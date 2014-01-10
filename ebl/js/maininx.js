@@ -213,12 +213,7 @@ $(document).ready(function () {
 					conversionRateObject.absolute = [];
 					l = json.revenueResponse.items.length;
 					for(i = 0; i < l; i++){
-						var clevents = parseFloat(json.revenueResponse.items[i].clickEvents);
-						if(clevents == 0){
-							convRate = 0.0;
-						}else{
-							convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/clevents;
-						}
+						convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/parseFloat(json.revenueResponse.items[i].clickEvents);
 						conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
 						conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
 					}
@@ -375,12 +370,7 @@ $(document).ready(function () {
 					conversionRateObject.absolute = [];
 					l = json.revenueResponse.items.length;
 					for(i = 0; i < l; i++){
-						var clevents = parseFloat(json.revenueResponse.items[i].clickEvents);
-						if(clevents == 0){
-							convRate = 0.0;
-						}else{
-							convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/clevents;
-						}
+						convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/parseFloat(json.revenueResponse.items[i].clickEvents);
 						conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
 						conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
 					}
@@ -1288,12 +1278,7 @@ function fillConversionRateDay() {
 				conversionRateObject.absolute = [];
 				l = json.revenueResponse.items.length;
 				for(i = 0; i < l; i++){
-					var clevents = parseFloat(json.revenueResponse.items[i].clickEvents);
-					if(clevents == 0){
-						convRate = 0.0;
-					}else{
-						convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/clevents;
-					}
+					convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/parseFloat(json.revenueResponse.items[i].clickEvents);
 					conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
 					conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
 				}

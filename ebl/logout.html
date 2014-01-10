@@ -33,25 +33,24 @@
 		$.ajax({
 			type:"POST",
 			url: "/ebl/v3/registration/logout",
-			 beforeSend: function (req) {
-            req.setRequestHeader('Authorization', make_base_auth(loginName, password));
-            req.setRequestHeader('no-realm', 'realm1');
+			beforeSend: function (req) {
+	            req.setRequestHeader('Authorization', make_base_auth(loginName, password));
+	            req.setRequestHeader('no-realm', 'realm1');
 			},
-			success: function(json){
+			success: function(json) {
 					$.cookie('password', null);
 					$.cookie('email', null);
 					window.location = "login.html";
 			},
-			error : function(jqXHR, textStatus, errorThrown)
-			{
-			 if (errorThrown == "Unauthorized") {
-				$.cookie('password', null);
-				$.cookie('email', null);
-				window.location = "login.html";
-            } else {
-			setMessagePopUp("problem", "error_server_error");
+			error : function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "Unauthorized") {
+					$.cookie('password', null);
+					$.cookie('email', null);
+					window.location = "login.html";
+	            } else {
+					setMessagePopUp("problem", "error_server_error");
+				}
 			}
-						}
 		});
 	
 	

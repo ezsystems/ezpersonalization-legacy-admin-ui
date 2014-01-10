@@ -41,13 +41,14 @@
         </ul>
       </div>
     </header>
-    <section class="login_center normal_form">
+    
+    <section class="login_center normal_form" data-i18n-ready="visible">
       <form action="" method="get" onsubmit="return false">
         <fieldset>
           <h3 data-translate="login_welcometo">Welcome to YOOCHOOSE</h3>
           
           <div class="actions">
-           	  <a class="login form_submit_button" data-translate="login_new_login_button" href="ebl/login">Login</a>
+           	  <a class="login" data-translate="login_new_login_button" href="/api/v4/registration/login">Login</a>
           </div>
             
           <h3 data-translate="login_old_login_header">For customers registered before 01.02.2014</h3>
@@ -72,6 +73,10 @@
       </form>
       <a href="registration_step_1.html" data-translate="login_dont_have_account">Don't have an account? Register here, it's fast and easy</a>
     </section>
+    
+   	<script type="text/javascript">
+		$("section.login_center").css('visibility', 'hidden'); // it will be make visible back by i18n library.
+	</script>
     
     <!--  still in development 
     <a id="facebook_login" href="#">Login over facebook</a>
@@ -134,6 +139,7 @@
 			</div>
 		</div>
 	</div>
+
 	
 	<div class="overlay" style="background-color: rgba(63, 63, 63, 0.3);" id="messageOkReset">
 		<div class="dialog_body change_password" id="messageBodyOkReset" >
