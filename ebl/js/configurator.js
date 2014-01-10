@@ -7,6 +7,7 @@
   $(document).ready(function() {
 
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
+	  $('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
 
 
 	  setLoadingDiv($('.models_groups'));
@@ -337,7 +338,7 @@ function deleteScenario() {
 		  },
 		  url: "ebl/v3/" + customerID + "/structure/get_scenario/" + reference_code,
 		  success: function(json) {
-
+			  var previewTypes ='';
 			  $('body').data('scenario', json);
 
 			  var modelRefList = $('body').data('model_list');
@@ -348,6 +349,10 @@ function deleteScenario() {
 
 				  for(var i = 0; i < json.scenario.outputItemTypes.length; i ++) {
 					  outputType = json.scenario.outputItemTypes[i];
+					  previewTypes += outputType;
+					  if(i < (json.scenario.outputItemTypes.length-1)){
+						  previewTypes += ",";
+					  }
 					  if(outputItemTypes == "") {
 						  switch(outputType) {
 							  case 1:
@@ -389,7 +394,7 @@ function deleteScenario() {
 					  }
 				  }
 			  }
-
+			  $('.preview_tab').find('a').attr("href", $('.preview_tab').find('a').attr("href")+"&outputtypes="+previewTypes);
 			  //set the colors of the models on the left side
 
 			  for(var l = 0; l < modelRefList.modelRefArray.length; l ++) {
@@ -635,10 +640,10 @@ function deleteScenario() {
 										  maxRating = parseDuration(maxRating);
 										  str += ' ('+((maxRating.getHours() < 48) ? (maxRating.getHours()
 												  + ' <span data-translate="'
-												  + (maxRating.getHours() > 1 ? 'duration_hours'
-												  : 'duration_hour') + '">Hours</span>')
+												  + (maxRating.getHours() > 1 ? 'model_duration_hours'
+												  : 'model_duration_hour') + '">Hours</span>')
 												  : (maxRating.getDays()
-												  + ' <span data-translate="duration_days">Days</span>'))
+												  + ' <span data-translate="model_duration_days">Days</span>'))
 												  + ')';
 									  }else{
 										 str += ' ('+ modelRefList.modelRefArray[l].referenceCode + ')';									  
@@ -1548,19 +1553,19 @@ function deleteScenario() {
 		  if(maxRating) {
 			  str += (maxRating.getHours() < 48) ? maxRating.getHours()
 					  + ' <font data-translate="'
-					  + (maxRating.getHours() > 1 ? 'duration_hours'
+					  + (maxRating.getHours() > 1 ? 'model_duration_hours'
 					  : 'duration_hour') + '">Hours</font>'
 					  : maxRating.getDays()
-					  + ' <fontdata-translate="duration_days">Days</font>';
+					  + ' <fontdata-translate="model_duration_days">Days</font>';
 		  }
 		  if(maxItemAge) {
 			  str += ' / ';
 			  str += (maxItemAge.getHours() < 48) ? maxItemAge.getHours()
 					  + ' <font data-translate="'
-					  + (maxRating.getHours() > 1 ? 'duration_hours'
+					  + (maxRating.getHours() > 1 ? 'model_duration_hours'
 					  : 'duration_hour') + '">Hours</font>'
 					  : maxItemAge.getDays()
-					  + ' <font data-translate="duration_days">Days</font>';
+					  + ' <font data-translate="model_duration_days">Days</font>';
 		  }
 
 	  } else if(startsWith('CB', type, true)&& !startsWith('CBFT', type, true) ) { //CB Model

@@ -11,20 +11,20 @@
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css">
     <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
     <link rel="stylesheet" href="css/styles_new.css">
-    <!--<script src="js/jquery-1.7.1.min.js"></script>-->
-	<!--<script src="js/jquery-1.9.1.js"></script>-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    <!--<script src="js/jquery-ui.1.8.16.min.js"></script>-->
-	<!--<script src="js/jquery-ui-1.10.2.custom.min.js"></script>-->
-	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-	<script src="js/jquery.cookie.js"></script>
-    <!--<script src="js/browser_detection.js"></script>-->
+    
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
+    <script src="js/lib/jquery.cookie.js"></script>
+    <script src="js/lib/jquery.i18n.properties.js"></script>
+    
     <script src="js/form_submit_trigger.js"></script>
     <script src="js/equalize.js"></script>
     <script src="js/things.js"></script>
     <script src="js/helper.js"></script>
-    <script src="ebl2/js/localizations/localizer.js"></script>
-    <script src="js/configurator.js"></script>
+    
+    <script src="js/i18n.js"></script>
+    
+    <script src="js/configurator.js" data-i18n-files="scenario,common"></script>
 
 
   </head>
@@ -43,8 +43,13 @@
 			</li>
 			<li class="configurator_tab current">
 				<span>
-					<span data-translate="settings_placing_models">Step 2: Placing models</span>
+					<span data-translate="settings_placing_models">Placing models</span>
 				</span>
+			</li>
+			<li class="preview_tab">
+				<a href="#">
+					<span data-translate="settings_preview">Preview</span>
+				</a>
 			</li>
 		</ul>
       </nav>
@@ -257,8 +262,8 @@
           <label for="relevant_period" data-translate="configurator_relevant">Relevant:</label>
           <input id="relevant_period" type="number" name="relevant_period" min="1" max="999" step="1"/>
           <select id="relevant_period_unit" >
-          	<option value="H" data-translate="duration_hours">Hours</option>
-          	<option value="D" data-translate="duration_days">Days</option>
+          	<option value="H" data-translate="model_duration_hours">Hours</option>
+          	<option value="D" data-translate="model_duration_days">Days</option>
           	
           </select>
 			<a class="helpBtn" data-helptxt="configuration_help_cb_model"></a>
@@ -331,8 +336,8 @@
 					<span data-translate="configurator_max_item_age">Maximum item age:</span>
 	        		<input name="maxItemAge" type="text" size="10">
 		        	<select name="maxItemAgeUnit">
-		        		<option value="D" data-translate="duration_days">days</option>
-		        		<option value="H" data-translate="duration_hours">hours</option>
+		        		<option value="D" data-translate="model_duration_days">days</option>
+		        		<option value="H" data-translate="model_duration_hours">hours</option>
 		        	</select>
 					<a class="helpBtn" data-helptxt="configuration_help_maximum_item_age"></a>
 	        	</div>
@@ -423,8 +428,8 @@
 						<span data-translate="configurator_max_item_age">Maximum item age:</span>
 						<input name="maxItemAge" type="text" size="10">
 						<select name="maxItemAgeUnit">
-							<option value="D" data-translate="duration_days">days</option>
-							<option value="H" data-translate="duration_hours">hours</option>
+							<option value="D" data-translate="model_duration_days">days</option>
+							<option value="H" data-translate="model_duration_hours">hours</option>
 						</select><a class="help"></a>
 					</label>
 					<div class="hintSpace">Space for hints and warnings.</div>

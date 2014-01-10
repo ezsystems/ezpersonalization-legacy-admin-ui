@@ -531,6 +531,7 @@
 						
 					if(json.scenario.outputItemTypes.length > 0)
 					{
+						$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString());
 						for(var i = 0; i < json.scenario.outputItemTypes.length; i++)
 						{
 							if(json.scenario.outputItemTypes[i] == $(this).val())
@@ -583,13 +584,16 @@
 			{
 				$('#scenario_id').attr("disabled","disabled");
 				$('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
+				$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
 			}
 			else
 			{
 				$('.configurator_tab').addClass("no_link").find('a').attr("href", "#").attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
+				$('.preview_tab').addClass("no_link").find('a').attr("href", "#").attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
 				$('#button_save').attr('data-translate', 'settings_button_save_next_step');
 				$('.delete').attr('data-translate', 'settings_cancel');
 			}
+			
 			localizer();
 			
 			
@@ -766,6 +770,7 @@
 						addScenarioToParent();
 					}
 					
+					$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString());
 					updatese = true;
 					saveFiltersForm();
 				},

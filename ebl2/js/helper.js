@@ -201,7 +201,7 @@ function unsetLoadingDiv(element) {
 function setMessagePopUp(type, message) {
 	$('.message').removeClass("problem");
 	$('.message').removeClass("positive");
-  $('.message').addClass(type);
+    $('.message').addClass(type);
 	$('#message_text').attr("data-translate", message);
 	localizer();
   
@@ -210,8 +210,8 @@ function setMessagePopUp(type, message) {
   }else{
     $('.message').removeAttr('style');
   }
-  
 }
+
 
 function validateEmail(email) {
  

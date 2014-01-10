@@ -1,3 +1,4 @@
+
 function setHost(fusername) {
 	    var dev = 'cat.dev';
 	    var test = 'admin.test';
@@ -17,8 +18,6 @@ function setHost(fusername) {
 	   	$("#formff").submit();
 	   	
 	}	 
-	
-	
 	
 function realLogin(email,password){
 	$.ajax({
@@ -159,8 +158,21 @@ function error_handler(jqXHR, textStatus, errorThrown) {
 	unsetLoadingDiv($('.actions'));
 }
 
+
 $(document).ready(function () {
-	
+
+    var editData4 =$("#resetp");
+
+    editData4.on("click", function(event){
+    	$('label[for="fpemail"]').parent().removeClass("problem");
+    	$('label[for="captcha"]').parent().removeClass("problem");
+    	$('.validation_message').hide();
+    	captchascope = Math.round(Math.random() * 100000);
+        $('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
+        $('#captcha').val("");
+    	setDialogsContact('messageReset','messageBodyReset','destroy_dialog');
+    	return false;
+    });
     
     $('#password').keypress(function (e) {
         if (e.which == 13) {
@@ -216,18 +228,19 @@ function resetPass() {
 		$('label[for="captcha"]').parent().removeClass("problem");
 	}
 	
-	if(showError || mailProblem)
-	{
+	if(showError || mailProblem){
 		if(mailProblem){
 			$('#validation_message').attr('data-translate', "error_wrongmail" );
 		}else{
 			$('#validation_message').attr('data-translate', "error_fill_required_fields" );
 		}
-		localizer();
+		
+		i18n($('#validation_message'));
+		
 		$('.validation_message').show();
-	}
-	else
-	{
+		
+	} else {
+		
 		setLoadingDiv($('#messageBodyReset2'));
          var url = '/ebl/v3/registration/forgot_password';
          $.ajax({
@@ -291,7 +304,9 @@ function resetPass() {
 					}
 					unsetLoadingDiv($('#messageBodyReset2'));
 					$('#validation_message').attr('data-translate', errormsg );
-					localizer();
+					
+					i18n($('#validation_message'));
+					
 					$('.validation_message').show();
 			}
 		});

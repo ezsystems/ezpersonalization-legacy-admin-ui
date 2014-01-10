@@ -99,7 +99,8 @@ $(document).ready(function () {
 	$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
 	$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
 	$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
-	localizer();
+	
+	
 	$('#copyrightsLink').off('click').click(function() {
     	console.log("should close corporate1");
     	$('#messageCorporate').hide();
@@ -515,7 +516,7 @@ $(document).ready(function () {
 });
 
 
-$('#saveMandatorChange').live("click", function (event) {
+$(document).on("click", '#saveMandatorChange', function (event) {
 	if($('#choose_mandant').val() != "")
 	{
 		$.cookie('customerID', $('#choose_mandant').val(), { expires: 365 });

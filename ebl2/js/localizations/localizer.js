@@ -3,6 +3,22 @@
 var in_to_language = "en",
 	translate;
 
+
+function setMessagePopUp(type, message, link) {
+	$('.message').removeClass("problem");
+	$('.message').removeClass("positive");
+    $('.message').addClass(type);
+	$('#message_text').attr("data-translate", message);
+	localizer();
+  
+	if ( (type == 'positive') || (type == 'neutral') ){
+		$('.message').removeAttr('style').delay(2500).fadeOut('slow');
+	} else {
+		$('.message').removeAttr('style');
+	}
+}
+
+
 function localizer() {
 
 	var storedLanguage = $.cookie('language');
@@ -721,7 +737,12 @@ function localizer() {
 			"empty_string": '',
 
 			"index_help_about_scenarios": 'Scenarios',
-			"index_help_about_ab_testing": 'A/B Testing'
+			"index_help_about_ab_testing": 'A/B Testing',
+				
+			//Preview
+			"preview_userid": "User ID",
+			"preview_topn": "Number of recommendations",
+			"preview_contextitems": "Context Items"
 			},
 
 
@@ -1400,7 +1421,12 @@ function localizer() {
 			"empty_string": '',
 
 			"index_help_about_scenarios": 'Szenarien',
-			"index_help_about_ab_testing": 'A/B Tests'
+			"index_help_about_ab_testing": 'A/B Tests',
+			
+			//Preview
+			"preview_userid": "Benutzer ID",
+			"preview_topn": "Anzahl der Empfehlungen",
+			"preview_contextitems": "Kontext-Artikel"
 	},
 	"fr": { "login_welcometo": "Bienvenus sur votre service de Recommandation (optimisé pour Mozilla Firefox)",
 			"login_slogon": "Et obtenir gratuitement des recommandations sur votre site en 5 minutes",
@@ -2070,7 +2096,12 @@ function localizer() {
 			"empty_string": '',
 
 			"index_help_about_scenarios": 'Scenarios',
-			"index_help_about_ab_testing": 'A/B Testing'
+			"index_help_about_ab_testing": 'A/B Testing',
+				
+			//Preview
+			"preview_userid": "ID utilisateur",
+			"preview_topn": "Nombre de recommandations",
+			"preview_contextitems": "Contexte Articles"
 			}};
 	
     var containers = $("[data-translate]");

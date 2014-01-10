@@ -10,8 +10,6 @@ var setChartsDimensions = function () {
 		});
 		if (typeof rightLine !== 'undefined') {
 			rightLine.Draw();
-		}else{
-			console.log("hhhhhhhhhhhhhhhh"+ (typeof rightLine));
 		}
 		if (typeof middlebar !== 'undefined') {
 			middlebar.Draw();
@@ -851,9 +849,10 @@ var setMessages = function () {
 
 	var destroyMessageTrigger = $('.message .destroy_message, .message .close');
 	destroyMessageTrigger.on("click", function (event) {
-		$(this).closest('.message').fadeOut('fast');
+		if ( ! $(this).attr("href")) {
+			$(this).closest('.message').fadeOut('fast');	
+		}
 	});
-
 };
 
 var autodestructionMessage = function () {
