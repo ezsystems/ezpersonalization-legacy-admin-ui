@@ -26,18 +26,6 @@ $(document).ready(function () {
     $('.form_submit_button').click(function () {
         login();
     });
-    
-    $('#facebook_login').click(function () {
-    	start_sso("facebook");
-    });
-    
-    $('#google_login').click(function () {
-    	start_sso("google");
-    });
-    
-    $('#twitter_login').click(function () {
-    	start_sso("twitter");
-    });
 });
 
 
@@ -148,29 +136,6 @@ function start_sso(provider) {
 		},
 		error: error_handler
 	});
-	
-	
-// 	$.ajax("", {
-// 		type: "POST",
-		
-// 		beforeSend: function (req) {
-// 			req.setRequestHeader('no-realm', 'yes');
-// 		},
-		
-//         data: {
-//         	provider: provider,
-//         	redirect_uri: window.location,
-//         	"no-realm": "yes"
-//         },
-        
-//         dataType: "json"
-// 		,
-// 		error: error_handler
-// 	}).done(function(json){
-// 				$('body').data('response', json);
-				
-// 				window.location = response.authenticationUri;
-// 			});
 	
 	return false;
 }

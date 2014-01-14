@@ -19,7 +19,9 @@
     
     <script src="js/form_submit_trigger.js"></script>
     <script src="js/things.js"></script>
-    <script src="js/helper.js"></script> 
+    <script src="js/helper.js"></script>
+    
+    <script src="js/user.js"></script>  
     
     <script src="js/equalize.js"></script>
 	
@@ -79,7 +81,7 @@
         <li><a id="edit_contact_datal" class="edit_contact_data" data-translate="index_edit_personal">Edit personal and contact data</a></li>
       </ul>
     </header>
-    <section class="mandant">
+    <section class="mandant" style="margin: 0 20px;">
       <header class="clearfix">
         <div class="s1_5">
           <p class="switch">
@@ -299,7 +301,7 @@
         </div>
       </form>
     </section>
-    <section class="scenarios">
+    <section class="scenarios"  style="margin: 20px 20px 0 20px;">
       <header class="clearfix" style="padding: 0; background: transparent;">
 		  <ul class="options_menu">
 			  <li class="tab"  data-target="#available_scenarios" data-controls="#scenarioControls"><label data-translate="index_your_scenarios"></label></li>
@@ -368,7 +370,7 @@
       </ul>
     </footer>
     
-    <div class="overlay">
+    <div id="switch_mandator_popup" class="overlay">
       <div class="dialog_body change_mandant">
         
         <a class="destroy_dialog">X</a>
@@ -381,14 +383,29 @@
                 <option value="" data-translate="index_select_a_mandator">- Select an mandator -</option>
               </select>
             </label>
-            <label><input type="checkbox" id="set_default" name="set_default" /><span data-translate="index_set_as_default"> Set as default</span></label>
             <div class="actions">
               <a id="saveMandatorChange" class="save" data-translate="index_save_changes">Save changes</a>
             </div>
         </div>
-        
       </div>
     </div>
+
+    
+    <div id="no_mandator_available" class="overlay">
+      <div class="dialog_body">
+        <h2 data-translate="no_mandator_available_header">No clients available</h2>
+        <div data-translate="no_mandator_available_text">
+        	No clients linked to this user account. Please use another account or book a new contract.
+        </div>
+        <div class="actions clearfix">
+          <a class="logout" data-translate="no_mandator_available_logout" href="/login.html">Logout</a>
+        </div>
+        <div class="actions clearfix">
+          <a class="book" data-translate="no_mandator_available_book">Book new contract</a>
+        </div>
+      </div>
+    </div>
+
 
 	<!-- dialogs related to ABTesting -->
 	<div id="cover" class="cover" style="display: none"></div>
