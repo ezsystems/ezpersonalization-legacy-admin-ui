@@ -10,19 +10,25 @@ $(document).ready(function () {
 	
 	var files = [];
 	
-	$('script[data-i18n-files]').each(function() {
-		var v = $(this).attr('data-i18n-files');
-		var vv = v.split(",");
-		for (i in vv) {
-			var trimmed = $.trim(vv[i]);
-			if (trimmed.length > 0) {
-				files.push(trimmed);
+	try {
+		$('script[data-i18n-files]').each(function() {
+			var v = $(this).attr('data-i18n-files');
+			var vv = v.split(",");
+			for (i in vv) {
+				var trimmed = $.trim(vv[i]);
+				if (trimmed.length > 0) {
+					files.push(trimmed);
+				}
 			}
+		});
+		
+		if (files.length > 0) {
+			init_i18n(files);
+		} else {
+			console.error("No i18n files specified. Use attribute 'data-i18n-files' in the [script] tag.");
 		}
-	});
-	
-	if (files.length > 0) {
-		init_i18n(files);
+	} finally {
+		$('[data-i18n-ready=visible]').css('visibility', 'visible');
 	}
 });
 
@@ -52,10 +58,10 @@ function init_i18n(filenames) {
 			}
 		});
 		
-		_i18n_ready = true;
 	});
 	
 	apply_i18n(filenames);
+	
 }
 
 
@@ -120,8 +126,9 @@ function apply_i18n(filenames) {
 	    cache: true,
 	    language: in_to_language, 
 	    callback: function() {
+	    	_i18n_ready = true;
+	    	
 	        var containers = $("[data-translate]");
-	        
 	        containers.each(function() {
 	        	i18n(this);
 	        });

@@ -384,11 +384,6 @@ a.create_new:before {
 
 /*Globals Headers and their content */
 
-section {
-  display: block;
-  margin: 0 20px;
-}
-
 section > header {
   display: block;
   background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
@@ -628,15 +623,13 @@ input[type="text"].inverted {
 }
 
 .options_menu > li:first-child > label {
-  -moz-border-radius: 5px 0px 0px 5px;
-  -webkit-border-radius: 5px 0px 0px 5px;
-  border-radius: 5px 0px 0px 5px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
-.options_menu > li:last-child > label {
-  -moz-border-radius: 0px 5px 5px 0px;
-  -webkit-border-radius: 0px 5px 5px 0px;
-  border-radius: 0px 5px 5px 0px;
+.options_menu > li:last-child > label, .options_menu > li.last-child > label {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
 .normal_form label {
@@ -730,6 +723,45 @@ input[type="text"].inverted {
 
 /*Global dialog*/
 
+
+	.overlay .dialog_body {
+		padding: 40px;
+		margin: 5% auto 0 auto;
+		position: relative;
+	    background: white url("../img/rauschen.png") repeat left top;
+		box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+		border: 1px solid #000000;
+		border-radius: 6px; 
+		-moz-border-radius: 6px;
+		-webkit-border-radius: 6px;
+	}
+
+	.overlay .dialog_body h2 {
+	    display: block;
+	    font-size: 24px;
+	    border-bottom: 1px solid rgba(216, 216, 216, 1);
+	    padding-bottom: 5px;
+	    margin: 0 0 10px 0;
+	}
+	
+	.overlay .dialog_body h3 {
+	  	display: block;
+		background: none;
+	  	color: inherit;
+	  	padding: 0;
+	  	position: inherit;
+	  	text-shadow: none;
+	  	font-size: 18px;
+	  	margin: 40px 0 20px;
+	}
+	
+	.overlay .dialog_body p {
+		margin-bottom: 10px;
+	}
+		
+		
+		
+
 .overlay, ._overlay {
   display: none;
   background-color: rgba(63, 63, 63, 0.3);
@@ -737,15 +769,15 @@ input[type="text"].inverted {
   min-width: 100%;
   height: 100%;
   min-height: 100%;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
-    bottom: 0;
-    right: 0;
+  bottom: 0;
+  right: 0;
   z-index: 999;
 }
 
-.dialog_body, ._dialog_body {
+._dialog_body {
   display: none;
   width: 80%;
   margin: 60px auto 0 auto;
@@ -757,8 +789,8 @@ input[type="text"].inverted {
   border-radius: 6px; 
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
-  
 }
+
 
 ._dialog_body {
 	display: block;
@@ -770,7 +802,7 @@ input[type="text"].inverted {
 	overflow: auto;
 }
 
-.dialog_body > h2, ._dialog_body > h2 {
+._dialog_body > h2 {
   display: block;
   font-size: 24px;
   border-bottom: 1px solid rgba(216, 216, 216, 1);
@@ -778,17 +810,7 @@ input[type="text"].inverted {
   margin: 20px 20px 0 20px;
 }
 
-.ABOverlay .dialog_body h3{
-  display: block;
-  background: none;
-  color: inherit;
-  padding: 0;
-  position: inherit;
-  text-shadow: none;
-  font-size: 18px;
-  margin: 40px 0 20px;
-}
-.dialog_body h3, .dialog_body h3{
+.dialog_body h3{
   display: block;
   background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
   color: rgba( 216, 216, 216, 1);
@@ -1808,7 +1830,6 @@ font.settings:hover{
   width: 40%;
 }
 
-.change_mandant > .clearfix,
 .change_password > .clearfix {
   padding: 20px;
 }
