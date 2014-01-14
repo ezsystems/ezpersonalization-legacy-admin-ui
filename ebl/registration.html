@@ -22,7 +22,7 @@
     
     <script src="js/contactup.js"></script>
     
-    <script src="js/i18n.js" data-i18n-files="migration,common"></script>
+    <script src="js/i18n.js" data-i18n-files="registration,common"></script>
     
 	<script>
 
@@ -31,39 +31,61 @@
 		var step = queryString["step"];
 		if (! step) step = 1;
 		
-		var errorCode = queryString["errorCode"];
+		var faultCode = queryString["faultCode"];
 		
-		if (queryString["bookingState"] == "CANCELLED") {
-			errorCode = "CANCELLED";
-		} else if (queryString["bookingState"] == "ERROR") {
-			errorCode = "UNKNOWN";
+		if (! faultCode) {
+			if (queryString["bookingState"] == "CANCELLED" && ! faultCode) {
+				faultCode = "CANCELLED";
+			} else if (queryString["bookingState"] == "ERROR") {
+				faultCode = "UNKNOWN";
+			}
 		}
 		
 		var product  = queryString["product"];
 		var mandator = queryString["mandator"];
-		var code     = queryString["code"];
+		var currency = queryString["currency"];
 		
 		if (step == 1 || step == 2) {
 			if (! product) {
 				errorCode="product_not_set";
 			}
-			if (! code) {
-				errorCode="code_not_set";
-			}
 		}
 		
-		var step1url = "/migration.html?product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
-		var step2url = "/migration.html?step=2&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
-		var step3url = "/migration.html?step=3&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+		var step1url = "/registration.html?product=" + encodeURIComponent(product);
+		var step2url = "/registration.html?step=2&product=" + encodeURIComponent(product);
+		var step3url = "/registration.html?step=3"; // product and currency will
+		
+		if (currency) {
+			step1url += "&currency=" + encodeURIComponent(currency);
+			step2url += "&currency=" + encodeURIComponent(currency);
+		}
+		
+		var loginLink = "/api/v4/registration/login?returnUrl=" + encodeURIComponent(step2url);
 
+		var productLink = "/api/v4/registration/buy/" + encodeURIComponent(product);
+		if (currency) {
+			productLink += "/" + encodeURIComponent(currency);
+		}
+		productLink += "?returnUrl=" + encodeURIComponent(step3url);
 		
 		$(document).ready(function () {
-			
-			if (errorCode) {
-				var key = "message_error_" + errorCode;
+			if (faultCode) {
+				var key;
+				
+				if (faultCode == "productNotFoundFault") {
+					key = "registration.message_error_product_not_found";
+				}
+				
+				if (faultCode == "productNotBookableFault") {
+					if (currency) {
+						key = "registration.message_error_not_bookable_c";	
+					} else {
+						key = "registration.message_error_not_bookable";
+					}
+				}
 				
 				if (! jQuery.i18n.map[key]) {
-					key = "message_unexpected_error";
+					key = "registration.message_unexpected_error";
 				}
 				
 				var backLink;
@@ -74,62 +96,40 @@
 					backLink = step2url;
 				}
 				
-				setMessagePopUpLink("problem", backLink, key, errorCode);
+				setMessagePopUpLink("problem", backLink, key, faultCode, product, currency);
 			}
 			
 			if (step == 1) {
-				step1(product, mandator, code);
+				
+				if (faultCode) {
+					$('#cross-1').show();
+					$('#step-1-forward').hide();
+				} else {
+					$('#step-1-forward').attr("href", loginLink);
+					$('#bird-1').show();
+				}
+				
 			} else if (step == 2) {
-				step2(product, mandator, code);
+				$('#bird-1').show();
+				
+				if (faultCode) {
+					$('#cross-2').show();
+					$('#step-2-forward').hide();
+				} else {
+					$('#step-2-forward').attr("href", productLink);				
+					$('#bird-2').show();
+				}
+				
 			} else if (step == 3) {
-				step3(product, mandator, code);
+				$('#bird-1').show();
+				$('#bird-2').show();
+				if (faultCode) {
+					$('#cross-3').show();	
+				} else {
+					$('#bird-3').show();
+				}
 			}
 		});
-		
-		
-		function step1(product, mandator, code) {
-
-			if (errorCode) {
-				$('#cross-1').show();
-				$('#step-1-forward').hide();
-			} else {
-				var userLink = "/api/v4/migration/user/" + encodeURIComponent(product) + 
-						       "/" + encodeURIComponent(code) + "?returnUrl=" + encodeURIComponent(step2url) + 
-				    		   "&cancelUrl=" + encodeURIComponent(step1url);
-				
-				$('#step-1-forward').attr("href", userLink);
-				$('#bird-1').show();
-			}
-		}
-		
-		
-		function step2(product, mandator, code) {
- 
-			$('#bird-1').show();
-			
-			if (errorCode) {
-				$('#cross-2').show();
-				$('#step-2-forward').hide();
-			} else {
-				var userLink = "/api/v4/migration/contract/" + encodeURIComponent(product) + 
-						       "/" + encodeURIComponent(code) + "?returnUrl=" + encodeURIComponent(step3url) +
-						       "&cancelUrl=" + encodeURIComponent(step2url);
-				
-				$('#step-2-forward').attr("href", userLink);				
-				$('#bird-2').show();
-			}
-		}
-		
-		
-		function step3(product, mandator, code) {
-			$('#bird-1').show();
-			$('#bird-2').show();
-			if (errorCode) {
-				$('#cross-3').show();	
-			} else {
-				$('#bird-3').show();
-			}
-		}
 
 
 	</script>
@@ -232,14 +232,16 @@
     <section class="dialog normal_form">
     
       <div id="form-step-1" class="migration">
-          <h3 data-translate="migration.step_1.header">Migrate user account</h3>
-          <div data-translate="migration.step_1.description">
-          	A user is an agent, either a human agent (end-user) or software agent, who uses a computer or network service. A user often has a user account and is identified by a username (also user name).
+          <h3 data-translate="registration.step_1.header">Login or create a user</h3>
+          <div data-translate="registration.step_1.description">
+          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
        	  </div> 
           <div class="actions">
             <a id="step-1-forward" 
                class="login form_submit_button" 
-               data-translate="migration.step_1.button"
+               data-translate="registration.step_1.button"
                href="#to_step_2">Continue</a>
           </div>
       </div>
@@ -248,14 +250,16 @@
       </script>
       
       <div id="form-step-2" class="migration">
-          <h3 data-translate="migration.step_2.header">Migrate contract</h3>
-          <div data-translate="migration.step_2.description">
-          	Some text with words <span data-param="0">product</span> and <span data-param="1"><b>market</b></span>.
+          <h3 data-translate="registration.step_2.header">Book a product</h3>
+          <div data-translate="registration.step_2.description">
+          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
        	  </div> 
           <div class="actions">
             <a id="step-2-forward" 
             	class="login form_submit_button" 
-            	data-translate="migration.step_2.button"
+            	data-translate="registration.step_2.button"
               	href="#to_step_3">Continue</a>
               	
           </div>
@@ -265,15 +269,17 @@
       </script>
       
       <div id="form-step-3" class="migration">
-          <h3 data-translate="migration.step_3.header">Migrationg finished</h3>
-          <div data-translate="migration.step_3.description">
-          	A user is an agent, either a human agent (end-user) or software agent, who uses a computer or network service. A user often has a user account and is identified by a username (also user name).
+          <h3 data-translate="registration.step_3.header">Congratulation</h3>
+          <div data-translate="registration.step_3.description">
+          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
        	  </div> 
           <div class="actions">
             <a id="step-3-forward" 
                class="login form_submit_button" 
-               data-translate="migration.step_3.button"
-               href="/index.html">Continue</a>
+               data-translate="registration.step_3.button"
+               href="/index.html">Go to Dashboard</a>
           </div>
       </div>   
       <script type="text/javascript">
@@ -281,14 +287,9 @@
       </script>         
       
     </section>
-    
-    <!--  still in development 
-    <a id="facebook_login" href="#">Login over facebook</a>
-    <a id="google_login" href="#">Login over google</a>
-    <a id="twitter_login" href="#">Login over twitter</a>
-    -->    
+
     <footer>
-      Copyright 2009-<script>document.write(new Date().getFullYear());</script><noscript>2014</noscript> YOOCHOOSE GmbH
+      Copyright <script>document.write("2009-" + new Date().getFullYear());</script> YOOCHOOSE GmbH
       <ul class="clearfix">
         <li><a href="corporate_information.html" data-translate="common_corporate_information">Corporate information</a></li>
         <li><a href="data_privacy.html" data-translate="common_data_privacy">Data privacy</a></li>
@@ -297,13 +298,9 @@
     </footer>
     <div class="message" style="display:none;">
       <p>
-        <span id="message_text">Something neutral happened. That's it.</span>
+        <span id="message_text">Messagebox</span>
         <a class="close">OK</a>
       </p>
     </div>
-    <form style="display: hidden" action="#" method="GET" id="formff">
-		  <input type="hidden" id="freeusername" name="freeusername" value=""/>
-	</form>
-	
   </body>
 </html>

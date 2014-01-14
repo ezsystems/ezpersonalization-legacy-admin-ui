@@ -1838,8 +1838,7 @@ function deleteScenario() {
 			  'type': 'GET',
 			  'url': 'ebl/v3/profile/get_mandator/' + name,
 			  'dataType': 'json'
-		  })
-				  .then(
+		  }).then(
 				  function(response) {
 					  app.data.mandator = response.mandator;
 					  return app.data.mandator;

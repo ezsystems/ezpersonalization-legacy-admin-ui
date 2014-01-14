@@ -1,23 +1,53 @@
 
+
+
+$(document).ready(function () {
+
+    var editData4 =$("#resetp");
+
+    editData4.on("click", function(event){
+    	$('label[for="fpemail"]').parent().removeClass("problem");
+    	$('label[for="captcha"]').parent().removeClass("problem");
+    	$('.validation_message').hide();
+    	captchascope = Math.round(Math.random() * 100000);
+        $('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
+        $('#captcha').val("");
+    	setDialogsContact('messageReset','messageBodyReset','destroy_dialog');
+    	return false;
+    });
+    
+    $('#password').keypress(function (e) {
+        if (e.which == 13) {
+            $(this).blur();
+            login();
+        }
+    });
+
+    $('.form_submit_button').click(function () {
+        login();
+    });
+});
+
+
 function setHost(fusername) {
-	    var dev = 'cat.dev';
-	    var test = 'admin.test';
-	   	var src = window.location.href;
-	   	recoHost = 'http://free.yoochoose.net/login.html';
-	   	if(src.indexOf(dev)!=-1 ){
-	    	recoHost = 'http://cat.development.yoochoose.com/ebl2/login.html';
-	    }else{
-	    	if(src.indexOf(test)!=-1 ){
-	    		recoHost = 'http://free.test.yoochoose.net/login.html';
-	    	}else{
-	    		recoHost = 'http://free.yoochoose.net/login.html';
-	    	}
-	    }
-	   	$("#freeusername").val(fusername);
-	   	$("#formff").attr("action",recoHost);
-	   	$("#formff").submit();
-	   	
-	}	 
+    var dev = 'cat.dev';
+    var test = 'admin.test';
+   	var src = window.location.href;
+   	recoHost = 'http://free.yoochoose.net/login.html';
+   	if (src.indexOf(dev) != -1) {
+    	recoHost = 'http://cat.development.yoochoose.com/ebl2/login.html';
+    } else {
+    	if(src.indexOf(test)!=-1 ){
+    		recoHost = 'http://free.test.yoochoose.net/login.html';
+    	} else {
+    		recoHost = 'http://free.yoochoose.net/login.html';
+    	}
+    }
+   	$("#freeusername").val(fusername);
+   	$("#formff").attr("action",recoHost);
+   	$("#formff").submit();
+   	
+}	 
 	
 function realLogin(email,password){
 	$.ajax({
@@ -107,29 +137,6 @@ function start_sso(provider) {
 		error: error_handler
 	});
 	
-	
-// 	$.ajax("", {
-// 		type: "POST",
-		
-// 		beforeSend: function (req) {
-// 			req.setRequestHeader('no-realm', 'yes');
-// 		},
-		
-//         data: {
-//         	provider: provider,
-//         	redirect_uri: window.location,
-//         	"no-realm": "yes"
-//         },
-        
-//         dataType: "json"
-// 		,
-// 		error: error_handler
-// 	}).done(function(json){
-// 				$('body').data('response', json);
-				
-// 				window.location = response.authenticationUri;
-// 			});
-	
 	return false;
 }
 
@@ -158,45 +165,6 @@ function error_handler(jqXHR, textStatus, errorThrown) {
 	unsetLoadingDiv($('.actions'));
 }
 
-
-$(document).ready(function () {
-
-    var editData4 =$("#resetp");
-
-    editData4.on("click", function(event){
-    	$('label[for="fpemail"]').parent().removeClass("problem");
-    	$('label[for="captcha"]').parent().removeClass("problem");
-    	$('.validation_message').hide();
-    	captchascope = Math.round(Math.random() * 100000);
-        $('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
-        $('#captcha').val("");
-    	setDialogsContact('messageReset','messageBodyReset','destroy_dialog');
-    	return false;
-    });
-    
-    $('#password').keypress(function (e) {
-        if (e.which == 13) {
-            $(this).blur();
-            login();
-        }
-    });
-
-    $('.form_submit_button').click(function () {
-        login();
-    });
-    
-    $('#facebook_login').click(function () {
-    	start_sso("facebook");
-    });
-    
-    $('#google_login').click(function () {
-    	start_sso("google");
-    });
-    
-    $('#twitter_login').click(function () {
-    	start_sso("twitter");
-    });
-});
 
 function resetPass() {
 	
