@@ -137,6 +137,24 @@ var setDragDrop = function () {
 	});
 };
 
+
+
+/** Returns the first non-null argument */
+var ifnull = function() {
+	
+	var i18n_params = Array.prototype.slice.call(arguments, 0);
+	
+	for (var i = 0; i < arguments.length; i++) {
+		if (typeof arguments[i] === 'undefined' || arguments[i] == null) {
+			continue;
+		}
+		return arguments[i];
+	}
+	
+	return null;
+};
+
+
 var setLiveDragDrop = function (element) {
 	element.draggable({
 		//connectToSortable: ".empty_model_place",
@@ -790,7 +808,7 @@ var activateRandomModelDialog = function (model, title) {
 
 
 var activateDialog = function () {
-	var openButton = $(".configure_model, .switch > a, .change_password");
+	var openButton = $(".configure_model, .change_password");
 	openButton.on("click", function (event) {
 		var modelID = $(this).closest("li.model").find("h5").text();
 		setDialogs(modelID);
