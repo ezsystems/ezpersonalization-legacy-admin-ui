@@ -83,9 +83,9 @@
 			recoHost = 'http://cat.development.yoochoose.com:8080/recocontroller';
 		}else{
 			if(cur_host.indexOf(test)!=-1 ){
-				recoHost = 'http://reco.test.yoochoose.net';
+				recoHost = 'https://reco.test.yoochoose.net';
 			}else{
-				recoHost = 'http://reco.yoochoose.net';
+				recoHost = 'https://reco.yoochoose.net';
 			}
 		}
 		
@@ -137,6 +137,7 @@ function jsonpCallback(json){
 	strjs = strjs.replace("]" , "<br/>]");
 	console.log("json="+JSON.stringify(strjs));
 	$("#prettyprint").html(strjs);
+	$("#prettyprint").removeClass("prettyprinted"); 
 	prettyPrint();
 	
 }
