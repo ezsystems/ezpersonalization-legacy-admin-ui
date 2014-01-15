@@ -21,8 +21,6 @@
     <script src="js/things.js"></script>
     <script src="js/helper.js"></script>
     
-    <script src="js/user.js"></script>  
-    
     <script src="js/equalize.js"></script>
 	
     <script src="js/libraries/RGraph/RGraph.common.core.js"></script>
@@ -58,7 +56,7 @@
     <script src="js/i18n.js" data-i18n-files="dashboard,common"></script>
 	
   </head>
-  <body id="dashboard">
+  <body id="dashboard" style="overflow-y:scroll;">
     <header class="clearfix top_head">
       <div class="logo_area s1_5">
         <h1 class="hide" title="YooChoose. We recommend."><a href="#">YooChoose. We recommend.</a></h1>
@@ -284,7 +282,7 @@
           </div>
           <div class="conversion_rate_chart s1_3">
             <h3 id="index_conversion_rate_average" data-translate="index_conversion_rate_average">Conversion rate (average)</h3>
-            <canvas id="conversion_rate" width="400" height="250">[No canvas support]</canvas>
+           	<canvas id="conversion_rate" width="400" height="250">[No canvas support]</canvas>
             <fieldset>
               <ul class="available_charts clearfix">
                 <li>
@@ -318,7 +316,7 @@
 			<a class="helpLink" data-target="#ABHelp"></a>
 		</div>
       </header>
-      <ul id="available_scenarios" class="available_scenarios clearfix tabContent">
+      <ul id="available_scenarios" class="available_scenarios clearfix tabContent" style="min-height: 150px;">
         <li class="dummy_scenario" style="display:none;">
           <div class="scenario activated" style="minHeight:250px;">
            <div style="line-height: 0.7em;">&nbsp;</div>

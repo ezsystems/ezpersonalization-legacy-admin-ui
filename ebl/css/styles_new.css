@@ -16,6 +16,11 @@
   overflow: hidden;
 }
 
+
+div.loading {
+	background-color: rgba(63, 63, 63, 0.05);
+}
+
 /*Fixes end*/
 
 /*------------*/

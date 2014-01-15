@@ -1,17 +1,11 @@
-/* css({'border-top':'5px solid red'}) */
 
-
-var cachedScript = function(url) {
- 	  options = {
- 			crossDomain: true, // it adds script tag and allows to debug included file 
-		    dataType: "script",
-		    cache: true,
-		    url: url
-	  };
-	  return jQuery.ajax( options );
-};
-
-
+/** It loads the specified scripts and call the specified callback functions.
+ *  It works similar to jQuery.getScript function with some additional features:<br>
+ *  
+ *     1. It is able to load multiple scripts simultaneously.<br>
+ *     2. It loads scripts in cross domain mode (see $.ajax description).<br>
+ *     3. It allows browser to use the cache.<br>
+ */
 var include = function(scripts, callback) {
 	var arguments = [];
 	
@@ -22,6 +16,17 @@ var include = function(scripts, callback) {
 	$.when.apply(null, arguments).done(function() {
 		callback();
 	});
+};
+
+
+var cachedScript = function(url) {
+ 	  options = {
+ 			crossDomain: true, // it adds script tag and allows to debug included file 
+		    dataType: "script",
+		    cache: true,
+		    url: url
+	  };
+	  return jQuery.ajax( options );
 };
 
 
@@ -42,9 +47,7 @@ var setChartsDimensions = function () {
 		if (typeof leftbar !== 'undefined') {
 			leftbar.Draw();
 		}
-		 
 	}
-
 };
 
 var setEquals = function () {

@@ -6,6 +6,16 @@ var customerID = $.cookie('customerID');
 $(document).ready(function () {
 	
 	
+	showEmptyCharts();
+	showEmptyEventChart();
+	
+	setLoadingDiv($('section.mandant > header'));
+	setLoadingDiv($('.available_scenarios'));
+	
+	setLoadingDiv($('#conversion_rate'));
+	setLoadingDiv($('#collected_events'));
+	setLoadingDiv($('#delivered_recommendations'));
+	
 	
 	include(["/js/switch_mandator.js", "/js/user.js"], function() {
 		
@@ -30,13 +40,6 @@ $(document).ready(function () {
 		    	});
 		    }
 		});
-		
-		setLoadingDiv($('section.mandant > header'));
-		setLoadingDiv($('.available_scenarios'));
-		setLoadingDiv($('#conversion_rate'));
-		setLoadingDiv($('#collected_events'));
-		setLoadingDiv($('#delivered_recommendations'));
-		
 		
 		getAccesibleMandators(function(mandatorList) {
 			
@@ -130,10 +133,14 @@ $(document).ready(function () {
 			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
 			$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
 			localizer();
-		
+			
+			showEmptyCharts();
+			showEmptyEventChart();
+			
 	        setLoadingDiv($('#conversion_rate'));
 	        setLoadingDiv($('#collected_events'));
 	        setLoadingDiv($('#delivered_recommendations'));
+	        
 	        fillConversionRateDay();
 	        fillRecommendationDay();
 	    });
@@ -151,6 +158,9 @@ $(document).ready(function () {
 	        currentDate = getCurrentDateMinusDays(0);
 	        var to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
 	        var granularity = "PT12H";
+			
+			showEmptyCharts();
+			showEmptyEventChart();
 			
 	        setLoadingDiv($('#collected_events'));
 	        setLoadingDiv($('#conversion_rate'));
@@ -308,6 +318,9 @@ $(document).ready(function () {
 	        currentDate = getCurrentDateMinusDays(0);
 	        var to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
 	        var granularity = "P1D";
+	        
+			showEmptyCharts();
+			showEmptyEventChart();
 	
 	        setLoadingDiv($('#conversion_rate'));
 	        setLoadingDiv($('#collected_events'));
