@@ -25,18 +25,23 @@ $(document).ready(function () {
     	return false;
     });
     
+    var closeAll = function() {
+    	$("#messageContact").hide();
+    	$("#messageCorporate").hide();
+    	$("#messagePrivacy").hide();
+    };
+    
     var closeButtons = $('.dialog_body .destroy_dialog');
     
-    closeButtons.on("click", function(event){
-    	$(".overlay").hide();
-    });
+    closeButtons.on("click", closeAll);
     
     $(document).bind('keydown', function(e) { 
 	    if (e.which == 27) {
-	    	$(".overlay").hide();
+	    	closeAll();
 	    }
     });
 });
+
 
 
 showContactPopup = function (overlayId) {

@@ -1,5 +1,29 @@
 /* css({'border-top':'5px solid red'}) */
 
+
+var cachedScript = function(url) {
+ 	  options = {
+		    dataType: "script",
+		    cache: true,
+		    url: url
+	  };
+	  return jQuery.ajax( options );
+};
+
+
+var include = function(scripts, callback) {
+	var arguments = [];
+	
+	for (var i in scripts) {
+		arguments.push(cachedScript(scripts[i]));
+	}
+    
+	$.when.apply(null, arguments).done(function() {
+		callback();
+	});
+};
+
+
 var setChartsDimensions = function () {
 //conversion_rate
 	var chartCanvas = $('canvas');
