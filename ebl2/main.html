@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Dashboard</title>
+    <meta name="description" content="YooChoose recommendation main page">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="shortcut icon" href="img/favicon.ico">
+	<link rel="apple-touch-icon" href="img/favicon.ico">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="css/reset.css">
+    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="css/styles_new.css">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+   <!--  <script src="js/browser_detection.js"></script> -->
+    <script src="js/form_submit_trigger.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="js/localizations/localizer.js" charset=UTF-8></script>
+    <script src="js/equalize.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+    <script src="js/libraries/RGraph.common.core.js"></script>
+    <script src="js/libraries/RGraph.common.adjusting.js"></script> <!-- Just needed for adjusting -->
+    <script src="js/libraries/RGraph.common.annotate.js"></script>  <!-- Just needed for annotating -->
+    <script src="js/libraries/RGraph.common.context.js"></script>   <!-- Just needed for context menus -->
+    <script src="js/libraries/RGraph.common.effects.js"></script>   <!-- Just needed for visual effects -->
+    <script src="js/libraries/RGraph.common.resizing.js"></script>  <!-- Just needed for resizing -->
+    <script src="js/libraries/RGraph.common.tooltips.js"></script>  <!-- Just needed for tooltips -->
+    <script src="js/libraries/RGraph.common.zoom.js"></script>      <!-- Just needed for zoom -->
+    <script src="js/libraries/RGraph.bar.js"></script>              <!-- Just needed for bar charts -->
+    <script src="js/libraries/RGraph.bipolar.js"></script>          <!-- Just needed for bi-polar charts -->
+    <script src="js/libraries/RGraph.funnel.js"></script>           <!-- Just needed for funnel charts -->
+    <script src="js/libraries/RGraph.gantt.js"></script>            <!-- Just needed for gantt charts -->
+    <script src="js/libraries/RGraph.hbar.js"></script>             <!-- Just needed for horizontal bar charts -->
+    <script src="js/libraries/RGraph.hprogress.js"></script>        <!-- Just needed for horizontal progress bars -->
+    <script src="js/libraries/RGraph.led.js" charset="UTF-8"></script>              <!-- Just needed for LED charts -->
+    <script src="js/libraries/RGraph.line.js"></script>             <!-- Just needed for line charts -->
+    <script src="js/libraries/RGraph.meter.js"></script>            <!-- Just needed for meter charts -->
+    <script src="js/libraries/RGraph.odo.js"></script>              <!-- Just needed for odometers -->
+    <script src="js/libraries/RGraph.pie.js"></script>              <!-- Just needed for pie AND donut charts -->
+    <script src="js/libraries/RGraph.rose.js"></script>             <!-- Just needed for rose charts -->
+    <script src="js/libraries/RGraph.rscatter.js"></script>         <!-- Just needed for rscatter charts -->
+    <script src="js/libraries/RGraph.scatter.js"></script>          <!-- Just needed for scatter charts -->
+    <script src="js/libraries/RGraph.radar.js"></script>            <!-- Just needed for radar charts -->
+    <script src="js/libraries/RGraph.vprogress.js"></script>        <!-- Just needed for vertical progress bars -->
+	<script src="js/mainCharts.js"></script>
+	<script src="js/reconfigure.js"></script>
+	<script src="js/mainhelper.js"></script>
+	<script src="js/contactup.js"></script>
+
+  </head>
+  <body id="dashboard">
+    <header class="clearfix top_head">
+      <div class="logo_area s1_5">
+        <h1 class="hide" title="YooChoose. We recommend."><a href="#">YooChoose. We recommend.</a></h1>
+      </div>
+      <div class="top_bar clearfix">
+        <ul class="language_selection clearfix">
+          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
+          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
+          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
+        </ul>
+        <a href="logout.html" data-translate="index_logout" class="logout">logout</a>
+      </div>
+      <nav class="s2_5">
+        <ul class="main_navi clearfix">
+          <li class="current"></li>
+        </ul>
+      </nav>
+      <ul class="account_data s2_5">
+        <li><span data-translate="index_login">Login: </span><strong></strong></li>
+        <li><a href="#" id="edit_contact_data" class="edit_contact_data" data-translate="index_edit_personal">Edit personal and contact data</a></li>
+      </ul>
+    </header>
+    <section class="mandant">
+      <header class="clearfix">
+        <div class="s1_5">
+          <p class="switch">
+            <a href="#" data-translate="index_switch_mandant">Switch mandant</a>
+          </p>
+          &nbsp;
+        </div>
+        <div class="s2_5">
+          <h2 class="info">
+            <strong class="project_title">usearc.de</strong><br/>
+            <span class="code"><span data-translate="webpage_code">Webpage Code:</span><span class="codeid">270</span></span>
+          </h2>
+        </div>
+        <div class="s1_5 autorefresh" style="display:none">
+          <span data-translate="index_auto_refresh">Autorefresh</span>
+          <form class="clearfix" method="get" action="#">
+            <label for="autorefresh_on"><input type="radio" name="autorefresh" id="autorefresh_on" value="on" /><span data-translate="index_on">On</span></label>
+            <label for="autorefresh_off"><input type="radio" name="autorefresh" id="autorefresh_off" value="off" checked="checked" /><span data-translate="index_off">Off</span></label>
+          </form>
+        </div>
+       
+      </header>
+  	 <div id="tabs">
+	  <ul>
+	    <li><a href="#tabs-1" data-translate="script">Script</a></li>
+	    <li><a href="#tabs-2" data-translate="statistics">Statistics</a></li>
+	    <li><a href="#tabs-3" data-translate="edit_style">Configuration</a></li>
+	    <li><a href="#tabs-4" data-translate="upgrade">Upgrade</a></li>
+	    <li><a href="help.html" data-translate="index_help">Help</a></li>
+	  </ul>
+	  <div id="tabs-1">
+	     <div style="text-align: center;">
+	     <br/>
+	      <b><span id="script_main" data-translate="script_main" ></span></b>
+	      <br/><br/>
+	      <textarea readonly dir="ltr" cols="65" rows="7" style="color: black; font-family:'Courier New'; font-size: 14px;
+	       unicode-bidi: embed; resize: auto; cursor: auto; width: 80%; overflow:auto;" id ="scriptaria" > </textarea>
+	       <br/><br/> 
+	       
+	     	<div style="text-align: left;">
+	     		<span data-translate="crawler_status" style="display: inline-block; font-weight:bold;">Recommendation status:</span>
+	     		<p id="crawler_status" style="display: inline-block;"></p>
+	     		<br>
+	     		<span data-translate="crawler_date" style="display: inline-block; font-weight:bold;" id="crawler_dates" >Last scan date:</span>
+	     		<p id="crawler_date" style="display: inline-block;"></p>
+	     		<br>
+	     		<span data-translate="crawler_amount_of_items" style="display: inline-block;font-weight:bold;" id="crawler_itemss">Amount of items:</span>
+	     		<p id="crawler_items" style="display: inline-block;"></p>
+	     	</div>
+	     </div>
+	    </div>
+     
+     
+     <div id="tabs-2">
+      <form class='clearfix' method='get' action='#'  id="statistics">
+        <fieldset class="time_settings">
+          <ul class="available_view_options options_menu clearfix">
+            
+            <li class="view_option_day current">
+              <label for="view_option_day" class="option">
+                <input type="radio" id="view_option_day" name="view_option" value="day" checked="checked" />
+                <span data-translate="index_last_day">Last day</span><span class="info">
+				<script>
+				var lastDay = getCurrentDateMinusDays(1);
+				document.write("(" + lastDay.day + "." + lastDay.month + "." + lastDay.year + ")");
+				</script></span>
+              </label>
+            </li>
+            <li class="view_option_week">
+              <label for="view_option_week" class="option">
+                <input type="radio" id="view_option_week" name="view_option" value="day" />
+                <span data-translate="index_last_week">Last week</span><span class="info">
+				<script>
+				var lastWeekDay = getCurrentDateMinusDays(7);
+				var lastDay = getCurrentDateMinusDays(1);
+				document.write("(" + lastWeekDay.day + "." + lastWeekDay.month + "." + lastWeekDay.year + ") - ");
+				document.write("(" + lastDay.day + "." + lastDay.month + "." + lastDay.year + ")");
+				</script></span>
+              </label>
+            </li>
+            <li class="view_option_month">
+              <label for="view_option_month" class="option">
+                <input type="radio" id="view_option_month" name="view_option" value="month" />
+                <span data-translate="index_last_month">Last month</span><span class="info">
+				<script>
+				var lastMonthDay = getCurrentDateMinusDays(30);
+				var lastDay = getCurrentDateMinusDays(1);
+				document.write("(" + lastMonthDay.day + "." + lastMonthDay.month + "." + lastMonthDay.year + ") - ");
+				document.write("(" + lastDay.day + "." + lastDay.month + "." + lastDay.year + ")");
+				</script></span>
+              </label>
+            </li>
+          </ul>
+		 
+        </fieldset>
+        
+       
+        <div class="clearfix">
+          <div class="collected_events_chart s1_3">
+            <h3 id="index_collected_events" data-translate="index_collected_events">Collected events</h3>
+            <canvas id="collected_events" width="400" height="250">[No canvas support]</canvas>
+            <fieldset>
+              <ul class="available_charts clearfix">
+                <li class="events_chart_bar_1">
+                  <label for="events_select_for_chart_bar_1">
+                    <select id="events_select_for_chart_bar_1" name="events_select_for_chart_bar_1">
+                      <option value=""  data-translate="index_select_an_event">- Select an event -</option>
+                      <option value="click" selected="selected">Click</option>
+                      <option value="total">Total</option>
+                    </select>
+                  </label>
+                </li>
+                 <li class="events_chart_bar_2">
+                  <label for="events_select_for_chart_bar_2">
+                    <select id="events_select_for_chart_bar_2" name="events_select_for_chart_bar_2">
+                      <option value="" selected="selected" data-translate="index_select_an_event">- Select an event -</option>
+                      <option value="recommended" selected="selected">Recommended</option>
+                      <option value="total">Total</option>
+                    </select>
+                  </label>
+                </li>
+               
+              </ul>
+            </fieldset>
+          </div>
+          <div class="delivered_recommendation_chart s1_3">
+            <h3 id="index_delivered_recommendations" data-translate="index_delivered_recommendations">Delivered recommendations</h3>
+            <canvas id="delivered_recommendations" width="400" height="250">[No canvas support]</canvas>
+          </div>
+          <div class="conversion_rate_chart s1_3">
+            <h3 id="index_conversion_rate_average" data-translate="index_conversion_rate_average">Conversion rate (average)</h3>
+            <canvas id="conversion_rate" width="400" height="250">[No canvas support]</canvas>
+          </div>
+        </div>
+      </form>
+     </div>
+     <div id="tabs-3">
+     	<section class="registration_step_1 normal_form">
+	      <form  method="get" class="clearfix" onsubmit="return false;">
+	        <fieldset class="primary_data s2_5">
+	          <h3 data-translate="regstep3_createaccount" style="border-radius: 5px;" >Configure recommendations</h3>
+	          <div class="wrapper clearfix">
+	            <p data-translate="regstep3_createaccount_information">Please, choose how your recommendations will look like, the sample product URL is needed in order to set the recommendation content.</p>
+	            <div>
+	              <label for="recommendation_size" class="required" style="width: 210px;">
+	                <span data-translate="regstep3_rec_size">Recommendation size:</span>
+	              </label>
+	              <select class="gwt-ListBox" name="recommendation_size" id="recommendation_size" style="width: 89%;">
+	              	<optgroup label="Recommended">
+	              		<option value="1">728 x 240 - Leaderboard</option>
+	              		<option value="2">160 x 600 - Wide Skyscraper</option>
+	              		<option value="3" disabled="disabled">320 x 50 - Mobile Banner</option>
+	              	</optgroup>
+	              	<optgroup label="Other - Horizontal" disabled="disabled">
+	              		<option value="4">468 x 60 - Banner</option>
+	              		<option value="5">234 x 60 - Half Banner</option>
+	              	</optgroup>
+	              	<optgroup label="Other - Vertical" disabled="disabled">
+	              		<option value="6">120 x 600 - Skyscraper</option>
+	              		<option value="7">120 x 240 - Vertical Banner</option>
+	              		<option value="8">300 x 600 - Large Skyscraper</option>
+	              	</optgroup>
+	              	<optgroup label="Other - Square" disabled="disabled">
+	              		<option value="9">336 x 280 - Large Rectangle</option>
+	              		<option value="10">300 x 250 - Medium Rectangle</option>
+	              		<option value="11">250 x 250 - Square</option>
+	              		<option value="12">200 x 200 - Small Square</option>
+	              		<option value="13">180 x 150 - Small Rectangle</option>
+	              		<option value="14">125 x 125 - Button</option>
+	              	</optgroup>
+	              </select>
+	           </div>
+	           <div class="actions2"  id ="change_size">
+	              <a class="save" id="save_size_change" data-translate="save_rec_size">Change Size</a>
+	           </div>
+	           <div class="actions3"  id ="show_more_conf">
+	              <a class="save" id="show_more_conf_button" data-translate="show_more_configuration">More Configuration </a>
+	           </div>
+	           <div id="more_conf">
+		           <div>
+		              <label for="rec-content-type" class="required" style="width: 210px; margin-left: -160px;">
+		                <span data-translate="regstep3_rec_content">Recpmmendation content type:</span>
+		              </label>
+		              <select class="gwt-ListBox" id="rec-content-type"  name="recommendation_size" style="width: 89%; ">
+		              	<option value="3">Product title &amp; image &amp; price</option>
+		              	<option value="2">Product title &amp; image</option>
+		              	<option value="1">Product title only</option>
+		              </select>
+		           </div>
+		           <div style="margin-top: 10px;">
+		              <label for="site" class="required" style="width: 210px; margin-left: -160px;">
+		                <span data-translate="regstep3_product_url">Sample product URL:</span>
+		              </label>
+		              <input type="text" name="site" id="site" value="" style="width: 88%; margin-left: -3px;height: 2em;"/>
+		           </div>
+		          
+		           <div class="actionsR" style="padding-top: 10px;">
+		              <a class="login" id="change_dom" data-translate="regstep3_finish_registration">Continue configuration</a>
+		           </div>
+		       </div>
+		     </div>
+	        </fieldset>
+	        <div class="according_infos s3_5">
+	          <h3 data-translate="regstep3_preview" style="border-radius: 5px;">Preview</h3>
+	          <div class="wrapper clearfix">
+	            <div id="recoPreview" style="display: none;"></div>
+	          </div>
+	        </div>
+	      </form>
+	    </section>
+     
+     </div>
+      <div id="tabs-4">
+     	 <div style="text-align: center;">
+     	 	<img alt="Extend recommender" src="images/ecommerce.png">
+     	 	<br/>
+	      	<p data-translate="upgrade_body">Here you find&nbsp;the latest&nbsp;information about our product offering, technical documentation and contracts.</p>
+	      	<br/><br/>
+	      	<table style="border: 1px solid #2b2725; width: 500px; border-spacing: 12px; padding:12px; margin:0 auto;" border="1"  >
+	      		<thead>
+	      			<tr style="background-color: #bbb9b4; height: 36px;">
+	      				<td style="text-align: left; padding-left: 30px;" valign="middle" scope="row"><span>Prduct Information</span></td>
+	      				<td style="text-align: center; width: 100px;" valign="middle" scope="row"><span>German</span></td>
+	      				<td style="text-align: center; width: 100px;" valign="middle" scope="row"><span>English</span></td>
+	      			</tr>
+	      		</thead>
+	      		<tbody>
+	      			<tr style="height: 36px;">
+	      				<td style="text-align: left; padding-left: 30px;" valign="middle" scope="row">Product Sheet (Online Publisher)</td>
+	      				<td style="text-align: center;" valign="middle" scope="row"><a href="http://yoochoose.com/index.download.88e9608d38d530625ec682c79ddc8cf8.pdf" title="Produktblatt (Online-Publisher)" class="internalLink">download</a></td>
+	      				<td style="text-align: center;" valign="middle" scope="row"><a href="http://yoochoose.com/index.download.d70ac30687f12c8ed11a312502d12afb.pdf" title="Product Sheet (Online Publisher)" class="internalLink">download</a></td>
+	      			</tr>
+	      			<tr style="height: 36px;">
+	      				<td style="text-align: left; padding-left: 30px;" valign="middle" scope="row">Product Sheet (Online Shops)</td>
+	      				<td style="text-align: center;" valign="middle" scope="row"><a href="http://yoochoose.com/index.download.13d576da8760fd12c0e4f083084d40b1.pdf" title="Productblatt (Online-Shops)" class="internalLink">download</a></td>
+	      				<td style="text-align: center;" valign="middle" scope="row"><a href="http://yoochoose.com/index.download.15ac2a6490c793bfaa9f95738b28b8ca.pdf" title="Product Sheet (Online Shops)" class="internalLink">download</a></td>
+	      			</tr>
+	      		</tbody>
+	      	</table>
+	      </div>
+      </div>
+    </div>
+    </section>
+	<footer>
+      Copyright &copy; 2009-<script>document.write(new Date().getFullYear());</script>
+	<noscript>2014</noscript> YOOCHOOSE GmbH
+      <ul class="clearfix">
+        <li><a  id="corporate" data-translate="login_corporate_information">Corporate information</a></li>
+        <li><a  id="privacy" data-translate="login_data_privacy">Data privacy</a></li>
+        <li><a  id="contact" data-translate="login_contact">Contact</a></li>
+      </ul>
+    </footer>
+    
+    <div class="overlay" id="messageOverlay">
+		<div class="dialog_body change_password" id="messageBodyOverlay" >
+			<a class="destroy_dialog">X</a>
+			<div class="clearfix">
+				 <ul>
+				   <li>
+				      	<p data-translate="rec_size_changed">The size changed successfully
+					   	</p>
+					   	<br/>
+			       </li>
+			       <li class="actions">
+			       		<a  class="close" id="destroyButtonOverlay">OK</a>
+			       </li>
+			    </ul>
+		       
+		    </div>
+		</div>
+	</div>
+    
+    
+    <div class="overlay" id="changeMandatorOverlay">
+      <div class="dialog_body change_mandant" id="changeMandatorBodyOverlay" >
+        
+        <a class="destroy_dialog">X</a>
+        
+        <h2 data-translate="index_switch_mandant">Switch mandant</h2>
+        
+        <div class="clearfix">
+            <label>
+              <select id="choose_mandant" name="choose_mandant">
+                <option value="" data-translate="index_select_a_mandator">- Select an mandator -</option>
+              </select>
+            </label>
+            <label><input type="checkbox" id="set_default" name="set_default" /><span data-translate="index_set_as_default"> Set as default</span></label>
+            <div class="actions">
+              <a id="saveMandatorChange" class="save" onclick="saveMandatorChoose();" data-translate="index_save_changes">Save changes</a>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <div class="overlay" style="background-color: rgba(63, 63, 63, 0.3);" id="editDataOverlay">
+		<div class="dialog_body change_password" id="editDataBodyOverlay" >
+			<a class="destroy_dialog" id="destroy_dialog" >X</a>
+			<div class="clearfix">
+				 <form class="normal_form clearfix" action="#" method="get">
+           			<ul>
+              			<li>
+	               			<label for="edit_email" class="required">
+	                 			<span data-translate="edit_contact_email">Email:</span>
+           					</label>
+           					<input type="text" name="edit_email" id="edit_email" value="" disabled="disabled" style="height: 2em;" />
+          				</li>
+			            
+              			<li>
+			                <label for="fname" class="required">
+				              <span data-translate="edit_contact_firstname">First name:</span>
+				            </label>
+				            <input type="text" name="fname" id="fname" placeholder="First name" autofocus="autofocus"  style="height: 2em;" />
+			            </li>
+			             <li class="new_password_confirm">
+			                <label for="lname" class="required">
+				              <span data-translate="edit_contact_lastname">Last name:</span>
+				            </label>
+				            <input type="text" name="lname" id="lname" placeholder="Last name"  style="height: 2em;" />
+			             </li>
+			             <li class="new_password_confirm">
+			                <label for="wurl" class="required">
+				              <span data-translate="regstep2_websiteurl">Website URL:</span>
+				            </label>
+				            <input type="text" name="wurl" id="wurl" placeholder="Website"  style="height: 2em;" />
+			             </li>
+			             <li class="validation_message" style="display:none">
+			                <p class="annotation" id="validation_message" data-translate="error_fill_required_fields">Fill all requeared fields</p>
+			             </li>
+			             <li class="actions">
+			                <a onclick="changeEditdata();" id="destroyButtonOverlay"  class="save_passwort_change save" data-translate="edit_contact_data_save_changes">Save changes</a>
+			             </li>
+            		</ul>
+        	  </form>
+			</div>
+		</div>
+	</div>
+    
+     <div class="overlay" style="background-color: rgba(63, 63, 63, 0.3);" id="messageContact">
+		<div class="dialog_body change_password" id="messageBodyContact" >
+			<a class="destroy_dialog">X</a>
+			<div class="clearfix">
+				<p>
+					<strong>YOOCHOOSE GmbH</strong><br/>
+					Bonner Str. 484<br/>
+					50968 Köln<br/>
+					Phone: +49 (221) - 367486 0<br/>
+					Fax: +49 (221) - 367486 22<br/>
+					<a href="mailto:info@yoochoose.com">info@yoochoose.com</a><br/>
+					<a href="http://www.yoochoose.com" target="_blank">www.yoochoose.com</a>
+				</p>
+				<p>
+					<strong data-translate="corporate_information_directors">Managing Directors:</strong><br/>
+					Dr. Uwe Alkemper &amp; Michael Friedmann
+				</p>
+				<p>
+					<strong data-translate="corporate_information_tax">Tax ID:</strong> DE264773520
+				</p>
+				<p data-translate="corporate_information_entry_paragraph">
+					<strong>Entry in the Commercial Register of Germany:</strong><br/>Cologne Local Court, HRB 65275
+				</p>
+		       
+		    </div>
+		</div>
+	</div>
+	
+	 <div  class="overlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);" id="messagePrivacy">
+			<div class="dialog_body change_password" id="messageBodyPrivacy">
+				<a class="destroy_dialog">X</a>
+				<section class="general_info clearfix">
+					
+						<h2 data-translate="data_privacy_title1" style="color: rgba(63, 63, 63, 1);">Data privacy</h2>
+						<p data-translate="data_privacy_paragraph1">
+							Based on visiting this website (yoochoose.net), information regarding access (date, time, page viewed) may be stored. This information is not person-related but anonymized and used for statistical evaluations only (see also paragraph on "Data Privacy - Google Analytics"). It is not released to any third party for commercial or non-commercial purposes.
+						</p>
+						<p data-translate="data_privacy_paragraph2">
+							The information you submitted via the <a href="contact.html">contact form</a> or via e-mail will be stored and used by YOOCHOOSE GmbH and the affiliated partner network (subcontractor) exclusively for quotes and order processing. The release to any third party outside of YOOCHOOSE GmbH for commercial or non-commercial purposes is strictly excluded. Any release of such information to any third party outside of YOOCHOOSE GmbH requires the express, personal consent of the rights holder in question.
+						</p>
+						<p data-translate="data_privacy_paragraph3">
+							YOOCHOOSE GmbH expressly points out that data transmission on the Internet (e.g. during communication via e-mail) may not be fully secure and cannot be protected completely from third-party access.
+						</p>
+						<p data-translate="data_privacy_paragraph4">
+							We expressly do not wish that the contact information on our website be used for commercial advertising, unless YOOCHOOSE GmbH has given prior written consent or a business relationship between the parties already exists. YOOCHOOSE GmbH and all individuals named on this website hereby object to any commercial use and transmission of their data.
+						</p>
+				
+					
+				</section>
+		    </div>
+	</div>
+	
+	 <div  class="overlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);" id="messageCorporate">
+			<div class="dialog_body change_password" style="height: 700px; width: 80%;" id="messageBodyCorporate">
+				<a class="destroy_dialog">X</a>
+				 <section class="general_info clearfix"style="max-height: 80%; margin-top: 30px;   overflow: hidden;">
+			<article class="s2_5">
+				<h2 data-translate="corporate_information_title" style="color: rgba(63, 63, 63, 1);">Corporate Information</h2>
+				<p>
+					<strong>YOOCHOOSE GmbH</strong><br/>
+					Bonner Str. 484<br/>
+					50968 Köln<br/>
+					Phone: +49 (221) - 367486 0<br/>
+					Fax: +49 (221) - 367486 22<br/>
+					<a href="mailto:info@yoochoose.com">info@yoochoose.com</a><br/>
+					<a href="http://www.yoochoose.com" target="_blank">www.yoochoose.com</a>
+				</p>
+				<p>
+					<strong data-translate="corporate_information_directors">Managing Directors:</strong><br/>
+					Dr. Uwe Alkemper &amp; Michael Friedmann
+				</p>
+				<p>
+					<strong data-translate="corporate_information_tax">Tax ID:</strong> DE264773520
+				</p>
+				<p data-translate="corporate_information_entry_paragraph">
+					<strong>Entry in the Commercial Register of Germany:</strong><br/>Cologne Local Court, HRB 65275
+				</p>
+			</article>
+			<article class="s3_5" style=" overflow-y: scroll;  max-height: 560px;">
+				<h3 data-translate="corporate_information_disclaimer">Disclaimer</h3>
+				<p data-translate="corporate_information_disclaimer_text">The content of this website was compiled with the utmost diligence. Nevertheless, YOOCHOOSE GmbH cannot guarantee that the information provided on this site is fully accurate, complete and up to date. Users may use this website at their own risk. All contributions containing the name of the author reflect the opinion of said author and not necessarily the opinion of YOOCHOOSE GmbH.<br/><br/>The mere usage of the website yoochoose.net does not constitute a contractual relationship between the user and YOOCHOOSE GmbH.
+				</p>
+				<h3 data-translate="corporate_information_external_links">External links</h3>
+				<p data-translate="corporate_information_external_links_text">
+					This website contains links to the websites of other parties ("external links"). These websites are subject to the liability of their operators. When originally creating the external links, YOOCHOOSE GmbH checked any outside content for potential legal violations. No legal violations were apparent at that point in time. YOOCHOOSE GmbH has no influence whatsoever on the current and future design or on the content of the linked websites.
+				<br/><br/>Setting external links does not mean that YOOCHOOSE GmbH appropriates the content behind the reference or link. YOOCHOOSE GmbH cannot be expected to continually monitor these external links without any specific indication regarding an existing legal violation. As soon as YOOCHOOSE GmbH learns of any legal violation, the affected external links will be deleted immediately. Such information can be reported to YOOCHOOSE GmbH via e-mail.
+				</p>
+				<h3 data-translate="corporate_information_copyrights">Copyrights and ancillary copyrights</h3>
+				<p data-translate="corporate_information_copyrights_text">
+					The content published on this website is subject to German law in terms of copyrights and ancillary copyrights. Each use that is not expressly permitted under the copyright laws and ancillary copyright laws of Germany requires the prior written consent of YOOCHOOSE GmbH or the holder of the copyright in question.<br/><br/>This applies in particular to the duplication, editing, translation, storage, processing or reproduction of content in databases or other electronic media and systems. The content and rights of any third party shall be labeled as such.<br/><br/><strong>In principle, the following shall apply:</strong><br/>The unauthorized duplication or transmission of individual content or complete web pages is not permitted and constitutes a punishable offense. Furthermore, the representation of this website in third-party frames is also subject to written authorization from YOOCHOOSE GmbH.
+				</p>
+				<h3 data-translate="corporate_information_third_party">Third-party copyrights</h3>
+				<p >
+					<span data-translate="corporate_information_third_party_text2">For copyright information pertaining to images, photographs and illustrations on our website, please go to</span>
+					<a id="copyrightsLink" data-translate="copyrightlink">Third-party copyrights.</a>
+				</p>
+			</article>
+		</section>
+		   
+		</div>
+	</div>
+	<div  class="overlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);" id="messageCopyrights">
+	
+			<div class="dialog_body change_password" id="messageBodyCopyrights" style=" width: 70%;">
+				<a class="destroy_dialog">X</a>
+				 <section class="general_info clearfix">
+					<article class="s2_5">
+						<h2 data-translate="copyright_header_left" style="color: rgba(63, 63, 63, 1);">Third-party copyrights</h2>
+						<p data-translate="copyright_text_left">
+							Please find below the copyright information for the photos, graphics and illustrations shown on our website. Among others, our sources included the stock photo portal
+							<a href="http://www.fotolia.com">Fotolia.com</a>
+						</p>
+					</article>
+					<article class="s3_5">
+						<h3 data-translate="copyright_header_right">The YOOCHOOSE website contains the following photos and illustrations:</h3>
+						<ul>
+							<li>Gordian knot by <a href="http://www.pixelwise.de" target="_blank">pixelwise.de</a></li>
+							<li>Businessman hand holding a pendulum ball by <a href="http://www.fotolia.com/id/10325814" target="_blank">Xavier Gallego Morell</a></li>
+							<li>3d network connections by <a href="http://www.fotolia.com/id/6836008" target="_blank">Dmitry Sunagatov</a></li>
+							<li>Circuit intégré von JNT Visual</li>
+							<li>Shopping girls by fotolia</li>
+							<li>Negativfilm by fotolia</li>
+							<li>Abacus by fotolia</li>
+							<li>Mixer by fotolia</li>
+							<li>Apples by fotolia</li>
+							<li>fiber by fotolia</li>
+							<li>Media park tower by Uwe Alkemper</li>
+							<li>Google Logo by <a href="http://www.google.de/stickers.html" target="_blank">Google-Offizielle Logos</a></li>
+						</ul>
+					</article>
+				</section>
+		    </div>
+		
+	</div>
+	
+	<div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text" data-translate=""></span>
+        <a class="close">OK</a>
+      </p>
+    </div>
+  </body>
+</html>
