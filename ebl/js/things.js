@@ -3,6 +3,7 @@
 
 var cachedScript = function(url) {
  	  options = {
+ 			crossDomain: true, // it adds script tag and allows to debug included file 
 		    dataType: "script",
 		    cache: true,
 		    url: url
