@@ -1,7 +1,7 @@
  var reference_code = gup('reference_code');
  var customerID = gup('customer_id');
  var outputtypes = gup('outputtypes');
-  var showdelete = false;
+ var showdelete = false;
   
   $(document).ready(function() {
 	  window.parent.$("#contentFrame").height( '100%');
@@ -49,6 +49,11 @@
 		  call_recs();
 
 	  });
+	  
+	  $('#addItem').click(function() {
+		  addItem();
+		  getCallId();
+	  });
 	  $('#user_id').val('someuser');
 	  getCallId($('#user_id').val());
 	  $('#user_id').change(function(){
@@ -65,10 +70,40 @@
   });
   
   
+ 
+  
+  function addItem(){
+	  var id = $('#itemId').val();
+	  if(! id.length) {
+		  showError('editorial_list_error_empty_id_field');
+		  return;
+	  }
+	  //test if the id contains just digits
+	  if(/\D/.test(id)) {
+		  //we have non digits in the field
+		  showError('editorial_list_error_invalid_id');
+		  return;
+	  }
+	  id = parseInt(id, 10);
+	  if(id > 2147483647 || id < 0) {
+		  showError('editorial_list_error_id_out_of_bounds');
+		  return;
+	  }
+	  
+	  var items = $('#context_items');
+	  if(items.val()!=null && items.val()!=''){
+		  items.val(items.val()+','+id); 
+	  }
+  }
+  
+  function showError(error){
+		
+  }
+  
   function getCallId(){
 		var url = getCallSrc().replace('jsonp','json');
 		$('#urlid').text(url);
-}
+  }
   
   function getCallSrc(){
 	  	var userId = $('#user_id').val();
@@ -88,8 +123,14 @@
 				recoHost = 'https://reco.yoochoose.net';
 			}
 		}
+		var scriptSrc = recoHost+'/ebh/'+customerID+'/'+userId+'/'+reference_code+'.jsonp';
+		var items = $('#context_items');
 		
-		var scriptSrc = recoHost+'/ebh/'+customerID+'/'+userId+'/'+reference_code+'.jsonp?contextitems=1&numrecs='+topn;
+		if(items.val()!=null && items.val()!=''){
+			scriptSrc += '?contextitems='+items.val()+'&numrecs='+topn; 
+		}else{
+			scriptSrc += '?numrecs='+topn; 
+		}
 		if(outputtype > 0){
 			scriptSrc += '&outputtype='+outputtype;
 		}
