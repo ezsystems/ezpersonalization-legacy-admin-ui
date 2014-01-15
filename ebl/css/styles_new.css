@@ -724,40 +724,40 @@ input[type="text"].inverted {
 /*Global dialog*/
 
 
-	.overlay .dialog_body {
-		padding: 40px;
-		margin: 5% auto 0 auto;
-		position: relative;
-	    background: white url("../img/rauschen.png") repeat left top;
-		box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
-		border: 1px solid #000000;
-		border-radius: 6px; 
-		-moz-border-radius: 6px;
-		-webkit-border-radius: 6px;
-	}
-
-	.overlay .dialog_body h2 {
-	    display: block;
-	    font-size: 24px;
-	    border-bottom: 1px solid rgba(216, 216, 216, 1);
-	    padding-bottom: 5px;
-	    margin: 0 0 10px 0;
-	}
+		.overlay .dialog_body {
+			padding: 40px;
+			margin: 5% auto 0 auto;
+			position: relative;
+		    background: white url("../img/rauschen.png") repeat left top;
+			box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+			border: 1px solid #000000;
+			border-radius: 6px; 
+			-moz-border-radius: 6px;
+			-webkit-border-radius: 6px;
+		}
 	
-	.overlay .dialog_body h3 {
-	  	display: block;
-		background: none;
-	  	color: inherit;
-	  	padding: 0;
-	  	position: inherit;
-	  	text-shadow: none;
-	  	font-size: 18px;
-	  	margin: 40px 0 20px;
-	}
-	
-	.overlay .dialog_body p {
-		margin-bottom: 10px;
-	}
+		.overlay .dialog_body h2 {
+		    display: block;
+		    font-size: 24px;
+		    border-bottom: 1px solid rgba(216, 216, 216, 1);
+		    padding-bottom: 5px;
+		    margin: 0 0 10px 0;
+		}
+		
+		.overlay .dialog_body h3 {
+		  	display: block;
+			background: none;
+		  	color: inherit;
+		  	padding: 0;
+		  	position: inherit;
+		  	text-shadow: none;
+		  	font-size: 18px;
+		  	margin: 40px 0 20px;
+		}
+		
+		.overlay .dialog_body p {
+			margin-bottom: 10px;
+		}
 		
 		
 		
@@ -956,7 +956,7 @@ h1 > a {
 	display: inline-block;
 	width: 175px;
 	height: 55px;
-	background: transparent url("../ebl2/img/YCLOGO.png") no-repeat left top;
+	background: transparent url("../img/YCLOGO.png") no-repeat left top;
 	margin: 0;
 }
 

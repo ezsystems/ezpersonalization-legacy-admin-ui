@@ -904,7 +904,7 @@ function loadScenarios(){
                     $(dummyClone).children("div").children("p.data").removeClass("unavailable").removeClass("ascending").removeClass("descending");
                     if (scenario.statisticItems.length < 1 || scenario.statisticItems.length > 2) {
                         //if the response have not correct data, the arrow gets an unavailable icon
-                        console.log("no correct number of items to show delivered recommendations");
+                        console.log("No correct number of items to show delivered recommendations");
                         $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
                         if (scenario.statisticItems.length == 0) {
                             $(dummyClone).children("div").children("p.data").children("span").children("strong").text("0");
@@ -942,10 +942,10 @@ function loadScenarios(){
                         $(dummyClone).children("div#scenario_" + j).addClass("partly_available");
                     }
                     if(j == 0){
-                    	console.log( $('.available_scenarios').children('li').length);
+//                    	console.log( $('.available_scenarios').children('li').length);
                     	$('.available_scenarios').empty();
                     	$('.available_scenarios').append(dummy);
-                    	console.log( $('.available_scenarios').children('li').length);
+//                    	console.log( $('.available_scenarios').children('li').length);
                     }
                   
                     $('.available_scenarios').append(dummyClone);
@@ -1577,8 +1577,8 @@ function showEmptyRecommendationChart() {
 }
 
 function updateCharts(labels, conversionValues, formatter) {
-	console.log('updating convRate chart');
-	console.log(conversionValues);
+//	console.log('updating convRate chart');
+//	console.log(conversionValues);
     RGraph.Clear(document.getElementById("conversion_rate"));
 
     rightLine = new RGraph.Line('conversion_rate', conversionValues);

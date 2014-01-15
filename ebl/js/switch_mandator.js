@@ -39,14 +39,14 @@ var initSwitchMandator = function() {
 	$('.switch > a').click(showSwitchMandatorPopup);
 	
 	var closeSwitchMandatorPopup = function(e) {
-	    if (!e || e.which == 27) {
+	    if (e.which == 1 || e.which == 27) { // left click or Esc
 	    	if ($('#switch_mandator_popup .destroy_dialog').is(':visible')) {
 	    		$('#switch_mandator_popup').hide();
 	    	}
 	    }
 	};
 	
-	$('#switch_mandator_popup destroy_dialog').on("click", closeSwitchMandatorPopup);
+	$('#switch_mandator_popup .destroy_dialog').on("click", closeSwitchMandatorPopup);
 	
 	$(document).bind('keydown', closeSwitchMandatorPopup);
 
@@ -65,7 +65,7 @@ var initSwitchMandator = function() {
 			
 			$('.available_view_options').children('li').removeClass('current');
 			$('.available_view_options').children('li').first().addClass('current');
-			console.log('triggering mandatorChanged');
+			
 			var event = new Event('mandatorChanged');
 			document.dispatchEvent(event);
 			
