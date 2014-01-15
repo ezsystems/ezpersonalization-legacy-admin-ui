@@ -111,6 +111,8 @@
 	  var items = $('#context_items');
 	  if(items.val()!=null && items.val()!=''){
 		  items.val(items.val()+','+id); 
+	  }else{
+		  items.val(id);  
 	  }
   }
   
