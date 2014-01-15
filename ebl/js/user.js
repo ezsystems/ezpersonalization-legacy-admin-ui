@@ -36,6 +36,7 @@ var logout = function() {
 
 ///////////////////////////////////////////////////////////// getCurrentUser
 
+
 var user = null;
 
 var getCurrentUser = function(callback) {
@@ -58,37 +59,20 @@ var getCurrentUser = function(callback) {
         },
         success: function (data) {
         	if (callback) {
-        		var user = _frontUser(data);
-        		callback(user);
+        		callback(data.loginInfo);
         	}
         },
         error: defaultErrorHandler
     });
     
     if ( ! callback) {
-    	var user = _frontUser(result.responseJSON);
-    	return user;
+    	return result.responseJSON.loginInfo;
     }
 };
 
 
-var _frontUser = function(backUser) {
-	user = {};
-	
-	user.firstName = "FirstName";
-	user.lastName = "FirstName";
-	user.email = "email@domain.com";
-	
-	user.name = data.loginInfo.name;
-	user.provider = data.loginInfo.provider;
-	user.root = data.loginInfo.root;
-	
-	return user;
-};
-
 
 ///////////////////////////////////////////////////////////// getAccesibleMandators
-
 
 
 

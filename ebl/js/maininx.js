@@ -5,11 +5,31 @@ var customerID = $.cookie('customerID');
 	
 $(document).ready(function () {
 	
-	include(["/js/switch_mandator.js"], function() {
-		
 	
-	    var loginName = $.cookie('email');
-		$('.account_data').children('li').first().find('strong').text(loginName);
+	
+	include(["/js/switch_mandator.js", "/js/user.js"], function() {
+		
+		getCurrentUser(function(loginInfo) {
+			
+			var name = "";
+			if (loginInfo.firstName) name += loginInfo.firstName;
+			if (loginInfo.lastName && name) name += " ";
+			if (loginInfo.lastName) name += loginInfo.lastName;
+			
+			if ( ! name) {
+				name += loginInfo.id;
+			}
+			
+			$('.account_data').children('li').first().find('strong').text(name);
+			
+		    if (loginInfo.provider == "ibs") {
+		    	$('#edit_contact_datal').attr('href', "api/v4/registration/selfcare");
+		    } else {
+		    	$('#edit_contact_datal').off('click').click(function() {
+		    		$('#editDataOverlay').show();
+		    	});
+		    }
+		});
 		
 		setLoadingDiv($('section.mandant > header'));
 		setLoadingDiv($('.available_scenarios'));
@@ -698,14 +718,6 @@ function initialLoadData() {
     	console.log("should close corporate2");
     	$('#messageCopyrights').show();
     });
-    
-    $('#edit_contact_datal').off('click').click(function() {
-    	$('#editDataOverlay').show();
-    }); 
-    
-    
-   
-    
     
 
 	var yesterday = new Date(Date.now() - 24*3600000);
