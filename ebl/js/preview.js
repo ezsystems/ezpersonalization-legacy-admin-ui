@@ -114,6 +114,7 @@
 	  }else{
 		  items.val(id);  
 	  }
+	  $('#itemId').val('');
   }
   
   function showError(error){
