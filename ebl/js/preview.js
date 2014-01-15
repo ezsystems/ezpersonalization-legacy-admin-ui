@@ -7,6 +7,7 @@
 	  window.parent.$("#contentFrame").height( '100%');
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
 	  $('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
+	 
 
 	  var outputArray = outputtypes.split(',');
 	  $('#output_type').children('option').each(function(index){
@@ -66,6 +67,23 @@
 		  getCallId();
 	  });
 	  initHelpBtn();
+	  
+	  $.ajax({
+		  dataType: "json",
+		  beforeSend: function(req) {
+			  req.setRequestHeader('no-realm', 'realm1');
+		  },
+		  url: "ebl/v3/" + customerID + "/structure/get_scenario/" + reference_code,
+		  success: function(json) {
+			  if(json.scenario.title == null || json.scenario.title == "") {
+				  $("#scenario_title").attr('placeholder',reference_code);
+				 
+			  }
+			  else {
+				 $("#scenario_title").attr('placeholder',json.scenario.title);
+			  }
+		  }
+		  });
 	 
   });
   
@@ -89,7 +107,7 @@
 		  showError('editorial_list_error_id_out_of_bounds');
 		  return;
 	  }
-	  
+	  $('.validation_message').hide();
 	  var items = $('#context_items');
 	  if(items.val()!=null && items.val()!=''){
 		  items.val(items.val()+','+id); 
@@ -97,7 +115,9 @@
   }
   
   function showError(error){
-		
+	  $('.annotation').attr('data-translate', error);
+	  $('.validation_message').show();
+	  localizer();
   }
   
   function getCallId(){
