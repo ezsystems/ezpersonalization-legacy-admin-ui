@@ -531,7 +531,7 @@
 						
 					if(json.scenario.outputItemTypes.length > 0)
 					{
-						$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString());
+						$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString()+"&inputtype="+json.scenario.inputItemType);
 						for(var i = 0; i < json.scenario.outputItemTypes.length; i++)
 						{
 							if(json.scenario.outputItemTypes[i] == $(this).val())
@@ -770,7 +770,7 @@
 						addScenarioToParent();
 					}
 					
-					$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString());
+					$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString()+"&inputtype="+json.scenario.inputItemType);
 					updatese = true;
 					saveFiltersForm();
 				},

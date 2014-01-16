@@ -1,6 +1,8 @@
  var reference_code = gup('reference_code');
  var customerID = gup('customer_id');
  var outputtypes = gup('outputtypes');
+ var inputtype = gup('inputtype');
+ 
  var showdelete = false;
   
   $(document).ready(function() {
@@ -88,6 +90,24 @@
   });
   
   
+  /**
+   * retrieves a item from server with given Id
+   * @param id
+   * @returns {*}
+   */
+  function getItem(type, id) {
+	  $.ajax({
+		  dataType: "json",
+		  beforeSend: function(req) {
+			  req.setRequestHeader('no-realm', 'realm1');
+		  },
+		  async: false, 
+		  url: "ebl/v3/" + customerID + "/elist/get_single_item/" + type + '/' + id,
+		  success: function(json) {
+			 return json.title;
+		  }
+	 });
+  };
  
   
   function addItem(){
@@ -193,6 +213,32 @@
 	}
   
 function jsonpCallback(json){
+	showJson(json);
+	showWithTitles(json);
+	
+}
+
+function showWithTitles(json){
+	var titles = false;
+	var list = json.recommendationResponseList;
+	var it = inputtype;
+	if(it == null || it == ''){
+		it = 1;
+	}
+	for(var i in list){
+		var id = list[i].itemId;
+		var title = getItem(it, id);
+		if(title !=null){
+			titles = true;
+			list[i].title = title;
+		}
+	}
+	if(titles){
+		showJson(json);
+	}
+}
+
+function showJson(json){
 	var strjs = JSON.stringify(json,null,'&nbsp;');
 	strjs = strjs.replace(/,/g , ",<br/>");
 	strjs = strjs.replace(/}/g , "<br/>}");
@@ -203,8 +249,9 @@ function jsonpCallback(json){
 	$("#prettyprint").html(strjs);
 	$("#prettyprint").removeClass("prettyprinted"); 
 	prettyPrint();
-	
 }
+
+
 function cancelScenario() {
 	  window.parent.$("#settingsP").hide();
 	  window.parent.$('#cover').hide();
