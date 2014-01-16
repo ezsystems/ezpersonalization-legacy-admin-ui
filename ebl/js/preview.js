@@ -102,7 +102,7 @@
 			  req.setRequestHeader('no-realm', 'realm1');
 		  },
 		  async: false, 
-		  url: "ebl/v3/" + customerID + "/elist/get_single_item/" + type + '/' + id,
+		  url: "ebl/v4/" + customerID + "/elist/get_single_item/" + type + '/' + id,
 		  success: function(json) {
 			 return json.title;
 		  }
