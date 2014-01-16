@@ -394,7 +394,7 @@ function deleteScenario() {
 					  }
 				  }
 			  }
-			  $('.preview_tab').find('a').attr("href", $('.preview_tab').find('a').attr("href")+"&outputtypes="+previewTypes);
+			  $('.preview_tab').find('a').attr("href", $('.preview_tab').find('a').attr("href")+"&outputtypes="+previewTypes+"&inputtype="+json.scenario.inputItemType);
 			  //set the colors of the models on the left side
 
 			  for(var l = 0; l < modelRefList.modelRefArray.length; l ++) {
