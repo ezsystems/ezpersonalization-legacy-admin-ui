@@ -138,7 +138,7 @@
   }
   
   function showError(error){
-	  $('.annotation').attr('data-translate', error);
+	  $('.error').attr('data-translate', error);
 	  $('.validation_message').show();
 	  localizer();
   }
