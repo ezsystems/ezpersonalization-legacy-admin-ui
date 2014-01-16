@@ -61,8 +61,9 @@ $(document).ready(function () {
 				currentMandator = mandatorList[0];
 				$('#choose_mandant').append('<option value="' + currentMandator.name + '">' + currentMandator.name + ': ' + currentMandator.website + '</option>');
 			}
-			
-			$.cookie('customerID', currentMandator.name, { expires: 365 });
+			if(currentMandator !=null ){
+				$.cookie('customerID', currentMandator.name, { expires: 365 });
+			}
 	
 			if (currentMandator == null) {
 				if(mandatorList.length == 0) {
