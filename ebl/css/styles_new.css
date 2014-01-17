@@ -1,0 +1,3065 @@
+﻿/*Fixes*/
+
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+} 
+.clearfix {
+  zoom: 1;
+}
+.hide {
+  text-indent: -1000em;
+  overflow: hidden;
+}
+
+
+div.loading {
+	background-color: rgba(63, 63, 63, 0.05);
+}
+
+/*Fixes end*/
+
+/*------------*/
+
+/*Globals*/
+
+/*  colors used:
+    dark grey:            rgba(  63,  63,  63, 1)
+    middle dark grey:     rgba( 127, 127, 127, 1)
+    middle light grey:    rgba( 165, 165, 165, 1)
+    light grey:           rgba( 216, 216, 216, 1)
+    link blue:            rgba(  35, 119, 160, 1)
+    link intensive blue:  rgba(  13, 189, 254, 1)
+    link light blue:      rgba( 171, 220, 245, 1)
+    sand grey:            rgba( 238, 236, 225, 1)
+    matt red:             rgba( 192,  80,  77, 1)
+    desatured red:        rgba( 217, 150, 148, 1)
+    light green:          rgba( 218, 236, 213, 1)
+    intensive green:      rgba( 149, 231, 127, 1)
+    light yellow:         rgba( 254, 254, 207, 1)
+    intensive yellow:     rgba( 255, 255,  84, 1)
+*/
+
+strong {
+  font-weight: bold;
+}
+
+body {
+  font-family: 'Istok Web', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  min-width: 960px;
+  color: rgba(63, 63, 63, 1);
+  background: white url("../img/rauschen.png") repeat left top;
+}
+
+/*Globals: links and buttons*/
+
+a,
+a:visited {
+  color: rgba(35, 119, 160, 1);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: all 0.2s linear; 
+}
+
+a:hover,
+a:focus {
+  color: black;
+}
+
+.styled {
+	right: 5px;
+	position: absolute;
+	width: 27px;
+	top: 8px;
+	 height: 30px; 
+	/* overflow: hidden; */
+	float: right;
+	text-decoration: none;
+	background-color: rgba(63, 63, 63, 1);
+	background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(63, 63, 63, 1)));
+	background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+	border: 1px solid rgba(6, 9, 4, 1);
+	border-radius: 5px;
+	font-weight: bold;
+	text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
+	transition: all 0.2s linear;
+}
+
+.styled a {
+	text-decoration: none;  /* Remove the underline from the links. */
+}
+
+.styled ul {
+	list-style-type: none;  /* Remove the bullets from the list */
+}
+
+.styled  .top {
+ /*  background-color: #DDD;  The button background */
+  width: 2em;
+  text-align: center;
+  min-height: 30px;
+}
+
+.styled  ul li.item {
+	float:right;
+    padding-right: 5px;
+    margin-right: -5px;    
+    border: 1px solid black;
+    min-width: 12em;
+    text-decoration: none;
+	background-color: rgba(63, 63, 63, 1);
+	background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(63, 63, 63, 1)));
+	background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+	border: 1px solid rgba(6, 9, 4, 1);
+	border-radius: 5px;
+	font-weight: bold;
+	text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
+	transition: all 0.2s linear;
+    display: none;  /* By default, do not display the items (which contains the links) */
+ }  
+
+
+#atoparrow{
+	padding: 0;
+	width: 100%;
+	text-decoration: none;
+	margin: 0;
+	display: inline-block;
+	position: relative;
+	right: 0;
+	top: 0;
+	margin-top: -1px;
+	margin-left: -1px;
+}
+
+a.button {
+	display: block;
+	line-height: 30px;
+	margin: -5px 0;
+	color: rgba(146, 202, 255, 1);
+	padding: 0 15px;
+	text-decoration: none;
+	background-color: rgba(63, 63, 63, 1);
+	background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(63, 63, 63, 1)));
+	background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+	border: 1px solid rgba(6, 9, 4, 1);
+	border-radius: 5px;
+	font-weight: bold;
+	text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
+	transition: all 0.2s linear;
+	transition: all linear 0.2s;
+}
+
+
+a.button.inline {
+	display: inline-block;
+}
+
+
+a.button:hover, a.button:focus {
+	background-image: -moz-linear-gradient(top, rgba( 127, 127, 127, 1), rgba(63, 63, 63, 1));
+	background-image: -webkit-gradient(linear, center top, center bottom, from(rgba( 127, 127, 127, 1)), to(rgba(63, 63, 63, 1)));
+	background-image: -o-linear-gradient(top, rgba( 127, 127, 127, 1), rgba(63, 63, 63, 1));
+	color: rgba(13, 189, 254, 1);
+}
+
+
+a.button:active {
+	background-image: none;
+	background-color: rgba(63, 63, 63, 1);
+	color: white;
+}
+
+
+a.button.inactive, a.button.inactive:hover {
+	color: rgba(200,200,200,1);
+	background-color: rgba(170, 170, 170, 1);
+	background-image: none;
+	cursor: default;
+}
+
+
+a.button.with_icon:before {
+  content:"";
+  width: 16px;
+  height: 16px;
+  background: transparent url("../img/yoosprite.png") no-repeat 50px 50px;
+  vertical-align: text-top;
+  margin: 2px 4px 0 0;
+}
+
+
+a.button.with_icon.create_new:before {
+  background: transparent url("../img/yoosprite.png") no-repeat -204px -22px;
+}
+
+
+a.button.with_icon.save_state:before {
+  background: transparent url("../img/yoosprite.png") no-repeat -140px -22px;
+}
+
+
+a.button.important {
+  background-color: rgba( 192,  80,  77, 1);
+  background-image: -moz-linear-gradient(top, rgba( 217, 150, 148, 1), rgba( 192,  80,  77, 1));
+  background-image: -webkit-gradient(linear, center top, center bottom, from(rgba( 217, 150, 148, 1)), to(rgba( 192,  80,  77, 1)));
+  background-image: -o-linear-gradient(top, rgba( 217, 150, 148, 1), rgba( 192,  80,  77, 1));
+  color: rgba(255, 232, 230, 1);
+}
+
+
+a.button.important:hover,
+a.button.important:focus {
+  background-color: rgba(219, 7, 2, 1);
+  background-image: -moz-linear-gradient(top, rgba( 217, 150, 148, 1), rgba(219, 7, 2, 1));
+  background-image: -webkit-gradient(linear, center top, center bottom, from(rgba( 217, 150, 148, 1)), to(rgba(219, 7, 2, 1)));
+  background-image: -o-linear-gradient(top, rgba( 217, 150, 148, 1), rgba(219, 7, 2, 1));
+  color: white;
+}
+
+
+a.pdf:before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin: 0 5px -3px 0;
+  background: transparent url("../img/yoosprite.png") no-repeat -156px -38px;
+}
+
+a.excel:before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin: 0 5px -3px 0;
+  background: transparent url("../img/yoosprite.png") no-repeat -172px -38px;
+}
+
+a.create_new:before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0 5px -3px 0;
+    background: transparent url("../img/yoosprite.png") no-repeat -204px -22px;
+}
+
+.destroy_placed_model,
+.destroy_custom_filter,
+.destroy_group,
+.destroy_dialog,
+.destroy_message {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 2px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 12px;
+  color: rgba(6, 9, 4, 1);
+  line-height: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+.destroy_placed_model:hover,
+.destroy_custom_filter:hover,
+.destroy_group:hover,
+.destroy_dialog:hover,
+.destroy_message:hover {
+  color: red;
+}
+
+/*Globals: links and buttons end*/
+
+::-webkit-input-placeholder {
+  color: rgba(140, 150, 138, 0.5);
+  font-weight: normal;
+  font-size: 85%;
+}
+:-moz-placeholder {
+  color: rgba(140, 150, 138, 0.5);
+  font-weight: normal;
+  font-size: 85%;
+}
+
+/*Globals Headers and their content */
+
+section > header {
+  display: block;
+  background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+  color: rgba( 216, 216, 216, 1);
+  padding: 14px 0 15px 0;
+  position: relative;
+  border-radius: 5px;
+}
+
+section > header strong,
+section > header h3 {
+  color: white;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
+}
+
+section > header h3 {
+  padding-left: 10px;
+}
+
+/*ab Test related*/
+section > header h3.tab {
+    padding: 15px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/*ab Test related*/
+section > header h3.tab.active {
+    padding: 15px;
+    display: inline-block;
+    cursor: default;
+}
+/*ab Test related*/
+
+section > header > .controls{
+    position: absolute;
+    height: 100%;
+    right: 0;
+    top: 0;
+}
+
+section > header a:not(.button),
+section > header a:not(.button):visited,
+a.inverted,
+a.inverted:visited {
+  color: rgba(171, 220, 245, 1);
+}
+
+section > header a:not(.button):hover,
+section > header a:not(.button):focus,
+a.inverted:hover,
+a.inverted:focus {
+  color: rgba(13, 189, 254, 1);
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
+}
+
+section > header a.button {
+	position: absolute;
+	right: 10px;
+	top: 13px;
+}
+
+section > header .header_title_basis {
+	display: block;
+	text-align: right;
+	padding-right: 10px;
+}
+
+section > header .header_title_values {
+	display: block;
+	text-align: left;
+	padding: 0 0 0 10px;
+}
+
+section > header .header_title_values.text_field {
+	padding: 0 0 0 20px;
+}
+
+section > header .header_title_values > input[type="text"] {
+	width: 100%;
+	padding: 0 8px 0 10px;
+	margin: -5px -10px;
+	border: 0;
+	line-height: 30px;
+	font-size: 14px;
+}
+
+section.scenario > header h3 {
+    float: left;
+}
+
+h3 {
+  font-weight: bold;
+}
+
+/*Globals Headers and their content end*/
+
+/*Globals sizes*/
+
+.s1_5,
+.s2_5,
+.s3_5,
+.s4_5,
+.s1_3,
+.s2_3,
+.s1_4,
+.s2_4,
+.s3_4 {
+  display: block;
+  float: left;
+  position: relative;
+}
+
+.s1_5 {
+  width: 20%;
+}
+
+.s2_5 {
+  width: 40%;
+}
+
+.s3_5 {
+  width: 60%;
+}
+
+.s4_5 {
+  width: 80%;
+}
+
+.s1_3 {
+  width: 33%;
+}
+
+.s2_3 {
+  width: 66%;
+}
+
+.s1_4 {
+  width: 25%;
+}
+
+.s2_4 {
+  width: 50%;
+}
+
+.s3_4 {
+  width: 75%;
+}
+
+/*Globals sizes end*/
+
+/*Globals form elements*/
+
+input[type="text"],
+input[type="password"] {
+  border: 1px solid rgba( 165, 165, 165, 1);
+  font-family: 'Istok Web', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0 3px;
+  height: 2em;
+}
+
+input[type="text"].inverted {
+  border: 0;
+}
+
+.options_menu > li {
+  display: block;
+  float: left;
+  margin-right: 2px;
+  min-width: 90px;
+}
+
+.options_menu > li:last-child {
+  margin-right: 0;
+}
+
+.options_menu > li > label > input {
+  display: none;
+}
+
+.options_menu > li > label {
+  display: block;
+  padding: 1px 9px 0 9px;
+  border: 1px solid rgba( 238, 236, 225, 1);
+  background-color: white;
+  text-align: center;
+  color: rgba(63, 63, 63, 1);
+  cursor: pointer;
+  line-height: 27px;
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  -ms-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+  text-decoration: underline;
+}
+
+.options_menu > li > label > .info {
+  display: none;
+}
+
+.options_menu > li > label:hover,
+.options_menu > li > label:focus {
+  background-color: rgba( 238, 236, 225, 1);
+  border-color: rgba( 216, 216, 216, 1);
+  color: black;
+}
+
+/*.options_menu > li > label:active {
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+}*/
+
+.options_menu > li.current > label,
+.options_menu > li.current > label:hover,
+.options_menu > li.current > label.focus {
+  background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+  border-color: rgba(63, 63, 63, 1);
+  color: white;
+  cursor: default;
+  text-decoration: none;
+}
+
+.options_menu > li.current > label > .info {
+  display: inline-block;
+  margin-left: 5px;
+  color: rgba( 216, 216, 216, 1);
+}
+
+.options_menu > li.current > label:active {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.options_menu > li:first-child > label {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.options_menu > li:last-child > label, .options_menu > li.last-child > label {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.normal_form label {
+  display: inline-block;
+  text-align: right;
+  line-height: 30px;
+  vertical-align: baseline;
+}
+
+.normal_form label > span {
+  padding-right: 10px;
+}
+
+.normal_form label.required span:after {
+  content: "*";
+  color: rgba(165, 165, 165, 1);
+  display: inline-block;
+  margin-left: 2px;
+}
+
+.normal_form input {
+  display: inline-block;
+  font-size: 14px;
+  margin-left: 9px;
+  border: 1px solid rgba(127, 127, 127, 1);
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  -ms-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+}
+
+.normal_form input[type="text"],
+.normal_form input[type="password"] {
+  line-height: 28px;
+}
+
+.normal_form select {
+  display: inline-block;
+  font-size: 14px;
+  border: 1px solid rgba(127, 127, 127, 1);
+  padding: 5px 0;
+}
+
+.normal_form input:focus {
+  outline: 0;
+  box-shadow: 0 0 8px rgba(13, 189, 254, 1);
+}
+
+.normal_form .problem input {
+  box-shadow: 0 0 8px rgba(192, 80, 77, 1);
+}
+
+.normal_form .problem label span,
+.normal_form .problem label span:after {
+  color: rgba(192, 80, 77, 1);
+}
+
+.normal_form input[disabled=disabled] {
+  opacity: 0.5;
+  font-style: italic;
+}
+
+/*Globals form elements end*/
+
+/*Global loaders */
+
+.loader_wrapper {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.loader_wrapper.w_30 {
+  width: 30px;
+  height: 30px;
+}
+
+.loader_wrapper.w_30 > img {
+  width: 30px;
+  height: 30px;
+  margin: -30px 0 0 -30px;
+}
+
+/*Global loaders end */
+
+/*Global dialog*/
+
+
+.overlay .dialog_body {
+	padding: 40px;
+	margin: 5% auto 0 auto;
+	position: relative;
+    background: white url("../img/rauschen.png") repeat left top;
+	box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+	border: 1px solid #000000;
+	border-radius: 6px; 
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+
+.overlay .dialog_body h2 {
+    display: block;
+    font-size: 24px;
+    border-bottom: 1px solid rgba(216, 216, 216, 1);
+    padding-bottom: 5px;
+    margin: 0 0 10px 0;
+}
+
+.overlay .dialog_body h3 {
+  	display: block;
+	background: none;
+  	color: inherit;
+  	padding: 0;
+  	position: inherit;
+  	text-shadow: none;
+  	font-size: 18px;
+  	margin: 40px 0 20px;
+}
+
+.overlay .dialog_body p {
+	margin-bottom: 10px;
+}
+		
+		
+		
+
+.overlay, ._overlay {
+  display: none;
+  background-color: rgba(63, 63, 63, 0.3);
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
+  min-height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+}
+
+._dialog_body {
+  display: none;
+  width: 80%;
+  margin: 60px auto 0 auto;
+  text-align: left;
+  position: relative;
+  background: white url("../img/rauschen.png") repeat left top;
+  box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+  border: 1px solid #000000;
+  border-radius: 6px; 
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+}
+
+
+._dialog_body {
+	display: block;
+/* 	padding: 20px; */
+}
+._dialog_body .content{
+	padding: 20px;
+	max-height: 500px;
+	overflow: auto;
+}
+
+._dialog_body > h2 {
+  display: block;
+  font-size: 24px;
+  border-bottom: 1px solid rgba(216, 216, 216, 1);
+  padding-bottom: 5px;
+  margin: 20px 20px 0 20px;
+}
+
+.dialog_body h3{
+  display: block;
+  background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+  color: rgba( 216, 216, 216, 1);
+  padding: 5px 10px 5px 10px;
+  position: relative;
+  font-size: 14px;
+  color: white;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
+}
+
+.dialog_body > .destroy_dialog, ._dialog_body > .destroy_dialog {
+  display: block;
+  position: absolute;
+  right: 7px;
+  top: 10px;
+  font-size: 18px;
+}
+
+/*Global dialog end*/
+
+/*Global tooltips*/
+
+/*.tooltip_trigger,
+.tooltip_trigger:hover {
+  cursor: help;
+}*/
+
+.tooltip {
+  display: none;
+}
+
+/*Global tooltips end*/
+
+/*Global messages*/
+
+.message {
+  display: block;
+  width: 50%;
+  position: absolute;
+  z-index: 1000;
+  left: 25%;
+  top: 40%;
+  text-decoration: none;
+  color: rgba(70, 78, 66, 1);
+  background-color: transparent;
+  border: 10px solid rgba(0, 0, 0, 0.5);
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.message.registration{
+  text-align: center;
+  border-width: 1px;
+  -moz-border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border-radius: 10px 10px 10px 10px;
+  z-index: 3000;
+}
+
+.message.registration > p {
+  background-color: rgba( 218, 236, 213, 1);
+  -moz-border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border-radius: 10px 10px 10px 10px;
+}
+
+.message.positive,
+.message.neutral {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: auto;
+  top: auto;
+  border-width: 1px;
+  border-bottom: none;
+  border-right: none;
+  -moz-border-radius: 10px 0 0 0;
+  -webkit-border-radius: 10px 0 0 0;
+  border-radius: 10px 0 0 0;
+  width: auto;
+  max-width: 25%;
+}
+
+.message.positive > p a.close,
+.message.neutral > p > a.close {
+  display: none;
+}
+
+.message > p {
+  display: block;
+  padding: 20px;
+}
+
+.message.positive > p,
+.message.neutral > p {
+  -moz-border-radius: 10px 0 0 0;
+  -webkit-border-radius: 10px 0 0 0;
+  border-radius: 10px 0 0 0;
+}
+
+.message.neutral > p {
+  background-color: rgba(238, 236, 225, 1);
+}
+
+.message.problem,
+.message.info {
+  text-align: center;
+}
+
+.message.problem > p {
+  background-color: rgba( 192,  80,  77, 1);
+  color: white;
+}
+
+.message.problem > p > span, .message.info > p > span {
+  display: block;
+  padding-bottom: 10px;
+}
+
+.message.positive > p, .message.info > p {
+  background-color: rgba( 218, 236, 213, 1);
+}
+
+/*Global messages end*/
+
+/*Globals end*/
+
+.top_head {
+  display: block;
+  position: relative;
+  padding: 0 20px;
+  margin-bottom: 9px;
+  min-height: 103px;
+}
+
+.logo_area {
+  text-align: center;
+}
+
+h1,
+h1 > a {
+	display: inline-block;
+	width: 175px;
+	height: 55px;
+	background: transparent url("../img/YCLOGO.png") no-repeat left top;
+	margin: 0;
+}
+
+h1 {
+  margin-top: 25px;
+}
+
+h1 > a {
+  background: none;
+}
+
+.top_bar {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 6px;
+  width: 100%;
+  background-color: rgba( 238, 236, 225, 1);
+  border-bottom: 1px solid rgba( 127, 127, 127, 1);
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.top_bar > ul,
+.top_bar > a.logout {
+  display: block;
+  background-color: rgba( 238, 236, 225, 1);
+  border: 1px solid rgba( 127, 127, 127, 1);
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  -moz-border-radius: 0px 0px 5px 5px;
+  -webkit-border-radius: 0px 0px 5px 5px;
+  border-radius: 0px 0px 5px 5px;
+  border-top: none;
+  position: absolute;
+  top: 6px;
+}
+
+.language_selection {
+  padding: 3px 10px 6px 10px;
+  left: 20%;
+  margin-left: 21px;
+}
+
+.language_selection > li,
+.language_selection > li a,
+.language_selection > li span {
+  display: block;
+  float: left;
+  width: 16px;
+  height: 11px;
+}
+
+.language_selection > li {
+  margin-left: 10px;
+}
+
+.language_selection > li:first-child {
+  margin-left: 0;
+}
+
+.language_selection > li.de span {
+  background: transparent url("../img/yoosprite.png") no-repeat -124px 0px;
+}
+.language_selection > li.de.current span {
+  background: transparent url("../img/yoosprite.png") no-repeat -124px -11px;
+}
+
+.language_selection > li.en span {
+  background: transparent url("../img/yoosprite.png") no-repeat -140px 0px;
+}
+.language_selection > li.en.current span {
+  background: transparent url("../img/yoosprite.png") no-repeat -140px -11px;
+}
+
+.language_selection > li.fr span {
+  background: transparent url("../img/yoosprite.png") no-repeat -156px 0px;
+}
+.language_selection > li.fr.current span {
+  background: transparent url("../img/yoosprite.png") no-repeat -156px -11px;
+}
+
+.language_selection > li a:hover {
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.75);
+}
+
+.top_bar > a.logout {
+  right: 0;
+  margin-right: 20px;
+  padding: 0 10px;
+}
+
+.top_bar > a.logout:hover,
+.top_bar > a.logout:focus {
+  color: rgba(192, 80, 77, 1);
+}
+
+.main_navi {
+  display: block;
+  margin-top: 83px;
+  margin-left: -2px;
+}
+
+.main_navi li {
+  display: block;
+  float: left;
+  font-size: 24px;
+  border-left: 1px solid rgba(140, 150, 138, 1);
+  padding: 0 20px;
+}
+
+.main_navi > li:first-child {
+  border-left: 0;
+  padding-left: 10px;
+}
+
+.wizard_navi_wrapper {
+	min-height: 103px;
+}
+
+.wizard_navi_wrapper > h2,
+.wizard_navi_wrapper > .wizard_steps {
+	display: inline-block;
+}
+
+.wizard_navi_wrapper > h2 {
+	font-size: 18px;
+	position: absolute;
+	left: 10px;
+	top: 45px;
+}
+
+.wizard_steps {
+	width: 100%;
+	position: absolute;
+	bottom: -9px;
+	left: 10px;
+}
+
+.wizard_steps > li {
+	display: block;
+	float: left;
+	width: 25%;
+}
+
+.wizard_steps > li > a,
+.wizard_steps > li > span {
+	display: block;
+	line-height: 29px;
+	text-align: left;
+	padding: 4px 10px 0 10px;
+}
+
+.wizard_steps > li > a {
+	cursor: pointer;
+	-webkit-transition: all linear 0.2s;
+	-moz-transition: all linear 0.2s;
+	-ms-transition: all linear 0.2s;
+	-o-transition: all linear 0.2s;
+	transition: all linear 0.2s;
+	text-decoration: none;
+	line-height: 27px;
+	border: 1px solid rgba(140, 150, 138, 0.33);
+}
+
+.wizard_steps > li > a > span {
+	text-decoration: underline;
+}
+
+.wizard_steps > li:not(.no_link) > a:hover,
+.wizard_steps > li:not(.no_link) > a:focus {
+  background-color: rgba( 238, 236, 225, 1);
+}
+
+.wizard_steps > li.no_link{
+  opacity: 0.33;
+}
+
+.wizard_steps > li > span {
+	background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+	color: rgba(216, 216, 216, 1);
+}
+
+.wizard_steps > li:first-child > a,
+.wizard_steps > li:first-child > span {
+	-moz-border-radius: 5px 0 0 0;
+	-webkit-border-radius: 5px 0 0 0;
+	border-radius: 5px 0 0 0;
+	border-right: 0;
+}
+
+.wizard_steps > li:last-child > a,
+.wizard_steps > li:last-child > span {
+	-moz-border-radius: 0 5px 0 0;
+	-webkit-border-radius: 0 5px 0 0;
+	border-radius: 0 5px 0 0;
+	border-left: 0;
+}
+
+.wizard_steps > li > a:before,
+.wizard_steps > li > span:before {
+	content: "";
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	margin-top: 5px;
+}
+
+.wizard_steps > li.settings_tab > a:before,
+.wizard_steps > li.settings_tab > span:before {
+	background: transparent url("../img/yoosprite.png") no-repeat -156px -22px;
+}
+
+.wizard_steps > li.configurator_tab > a:before,
+.wizard_steps > li.configurator_tab > span:before {
+	background: transparent url("../img/yoosprite.png") no-repeat -172px -22px;
+}
+
+.wizard_steps > li.filters_tab > a:before,
+.wizard_steps > li.filters_tab > span:before {
+	background: transparent url("../img/yoosprite.png") no-repeat -188px -22px;
+}
+
+.account_data > li:first-child {
+  margin-top: 26px;
+}
+
+.account_data > li.current:before {
+  content: ">";
+  font-size: 10px;
+  display: inline-block;
+  margin-left: -11px;
+  margin-right: 5px;
+  vertical-align: text-top;
+  color: rgba(165, 165, 165, 1);
+}
+
+.mandant {
+  display: block;
+  margin-bottom: 25px;
+}
+
+.mandant > header .switch {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.mandant > header .info {
+  padding-left: 10px;
+}
+
+.mandant > header .info > p {
+  display: inline-block;
+}
+
+.mandant > header .active {
+  color: rgba(218, 236, 213, 1);
+}
+
+.mandant > header .outdated {
+  color: rgba(217, 150, 148, 1);
+}
+
+.mandant > header .autorefresh {
+  display: block;
+  position: absolute;
+  right: 40%;
+  top: 0;
+  text-align: right;
+  padding: 14px 20px 15px 0;
+}
+
+.time_settings {
+  display: block;
+  margin: 20px 0 15px 0;
+  position: relative;
+}
+
+.time_settings > .options_menu > li.view_option_custom.current {
+  position: relative;
+}
+
+.time_settings .export {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+
+.available_view_set_options {
+  position: absolute;
+  right: 10px;
+  top: 0;
+}
+
+.custom_range_settings {
+  display: none;
+  position: absolute;
+  left: 135px;
+  bottom: 3px;
+  width: 300px;
+  color: rgba( 216, 216, 216, 1);
+}
+
+body.mozilla .custom_range_settings {
+  bottom: 4px;
+}
+
+.time_settings > .options_menu > li.view_option_custom.current .custom_range_settings input[type="text"] {
+  display: inline-block;
+  width: 80px;
+}
+
+.collected_events_chart h3,
+.delivered_recommendation_chart h3,
+.conversion_rate_chart h3 {
+  display: block;
+  padding-bottom: 5px;
+}
+
+.available_charts {
+  display: block;
+  padding: 0 0 0 40px;
+  margin-top: -2px;
+}
+
+.conversion_rate_chart .available_charts {
+  padding: 0 0 0 10px;
+}
+
+.available_charts > li {
+  display: block;
+  float: left;
+  width: 33%;
+}
+
+.available_charts > li > label {
+  display: block;
+  padding: 0 20px 0 5px;
+  border-left: 5px solid transparent;
+}
+
+.available_charts > li.events_chart_bar_1 > label {
+  border-left-color: rgba(255, 167, 57, 1);
+}
+
+.available_charts > li.events_chart_bar_2 > label {
+  border-left-color: rgba(98, 184, 188, 1);
+}
+
+.available_charts > li.events_chart_bar_3 > label {
+  border-left-color: rgba(204, 199, 158, 1);
+}
+
+.available_charts > li.delivered_recommendations_chart_bar_1 > label {
+  border-left-color: rgba(81, 142, 19, 1);
+}
+
+.available_charts > li.delivered_recommendations_chart_bar_2 > label {
+  border-left-color: rgba(155, 93, 184, 1);
+}
+
+.available_charts > li.delivered_recommendations_chart_bar_3 > label {
+  border-left-color: rgba(18, 154, 253, 1);
+}
+
+.available_charts > li > label > select {
+  display: block;
+  width: 100%;
+}
+
+.conversion_rate_chart .available_charts > li > label {
+  padding-left: 25px;
+}
+
+section.scenarios header a.button.create_new {
+    display: inline-block;
+    position: relative;
+  /*position: absolute;*/
+    right: 30px;
+  /*top: 13px;*/
+}
+
+section.scenarios header a.helpLink{
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    background: transparent url("../img/yoosprite.png") no-repeat -188px -38px;
+}
+
+.available_scenarios {
+  display: block;
+  margin-top: 6px;
+}
+
+.available_scenarios > li {
+  display: block;
+  width: 20%;
+  float: left;
+}
+
+.available_scenarios > li > div,
+.available_scenarios > li > a {
+  text-decoration: none;
+  position: relative;
+  color: rgba(70, 78, 66, 1);
+  display: block;
+  margin: 10px;
+  border: 1px solid rgba(140, 150, 138, 0.33);
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  padding: 0 0 10px 0;
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  -ms-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+}
+
+p.introduction {
+  display: block;
+  padding: 13px 0 0 0;
+}
+
+.available_scenarios > li > div > .activity_options {
+  display: block;
+  padding: 8px 10px 6px 10px;
+}
+
+.available_scenarios > li > div > .activity_options > li {
+  display: block;
+  float: left;
+  padding-right: 10px;
+}
+
+.available_scenarios > li > div > .activity_options > li:last-child {
+  padding-right: 0;
+}
+
+.available_scenarios > li > div > h4,
+.available_scenarios > li > a > h4 {
+    display: block;
+    background-color: rgba(238, 236, 225, 1);
+    color: rgba(6, 9, 4, 1);
+    margin-bottom: 25px;
+    padding: 14px 10px 15px 5px;
+    border-left: 5px solid transparent;
+    -webkit-transition: all linear 0.2s;
+    -moz-transition: all linear 0.2s;
+    -ms-transition: all linear 0.2s;
+    -o-transition: all linear 0.2s;
+    transition: all linear 0.2s;
+}
+
+.available_scenarios > li > a > h4 {
+  -moz-border-radius: 10px 10px 0 0;
+  -webkit-border-radius: 10px 10px 0 0;
+  border-radius: 10px 10px 0 0;
+}
+
+.available_scenarios > li > div.disabled > h4 {
+  background-color: rgba(216, 216, 216, 1);
+}
+
+.available_scenarios > li > div.ready_to_use > h4 {
+  border-left-color: rgba(149, 231, 127, 1);
+}
+
+.available_scenarios > li > div.partly_available > h4 {
+  border-left-color: rgba(255, 255, 84, 1);
+}
+
+.available_scenarios > li > div.problem > h4 {
+  border-left-color: rgba(192, 80, 77, 1);
+}
+
+.available_scenarios > li > div.loading {
+  text-align: center;
+}
+
+.available_scenarios > li > div > p,
+.available_scenarios > li > a > p {
+  display: block;
+  padding: 0 10px;
+}
+
+.available_scenarios > li > div > p.data:before {
+   display: inline-block;
+   margin-right: 4px;
+   font-weight: bold;
+}
+
+.available_scenarios > li > div > p.data.unavailable:before {
+   display: none;
+}
+
+.available_scenarios > li > div > p.data.ascending:before {
+  content: "↑ ";
+  color: rgba(180, 216, 170, 1);
+}
+
+.available_scenarios > li > div > p.data.descending:before {
+  content: "↓";
+  color: rgba(253, 158, 158, 1);
+}
+
+.available_scenarios > li > div > p.description {
+  font-style: italic;
+  color: rgba(127, 127, 127, 1);
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.available_scenarios > li > a p,
+.available_scenarios > li > a h5 {
+  margin: 10px;
+  font-style: italic;
+  color: rgba(127, 127, 127, 1);
+  overflow: hidden;
+}
+
+.available_scenarios .scenario_navigation {
+  display: block;
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+}
+
+.available_scenarios .scenario_navigation > li {
+  display: block;
+  float: left;
+  width: 34%;
+  text-align: center;
+}
+
+.available_scenarios .scenario_navigation > li:first-child,
+.available_scenarios .scenario_navigation > li:last-child {
+  width: 33%;
+}
+
+.available_scenarios .scenario_navigation > li > a {
+  display: block;
+  padding: 4px 9px 0 9px;
+  border: 1px solid rgba(140, 150, 138, 0.33);
+  background-color: white;
+  text-align: center;
+  cursor: pointer;
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  -ms-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+  line-height: 27px;
+}
+
+.available_scenarios .scenario_navigation > li > a:hover,
+.available_scenarios .scenario_navigation > li > a:focus {
+  background-color: rgba( 238, 236, 225, 1);
+}
+
+.available_scenarios .scenario_navigation > li > a:active {
+  background-color: rgba(63, 63, 63, 1);
+}
+
+.available_scenarios .scenario_navigation > li:first-child > a {
+  -moz-border-radius: 0 0 0 10px;
+  -webkit-border-radius: 0 0 0 10px;
+  border-radius: 0 0 0 10px;
+  border-left: 0;
+  border-bottom: 0;
+  border-right: 0;
+}
+
+.available_scenarios .scenario_navigation > li:last-child > a {
+  -moz-border-radius: 0 0 10px 0;
+  -webkit-border-radius: 0 0 10px 0;
+  border-radius: 0 0 10px 0;
+  border-left: 0;
+  border-bottom: 0;
+  border-right: 0;
+}
+
+body.webkit .available_scenarios .scenario_navigation > li:last-child > a {
+  margin-right: -1px;
+}
+
+.available_scenarios .scenario_navigation > li > a > span {
+  display: none;
+}
+
+.available_scenarios .scenario_navigation > li > a:before {
+  content:"";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  background: transparent url("../img/yoosprite.png") no-repeat 50px 50px;
+  vertical-align: text-top;
+}
+
+.available_scenarios .scenario_navigation > li.settings > a:before {
+  background: transparent url("../img/yoosprite.png") no-repeat -156px -22px;
+}
+
+.available_scenarios .scenario_navigation > li.configurator > a:before {
+  background: transparent url("../img/yoosprite.png") no-repeat -172px -22px;
+}
+
+.available_scenarios .scenario_navigation > li.filters > a:before {
+  background: transparent url("../img/yoosprite.png") no-repeat -188px -22px;
+}
+
+font.settings{
+	float: right;
+	background: transparent url("../img/settings.png") no-repeat;
+}
+font.settings > a{
+	text-decoration:none;
+}
+font.settings:hover{
+	background: transparent url("../img/settingshover.png") no-repeat;
+}
+
+.account_details header h2 {
+  display: block;
+  text-align: right;
+  font-weight: bold;
+  color: white;
+  padding-right: 10px;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
+}
+
+#basis_selection header h2 {
+  display: block;
+  margin: 0 20px;
+}
+
+.account_details form ul {
+  display: block;
+  padding-top: 18px;
+}
+
+.account_details form ul li {
+  display: block;
+  padding-bottom: 6px;
+}
+
+.account_details form ul > li:first-child {
+  padding-bottom: 7px;
+}
+
+.account_details.normal_form form ul > li:first-child label {
+  font-style: italic;
+  opacity: 0.5;
+}
+
+.account_details.normal_form label {
+  width: 20%;
+}
+
+.account_details.normal_form input {
+  width: 20%;
+}
+
+.account_details.normal_form form ul > li.change_password {
+  padding-left: 20%;
+}
+
+.account_details.normal_form form ul > li.change_password > a {
+  display: inline-block;
+  margin: 15px;
+}
+
+.account_details form ul li.actions {
+  width: 40%;
+  margin-top: 20px;
+  text-align: right;
+}
+
+.account_details form ul li.actions > .save {
+  margin-right: -23px;
+}
+
+.login_center {
+  display: block;
+  width: 40%;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 150px;
+  margin-bottom: 120px;
+}
+
+.login_center fieldset {
+  display: block;
+  border: 1px solid rgba(140, 150, 138, 0.33);
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.login_center fieldset h3 {
+  display: block;
+  background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+  color: white;
+  line-height: 40px;
+  margin: 20px 0;
+  text-align: center;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
+}
+
+.login_center fieldset p {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.login_center fieldset div {
+  display: block;
+  position: relative;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.login_center fieldset div > label {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 30%;
+}
+
+.login_center fieldset div > .reset_password {
+  display: block;
+  position: absolute;
+  left: 70%;
+  top: 8px;
+  padding-left: 20px;
+  font-size: 12px;
+}
+
+.login_center fieldset div > input {
+  width: 40%;
+}
+
+.login_center fieldset div > p {
+  padding: 0 20px;
+}
+
+.login_center fieldset div em {
+  font-style: italic;
+}
+
+.login_center fieldset div.actions {
+  margin: 10px 0;
+}
+
+.login_center > a {
+  display: inline-block;
+  padding: 5px;
+  margin-top: 40px;
+}
+
+.registration_step_1 h3 {
+  display: block;
+  background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+  color: white;
+  line-height: 40px;
+  margin: 20px 0;
+  text-align: left;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
+  margin: 0 10px 20px 10px;
+  padding: 0 10px;
+}
+
+.registration_step_1 .wrapper {
+  display: block;
+  margin: 0 10px;
+}
+
+.registration_step_1 .wrapper > p {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.registration_step_1 .wrapper > div {
+  display: block;
+  margin: 10px 0;
+}
+
+.registration_step_1 fieldset .wrapper > div {
+  padding-left: 160px;
+}
+
+.registration_step_1 fieldset .wrapper > img#captchaimage {
+  margin-left: 137px;
+}
+
+.registration_step_1 fieldset .wrapper > div:not(.checkbox) > label {
+  width: 150px;
+  margin-left: -160px;
+}
+
+.registration_step_1 fieldset .wrapper > div:not(.checkbox) > label > span {
+  padding-right: 20px;
+}
+
+.registration_step_1 fieldset .wrapper > div.checkbox {
+  padding-left: 137px;
+}
+
+.registration_step_1 fieldset .wrapper > div.checkbox > label {
+  text-align: left;
+  padding-left: 30px;
+  line-height: 20px;
+}
+
+.registration_step_1 fieldset .wrapper > div.checkbox > label > input[type="checkbox"],
+.registration_step_1 fieldset .wrapper > div.checkbox > label > input[type="radio"] {
+  margin-left: -20px;
+  min-height: inherit;
+}
+
+.registration_step_1 fieldset .wrapper > div > input[type="text"] {
+  width: 100%;
+  margin-left: -10px;
+}
+
+.registration_step_1 fieldset .wrapper > div.actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.registration_step_1 .legal_text {
+  display: block;
+  margin: 20px 0;
+  height: 300px;
+  overflow-y: scroll;
+  border: 1px solid rgba(140, 150, 138, 0.33);
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+.registration_step_1 .legal_text > h3,
+.registration_step_1 .legal_text > h4 {
+  background: none;
+  color: rgba(63, 63, 63, 1);
+  font-size: 18px;
+  text-shadow: none;
+  margin: 10px 0;
+  padding: 0;
+}
+
+.registration_step_1 .legal_text > p {
+  display: block;
+  margin: 20px 0;
+}
+
+.change_mandant {
+  width: 40%;
+}
+
+.change_mandant .actions,
+.change_password .actions {
+  display: block;
+  text-align: right;
+}
+
+.change_mandant select#choose_mandant {
+  width: 150px;
+}
+
+footer {
+  display: block;
+  padding: 8px 20px 15px 20px;
+  border-top: 1px solid rgba( 238, 236, 225, 1);
+  margin-top: 20px;
+}
+
+footer > ul {
+  display: block;
+  float: right;
+}
+
+footer > ul > li {
+  display: inline-block;
+  padding-left: 20px;
+}
+
+section.help header h2 {
+  text-align: left;
+  padding-left: 20px;
+  font-weight: bold;
+  color: white;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
+}
+
+section.help > article {
+  display: block;
+  margin-top: 20px;
+}
+
+section.help > article p {
+  display: block;
+  margin: 20px;
+}
+
+section.help > article img {
+  float: left;
+  margin: 0 20px 20px 0;
+}
+
+.setting_list {
+	display: block;
+	margin-top: 18px;
+}
+
+.setting_list > li {
+	display: block;
+	padding-bottom: 6px;
+}
+
+.setting_list .basis > label,
+.setting_list .basis > h3 {
+	display: block;
+	padding-right: 10px;
+	padding-top: 2px;
+	text-align: right;
+	font-weight: normal;
+	line-height: 30px;
+}
+
+.setting_list .value > div {
+	display: block;
+	margin-left: 19px;
+}
+
+.setting_list .select_field .value > div {
+	margin: 0 -9px 0 0;
+	padding-left: 9px;
+}
+
+.setting_list .value > div > input[type="text"],
+.setting_list .value > div > textarea {
+	padding: 0 7px 0 10px;
+	width: 100%;
+	margin-left: -10px;
+}
+
+.setting_list .value > div > textarea {
+	padding-top: 5px;
+}
+
+.setting_list .value > div > select {
+	width: 100%;
+	padding: 5px 5px 5px 7px;
+}
+
+.setting_list .output_types {
+	padding: 7px 0;
+}
+
+.setting_list .output_types > li {
+	display: block;
+}
+
+.setting_list .value .output_types > li input[type="checkbox"] {
+	line-height: 14px;
+	min-height: 14px;
+	margin: 3px 0 0 9px;
+	vertical-align: top;
+}
+
+.setting_list .value .output_types > li label {
+	line-height: 20px;
+}
+
+.ghost {
+	display: none !important;
+}
+
+.title > .status {
+	display: inline-block;
+	padding-left: 20px;
+	font-weight: bold;
+}
+
+.title > .status.ready_to_use {
+	color: rgba(180, 216, 170, 1);
+}
+
+.title > .status.partly_available {
+	color: rgba(253, 252, 158, 1);
+}
+
+.title > .status.problem {
+	color: rgba(253, 158, 158, 1);
+}
+
+.scenario_configuration_steps > section > article {
+	margin-top: 22px;
+	display: block;
+}
+
+.models_base > h3 {
+	display: block;
+	font-size: 14px;
+	line-height: 22px;
+	font-weight: normal;
+	margin-right: 10px;
+	padding: 2px 10px 0 10px;
+	background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+	color: rgba( 216, 216, 216, 1);
+	border: 1px solid rgba(63, 63, 63, 1);
+}
+
+.models_base > h3 span {
+	display: inline-block;
+}
+
+.models_base > h3 > label {
+	display: inline-block;
+	float: right;
+}
+
+.models_base > h3 > label > span {
+	font-size: 12px;
+	font-style: italic;
+}
+
+.models_base > h3 select {
+	margin: 0;
+	width: 120px;
+}
+
+.models_groups {
+  display: block;
+  border: 1px solid rgba(217, 226, 216, 1);
+  margin: 12px 10px 0 0;
+  overflow-y: scroll;
+  padding-top: 7px;
+}
+
+.models_groups > li {
+  display: block;
+  padding: 17px 0 0 15px;
+  min-height: 150px;
+}
+
+.models_groups > li > h4,
+.models_used > li > h4,
+.filters_group h4 {
+  font-weight: bold;
+  border-bottom: 1px solid rgba(140, 150, 138, 1);
+  margin-right: 15px;
+  margin-bottom: 1px;
+}
+
+.filters_group h4 {
+  margin-top: 13px;
+}
+
+.models_used > li > h4 {
+  margin: 0 20px 10px 0;
+}
+
+.list_of_models {
+  display: block;
+}
+
+.list_of_models > .model {
+  display: block;
+  float: left;
+  width: 50%;
+}
+
+.model > div {
+	position: relative;
+  border: 1px solid rgba(140, 150, 138, 0.33);
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin: 11px 15px 0 0;
+  padding: 7px 0 0em 0;
+  cursor: move;
+  overflow: hidden;
+  -webkit-transition: box-shadow linear 0.2s;
+  -moz-transition: box-shadow linear 0.2s;
+  -ms-transition: box-shadow linear 0.2s;
+  -o-transition: box-shadow linear 0.2s;
+  transition: box-shadow linear 0.2s;
+}
+
+.model > div:hover,
+.grouping_attributes{
+    min-height: 45px;
+}
+
+.grouping_attributes li:hover {
+  -webkit-box-shadow: 0 0 8px rgba(217, 226, 216, 1);
+  -moz-box-shadow: 0 0 8px rgba(217, 226, 216, 1);
+  box-shadow: 0 0 8px rgba(217, 226, 216, 1);
+}
+
+.model h5 {
+  font-size: 12px;
+  line-height: 20px;
+  display: block;
+  background-color: rgba(216, 216, 216, 1);
+  color: rgba(6, 9, 4, 1);
+  padding: 0 9px 0 4px;
+  border-left: 5px solid transparent;
+  overflow: hidden;
+}
+
+.helper_on_the_move {
+	padding: 20px;
+	display: block;
+	border: 10px solid rgba(0, 0, 0, 0.5);
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	font-size: 18px;
+	background-color: rgba( 238, 236, 225, 1);
+	z-index: 100;
+  overflow: hidden;
+}
+
+.model.ready_to_use h5 {
+  border-left-color: rgba(180, 216, 170, 1);
+}
+
+.model.needs_building h5 {
+  border-left-color: rgba(253, 252, 158, 1);
+}
+
+.model.problem h5 {
+  border-left-color: #C0504D;
+}
+
+.model p {
+  display: block;
+  padding: 10px 10px 10px 10px;
+  font-size: 12px;
+  line-height: 20px;
+  font-style: italic;
+  overflow: hidden;
+}
+
+.model a.configure_model {
+  display: block;
+  float: left;
+  font-size: 12px;
+  width: 35px;
+  text-align: center;
+/*   margin: -7px 8px 0 0; */
+/*   padding: 5px 10px; */
+	border-right: 1px solid rgba(140, 150, 138, 0.33);
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  -ms-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+  cursor: pointer;
+/*   -moz-border-radius: 3px; */
+/*   -webkit-border-radius: 3px; */
+/*   border-radius: 3px; */
+}
+
+.model a.configure_model span.alt {
+	display: none;
+}
+
+.model a.configure_model span.img {
+	background: transparent url("../img/yoosprite.png") no-repeat -156px -22px;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+/* 	margin-top: 5px; */
+}
+
+/* .model a.configure_model:hover,
+.model a.configure_model:focus {
+  background-color: rgba( 238, 236, 225, 1);
+} */
+.model a.configure_model_new:hover,
+.model a.configure_model_new:focus {
+  background-color: rgba( 238, 236, 225, 1);
+}
+
+
+.model .config{
+	position: absolute;
+	bottom: 0;
+	height: 1.6em;
+	width: 100%; 
+/* 	padding:0.2em; */
+/* 	background-color: grey; */
+	border-top: 1px solid grey;
+	
+}
+
+.model .info{
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: center;
+}
+
+.storyboards_base{
+	overflow-y: auto;
+}
+
+.storyboards_base > h3 {
+	position: relative;
+	margin-left: 10px;
+  background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+	color: rgba( 216, 216, 216, 1);
+	border-color: rgba(63, 63, 63, 1);
+  font-size: 14px;
+	line-height: 22px;
+	height: 26px;
+}
+
+.storyboards_base > h3[aria-expanded="false"] {
+	margin: 0 0 14px 10px;
+}
+
+.storyboards_base > h3 > span {
+	display: block;
+	font-size: 14px;
+	line-height: 22px;
+	font-weight: normal;
+	-webkit-transition: all linear 0.2s;
+	-moz-transition: all linear 0.2s;
+	-ms-transition: all linear 0.2s;
+	-o-transition: all linear 0.2s;
+	transition: all linear 0.2s;
+	padding: 2px 0 0 0;
+	margin-left: 5px;
+	margin-right: 5px;
+/* 	border: 1px solid rgba(140, 150, 138, 0.33); */
+}
+
+.storyboards_base > h3[aria-expanded="true"] > a {
+	background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+	color: rgba( 216, 216, 216, 1);
+	cursor: default;
+	border-color: rgba(63, 63, 63, 1);
+	text-decoration: none;
+}
+
+.storyboards_base > h3[aria-expanded="false"] > a {
+	border-color: rgba(140, 150, 138, 0.33);
+	background-color: transparent;
+}
+
+.storyboards_base > h3[aria-expanded="false"]:hover > a,
+.storyboards_base > h3[aria-expanded="false"]:focus > a {
+	background-color: rgba( 238, 236, 225, 1);
+}
+
+.storyboards_base h3 .category_path_selection {
+  display: block;
+  position: absolute;
+  right: 10px;
+  top: 1px;
+}
+
+.storyboards_base h3 .category_path_selection label {
+	font-size: 12px;
+	font-style: italic;
+	color: rgba( 216, 216, 216, 1);
+	font-weight: normal;
+}
+
+.storyboards_base h3 .category_path_selection select {
+	width: 139px;
+}
+
+.storyboards_base h3[aria-expanded="false"] .category_path_selection {
+  display: none;
+}
+
+.storyboards_base h3 span.img {
+	background: transparent url("../img/yoosprite.png") no-repeat -156px -22px;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	position: relative;
+	top: 4px;
+	right: 4px;
+	cursor: pointer;
+}
+.storyboards_base > div > ul {
+	display: block;
+	margin: 13px 0 18px 10px;
+	margin-right: 20px;
+}
+
+.storyboards_base > div > ul > li {
+  display: block;
+  float: left;
+  width: 33%;
+}
+
+.storyboards_base > div > ul > li:first-child {
+	width: 34%;
+}
+
+.empty_model_place {
+  display: block;
+  border: 1px dashed rgba(140, 150, 138, 0.33);
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-right: 20px;
+  /*min-height: 100px;*/
+  text-align: center;
+  /*padding: 60px 0;*/
+  padding: 0;
+  font-size: 18px;
+  color: rgba(140, 150, 138, 0.5);
+}
+
+.empty_model_place.deploy > span {
+	display: none;
+}
+
+.storyboards_base > div > ul > li:last-child .empty_model_place {
+  margin-right: 0;
+}
+
+.placed_model {
+  margin-right: 20px;
+  min-height: 100px;
+  display: block;
+  border: 1px solid rgba(140, 150, 138, 0.33);
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  padding: 0 0 16px 0;
+  position: relative;
+}
+
+.placed_model .destroy_placed_model {
+	top: 12px;
+	right: 4px;
+	background-color: #fff;
+}
+
+.placed_model h4,
+.placed_model h5 {
+  display: block;
+  background-color: rgba(216, 216, 216, 1);
+  color: rgba(6, 9, 4, 1);
+  margin: 9px 0 11px 0;
+  padding: 14px 14px 12px 9px;
+  border-left: 5px solid transparent;
+  overflow: hidden;
+}
+
+.placed_model.partly_available h4,
+.placed_model.partly_available h5 {
+  border-left-color: rgba(253, 252, 158, 1);
+}
+
+.placed_model.ready_to_use h4,
+.placed_model.ready_to_use h5 {
+  border-left-color: rgba(180, 216, 170, 1);
+}
+
+.placed_model.problem h4,
+.placed_model.problem h5 {
+  border-left-color: rgba(253, 158, 158, 1);
+}
+
+.placed_model form {
+  display: block;
+  padding: 0 14px;
+}
+
+.placed_model form ul {
+  display: block;
+  padding-bottom: 10px;
+}
+
+.placed_model form ul li {
+  display: block;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.placed_model form ul li.checkbox {
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(140, 150, 138, 0.33);
+  margin-bottom: 4px;
+}
+
+.placed_model form ul li.checkbox input {
+  margin-right: 5px;
+}
+
+ul.placed_model_settings > li {
+  float: left;
+  width: 100%;
+}
+
+ul.placed_model_settings > li.context_options > label {
+  display: block;
+}
+
+ul.placed_model_settings > li.context_options > label > input {
+  margin-left: -1px;
+}
+
+ul.placed_model_settings > li.spinner > div > input {
+	margin-top: 2px;
+	font-size: 12px;
+}
+
+ul.placed_model_settings > li.usesubmodels > div {
+	margin-bottom: 5px;
+  position: relative;
+}
+
+ul.placed_model_settings > li.usesubmodels > div > label {
+  display: inline-block;
+	font-weight: normal;
+  padding-left: 18px;
+}
+
+ul.placed_model_settings > li.usesubmodels > div > input {
+	vertical-align: middle;
+	margin: 0 2px 0 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.placed_model form ul li > div {
+  display: block;
+  padding-right: 10px;
+}
+
+.placed_model select,
+.placed_model input[type="number"] {
+  width: 100%;
+  display: inline-block;
+}
+
+.mozilla .placed_model input[type="number"] {
+  padding: 1px 0;
+  border: 1px solid rgba(140, 150, 138, 0.5);
+}
+
+.placed_model > p.description {
+	display: block;
+	padding: 8px 14px 0 14px;
+	font-size: 12px;
+	line-height: 20px;
+	font-style: italic;
+  overflow: hidden;
+}
+
+.model_settings .relevance {
+  display: block;
+  padding: 20px;
+}
+
+.model_settings .relevance select {
+  margin-right: 20px;
+}
+
+.model_settings > .clearfix {
+  display: block;
+  padding: 0 20px 20px 20px;
+}
+
+.model_settings .filters_base {
+  width: 100%;
+}
+
+.numeric_range {
+  display: inline-block;
+}
+
+.numeric_range > input[type="text"] {
+  width: 250px;
+}
+
+.model_settings a.save {
+  margin-top: 20px;
+  float: right;
+}
+
+.filters_group > div {
+/*   display: block; */
+/*   float: left; */
+/*   width: 50%; */
+}
+
+.filters li,
+.custom_filters li {
+  display: block;
+  margin: 10px 15px 0 0;
+  position: relative;
+}
+
+.custom_filters li {
+  margin: 0;
+  padding: 15px 0;
+  position: relative;
+  border-top: 1px dotted rgba(140, 150, 138, 0.33);
+}
+
+.custom_filters > li:first-child {  
+  border-top: none;
+}
+
+.custom_filters li input[type="text"] {
+  border: 1px solid rgba(140, 150, 138, 0.75);
+  line-height: 18px;
+  font-size: 14px;
+  font-weight: bold;
+  width: 30%;
+  padding: 1px 3px;
+}
+
+.custom_filters li .destroy_custom_filter {
+  top: 20px;
+  right: 0;
+}
+
+.custom_filters > li:first-child .destroy_custom_filter {
+  display: none;
+}
+
+.custom_filters li .add_one_more {
+  display: inline-block;
+  padding: 2px;
+  margin-left: 10px;
+  display: none;
+}
+
+.custom_filters > li:last-child .add_one_more {
+  display: inline-block;
+}
+
+.grouping_attributes {
+  padding-top: 5px;
+}
+
+.grouping_attributes > li,
+.user_created_group > li {
+  display: block;
+  float: left;
+  border: 1px solid rgba(140, 150, 138, 0.33);
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px 10px 0 0;
+  cursor: move;
+  -webkit-transition: box-shadow linear 0.2s;
+  -moz-transition: box-shadow linear 0.2s;
+  -ms-transition: box-shadow linear 0.2s;
+  -o-transition: box-shadow linear 0.2s;
+  transition: box-shadow linear 0.2s;
+}
+
+.user_created_group > li:first-child {
+/*   margin-top: -30px; */
+}
+
+.groups_base > li {
+  display: block;
+  float: left;
+  width: 25%;
+  margin-top: 20px;
+}
+
+.groups_base > li h5 {
+  display: block;
+  font-weight: bold;
+  position: relative;
+  background-color: rgba(243, 243, 243, 1);
+  line-height: 30px;
+  margin-right: 15px;
+  padding-left: 15px;
+}
+
+.groups_base > li h5 > .destroy_group {
+  right: 5px;
+  top: 7px;
+}
+
+.groups_base > li:first-child .destroy_group {
+  display: none;
+}
+
+.user_created_group {
+  display: block;
+  border: 1px dashed rgba(140, 150, 138, 0.33);
+  border-top: none;
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 5px 5px;
+  border-radius:  0 0 5px 5px;
+  padding: 15px 15px 15px 15px;
+  margin: 0 15px 0 0;
+  min-height: 100px;
+}
+
+.create_one_more_group {
+  display: inline-block;
+  padding: 4px 0;
+}
+
+.change_password {
+  width: 500px;
+}
+
+.change_password form ul > li {
+  display: block;
+  padding-bottom: 6px;
+}
+
+.change_password form ul > li > label {
+  width: 40%;
+}
+
+.change_password form ul > li > input {
+  width: 50%;
+}
+
+.change_password form ul > li.actions {
+  padding: 20px 23px 0 0;
+}
+
+.change_password form ul > li > .annotation {
+  display: block;
+  margin-left: 40%;
+  padding: 8px 30px 5px 15px;
+  font-style: italic;
+}
+
+.change_password form ul > li.validation_message > .annotation {
+  color: rgba(192, 80, 77, 1);
+}
+
+/* General Infos on static pages */
+
+.general_info h2 {
+	display: block;
+	font-size: 24px;
+	margin-bottom: 20px;
+	color: rgba( 127, 127, 127, 1);
+}
+
+.general_info p {
+	display: block;
+	margin-top: 20px;
+}
+
+.general_info em {
+	font-style: italic;
+}
+
+.general_info > article.s2_5 > p,
+.general_info > article.s2_5 > h2 {
+	margin-right: 20px;
+}
+
+.general_info article > h3 {
+	display: block;
+	font-size: 18px;
+	margin: 40px 0 20px;
+}
+
+.general_info article > h3:first-child {
+	margin-top: 0;
+}
+
+body#contact .normal_form ul li {
+	padding-bottom: 6px;
+}
+
+body#contact .normal_form ul li.actions {
+	text-align: right;
+	width: 470px;
+}
+
+body#contact .normal_form textarea {
+  display: inline-block;
+  font-size: 14px;
+  margin-left: 9px;
+  line-height: 28px;
+  border: 1px solid rgba(127, 127, 127, 1);
+  -webkit-transition: all linear 0.2s;
+  -moz-transition: all linear 0.2s;
+  -ms-transition: all linear 0.2s;
+  -o-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+	vertical-align: top;
+}
+
+body#contact .normal_form textarea:focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 8px rgba(13, 189, 254, 1);
+  -moz-box-shadow: 0 0 8px rgba(13, 189, 254, 1);
+  box-shadow: 0 0 8px rgba(13, 189, 254, 1);
+}
+
+body#contact .normal_form .problem textarea {
+  -webkit-box-shadow: 0 0 8px rgba(192, 80, 77, 1);
+  -moz-box-shadow: 0 0 8px rgba(192, 80, 77, 1);
+  box-shadow: 0 0 8px rgba(192, 80, 77, 1);
+}
+
+body#contact article.s3_5 form label {
+	width: 150px;
+}
+
+body#contact article.s3_5 form input,
+body#contact article.s3_5 form textarea {
+	width: 300px;
+}
+
+a.reload_captcha {
+  display: block;
+  padding-left: 20px;
+  position: relative;
+  float: none;
+  clear: both;
+}
+
+a.reload_captcha:before {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  left: 0;
+  top: 1px;
+  background: transparent url("../img/yoosprite.png") no-repeat -140px -22px;
+}
+
+/*@author mse*/
+
+/* CB Model Configurator*/
+
+#CB_model_configuration .disabled{
+	color: #aaa;
+}
+
+.table{
+	display: table;
+}
+.tr{
+	display: table-row;
+    margin-bottom: 10px;
+}
+
+.tc{
+	display: table-cell;
+	padding: 5px 10px;
+	text-align: center;
+}
+
+.attr_slider {
+/* 	display: inline-block; */
+	width: 200px;
+/* 	height: 1em; */
+/* 	background-color: red; */
+}
+
+.delete_interval{
+    background: transparent url("../img/yoosprite.png") no-repeat -204px -38px;
+	cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+#category_path_settings form > div{
+	padding: 10px;
+}
+
+#category_path_settings form > div.left{
+	float: left;
+	clear: both;
+}
+
+#category_path_settings form > div.right{
+	margin-left: 40px;
+}
+
+#category_path_settings form > div.right > div{
+	margin-bottom: 10px;
+}
+
+#category_path_settings form .path_slider{
+	display:inline-block;
+	width: 100px;
+	margin-right: 20px;
+}
+
+.hintSpace{
+    min-height: 2em;
+    margin-top: 10px;
+    border-top: 1px solid #000000;
+    padding: 10px;
+    color: #ff0000;
+}
+
+#hoverView{
+    position: absolute;
+    z-index: 1000;
+}
+
+#helpView{
+    position: absolute;
+    z-index: 2000;
+    background: #ffffff url("../img/rauschen.png");
+    padding: 20px;
+    border: 2px solid rgb(17, 45, 182);
+    border-radius: 10px;
+    max-width: 400px;
+}
+
+#helpView .close{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.helpBtn{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: url("../img/yoosprite.png") no-repeat -188px -38px;
+    vertical-align: middle;
+    padding: 0.2em;
+}
+
+a.remove_attribute_value {
+    text-decoration: none;
+    font-weight: 700;
+    color: rgba(6, 9, 4, 1);
+}
+
+a.remove_attribute_value:hover{
+    color: red;
+}
+
+.editorial_list{
+    display: block;
+    float: left;
+    width: 250px;
+    margin: 10px;
+    box-sizing: border-box;
+}
+
+.editorial_list .listHead{
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+    color: rgba( 216, 216, 216, 1);
+    border: 1px solid rgba(63, 63, 63, 1);
+    border-radius: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+
+}
+
+.editorial_list .listHead span, .editorial_list ul span {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 5px;
+    vertical-align: bottom;
+    white-space: nowrap;
+}
+
+.editorial_list ul li{
+    white-space: nowrap;
+}
+
+.idCol{
+    width: 80px;
+}
+
+.titleCol{
+    width: 130px;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.deleteCol{
+    width: 20px;
+    text-align: center;
+}
+
+.editorial_list ul{
+    clear: both;
+    height: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px dotted #000000;
+    border-radius: 5px;
+}
+
+.editorial_list ul li{
+    display: block;
+    list-style: none;
+    background: white url("../img/rauschen.png") repeat left top;
+    cursor: move;
+}
+
+.editorial_list ul li .deleteCol{
+    cursor: pointer;
+}
+
+.editorial_list .deleteItem:hover{
+    color: #ff0000;
+}
+
+body > .cover{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    background-color: #000000;
+}
+
+.ABOverlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    padding: 50px 0;
+    text-align: center;
+}
+
+.ABOverlay .cover{
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    background-color: #000000;
+}
+
+.ABOverlay .cover > div{
+    padding: 100px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 2em;
+    color: white;
+
+}
+
+.ABOverlay > .content{
+    display: inline-block;
+    max-width: 80%;
+    max-height: 90%;
+    overflow: auto;
+    /*margin: 0 auto;*/
+    /*padding: 3em;*/
+    background: white url("../img/rauschen.png");
+    box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+    border: 1px solid #000000;
+    border-radius: 6px;
+    text-align: left;
+
+}
+.ABOverlay .contentWrapper{
+    position: relative;
+    padding: 3em;
+    /*text-align: center;*/
+}
+
+.ABOverlay ul{
+    list-style-type: circle;
+}
+.ABOverlay ol{
+    list-style-type: decimal;
+}
+
+.ABOverlay h2{
+    margin-bottom: 2em;
+    border-bottom: 2px solid gray;
+    font-weight: 700;
+    font-size: 1.3em;
+
+}
+
+#ABTests .tc.results a:hover, #ABTests .tc.config a:hover, #ABTests .tc.remove a:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#ABTests .tr.head{
+    font-weight: 700;
+}
+
+#ABTests .tr:nth-child(odd){
+    background-color: rgba(235, 235, 235, 1);
+}
+
+#abTestEditor .frame{
+    border: 2px solid gray;
+    padding: 1em;
+}
+
+#abTestEditor .tc{
+    text-align: left;
+    font-weight: 700;
+}
+
+#abTestEditor .tc.right{
+    text-align: right;
+}
+
+#abTestEditor .tc.middle{
+    vertical-align: middle;
+}
+
+#abTestEditor .controls{
+    text-align: right;
+}
+
+#abTestEditor .errors{
+    padding: 10px;
+    min-height: 2em;
+    color: red;
+}
+
+.test .delete:hover{
+    cursor: pointer;
+}
+
+
+#abTestResults table{
+    width: 100%;
+}
+
+#abTestResults table caption{
+    padding: 5px;
+    text-align: center;
+    font-weight: 700;
+}
+
+#abTestResults thead td{
+    font-weight: 700;
+}
+
+#abTestResults td{
+    padding: 10px;
+}
+
+#abTestViewer .content{
+    min-width: 600px;
+}
+#abTestViewer .tc{
+    text-align: left;
+
+}
+
+a.closeOverlay {
+    display: block;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+}
+
+a.closeOverlay:hover {
+    color: #ff0000;
+}
+
+.modalDialog {
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+
+}
+
+.modalDialog > .dialog {
+    display: block;
+    position: relative;
+    top: 30%;
+    width: 500px;
+    margin: 0 auto;
+    background: white url("../img/rauschen.png");
+    padding: 20px;
+    font-size: 14px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.7);
+}
+
+.modalDialog .controls {
+    margin-top: 2em;
+    float: right;
+}
+.modalDialog h2 {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin-bottom: 1em;
+}
+
+.modalDialog .button {
+    float: right;
+    margin-left: 1em;
+}
+
+#abTestResultChart {
+    margin: 0 auto;
+    width: 600px;
+}
+
+.ui-widget.ui-datepicker{
+    font-size: 10px;
+}
+
+section.scenarios > header{
+    margin-bottom: 2em;
+}
+
+section.scenarios > header a:not(.button), section.scenarios > header a:not(.button):visited, a.inverted, a.inverted:visited {
+    color: rgba(35, 119, 160, 1);
+}
+
+section.scenarios > header a:not(.button):hover, section.scenarios > header a:not(.button):focus, section.scenarios a.inverted:hover, section.scenarios a.inverted:focus {
+    color: rgba(35, 119, 160, 1);
+    text-shadow: none;
+}
+
+#ABSuccessAdvice {
+    margin-bottom: 1em;
+    padding: 1em;
+    color: rgba(235,81,74,1);
+    text-align: center;
+    font-weight: 700;
+
+}
+
+#ABWarning ul{
+    margin-left: 1em;
+}
+
+.RGraph_tooltip{
+    z-index: 10000;
+}
+
+.editdata li{
+	display: block;
+	padding-bottom: 10px;
+}
+
+.editdata li input{
+	width: 45%;
+	height: 2em;
+}
+
+.editdata li label{
+	width: 49%;
+}
