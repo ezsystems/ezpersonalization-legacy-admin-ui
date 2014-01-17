@@ -11,18 +11,30 @@ $(document).ready(function () {
 	$("#contactup").load("../includes/contactup.html");
 	
     $("#contact").on("click", function(event){
-    	showContactPopup("messageContact");
+    	$("#messageContact").show();
     	return false;
     });
     
     $("#corporate").on("click", function(event){
-    	showContactPopup("messageCorporate");
+    	$("#messageCorporate").show();
     	return false;
     });
     
     $("#privacy").on("click", function(event){
-    	showContactPopup("messagePrivacy");
+    	$("#messagePrivacy").show();
     	return false;
+    });
+    
+    $('#messageContact a.destroy_dialog').on("click", function(event){
+    	$("#messageContact").hide();
+    });
+    
+    $('#messageCorporate a.destroy_dialog').on("click", function(event){
+    	$("#messageCorporate").hide();
+    });
+    
+    $('#messagePrivacy a.destroy_dialog').on("click", function(event){
+    	$("#messagePrivacy").hide();
     });
     
     var closeAll = function() {
@@ -31,22 +43,9 @@ $(document).ready(function () {
     	$("#messagePrivacy").hide();
     };
     
-    var closeButtons = $('.dialog_body .destroy_dialog');
-    
-    closeButtons.on("click", closeAll);
-    
     $(document).bind('keydown', function(e) { 
 	    if (e.which == 27) {
 	    	closeAll();
 	    }
     });
 });
-
-
-
-showContactPopup = function (overlayId) {
-	$("#" + overlayId).show();
-    $('#' + overlayId + ' a.destroy_dialog').on("click", function(event){
-    	$(".overlay").hide();
-    });
-};

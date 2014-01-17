@@ -62,7 +62,7 @@ $(document).ready(function () {
 				$('#choose_mandant').append('<option value="' + currentMandator.name + '">' + currentMandator.name + ': ' + currentMandator.website + '</option>');
 			}
 			
-			$.cookie('customerID', currentMandator.name, { expires: 365 });
+			
 	
 			if (currentMandator == null) {
 				if(mandatorList.length == 0) {
@@ -71,6 +71,7 @@ $(document).ready(function () {
 					showSwitchMandatorPopup(false);
 				}
 			} else {
+				$.cookie('customerID', currentMandator.name, { expires: 365 });
 				initialLoadData();
 				setMandantData(currentMandator);
 			}
@@ -658,7 +659,7 @@ function setMandantData(mandatorInfo) {
 		beforeSend: function (req) {
             req.setRequestHeader('no-realm', 'realm1');
 		},
-        url: "/ebl/v3/profile/get_mandator_statistic/" + customerID,
+        url: "/ebl/v3/profile/get_mandator_statistic/" + mandatorInfo.name,
         success: function (json) {
 
             var mandatorStatistic = json.mandatorStatistic;
@@ -672,30 +673,24 @@ function setMandantData(mandatorInfo) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
 
-            if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
+            if(jqXHR.status != null && jqXHR.status == 403) {
+				setMessagePopUp("problem", "error_server_error_403");
+				
+			} else if(jqXHR.status != null && jqXHR.status == 401) {
+				setMessagePopUp("problem", "error_server_error_401");
+				
+			} else if(jqXHR.status != null && jqXHR.status == 400) {
+				setMessagePopUp("problem", "error_server_error_400");
+				
+			} else if(jqXHR.status != null && jqXHR.status == 404) {
+				setMessagePopUp("problem", "error_server_error_404");
+						
+			} else if(jqXHR.status != null && jqXHR.status == 409) {
+				setMessagePopUp("problem", "error_server_error_409");
+				
+			} else {
+				setMessagePopUp("problem", "error_server_error");
+			}
         }
     });
 }
