@@ -64,11 +64,7 @@ a:visited {
   color: rgba(35, 119, 160, 1);
   text-decoration: underline;
   cursor: pointer;
-  -webkit-transition: all linear 0.2s;
-  -moz-transition: all linear 0.2s;
-  -ms-transition: all linear 0.2s;
-  -o-transition: all linear 0.2s;
-  transition: all linear 0.2s;
+  transition: all 0.2s linear; 
 }
 
 a:hover,
@@ -77,32 +73,24 @@ a:focus {
 }
 
 .styled {
-right: 5px;
-position: absolute;
-width: 27px;
-top: 8px;
- height: 30px; 
-/* overflow: hidden; */
-float: right;
-text-decoration: none;
-background-color: rgba(63, 63, 63, 1);
-background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
-background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(63, 63, 63, 1)));
-background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
--webkit-box-shadow: inset 0 1px 3px rgba(255, 255, 255, 1);
--moz-box-shadow: inset 0 0 0 8px rgba(82, 168, 236, 0.6);
-box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
-border: 1px solid rgba(6, 9, 4, 1);
--moz-border-radius: 5px;
--webkit-border-radius: 5px;
-border-radius: 5px;
-font-weight: bold;
-text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
--webkit-transition: all linear 0.2s;
--moz-transition: all linear 0.2s;
--ms-transition: all linear 0.2s;
--o-transition: all linear 0.2s;
-transition: all linear 0.2s;
+	right: 5px;
+	position: absolute;
+	width: 27px;
+	top: 8px;
+	 height: 30px; 
+	/* overflow: hidden; */
+	float: right;
+	text-decoration: none;
+	background-color: rgba(63, 63, 63, 1);
+	background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(63, 63, 63, 1)));
+	background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+	border: 1px solid rgba(6, 9, 4, 1);
+	border-radius: 5px;
+	font-weight: bold;
+	text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
+	transition: all 0.2s linear;
 }
 
 .styled a {
@@ -124,62 +112,22 @@ transition: all linear 0.2s;
 	float:right;
     padding-right: 5px;
     margin-right: -5px;    
-        border: 1px solid black;
-        min-width: 12em;
-        
-        text-decoration: none;
+    border: 1px solid black;
+    min-width: 12em;
+    text-decoration: none;
 	background-color: rgba(63, 63, 63, 1);
 	background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
 	background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(63, 63, 63, 1)));
 	background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
-	-webkit-box-shadow: inset 0 1px 3px rgba(255, 255, 255, 1);
-	-moz-box-shadow: inset 0 0 0 8px rgba(82, 168, 236, 0.6);
 	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
 	border: 1px solid rgba(6, 9, 4, 1);
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	font-weight: bold;
 	text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
-	-webkit-transition: all linear 0.2s;
-	-moz-transition: all linear 0.2s;
-	-ms-transition: all linear 0.2s;
-	-o-transition: all linear 0.2s;
-	transition: all linear 0.2s;
-        display: none;  /* By default, do not display the items (which contains the links) */
-      }  
+	transition: all 0.2s linear;
+    display: none;  /* By default, do not display the items (which contains the links) */
+ }  
 
-
-
-
-
-#adelete,
-#acancel {  /* When the user hovers over the button (or any of the links) */
-	display: inline-block;
-	width:100%;
-	padding:0;
-	padding-left: 5px;
-	line-height: 25px;
-	text-decoration: none;
-	background-color: rgba(63, 63, 63, 1);
-	background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
-	background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(63, 63, 63, 1)));
-	background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
-	-webkit-box-shadow: inset 0 1px 3px rgba(255, 255, 255, 1);
-	-moz-box-shadow: inset 0 0 0 8px rgba(82, 168, 236, 0.6);
-	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
-	border: 1px solid rgba(6, 9, 4, 1);
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	font-weight: bold;
-	text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
-	-webkit-transition: all linear 0.2s;
-	-moz-transition: all linear 0.2s;
-	-ms-transition: all linear 0.2s;
-	-o-transition: all linear 0.2s;
-	transition: all linear 0.2s;
-      }
 
 #atoparrow{
 	padding: 0;
@@ -192,98 +140,50 @@ transition: all linear 0.2s;
 	top: 0;
 	margin-top: -1px;
 	margin-left: -1px;
-	
-}
-a.button {
-  display: block;
-  line-height: 30px;
-  margin: -5px 0;
-  color: rgba(146, 202, 255, 1);
-  padding: 0 15px;
-  text-decoration: none;
-  background-color: rgba(63, 63, 63, 1);
-  background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
-  background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(63, 63, 63, 1)));
-  background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
-  -webkit-box-shadow: inset 0 1px 3px rgba(255, 255, 255, 1);
-  -moz-box-shadow: inset 0 0 0 8px rgba(82, 168, 236, 0.6);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(6, 9, 4, 1);
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  font-weight: bold;
-  text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
-  -webkit-transition: all linear 0.2s;
-  -moz-transition: all linear 0.2s;
-  -ms-transition: all linear 0.2s;
-  -o-transition: all linear 0.2s;
-  transition: all linear 0.2s;
 }
 
-a.button.inline{
+a.button {
+	display: block;
+	line-height: 30px;
+	margin: -5px 0;
+	color: rgba(146, 202, 255, 1);
+	padding: 0 15px;
+	text-decoration: none;
+	background-color: rgba(63, 63, 63, 1);
+	background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(63, 63, 63, 1)));
+	background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(63, 63, 63, 1));
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+	border: 1px solid rgba(6, 9, 4, 1);
+	border-radius: 5px;
+	font-weight: bold;
+	text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
+	transition: all 0.2s linear;
+	transition: all linear 0.2s;
+}
+
+
+a.button.inline {
 	display: inline-block;
 }
 
-a.button.with_icon:before {
-  content:"";
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background: transparent url("../img/yoosprite.png") no-repeat 50px 50px;
-  vertical-align: text-top;
-  margin: 2px 4px 0 0;
+
+a.button:hover, a.button:focus {
+	background-image: -moz-linear-gradient(top, rgba( 127, 127, 127, 1), rgba(63, 63, 63, 1));
+	background-image: -webkit-gradient(linear, center top, center bottom, from(rgba( 127, 127, 127, 1)), to(rgba(63, 63, 63, 1)));
+	background-image: -o-linear-gradient(top, rgba( 127, 127, 127, 1), rgba(63, 63, 63, 1));
+	color: rgba(13, 189, 254, 1);
 }
 
-a.button.with_icon.create_new:before {
-  background: transparent url("../img/yoosprite.png") no-repeat -204px -22px;
-}
-
-a.button.with_icon.save_state:before {
-  background: transparent url("../img/yoosprite.png") no-repeat -140px -22px;
-}
-
-a.button:hover,
-a.button:focus {
-  background-image: -moz-linear-gradient(top, rgba( 127, 127, 127, 1), rgba(63, 63, 63, 1));
-  background-image: -webkit-gradient(linear, center top, center bottom, from(rgba( 127, 127, 127, 1)), to(rgba(63, 63, 63, 1)));
-  background-image: -o-linear-gradient(top, rgba( 127, 127, 127, 1), rgba(63, 63, 63, 1));
-  color: rgba(13, 189, 254, 1);
-}
 
 a.button:active {
-  background-image: none;
-  background-color: rgba(63, 63, 63, 1);
-  color: white;
+	background-image: none;
+	background-color: rgba(63, 63, 63, 1);
+	color: white;
 }
 
-a.save,
-a.login,
-a.delete,
-a.close {
-  display: inline-block;
-  padding: 0 15px;
-  border: 1px solid rgba(216, 216, 216, 1);
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  font-weight: bold;
-  text-shadow: 0px -1px 0px rgba(0, 0, 0, 1);
-  -webkit-transition: all linear 0.2s;
-  -moz-transition: all linear 0.2s;
-  -ms-transition: all linear 0.2s;
-  -o-transition: all linear 0.2s;
-  transition: all linear 0.2s;
-  text-decoration: none;
-  background-color: rgba(72, 80, 68, 1);
-  background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(72, 80, 68, 1));
-  background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(72, 80, 68, 1)));
-  background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(72, 80, 68, 1));
-  line-height: 30px;
-  color: rgba(146, 202, 255, 1);
-}
 
-a.save.inactive, a.save.inactive:hover{
+a.button.inactive, a.button.inactive:hover {
 	color: rgba(200,200,200,1);
 	background-color: rgba(170, 170, 170, 1);
 	background-image: none;
@@ -291,7 +191,27 @@ a.save.inactive, a.save.inactive:hover{
 }
 
 
-a.delete {
+a.button.with_icon:before {
+  content:"";
+  width: 16px;
+  height: 16px;
+  background: transparent url("../img/yoosprite.png") no-repeat 50px 50px;
+  vertical-align: text-top;
+  margin: 2px 4px 0 0;
+}
+
+
+a.button.with_icon.create_new:before {
+  background: transparent url("../img/yoosprite.png") no-repeat -204px -22px;
+}
+
+
+a.button.with_icon.save_state:before {
+  background: transparent url("../img/yoosprite.png") no-repeat -140px -22px;
+}
+
+
+a.button.important {
   background-color: rgba( 192,  80,  77, 1);
   background-image: -moz-linear-gradient(top, rgba( 217, 150, 148, 1), rgba( 192,  80,  77, 1));
   background-image: -webkit-gradient(linear, center top, center bottom, from(rgba( 217, 150, 148, 1)), to(rgba( 192,  80,  77, 1)));
@@ -299,27 +219,16 @@ a.delete {
   color: rgba(255, 232, 230, 1);
 }
 
-a.save:hover,
-a.save:focus,
-a.login:hover,
-a.login:focus,
-a.close:hover,
-a.close:focus {
-  color: rgba(161, 238, 242, 1);
-  background-color: rgba(0, 0, 0, 1);
-  background-image: -moz-linear-gradient(top, rgba(139, 149, 137, 1), rgba(0, 0, 0, 1));
-  background-image: -webkit-gradient(linear, center top, center bottom, from(rgba(139, 149, 137, 1)), to(rgba(0, 0, 0, 1)));
-  background-image: -o-linear-gradient(top, rgba(139, 149, 137, 1), rgba(0, 0, 0, 1));
-}
 
-a.delete:hover,
-a.delete:focus {
+a.button.important:hover,
+a.button.important:focus {
   background-color: rgba(219, 7, 2, 1);
   background-image: -moz-linear-gradient(top, rgba( 217, 150, 148, 1), rgba(219, 7, 2, 1));
   background-image: -webkit-gradient(linear, center top, center bottom, from(rgba( 217, 150, 148, 1)), to(rgba(219, 7, 2, 1)));
   background-image: -o-linear-gradient(top, rgba( 217, 150, 148, 1), rgba(219, 7, 2, 1));
   color: white;
 }
+
 
 a.pdf:before {
   content: "";
@@ -681,14 +590,10 @@ input[type="text"].inverted {
 
 .normal_form input:focus {
   outline: 0;
-  -webkit-box-shadow: 0 0 8px rgba(13, 189, 254, 1);
-  -moz-box-shadow: 0 0 8px rgba(13, 189, 254, 1);
   box-shadow: 0 0 8px rgba(13, 189, 254, 1);
 }
 
 .normal_form .problem input {
-  -webkit-box-shadow: 0 0 8px rgba(192, 80, 77, 1);
-  -moz-box-shadow: 0 0 8px rgba(192, 80, 77, 1);
   box-shadow: 0 0 8px rgba(192, 80, 77, 1);
 }
 
@@ -729,40 +634,40 @@ input[type="text"].inverted {
 /*Global dialog*/
 
 
-		.overlay .dialog_body {
-			padding: 40px;
-			margin: 5% auto 0 auto;
-			position: relative;
-		    background: white url("../img/rauschen.png") repeat left top;
-			box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
-			border: 1px solid #000000;
-			border-radius: 6px; 
-			-moz-border-radius: 6px;
-			-webkit-border-radius: 6px;
-		}
-	
-		.overlay .dialog_body h2 {
-		    display: block;
-		    font-size: 24px;
-		    border-bottom: 1px solid rgba(216, 216, 216, 1);
-		    padding-bottom: 5px;
-		    margin: 0 0 10px 0;
-		}
-		
-		.overlay .dialog_body h3 {
-		  	display: block;
-			background: none;
-		  	color: inherit;
-		  	padding: 0;
-		  	position: inherit;
-		  	text-shadow: none;
-		  	font-size: 18px;
-		  	margin: 40px 0 20px;
-		}
-		
-		.overlay .dialog_body p {
-			margin-bottom: 10px;
-		}
+.overlay .dialog_body {
+	padding: 40px;
+	margin: 5% auto 0 auto;
+	position: relative;
+    background: white url("../img/rauschen.png") repeat left top;
+	box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+	border: 1px solid #000000;
+	border-radius: 6px; 
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+
+.overlay .dialog_body h2 {
+    display: block;
+    font-size: 24px;
+    border-bottom: 1px solid rgba(216, 216, 216, 1);
+    padding-bottom: 5px;
+    margin: 0 0 10px 0;
+}
+
+.overlay .dialog_body h3 {
+  	display: block;
+	background: none;
+  	color: inherit;
+  	padding: 0;
+  	position: inherit;
+  	text-shadow: none;
+  	font-size: 18px;
+  	margin: 40px 0 20px;
+}
+
+.overlay .dialog_body p {
+	margin-bottom: 10px;
+}
 		
 		
 		
@@ -1835,10 +1740,6 @@ font.settings:hover{
   width: 40%;
 }
 
-.change_password > .clearfix {
-  padding: 20px;
-}
-
 .change_mandant .actions,
 .change_password .actions {
   display: block;
@@ -2023,6 +1924,7 @@ section.help > article img {
 .models_groups > li {
   display: block;
   padding: 17px 0 0 15px;
+  min-height: 150px;
 }
 
 .models_groups > li > h4,

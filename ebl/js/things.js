@@ -363,6 +363,7 @@ var layerSizing = function (overlay) {
 	overlay.css({'height': fullHeight + 'px', 'width': fullWidth + 'px'});
 };
 
+
 function setDialogs(modelID) {
 
 	var overlay = $('.overlay');
@@ -836,7 +837,7 @@ var activateRandomModelDialog = function (model, title) {
 
 
 var activateDialog = function () {
-	var openButton = $(".configure_model, .change_password");
+	var openButton = $(".configure_model");
 	openButton.on("click", function (event) {
 		var modelID = $(this).closest("li.model").find("h5").text();
 		setDialogs(modelID);

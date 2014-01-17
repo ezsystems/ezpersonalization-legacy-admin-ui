@@ -53,8 +53,9 @@ var initSwitchMandator = function() {
 	$("#saveMandatorChange").on("click", function (event) {
 		if($('#choose_mandant').val() != "") {
 			
-			$.cookie('customerID', $('#choose_mandant').val(), { expires: 365 });
-			var customerID = $.cookie('customerID');
+			var customerID = $('#choose_mandant').val();
+			
+			$.cookie('customerID', customerID, { expires: 365 });
 			
 			var mandatorInfo = getAccesibleMandator(customerID);
 			

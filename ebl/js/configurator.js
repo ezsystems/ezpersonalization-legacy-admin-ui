@@ -9,12 +9,8 @@
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
 	  $('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
 
-
-	  setLoadingDiv($('.models_groups'));
-
-	  setLoadingDiv($('.title'));
-	  setLoadingDiv($('.type'));
-	  setLoadingDiv($('.storyboards_base'));
+	  
+	  setLoadingDiv($('body'));
 
 	  //ajax request for the models on the left side
 	  $.ajax({
@@ -121,7 +117,8 @@
 			  }
 			  modelRefList.modelRefArray = modelRefArray;
 			  $('body').data('model_list', modelRefList);
-			  loadRightSection();
+			  
+			  loadRightSection(); // ONE MORE THREAD IS STARTED HERE
 
 			  $('body').on('mouseover', '.model', function() {
 				  setLiveDragDrop($(this));
@@ -131,7 +128,6 @@
 			  //	setLiveDragDrop($(this));
 			  //});
 
-			  unsetLoadingDiv($('.models_groups'));
 			  localizer();
 			  window.parent.$("#contentFrame").height( '100%');
 		  },
@@ -706,9 +702,7 @@ function deleteScenario() {
 				  }
 			  }
 			  localizer();
-			  unsetLoadingDiv($('.title'));
-			  unsetLoadingDiv($('.type'));
-			  unsetLoadingDiv($('.storyboards_base'));
+			  unsetLoadingDiv($('body'));
 			  setEquals();
 		  },
 		  error: stdAjaxErrorHandler

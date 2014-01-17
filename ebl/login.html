@@ -42,13 +42,13 @@
       </div>
     </header>
     
-    <section class="login_center normal_form" data-i18n-ready="visible">
+    <section id="login_dialog" class="login_center normal_form" data-i18n-ready="visible">
       <form action="" method="get" onsubmit="return false">
         <fieldset>
           <h3 data-translate="login_welcometo">Welcome to YOOCHOOSE</h3>
           
           <div class="actions">
-           	  <a class="login" data-translate="login_new_login_button" href="/api/v4/registration/login">Login</a>
+           	  <a class="login inline button" data-translate="login_new_login_button" href="/api/v4/registration/login">Login</a>
           </div>
             
           <h3 data-translate="login_old_login_header">For customers registered before 01.02.2014</h3>
@@ -57,7 +57,7 @@
             <label for="email" class="required">
               <span data-translate="login_email">Email:</span>
             </label>
-            <input type="text" name="email" id="email" autofocus="autofocus" style="height: 2em;"/>
+            <input type="text" name="email" id="email" autofocus="autofocus" style="height: 2em;" tabindex="0"/>
           </div>
           <div>
             <label for="password" class="required">
@@ -66,8 +66,8 @@
             <input type="password" name="password" id="password" style="height: 2em;" />
             <a id="resetp" class="reset_password" data-translate="login_forgot">Forgot?</a>
           </div>
-          <div class="actions">
-            <a class="login form_submit_button" data-translate="login_login">Legacy Login</a>
+          <div class="actions" style="padding: 10px;">
+            <a class="login form_submit_button inline button" data-translate="login_login" tabindex="0">Legacy Login</a>
           </div>
         </fieldset>
       </form>
@@ -98,45 +98,39 @@
         <a class="close">OK</a>
       </p>
     </div>
-    <form style="display: hidden" action="#" method="GET" id="formff">
-		  <input type="hidden" id="freeusername" name="freeusername" value=""/>
-	</form>
 	
-	<div class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);min-height: 100%;" id="messageReset">
-		<div class="dialog_body change_password" id="messageBodyReset" style="margin: 0px auto 0 auto; width: 400px;" >
+	<div class="overlay" id="messageReset">
+		<div class="dialog_body change_password" id="messageBodyReset" style="width: 400px;" >
 			<a class="destroy_dialog" id="destroy_dialog" >X</a>
-			<div class="clearfix" id="messageBodyReset2">
-				 <form class="normal_form clearfix" action="#" method="get">
-				  <h2 data-translate="reset_password_forgot_your_password" >Forgot your password?</h2>
-        		  <p data-translate="reset_password_reset_your_password_text" style="padding: 0px 0px 20px 10px;">Don't worry, we'll send you a mail with a link to page,<br/>where you can make in a new one.</p>
-           			<ul>
-              			<li>
-	               			<label for="fpemail" class="required" style="width: 30%;">
-				              <span data-translate="reset_password_email">Email:</span>
-				            </label>
-				            <input type="text" name="fpemail" id="fpemail" placeholder="Email used for registration" autofocus="autofocus" style="width: 60%;" />
-          				</li>
-			            
-              			<li style="text-align: center;">
-			                <img id="captchaimage" style="width: 50%;" src="" />
-			            </li>
-			             <li class="new_password_confirm">
-			                <label for="captcha" class="required" style="width: 30%;">
-				                <span>Captcha:</span>
-				             </label>
-				             <input type="text" name="captcha" id="captcha" style="width: 60%;" />
-							 <input style="display:none;" type="text" name="captchascope" id="captchascope" />
-			             </li>
-			            
-			             <li class="validation_message" style="display:none">
-			                <p class="annotation" id="validation_message" style="margin-left: 30%;" data-translate="error_fill_required_fields">Fill all requeared fields</p>
-			             </li>
-			             <li class="actions" style="padding-right: 13px;">
-			                <a onclick="resetPass();" id="destroyButtonOverlay"  class="login button" data-translate="reset_password_send">Save changes</a>
-			             </li>
-            		</ul>
-        	  </form>
-			</div>
+			<form class="normal_form" action="#" method="get">
+				<h2 data-translate="reset_password_forgot_your_password" >Forgot your password?</h2>
+	       		<p data-translate="reset_password_reset_your_password_text" style="padding: 0px 0px 20px 10px;">Don't worry, we'll send you a mail with a link to page,<br/>where you can make in a new one.</p>
+	   			<ul>
+         			<li>
+             			<label for="fpemail" class="required" style="width: 30%;">
+	             			<span data-translate="reset_password_email">Email:</span>
+	            		</label>
+	            		<input type="text" name="fpemail" id="fpemail" placeholder="Email used for registration" autofocus="autofocus" style="width: 60%;" />
+      				</li>
+           			<li class="captcha" style="text-align: center;">
+            	    	<img id="captchaimage" style="width: 50%;" src="" />
+            		</li>
+  	      			<li class="captcha new_password_confirm">
+        	        	<label for="captcha" class="required" style="width: 30%;">
+	            	    	<span>Captcha:</span>
+	        	    	</label>
+	             		<input type="text" name="captcha" id="captcha" style="width: 60%;" />
+				 		<input style="display:none;" type="text" name="captchascope" id="captchascope" />
+             		</li>
+            		<li class="validation_message" style="display:none">
+                		<p class="annotation" id="validation_message" style="margin-left: 30%;" data-translate="error_fill_required_fields">Fill all requeared fields</p>
+            		</li>
+            		<li class="actions" style="padding-right: 13px;">
+                		<a class="send button inline submit" data-translate="reset_password_send">Send</a>
+                		<a class="close button inline submit" data-translate="reset_password_close">Close</a>
+           			</li>
+         		</ul>
+       	  </form>
 		</div>
 	</div>
 
