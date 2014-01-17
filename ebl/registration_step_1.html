@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Registration</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="css/styles_new.css">
+    <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/jquery-ui.1.8.16.min.js"></script>
+    <script src="js/browser_detection.js"></script>
+    <script src="js/form_submit_trigger.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="ebl2/js/localizations/localizer.js"></script>
+	<script>
+	
+	var template = gup('template');
+	var email    = unescape(gup('email'));
+	var weburl   = unescape(gup('weburl'));
+	var lang     = gup('lang');
+	var solution = gup('solution');
+	
+	function saveForm(mailValue,weburl,captcha)
+	{
+	
+		var showError = false;
+		var mailProblem = false;
+		
+		if(weburl == ""){
+			$('label[for="weburl"]').parent().addClass("problem");
+			showError = true;
+		}else{
+			$('label[for="weburl"]').parent().removeClass("problem");
+		}
+		if(captcha == ""){
+			$('label[for="captcha"]').parent().addClass("problem");
+			showError = true;
+		}else{
+			$('label[for="captcha"]').parent().removeClass("problem");
+		}
+		if(mailValue == ""){
+			$('label[for="email"]').parent().addClass("problem");
+			showError = true;
+		}else{
+			if(mailValue.length<5 || mailValue.indexOf('@') == -1 || mailValue.indexOf('.') == -1 ){
+				$('label[for="email"]').parent().addClass("problem");
+				mailProblem = true;
+			}else{
+				$('label[for="email"]').parent().removeClass("problem");
+			}
+		}	
+		
+		if(!$('#privacy').is(':checked')){
+			$('label[for="privacy"]').parent().addClass("problem");
+			showError = true;
+		}else{
+			$('label[for="privacy"]').parent().removeClass("problem");
+		}
+		if(!$('#ownership_confirmation').is(':checked')){
+			$('label[for="ownership_confirmation"]').parent().addClass("problem");
+			showError = true;
+		}else{
+			$('label[for="ownership_confirmation"]').parent().removeClass("problem");
+		}
+		if(showError){
+			 setMessagePopUp("problem", "error_required_fields");
+		}else if(mailProblem){
+			setMessagePopUp("problem", "error_wrongmail");
+			showError = true;
+		}
+		return !showError;
+	}
+
+$(document).ready(function () {
+
+    var captchascope = Math.round(Math.random() * 100000);
+
+    $('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
+
+	var emaildecode = decodeURIComponent(email);
+	$('#email').val(emaildecode);
+	$('#weburl').val(decodeURI(weburl));
+	if(lang != "")
+	{
+		$.cookie('language', lang, { expires: 365 });
+		localizer();
+	}
+	
+	var toCheckSolution = true;
+	if(template != "")
+	{
+		toCheckSolution = false;
+		$('.radio').hide();
+	}
+	
+	if(solution == "newsl")
+	{
+		toCheckSolution = false;
+		$('#profile_type_publisher_basic').attr("checked", "checked");
+	}
+	else if(solution =="newsh")
+	{
+		toCheckSolution = false;
+		$('#profile_type_publisher_advanced').attr("checked", "checked");
+	}
+	else if(solution == "ebh")
+	{
+		toCheckSolution = false;
+		$('#profile_type_shop').attr("checked", "checked");
+	}
+	else if(solution =="ebl" || toCheckSolution)
+	{
+		$('#profile_type_shop_lite').attr("checked", "checked");
+	}
+	
+    $('a.login').click(function () {
+
+		var username = $.trim($('#email').val()),
+			templateParam = template,
+			solution = $('input[name="solution"]:checked').val(),
+			weburl = $.trim($('#weburl').val()),
+			captcha = $.trim($('#captcha').val()),
+			privacy = $('#privacy').is(':checked'),
+			ownership = $('#ownership_confirmation').is(':checked');
+
+		if (saveForm(username,weburl,captcha )) {
+
+			username = encodeURI(username);
+
+			setLoadingDiv($('.actions'));
+            var url = $('form').attr('action');
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                data: {
+                    username: username,
+                    email: username,
+                    solution: solution,
+                    weburl: weburl,
+                    captcha: captcha,
+                    captchascope: captchascope,
+                    template: templateParam,
+					locale: in_to_language
+                },
+                url: url,
+                statusCode: {
+                    412: function (jqXHR, textStatus, errorThrown) {
+                        setMessagePopUp("problem", "registration_step_1_message_captcha_not_correct");
+						captchascope = Math.round(Math.random() * 100000);
+						$('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
+						$('#captcha').val("");
+                    },
+                    409: function (jqXHR, textStatus, errorThrown) {
+                        setMessagePopUp("problem", "registration_step_1_message_login_name_already_used");
+                    }
+                },
+                success: function (json) {
+                    //on success
+                    //setMessagePopUp("positive", "registration_step_1_message_register_successfull");
+					window.location = "confirmation.html";
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 503)
+					{
+						setMessagePopUp("problem", "error_server_error_503");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+					unsetLoadingDiv($('.actions'));
+                }
+            });
+        } 
+    });
+	
+	$('.reload_captcha').click(function() {
+		captchascope = Math.round(Math.random() * 100000);
+		$('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
+		$('#captcha').val("");
+	});
+
+});
+	
+	</script>
+  </head>
+  <body id="registration">
+    <header class="clearfix top_head">
+      <div class="logo_area s1_5">
+        <h1 class="hide" title="YooChoose. We recommend."><span>YooChoose. We recommend.</span></h1>
+      </div>
+      <div class="top_bar clearfix">
+        <ul class="language_selection clearfix">
+          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
+          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
+          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
+        </ul>
+      </div>
+    </header>
+    <section class="registration_step_1 normal_form">
+      <form action="/ebl/v3/registration/register_new_customer" method="post" class="clearfix">
+        <fieldset class="primary_data s2_5">
+		  <input style="display:none;" type="text" name="template" id="template" />
+		  <input style="display:none;" type="text" name="username" id="username" />
+          <h3 data-translate="regstep1_createaccount">Create an Account</h3>
+          <div class="wrapper clearfix">
+            <p data-translate="regstep1_createaccount_information">Your YooChoose account gives you access to YooChoose recommendations services. If you already have an account, you can <a href="login.html">sign in here</a></p>
+            <div>
+              <label for="email" class="required">
+                <span data-translate="regstep1_email">Email:</span>
+              </label>
+              <input type="text" name="email" id="email" autofocus="autofocus" />
+            </div>
+            <div style="display:none;">
+              <label for="company" class="required">
+                <span data-translate="regstep1_company_name">Company name:</span>
+              </label>
+              <input type="text" name="company" id="company" />
+            </div>
+            <div class="checkbox radio">
+              <label for="profile_type_publisher_basic" class="required">
+                <input type="radio" name="solution" id="profile_type_publisher_basic" value="newsl" />
+                <span data-translate="regstep1_publisher_basic">Publisher Basic</span>
+              </label>
+            </div>
+            <div class="checkbox radio">
+              <label for="profile_type_publisher_advanced" class="required">
+                <input type="radio" name="solution" id="profile_type_publisher_advanced" value="newsh" />
+                <span data-translate="regstep1_publisher_advanced">Publisher Advanced</span>
+              </label>
+            </div>
+            <div class="checkbox radio">
+              <label for="profile_type_shop" class="required">
+                <input type="radio" name="solution" id="profile_type_shop" value="ebh" />
+                <span data-translate="regstep1_ebh">E-Business</span>
+              </label>
+            </div>
+            <div class="checkbox radio">
+              <label for="profile_type_shop_lite" class="required">
+                <input type="radio" name="solution" id="profile_type_shop_lite" value="ebl" />
+                <span data-translate="regstep1_ebl">E-Business Solution Lite</span>
+              </label>
+            </div>
+            <div>
+              <label for="weburl" class="required">
+                <span data-translate="regstep1_websiteurl">Web-site URL:</span>
+              </label>
+              <input type="text" name="weburl" id="weburl" />
+            </div>
+            <div class="checkbox">
+              <label for="privacy" class="required">
+                <input type="checkbox" name="privacy" id="privacy" />
+                <span data-translate="regstep1_checkbox1">I have read, understood and accept the privacy statement.</span>
+              </label>
+            </div>
+            <div class="checkbox">
+              <label for="ownership_confirmation" class="required">
+                <input type="checkbox" name="ownership_confirmation" id="ownership_confirmation" />
+                <span data-translate="regstep1_checkbox2">I am authorized to order, close and confirm the data processing agreement on behalf of the given company name.</span>
+              </label>
+            </div>
+            <div class="captcha_actions">
+              <img id="captchaimage" src="" />
+              <a href="#" class="reload_captcha" data-translate="regstep1_reload_captcha">Reload captcha</a>
+            </div>
+            <div class="captcha">
+              <label for="captcha" class="required">
+                <span>Captcha:</span>
+              </label>
+              <input type="text" name="captcha" id="captcha" />
+			  <input style="display:none;" type="text" name="captchascope" id="captchascope" />
+            </div>
+            <div class="actions">
+              <a class="login button" data-translate="regstep1_register">Register</a>
+            </div>
+          </div>
+        </fieldset>
+        <div class="according_infos s3_5">
+          <h3 data-translate="regstep1_licence_and_legal">Licence and legal information</h3>
+          <div class="wrapper clearfix">
+            <p data-translate="regstep1_licence_and_legal_information">You are only a few steps from your free trial YOOCHOOSE Recommender Engine. Before we provide you the ability to create an account, we draw your attention to some legal issues. We take the issue of data protection and privacy very seriously and ask you therefore to read the following instructions carefully and conform the data protection information in your website accordingly, if necessary. You may also <a href="https://admin.yoochoose.net/docs/privacy_en.pdf" class="pdf">view and download the PDF version</a></p>
+            <div class="legal_text" id="legal_text_1">
+
+            </div>
+            
+            <p data-translate="regstep1_legal_text"><br/>Furthermore, it is necessary that you allow us to process the data of your users on your behalf. This kind of information is involved, usage consumption and the like. Please confirm your subscription by entering your e-mail address and your company under the following agreement. All data is been sent to us by you, and according to the equirements of the currently applicable data protection laws. You may also <a href="https://admin.yoochoose.net/docs/data_en.pdf" class="pdf">view and download the PDF version</a></p>
+            
+            <div class="legal_text" id="legal_text_2">
+
+            </div>
+            
+          </div>
+        </div>
+      </form>
+    </section>
+    <div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text">Something neutral happened. That's it.</span>
+        <a class="close">OK</a>
+      </p>
+    </div>
+    
+    
+  </body>
+</html>
