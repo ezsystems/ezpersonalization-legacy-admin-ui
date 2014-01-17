@@ -61,8 +61,9 @@ $(document).ready(function () {
 				currentMandator = mandatorList[0];
 				$('#choose_mandant').append('<option value="' + currentMandator.name + '">' + currentMandator.name + ': ' + currentMandator.website + '</option>');
 			}
+			if(currentMandator !=null ){
 			
-			
+			}
 	
 			if (currentMandator == null) {
 				if(mandatorList.length == 0) {

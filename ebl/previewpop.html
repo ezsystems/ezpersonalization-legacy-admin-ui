@@ -68,7 +68,7 @@
 				<input type="text" id="scenario_title" name="scenario_title" placeholder="Title of scenario" disabled="disabled" />
 			</div>
 		  </div>
-		  <a style="float:right; right: 4em;" class="button with_icon save_state" id="button_save" data-translate="reset_password_send">Send</a>
+		  <a style="float:right; right: 4em;" class="button with_icon save_state" id="button_save" data-translate="preview_send">Send</a>
 		  
 		    <div class="styled" style="z-index: 1000;">
 		      <ul>
@@ -85,7 +85,7 @@
        <br/>
        <div style="text-align: center;" id="urlid"></div>
         <form action="#" method="get" id="scenario_primary_settings">
-        <ul class="setting_list normal_form s2_5 " style="overflow-y: hidden; width:50%; border-right: 1px solid rgba(217, 226, 216, 1);">
+        <ul class="setting_list normal_form s2_5 " style="overflow-y: hidden; width:50%;">
           <li class="scenario_id text_field clearfix">
 			<div class="s1_5 basis tooltip_trigger" >
 				<label for="user_id" data-translate="preview_userid" style="text-align: left;">User ID:</label>
@@ -144,18 +144,21 @@
 				</div>
 			</div>
           </li>
-          <li class="types_base select_field clearfix">
+          <li class="scenario_id text_field clearfix">
 			<div class="s1_5 basis" >
 				<label for="itemId" class="input_label" data-translate="editorial_list_form_item_id">Item Id:</label>
             </div>
 			<div class="s2_5 value" style="width: 75%;">
 				<div>
-					<input id="itemId" type="text" name="itemId" size="10" maxlength="10"/>
-					<a id="addItem" class="save" data-translate="editorial_list_form_add_item">Add</a>
+					<input id="itemId" type="text" name="itemId" size="10" maxlength="10" style=" width: 60%;"/>
+					<a id="addItem" class="save" data-translate="editorial_list_form_add_item" style="margin-right: -8px; right: 0px; position: absolute;">Add</a>
 				</div>
 			</div>
+			
           </li>
-        
+        <li class="validation_message" style="display: none;">
+			<p class="error" id="validation_message" style="margin-left: 20%;" data-translate="">All required fields must be filled</p>
+		</li>	
           <li class="page_id text_area clearfix">
 			<div class="s1_5 basis">
 				<label for="context_items" data-translate="preview_contextitems"  style="text-align: left;">Context Items:</label>
@@ -175,7 +178,7 @@
         <div class="filters_base s2_5" style="overflow-y: hidden; width:48%; margin-left: 1.5%;">
         
         <br/>
-        <code class="prettyprint" id="prettyprint" style="height: 504px; display: block; overflow-y: scroll;">
+        <code class="prettyprint" id="prettyprint" style="height: 470px; display: block; overflow-y: scroll;background: url('/img/previewbg.gif'); border-left: 1px solid rgba(217, 226, 216, 1);padding-left: 1em;">
         </code>
           
         </div>

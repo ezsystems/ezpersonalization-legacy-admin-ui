@@ -1,12 +1,15 @@
  var reference_code = gup('reference_code');
  var customerID = gup('customer_id');
  var outputtypes = gup('outputtypes');
+ var inputtype = gup('inputtype');
+ 
  var showdelete = false;
   
   $(document).ready(function() {
 	  window.parent.$("#contentFrame").height( '100%');
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
 	  $('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
+	 
 
 	  var outputArray = outputtypes.split(',');
 	  $('#output_type').children('option').each(function(index){
@@ -66,10 +69,45 @@
 		  getCallId();
 	  });
 	  initHelpBtn();
+	  
+	  $.ajax({
+		  dataType: "json",
+		  beforeSend: function(req) {
+			  req.setRequestHeader('no-realm', 'realm1');
+		  },
+		  url: "ebl/v3/" + customerID + "/structure/get_scenario/" + reference_code,
+		  success: function(json) {
+			  if(json.scenario.title == null || json.scenario.title == "") {
+				  $("#scenario_title").attr('placeholder',reference_code);
+				 
+			  }
+			  else {
+				 $("#scenario_title").attr('placeholder',json.scenario.title);
+			  }
+		  }
+		  });
 	 
   });
   
   
+  /**
+   * retrieves a item from server with given Id
+   * @param id
+   * @returns {*}
+   */
+  function getItem(type, id) {
+	  $.ajax({
+		  dataType: "json",
+		  beforeSend: function(req) {
+			  req.setRequestHeader('no-realm', 'realm1');
+		  },
+		  async: false, 
+		  url: "ebl/v4/" + customerID + "/elist/get_single_item/" + type + '/' + id,
+		  success: function(json) {
+			 return json.title;
+		  }
+	 });
+  };
  
   
   function addItem(){
@@ -89,15 +127,20 @@
 		  showError('editorial_list_error_id_out_of_bounds');
 		  return;
 	  }
-	  
+	  $('.validation_message').hide();
 	  var items = $('#context_items');
 	  if(items.val()!=null && items.val()!=''){
 		  items.val(items.val()+','+id); 
+	  }else{
+		  items.val(id);  
 	  }
+	  $('#itemId').val('');
   }
   
   function showError(error){
-		
+	  $('.error').attr('data-translate', error);
+	  $('.validation_message').show();
+	  localizer();
   }
   
   function getCallId(){
@@ -170,6 +213,32 @@
 	}
   
 function jsonpCallback(json){
+	showJson(json);
+	showWithTitles(json);
+	
+}
+
+function showWithTitles(json){
+	var titles = false;
+	var list = json.recommendationResponseList;
+	var it = inputtype;
+	if(it == null || it == ''){
+		it = 1;
+	}
+	for(var i in list){
+		var id = list[i].itemId;
+		var title = getItem(it, id);
+		if(title !=null){
+			titles = true;
+			list[i].title = title;
+		}
+	}
+	if(titles){
+		showJson(json);
+	}
+}
+
+function showJson(json){
 	var strjs = JSON.stringify(json,null,'&nbsp;');
 	strjs = strjs.replace(/,/g , ",<br/>");
 	strjs = strjs.replace(/}/g , "<br/>}");
@@ -180,8 +249,9 @@ function jsonpCallback(json){
 	$("#prettyprint").html(strjs);
 	$("#prettyprint").removeClass("prettyprinted"); 
 	prettyPrint();
-	
 }
+
+
 function cancelScenario() {
 	  window.parent.$("#settingsP").hide();
 	  window.parent.$('#cover').hide();

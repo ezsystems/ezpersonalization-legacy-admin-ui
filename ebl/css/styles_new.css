@@ -2529,6 +2529,10 @@ ul.placed_model_settings > li.usesubmodels > div > input {
   color: rgba(192, 80, 77, 1);
 }
 
+li.validation_message > .error {
+  color: rgba(192, 80, 77, 1);
+}
+
 /* General Infos on static pages */
 
 .general_info h2 {
