@@ -1,3 +1,22 @@
+
+
+
+
+/** Parses the query string and returns name/value pairs as map.
+ */
+function getUrlVars() {
+    var vars = [];
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++) {
+        var hash = hashes[i].split('=');
+        vars.push(decodeURIComponent(hash[0]));
+        vars[decodeURIComponent(hash[0])] = decodeURIComponent(hash[1]);
+    }
+    return vars;
+}
+		
+		
+
 //function gup copied from http://www.netlobo.com/url_query_string_javascript.html
 function gup(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -158,39 +177,53 @@ function getGraphDescriptionOf24h(startDate) {
 }
 
 function setLoadingDiv(element) {
-    var width = $(element).width();
-    var height = $(element).height();
+    var width  = $(element).outerWidth();
+    var height = $(element).outerHeight();
 	
-	if($(element).is(":visible"))
-	{
-		$(element).after('<div class="loading" style="position: relative; width: ' + width + 'px; height: ' + height + 'px;"><div class="loader_wrapper w_30"><img src="/img/wait30trans.gif"></div></div>');
-		$(element).hide();
+	if($(element).is(":visible")) {
+		
+		$(element).each(function() {
+			
+		 	var loaddiv = $(this).prev();
+		 	
+		 	var style = 'position: absolute; z-index: 10; width: ' + width + 'px; height: ' + height + "px;";
+		 	
+		 	if (! loaddiv || ! loaddiv.hasClass("loading")) {
+		
+		 		$(this).before('<div class="loading" style="' + style + '"><div class="loader_wrapper w_30"><img src="/img/wait30trans.gif"></div></div>');
+		 		loaddiv = $(this).prev();
+		 	}
+		 	
+		 	loaddiv.attr('style', style);
+		 	
+	 		copyCss(this, loaddiv, [ 
+      	             	"margin", "margin-top", "margin-left", "margin-bottom", "margin-right",
+      	             	"border-top-left-radius", "border-top-right-radius", "border-bottom-right-radius",
+      					"border-bottom-left-radius"]);
+		 });
 	}
 }
+
+
+function copyCss(from, to, props) {
+	for (var i in props) {
+		var prop = props[i];
+		var value = $(from).css(prop);
+		if (value) {
+			$(to).css(prop, value);
+		}
+	}
+}
+
 
 function unsetLoadingDiv(element) {
 	
-	if(!$(element).is(":visible"))
-	{
-		$(element).parent().find('.loading').remove();
-		$(element).show();
-	}
+	//if(!$(element).is(":visible")) {
+		$(element).parent().find('> .loading').hide();
+		//$(element).show();
+	//}
 }
 
-function setMessagePopUp(type, message) {
-	$('.message').removeClass("problem");
-	$('.message').removeClass("positive");
-  $('.message').addClass(type);
-	$('#message_text').attr("data-translate", message);
-	localizer();
-  
-  if ( (type == 'positive') || (type == 'neutral') ){
-    $('.message').removeAttr('style').delay(2500).fadeOut('slow');
-  }else{
-    $('.message').removeAttr('style');
-  }
-  
-}
 
 function validateEmail(email) {
  
@@ -363,10 +396,10 @@ function initHelpBtn(){
 		.on('click', function(e){
 			e.stopPropagation();//prevent the immediate execution of hideOnce
 			var $view = $('#helpView');
-			$view
-				.find('.content')
-				.attr('data-translate', $(this).data('helptxt'));
-			localizer();
+			$view.find('.content').attr('data-translate', $(this).data('helptxt'));
+			
+			i18n($view.find('.content'));
+			
 			$view
 				.css({
 					'left':  e.pageX + 20,
@@ -414,7 +447,7 @@ var initQuickHelp = (function() {
 //		$(document).unbind('mousemove');
 	});
 
-	}
+	};
 })();
 
 window.gui = {};
@@ -443,7 +476,10 @@ $(document).ready(function(){
 			.addClass(typeof classes.accept === 'string' ? classes.accept : '');
 		$infoBox.find('.msg').attr('data-translate', args.message ? args.message : 'provide_message');
 		$infoBox.find('.heading').attr('data-translate', args.heading ? args.heading : 'provide_heading');
-		window.localizer();
+		
+		i18n($infoBox.find('.msg'));
+		i18n($infoBox.find('.heading'));
+		
 		//after we got the localized strings, we replace the place holders
 		if(args.placeHolders){
 			for(name in args.placeHolders){

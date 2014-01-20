@@ -1,26 +1,100 @@
-function setHost(fusername) {
-	    var dev = 'cat.dev';
-	    var test = 'admin.test';
-	   	var src = window.location.href;
-	   	recoHost = 'http://free.yoochoose.net/login.html';
-	   	if(src.indexOf(dev)!=-1 ){
-	    	recoHost = 'http://cat.development.yoochoose.com/ebl2/login.html';
-	    }else{
-	    	if(src.indexOf(test)!=-1 ){
-	    		recoHost = 'http://free.test.yoochoose.net/login.html';
-	    	}else{
-	    		recoHost = 'http://free.yoochoose.net/login.html';
-	    	}
+
+
+
+$(document).ready(function () {
+
+    var editData4 =$("#resetp");
+
+    editData4.on("click", function(event){
+    	resetPasswordShow();
+    	return false;
+    });
+    
+    var closeResetp = function(e) { 
+	    if (e.which == 1 || e.which == 27) {
+	    	resetPasswordClose();
 	    }
-	   	$("#freeusername").val(fusername);
-	   	$("#formff").attr("action",recoHost);
-	   	$("#formff").submit();
-	   	
-	}	 
+    };
+    
+    $(document).bind('keydown', closeResetp);
+    
+    $('#messageReset a.destroy_dialog').on("click", closeResetp);
+    
+    $('#messageReset a.send').on("click", resetPass);
+    $('#messageReset a.close').on("click", closeResetp);
+
+    $('#login_dialog .form_submit_button').click(function () {
+        login();
+    });
+    
+    
+    $('#login_dialog input').keypress(function(e) {
+        if(e.which == 13) {
+            jQuery(this).blur();
+            jQuery('#login_dialog .form_submit_button').focus().click();
+        }
+    });
+    
+    
+    $('#messageReset input').keypress(function(e) {
+        if(e.which == 13) {
+            jQuery(this).blur();
+            jQuery('#messageReset a.submit:visible').focus().click();
+        }
+    });
+    
+});
+
+
+/** Shows password reset div. */
+function resetPasswordShow() {
+	$('label[for="fpemail"]').parent().removeClass("problem");
+	$('label[for="captcha"]').parent().removeClass("problem");
+	$('.validation_message').hide();
+	captchascope = Math.round(Math.random() * 100000);
+    $('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
+    $('#captcha').val("");
+    
+    $("#messageReset .close").hide();
+    $("#messageReset li.captcha").show();
+    $("#messageReset .send").show();
+    
+    $('#messageReset input').removeAttr('readonly');
+    
+    $("#messageReset").show();
+}
+
+
+function resetPasswordValidationMessage(i18n_key) {
+	$('.validation_message').show();
+	$('#validation_message').attr('data-translate', i18n_key);
 	
+	i18n($('#validation_message'));
+}
+
+
+/** Sets password reset div into "finished" mode. */
+function resetPasswordFinished() {
+	resetPasswordValidationMessage("reset_password_message_email_sent");
 	
+	$('#messageReset input').attr('readonly', true);
 	
-function realLogin(email,password){
+    $("#messageReset .close").show();
+    $("#messageReset li.captcha").hide();
+    $("#messageReset .send").hide();
+}
+
+ 
+/** Closed password reset div. */
+function resetPasswordClose() {
+	$("#messageReset").hide();
+}
+	
+
+function realLogin(email,password) {
+	
+	setLoadingDiv($('#login_dialog fieldset'));
+	
 	$.ajax({
 		type: "POST",
 		url: "ebl/v3/registration/create_access_token",
@@ -36,10 +110,28 @@ function realLogin(email,password){
 			password :password
         },
 		success: function (json) {
+			
+			setLoadingDiv($('#login_dialog fieldset'));
+			
 			$.cookie('email', email);
 			window.location = "index.html";
 		},
-		error: error_handler
+		error: function() {
+			
+			unsetLoadingDiv($('#login_dialog fieldset'));
+			
+			if(jqXHR.status != null && jqXHR.status == 403){
+				setMessagePopUp("problem", "error_server_error_403");
+			} else if(jqXHR.status != null && jqXHR.status == 401) {
+				setMessagePopUp("problem", "error_password_or_login_not_correct");
+			} else if(jqXHR.status != null && jqXHR.status == 400) {
+				setMessagePopUp("problem", "error_server_error_400");
+			} else if(jqXHR.status != null && jqXHR.status == 404) {
+				setMessagePopUp("problem", "error_server_error_404");
+			} else {
+				setMessagePopUp("problem", "error_server_error");
+			}
+		}
 	});
 }
 	 
@@ -48,143 +140,13 @@ function login() {
     var email = $('#email').val();
     var password = $('#password').val();
 
-	if(!validateEmail(email))
-	{
+	if(!validateEmail(email)) {
 		setMessagePopUp("problem", "error_login_not_valid_email_address");
-	}
-	else
-	{
-		var request = $.ajax({
-			type: "GET",
-			url: "/ebl/v3/ebl2/getSolution?mandator="+email,
-			dataType: "json"
-		});
-		request.done(function( json ) {
-				var manInfo = json.mandatorInfo;
-				if(manInfo != null){
-					var solution = manInfo.name;
-					if(solution == 'ebl2'){
-						setHost(email);
-					}else{
-						realLogin(email,password);
-					}
-				}
-				else{
-					realLogin(email,password);
-				}
-		});
-		request.fail(function(jqXHR, textStatus) {
-			requestOperating = false;
-			alert( "Request failed: " + textStatus+" "+jqXHR.status );
-		});
-		
-		setLoadingDiv($('.actions'));
-		
-		
+	} else {
+		realLogin(email,password);
 	}
 }
 
-
-function start_sso(provider) {
-	
-	var location = window.location + "";
-	
-	$.ajax({
-		type: "POST",
-		url: "ebl/v3/registration/sso_auth_uri",
-
-		beforeSend: function (req) {
-			req.setRequestHeader('Authorization', "");
-			req.setRequestHeader('no-realm', 'yes');
-		},
-		dataType: "json",
-        data: {
-        	provider: provider,
-        	location: location,
-        },
-		success: function (response) {
-			window.location = response.authenticationRequest.authenticationUri;
-		},
-		error: error_handler
-	});
-	
-	
-// 	$.ajax("", {
-// 		type: "POST",
-		
-// 		beforeSend: function (req) {
-// 			req.setRequestHeader('no-realm', 'yes');
-// 		},
-		
-//         data: {
-//         	provider: provider,
-//         	redirect_uri: window.location,
-//         	"no-realm": "yes"
-//         },
-        
-//         dataType: "json"
-// 		,
-// 		error: error_handler
-// 	}).done(function(json){
-// 				$('body').data('response', json);
-				
-// 				window.location = response.authenticationUri;
-// 			});
-	
-	return false;
-}
-
-
-function error_handler(jqXHR, textStatus, errorThrown) {
-	if(jqXHR.status != null && jqXHR.status == 403)
-	{
-		setMessagePopUp("problem", "error_server_error_403");
-	}
-	else if(jqXHR.status != null && jqXHR.status == 401)
-	{
-		setMessagePopUp("problem", "error_password_or_login_not_correct");
-	}
-	else if(jqXHR.status != null && jqXHR.status == 400)
-	{
-		setMessagePopUp("problem", "error_server_error_400");
-	}
-	else if(jqXHR.status != null && jqXHR.status == 404)
-	{
-		setMessagePopUp("problem", "error_server_error_404");
-	}
-	else
-	{
-		setMessagePopUp("problem", "error_server_error");
-	}
-	unsetLoadingDiv($('.actions'));
-}
-
-$(document).ready(function () {
-	
-    
-    $('#password').keypress(function (e) {
-        if (e.which == 13) {
-            $(this).blur();
-            login();
-        }
-    });
-
-    $('.form_submit_button').click(function () {
-        login();
-    });
-    
-    $('#facebook_login').click(function () {
-    	start_sso("facebook");
-    });
-    
-    $('#google_login').click(function () {
-    	start_sso("google");
-    });
-    
-    $('#twitter_login').click(function () {
-    	start_sso("twitter");
-    });
-});
 
 function resetPass() {
 	
@@ -192,13 +154,11 @@ function resetPass() {
 	var mailProblem = false;
 	var captcha = $('#captcha').val();
 	var fpemail = $('#fpemail').val();
-	if(fpemail == "")
-	{
+	if(fpemail == "")  {
 		$('label[for="fpemail"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
+		
 		if(fpemail.length<5 || fpemail.indexOf('@') == -1 || fpemail.indexOf('.') == -1 ){
 			$('label[for="fpemail"]').parent().addClass("problem");
 			mailProblem = true;
@@ -206,32 +166,30 @@ function resetPass() {
 			$('label[for="fpemail"]').parent().removeClass("problem");
 		}
 	}
-	if(captcha == "")
-	{
+	if(captcha == "") {
 		$('label[for="captcha"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
 		$('label[for="captcha"]').parent().removeClass("problem");
 	}
 	
-	if(showError || mailProblem)
-	{
+	if(showError || mailProblem){
 		if(mailProblem){
 			$('#validation_message').attr('data-translate', "error_wrongmail" );
 		}else{
 			$('#validation_message').attr('data-translate', "error_fill_required_fields" );
 		}
-		localizer();
+		
+		i18n($('#validation_message'));
+		
 		$('.validation_message').show();
-	}
-	else
-	{
-		setLoadingDiv($('#messageBodyReset2'));
+		
+	} else {
+		
+		 setLoadingDiv($('#messageReset .dialog_body'));
          var url = '/ebl/v3/registration/forgot_password';
          $.ajax({
-             type: "POST",
+        	 type: "POST",
              dataType: "json",
              data: {
                  username: fpemail,
@@ -241,58 +199,39 @@ function resetPass() {
              url: url,
              statusCode: {
                  412: function (jqXHR, textStatus, errorThrown) {
-                		 unsetLoadingDiv($('#messageBodyReset2'));
-	                	$('#validation_message').attr('data-translate', "reset_password_message_captcha_not_correct" );
-	             		localizer();
-	             		$('.validation_message').show();
-						captchascope = Math.round(Math.random() * 100000);
-						$('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
-						$('#captcha').val("");
+	        		unsetLoadingDiv($('#messageReset .dialog_body'));
+	        		
+	        		resetPasswordValidationMessage("reset_password_message_captcha_not_correct" );
+	        		 
+					captchascope = Math.round(Math.random() * 100000);
+					$('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
+					$('#captcha').val("");
                  }
              },
-			success: function (json) {
-				unsetLoadingDiv($('#messageBodyReset2'));
-				$('#validation_message').attr('data-translate', "reset_password_message_email_sent" );
-				localizer();
-				$('.validation_message').hide();
-				var layerBody = $('#messageReset').parent('body');
-	    	   	var layer = $('#messageBodyReset');
-	    	   	var overlay = $('#messageReset');
-	    	   	closeLayerContact(layerBody, layer, overlay);
-	    	   	setDialogsContact('messageOkReset','messageBodyOkReset','destroy_dialog');
+			 success: function (json) {
 				
+				 unsetLoadingDiv($('#messageReset .dialog_body'));
 				
-			},
-			error: function (jqXHR, textStatus, errorThrown) {
-				var errormsg;
-					if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						errormsg = "error_server_error_403";
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						errormsg = "error_server_error_401";
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						errormsg = "error_server_error_400";
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						errormsg = "error_server_error_404";
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						errormsg = "error_server_error_409";
-					}
-					else
-					{
-						errormsg = "error_server_error";
-					}
-					unsetLoadingDiv($('#messageBodyReset2'));
-					$('#validation_message').attr('data-translate', errormsg );
-					localizer();
-					$('.validation_message').show();
+				 resetPasswordFinished();
+			 },
+			 error: function (jqXHR, textStatus, errorThrown) {
+				
+				 unsetLoadingDiv($('#messageReset .dialog_body'));
+				
+				 var errormsg;
+				 if(jqXHR.status != null && jqXHR.status == 400) {
+			 		errormsg = "error_server_error_400";
+					
+				 } else if(jqXHR.status != null && jqXHR.status == 404) {
+					errormsg = "error_server_error_login_not_found";
+					
+				} else if(jqXHR.status != null && jqXHR.status == 409) {
+					errormsg = "error_server_error_409";
+					
+				} else {
+					errormsg = "error_server_error";
+				}
+				resetPasswordValidationMessage(errormsg);
 			}
 		});
 	}

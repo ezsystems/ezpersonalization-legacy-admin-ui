@@ -1,4 +1,36 @@
-/* css({'border-top':'5px solid red'}) */
+
+/** It loads the specified scripts and call the specified callback functions.
+ *  It works similar to jQuery.getScript function with some additional features:<br>
+ *  
+ *     1. It is able to load multiple scripts simultaneously.<br>
+ *     2. It loads scripts in cross domain mode (see $.ajax description).<br>
+ *     3. It allows browser to use the cache.<br>
+ */
+var include = function(scripts, callback) {
+	var arguments = [];
+	
+	for (var i in scripts) {
+		arguments.push(cachedScript(scripts[i]));
+	}
+    
+	return $.when.apply(null, arguments).done(function() {
+		if (callback) {
+			callback();
+		}
+	});
+};
+
+
+var cachedScript = function(url) {
+ 	  options = {
+ 			crossDomain: true, // it adds script tag and allows to debug included file 
+		    dataType: "script",
+		    cache: true,
+		    url: url
+	  };
+	  return jQuery.ajax( options );
+};
+
 
 var setChartsDimensions = function () {
 //conversion_rate
@@ -10,8 +42,6 @@ var setChartsDimensions = function () {
 		});
 		if (typeof rightLine !== 'undefined') {
 			rightLine.Draw();
-		}else{
-			console.log("hhhhhhhhhhhhhhhh"+ (typeof rightLine));
 		}
 		if (typeof middlebar !== 'undefined') {
 			middlebar.Draw();
@@ -19,9 +49,7 @@ var setChartsDimensions = function () {
 		if (typeof leftbar !== 'undefined') {
 			leftbar.Draw();
 		}
-		 
 	}
-
 };
 
 var setEquals = function () {
@@ -138,6 +166,24 @@ var setDragDrop = function () {
 		}
 	});
 };
+
+
+
+/** Returns the first non-null argument */
+var ifnull = function() {
+	
+	var i18n_params = Array.prototype.slice.call(arguments, 0);
+	
+	for (var i = 0; i < arguments.length; i++) {
+		if (typeof arguments[i] === 'undefined' || arguments[i] == null) {
+			continue;
+		}
+		return arguments[i];
+	}
+	
+	return null;
+};
+
 
 var setLiveDragDrop = function (element) {
 	element.draggable({
@@ -318,6 +364,7 @@ var layerSizing = function (overlay) {
 	var fullHeight = $('body').outerHeight(true);
 	overlay.css({'height': fullHeight + 'px', 'width': fullWidth + 'px'});
 };
+
 
 function setDialogs(modelID) {
 
@@ -792,7 +839,7 @@ var activateRandomModelDialog = function (model, title) {
 
 
 var activateDialog = function () {
-	var openButton = $(".configure_model, .switch > a, .change_password");
+	var openButton = $(".configure_model");
 	openButton.on("click", function (event) {
 		var modelID = $(this).closest("li.model").find("h5").text();
 		setDialogs(modelID);
@@ -851,9 +898,10 @@ var setMessages = function () {
 
 	var destroyMessageTrigger = $('.message .destroy_message, .message .close');
 	destroyMessageTrigger.on("click", function (event) {
-		$(this).closest('.message').fadeOut('fast');
+		if ( ! $(this).attr("href")) {
+			$(this).closest('.message').fadeOut('fast');	
+		}
 	});
-
 };
 
 var autodestructionMessage = function () {

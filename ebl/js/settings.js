@@ -4,16 +4,22 @@
 	var fromTemplate = gup('from_template');
 	
 	
+  $(document).ready(function() {
+		
+	  // load included files and call initializer
+	  initialize_configurator_header(function() {
+		  initialize();
+	  });
+  });
+  
 	
-	$(window).ready(function() {
+  var initialize = function() {
+	  
 		scenarioReady();
 		//$('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
 		$('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code='+reference_code+'&customer_id='+customerID);
-	
-		//ajax request for the right section
-		setLoadingDiv($('#filter_group_standard'));
-		setLoadingDiv($('#filter_group_item'));
 		
+		setLoadingDiv($('body'));
 	
 		$.ajax({
 				dataType: "json",
@@ -138,34 +144,10 @@
 						$('#limit_max_recs_per_session').val(excludeRepeatedRecommendations);
 					}
 					
-				unsetLoadingDiv($('#filter_group_item'));
+					unsetLoadingDiv($('#filter_group_item'));
 				},
-				error : function(jqXHR, textStatus, errorThrown)
-				{
-					if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
+				error : function(jqXHR, textStatus, errorThrown) {
+					settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
                 }
 		});
 		
@@ -178,41 +160,94 @@
 			saveForm();
 		});
 		
-	});
+	};
 	
-	var updatef1;
-	var updatef2;
-	var updatese;
-	var transferOk;
 	function saveForm(){
-		updatef1 = false;
-		updatef2 = false;
-		updatese = false;
-		transferOk = true;
-	
-		saveSettingsForm();
+		setLoadingDiv($('body'));
 		
-		var timerStatus = setInterval(function () {
-			if(updatef1 && updatef2 && updatese){
-				clearInterval(timerStatus);
-				unsetLoadingDiv($('#filter_group_standard'));
-				unsetLoadingDiv($('#filter_group_item'));
-				unsetLoadingDiv($('.scenario_settings'));
-				unsetLoadingDiv($('.setting_list'));
-				if(transferOk){
-					setMessagePopUp("positive", "message_positive_data_saved_successfully");
-					if(fromTemplate != ""){
-						window.location = $('.configurator_tab').find('a').attr("href");
-					}
-				}
+		saveSettingsForm(function () {
+			unsetLoadingDiv($('body'));
+			setMessagePopUp("positive", "message_positive_data_saved_successfully");
+			if(fromTemplate != ""){
+				window.location = $('.configurator_tab').find('a').attr("href");
 			}
-		},50);
+		});
 	}
 	
 	
+	function saveSettingsForm(callback) {
+		
+		var url = "";
+		if(fromTemplate == "") {
+			url = "ebl/v3/"+customerID+"/structure/update_scenario";
+		}
+		else if(fromTemplate == "1") {
+			url = "ebl/v3/"+customerID+"/structure/create_scenario";
+		}
+		else if(fromTemplate == "2") {
+			url = "ebl/v3/"+customerID+"/structure/copy_library_scenario?source_reference_code=" + encodeURIComponent(reference_code) + "&destination_reference_code=" + encodeURIComponent($('#scenario_id').val());
+		}
+		else if(fromTemplate == "3") {
+			url = "ebl/v3/"+customerID+"/structure/create_scenario";
+		}
 	
-	function saveFiltersForm()
-	{
+		var scenarioID = $('#scenario_id').val();
+		var wrongId = false;
+		if( (scenarioID.indexOf(" ") != 0) &&  (scenarioID.indexOf(" ") != scenarioID.length) && (scenarioID.indexOf(" ") != -1)) {
+			wrongId = true;
+			setMessagePopUp("problem", "error_wrong_characters_in_id");
+		} else {
+			if(scenarioID.indexOf(".") != -1 || scenarioID.indexOf(":") != -1 || scenarioID.indexOf(";") != -1 || scenarioID.indexOf("/") != -1 || scenarioID.indexOf("\\") != -1 || scenarioID.indexOf("'") != -1 || scenarioID.indexOf('"') != -1) {
+				wrongId = true;
+				setMessagePopUp("problem", "error_wrong_characters_in_id");
+			}
+		}
+		
+		if(wrongId == false) {
+			
+			setLoadingDiv($('body'));
+		
+			var json = $('body').data('scenario');
+			$.ajax({
+				type:"POST",
+				beforeSend: function(x) {
+					if (x && x.overrideMimeType) {
+					  x.overrideMimeType("application/json;charset=UTF-8");
+					}
+				  },
+					statusCode: {
+							409: function (jqXHR, textStatus, errorThrown) {
+							setMessagePopUp("problem", "error_scenario_id_already_exists");
+							}
+					},
+				mimeType: "application/json",
+				contentType: "application/json",
+				dataType: "json",
+				data: JSON.stringify(json.scenario),
+				url: url,
+				success: function(json){
+					//on success
+					if(fromTemplate != "")
+					{
+						$('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + json.scenario.referenceCode + "&customer_id=" + customerID);
+						reference_code = encodeURIComponent(json.scenario.referenceCode);
+						addScenarioToParent();
+					}
+					
+					$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString()+"&inputtype="+json.scenario.inputItemType);
+					
+					saveFiltersForm(callback);
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
+				}
+			});
+		}
+	}
+	
+	
+	function saveFiltersForm(callback) {
+		
 		//setLoadingDiv($('.filters_group').children().first());
 		//setLoadingDiv($('.filters_group').children().last());
 		//Save profile filters
@@ -230,57 +265,16 @@
 			data: JSON.stringify(json.profileFilterSet),
 			url: "ebl/v3/" + encodeURIComponent(customerID) + "/structure/update_filter_set/profile/" + encodeURIComponent(reference_code),
 			success: function(json){
-				//on success
-				//unsetLoadingDiv($('.filters_group').children().first());
-				
-				if($.cookie('otherGroupSaved') == "true")
-				{
-					$.cookie('otherGroupSaved', 'false');
-				}
-				else
-				{
-					$.cookie('otherGroupSaved', 'true');
-				}
-				updatef1 = true;
-				saveStandradFilters();
+				saveStandradFilters(callback);
 			},
-			error : function(jqXHR, textStatus, errorThrown)
-			{
-				if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-				updatef1 = true;
-				transferOk = false;
-				saveStandradFilters();
+			error : function(jqXHR, textStatus, errorThrown) {
+				settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
 			}
 		});
-		
-		
 	}
 	
 	
-	function saveStandradFilters(){
+	function saveStandradFilters(callback){
 		//Save standard filters
 		var json = $('body').data('filters_standard');
 		$.ajax({
@@ -296,48 +290,10 @@
 			data: JSON.stringify(json.standardFilterSet),
 			url: "ebl/v3/" + encodeURIComponent(customerID) + "/structure/update_filter_set/standard/" + encodeURIComponent(reference_code),
 			success: function(json){
-				//unsetLoadingDiv($('.filters_group').children().last());
-				
-				if($.cookie('otherGroupSaved') == "true")
-				{
-					$.cookie('otherGroupSaved', 'false');
-					//setMessagePopUp("positive", "message_data_saved_successfully");
-				}
-				else
-				{
-					$.cookie('otherGroupSaved', 'true');
-				}
-				updatef2 = true;
-				
+				callback();
 			},
-			error : function(jqXHR, textStatus, errorThrown)
-			{
-				if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-				updatef2 = true;
-				transferOk = false;
+			error : function(jqXHR, textStatus, errorThrown) {
+				settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
 			}
 		});
 	}
@@ -348,70 +304,30 @@
 		var jsonStandard = $('body').data('filters_standard');
 		var jsonProfile = $('body').data('filters_profile');
 		
-		if($('#no_cheaper_products').attr("checked") == "checked")
-		{ 
+		if($('#no_cheaper_products')[0].checked) { 
 			jsonStandard.standardFilterSet.excludeCheaperItems = "YES";
-		}
-		else
-		{
+		} else {
 			jsonStandard.standardFilterSet.excludeCheaperItems = "NO";
 		}
 		
-		if($('#no_top_sellings').attr("checked") == "checked")
-		{
-			jsonStandard.standardFilterSet.excludeTopSellingResults = true;
-		}
-		else
-		{
-			jsonStandard.standardFilterSet.excludeTopSellingResults = false;
-		}
+		jsonStandard.standardFilterSet.excludeTopSellingResults = $('#no_top_sellings')[0].checked;
 		
-		if($('#currently_viewed').attr("checked") == "checked")
-		{
-			jsonStandard.standardFilterSet.excludeContextItems = true;
-		}
-		else
-		{
-			jsonStandard.standardFilterSet.excludeContextItems = false;
-		}
-
-
-		if($('#no_black_list_items_editor').attr("checked") == "checked")
-		{
-			jsonStandard.standardFilterSet.excludeEditorBlacklistResults = true;
-		}
-		else
-		{
-			jsonStandard.standardFilterSet.excludeEditorBlacklistResults = false;
-		}
+		jsonStandard.standardFilterSet.excludeContextItems = $('#currently_viewed')[0].checked;
 		
-		if($('#no_already_purchased').attr("checked") == "checked")
-		{
-			jsonProfile.profileFilterSet.excludeAlreadyPurchased = true;
-		}
-		else
-		{
-			jsonProfile.profileFilterSet.excludeAlreadyPurchased = false;
-		}
+		jsonProfile.profileFilterSet.excludeAlreadyPurchased = $('#no_already_purchased')[0].checked;
 		
-		if($('#enable_limit_max_recs_per_session').attr("checked") == "checked")
-		{
+		if($('#enable_limit_max_recs_per_session')[0].checked) {
 			jsonProfile.profileFilterSet.excludeRepeatedRecommendations = $('#limit_max_recs_per_session').val();
 			$('#limit_max_recs_per_session').removeAttr("disabled");
-		}
-		else
-		{
+		} else {
 			jsonProfile.profileFilterSet.excludeRepeatedRecommendations = null;
 			$('#limit_max_recs_per_session').attr("disabled", "disabled");
 		}
 		
-		if($('#enable_min_price').attr("checked") == "checked")
-		{
+		if($('#enable_min_price')[0].checked) {
 			jsonStandard.standardFilterSet.minimalItemPrice = $('#limit_min_price').val();
 			$('#limit_min_price').removeAttr("disabled");
-		}
-		else
-		{
+		} else {
 			jsonStandard.standardFilterSet.minimalItemPrice = null;
 			$('#limit_min_price').attr("disabled", "disabled");
 		}
@@ -419,36 +335,26 @@
 		$('body').data('filters_standard', jsonStandard);
 		$('body').data('filters_profile',jsonProfile);
 	}
-	
-	
 
-	//fromTemplate = 1 are copies of old scenarios
-	//fromTemplate = 2 are copies of library
-	//fromTemplate = 3 are new scenarios
-
-	var showdelete = false;
 	
 	function scenarioReady() {
 	
 		var mandatorType = $.cookie('mandatorType');
 		
-		if(mandatorType == "SHOP")
-		{
+		if(mandatorType == "SHOP") {
 			$('#input_type').children('option').each(function(index){
-				if(index > 0)
-				{
-				$(this).hide();
+				if(index > 0) {
+					$(this).hide();
 				}
 			});
 		
 		$('.output_types').children('li').each(function(index){
-				if(index > 0)
-				{
-				$(this).hide();
+				if(index > 0) {
+					$(this).hide();
 				}
 			});
 		
-		}else{
+		} else {
 			var solution = $.cookie('mandatorVersionType');
 			if(solution != null && solution != 'undefined' && solution != 'EXTENDED'){
 				$('#input_type').children('option').each(function(index){
@@ -470,8 +376,7 @@
 			}
 			
 		}
-		if(reference_code == "")
-		{
+		if(reference_code == "") {
 
 			var json = new Object();
 			json.scenario = new Object();
@@ -489,13 +394,14 @@
 			});
 			
 			$('body').data('scenario', json);
-		}
-		else
-		{
+			
+		} else {
+			
+		setLoadingDiv($('body'));
 		
-		setLoadingDiv($('.scenario_settings'));
-		setLoadingDiv($('.setting_list'));
-		
+//		setLoadingDiv($('.scenario_settings'));
+//		setLoadingDiv($('.setting_list'));
+//		
 		var url = "";
 		if(fromTemplate == "2")
 		{
@@ -520,6 +426,8 @@
 				},
 				url: url,
 				success: function(json){
+					
+					unsetLoadingDiv($('body'));
 				
 					$('body').data('scenario', json);
 				
@@ -531,6 +439,7 @@
 						
 					if(json.scenario.outputItemTypes.length > 0)
 					{
+						$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString()+"&inputtype="+json.scenario.inputItemType);
 						for(var i = 0; i < json.scenario.outputItemTypes.length; i++)
 						{
 							if(json.scenario.outputItemTypes[i] == $(this).val())
@@ -543,12 +452,16 @@
 					var additionalParameter = "?reference_code=" + json.scenario.referenceCode + "&customer_id=" + customerID;
 					$('#sc_description').val(json.scenario.description);
 					$('.go_next').attr("href", "configuratorpop.html" + additionalParameter);
-					unsetLoadingDiv($('.scenario_settings'));
-					unsetLoadingDiv($('.setting_list'));
+//					unsetLoadingDiv($('.scenario_settings'));
+//					unsetLoadingDiv($('.setting_list'));
+					
+					
 				
 				},
-				error : function(jqXHR, textStatus, errorThrown)
-				{
+				error : function(jqXHR, textStatus, errorThrown) {
+					
+				  unsetLoadingDiv($('body'));
+					
 				 if(jqXHR.status != null && jqXHR.status == 403)
 					{
 						setMessagePopUp("problem", "error_server_error_403");
@@ -583,55 +496,17 @@
 			{
 				$('#scenario_id').attr("disabled","disabled");
 				$('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
+				$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
 			}
 			else
 			{
 				$('.configurator_tab').addClass("no_link").find('a').attr("href", "#").attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
+				$('.preview_tab').addClass("no_link").find('a').attr("href", "#").attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
 				$('#button_save').attr('data-translate', 'settings_button_save_next_step');
 				$('.delete').attr('data-translate', 'settings_cancel');
 			}
+			
 			localizer();
-			
-			
-			//$('.go_next').click(function(){
-			//	saveForm(");
-			//});
-			
-			$(document).click(function(e){
-				var tid = event.target.id;
-				if(tid != 'atoparrow' && tid !='toparrow' && showdelete){
-					$('.item').hide();
-					showdelete = false;
-				}
-			});
-			
-			$('.cancel').click(function (){
-				cancelScenario();
-			});
-			
-			$('#toparrow').click(function (){
-				if(!showdelete){
-					$('.item').show();
-					showdelete = true;
-				}else{
-					$('.item').hide();
-					showdelete = false;
-				}
-			});
-			
-			$('.delete').click(function () {
-			
-				if(fromTemplate == "")
-				{
-					deleteScenario();
-				}
-				else
-				{
-					cancelScenario();
-				}
-			});
-			
-		
 			
 	};
 	
@@ -690,114 +565,7 @@
         window.parent.$('#select_for_delivered_recommendations_chart_bar_3').append(options);
 
 	}
-	
-	function saveSettingsForm()
-	{
-		var url = "";
-		if(fromTemplate == "")
-		{
-			url = "ebl/v3/"+customerID+"/structure/update_scenario";
-		}
-		else if(fromTemplate == "1")
-		{
-			url = "ebl/v3/"+customerID+"/structure/create_scenario";
-		}
-		else if(fromTemplate == "2")
-		{
-			url = "ebl/v3/"+customerID+"/structure/copy_library_scenario?source_reference_code=" + encodeURIComponent(reference_code) + "&destination_reference_code=" + encodeURIComponent($('#scenario_id').val());
-		}
-		else if(fromTemplate == "3")
-		{
-			url = "ebl/v3/"+customerID+"/structure/create_scenario";
-		}
-	
-		var scenarioID = $('#scenario_id').val();
-		var wrongId = false;
-		if( (scenarioID.indexOf(" ") != 0) &&  (scenarioID.indexOf(" ") != scenarioID.length) && (scenarioID.indexOf(" ") != -1))
-		{
-			wrongId = true;
-			transferOk = false;
-			setMessagePopUp("problem", "error_wrong_characters_in_id");
-		}
-		else
-		{
-			if(scenarioID.indexOf(".") != -1 || scenarioID.indexOf(":") != -1 || scenarioID.indexOf(";") != -1 || scenarioID.indexOf("/") != -1 || scenarioID.indexOf("\\") != -1 || scenarioID.indexOf("'") != -1 || scenarioID.indexOf('"') != -1)
-			{
-				wrongId = true;
-				transferOk = false;
-				setMessagePopUp("problem", "error_wrong_characters_in_id");
-			}
-		}
-		
-		if(wrongId == false)
-		{
-			setLoadingDiv($('.scenario_settings'));
-			setLoadingDiv($('.setting_list'));
-			//filters load weel
-			setLoadingDiv($('.filters_group').children().first());
-			setLoadingDiv($('.filters_group').children().last());
-		
-			var json = $('body').data('scenario');
-			$.ajax({
-				type:"POST",
-				beforeSend: function(x) {
-					if (x && x.overrideMimeType) {
-					  x.overrideMimeType("application/json;charset=UTF-8");
-					}
-				  },
-					statusCode: {
-							409: function (jqXHR, textStatus, errorThrown) {
-							setMessagePopUp("problem", "error_scenario_id_already_exists");
-							updatese = true;
-							transferOk = false;
-							}
-					},
-				mimeType: "application/json",
-				contentType: "application/json",
-				dataType: "json",
-				data: JSON.stringify(json.scenario),
-				url: url,
-				success: function(json){
-					//on success
-					if(fromTemplate != "")
-					{
-						$('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + json.scenario.referenceCode + "&customer_id=" + customerID);
-						reference_code = encodeURIComponent(json.scenario.referenceCode);
-						addScenarioToParent();
-					}
-					
-					updatese = true;
-					saveFiltersForm();
-				},
-				error : function(jqXHR, textStatus, errorThrown)
-				{
-					if(jqXHR.status != null && jqXHR.status == 403)
-						{
-							setMessagePopUp("problem", "error_server_error_403");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 401)
-						{
-							setMessagePopUp("problem", "error_server_error_401");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 400)
-						{
-							setMessagePopUp("problem", "error_server_error_400");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 404)
-						{
-							setMessagePopUp("problem", "error_server_error_404");
-						}
-						else
-						{
-							setMessagePopUp("problem", "error_server_error");
-						}
-					updatese = true;
-					transferOk = false;
-					saveFiltersForm();
-				}
-			});
-		}
-	}
+
 	
 	function updateScenario() {
 		
@@ -820,10 +588,7 @@
 		
 	}
 	
-	function cancelScenario() {
-		  window.parent.$("#settingsP").hide();
-		  window.parent.$('#cover').hide();
-	}
+
 	
 	function deleteScenario() {
 		
@@ -891,4 +656,25 @@
 	
 	
 	
+	
+	
+	
+	function settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown) {
+		
+		unsetLoadingDiv($('body'));
+		
+		if(jqXHR.status != null && jqXHR.status == 403) {
+			setMessagePopUp("problem", "error_server_error_403");
+		} else if(jqXHR.status != null && jqXHR.status == 401) {
+			setMessagePopUp("problem", "error_server_error_401");
+		} else if(jqXHR.status != null && jqXHR.status == 400) {
+			setMessagePopUp("problem", "error_server_error_400");
+		} else if(jqXHR.status != null && jqXHR.status == 404) {
+			setMessagePopUp("problem", "error_server_error_404");
+		} else if(jqXHR.status != null && jqXHR.status == 409) {
+			setMessagePopUp("problem", "error_server_error_409");
+		} else {
+			setMessagePopUp("problem", "error_server_error");
+		}
+	}
 	

@@ -1,6 +1,23 @@
 ﻿/* css({'border-top':'5px solid red'}) */
 
-var in_to_language = "en";
+var in_to_language = "en",
+	translate;
+
+
+function setMessagePopUp(type, message, link) {
+	$('.message').removeClass("problem");
+	$('.message').removeClass("positive");
+    $('.message').addClass(type);
+	$('#message_text').attr("data-translate", message);
+	localizer();
+  
+	if ( (type == 'positive') || (type == 'neutral') ){
+		$('.message').removeAttr('style').delay(2500).fadeOut('slow');
+	} else {
+		$('.message').removeAttr('style');
+	}
+}
+
 
 function localizer() {
 
@@ -35,7 +52,9 @@ function localizer() {
 	
 	translate = {
 	"en": { "login_welcometo": "Welcome to your Recommendation Service",
-			"login_dont_have_account":"Create a new account",
+			"login_slogon": "And get free recommendations on your site in 5 minutes",
+			"login_ad": "Every response will include three recommendations and one Google ad",
+			"login_dont_have_account":"Sign Up",
 			"login_email": "Email:",
 			"login_password": "Password:",
 			"login_forgot": "Forgot password?",
@@ -47,7 +66,7 @@ function localizer() {
 			"regstep1_createaccount_information": 'Your YOOCHOOSE account provides access to Recommendation Services. If you already have an account, you can <a href="login.html">sign in here',
 			"regstep1_email": "Email:",
 			"regstep1_company_name": "Company name:",
-			"regstep1_publisher_basic": "Publisher (Basic)",
+			"regstep1_publisher_basic": "eZ Publish, Publisher (Basic)",
             "regstep1_publisher_advanced": "eZ Publish, Publisher (Advanced)",
 			"regstep1_ebh": "Online shop (Advanced)",
 			"regstep1_ebl" : "Online shop (Basic)",
@@ -57,7 +76,7 @@ function localizer() {
 			"regstep1_checkbox2" : "I am authorized to order, close and confirm the data processing agreement on behalf of the given company.",
 			"regstep1_register" : "Register",
 			"regstep1_licence_and_legal" : "Licence and legal information",
-			"regstep1_licence_and_legal_information" : 'You are only a few steps away from your free trial YOOCHOOSE Recommender Engine. Before you create an account, we request your attention for some legal issues. We take data protection and privacy issues very seriously and ask you to carefully read the following instructions and align the data protection information in your website accordingly. You may also <a href="/pdf/dataprivacy.pdf" class="pdf">view and download the PDF version',
+			"regstep1_licence_and_legal_information" : 'You are only a few steps away from your free trial YOOCHOOSE Recommender Engine. Before you create an account, we request your attention for some legal issues. We take data protection and privacy issues very seriously and ask you to carefully read the following instructions and align the data protection information in your website accordingly. You may also <a href="https://admin.yoochoose.net/pdf/dataprivacy.pdf" class="pdf">view and download the PDF version',
 			"regstep2_createaccount" : "Create an account",
 			"regstep2_createaccount_information" : "Please, provide more information about your company:",
 			"regstep2_email" : "Email:",
@@ -78,6 +97,8 @@ function localizer() {
 			"regstep3_createaccount_information" : "Please, choose how your recommendations will look like, the sample product URL is needed in order to set the recommendation content.",
 			"regstep3_finish_registration" :"Continue configuration",
 			"regstep3_preview" : "Preview",
+			"regstep3_site_tooltip" : "Please provide your web-site URL (main page), for example http://www.mydomain.com",
+			"regstep3_product_tooltip" : "Please provide a sample product page URL from your web-site, for example if your site is http://www.mydomain.com, a product page could be http://www.mydomain.com/ somepath/someproduct.html ",
 			"script_main": "<br/> Please copy the following script and place it in every product page you want to get the recommendations ",
 			"script" : "Script",
 			"statistics" : "Statistics",
@@ -86,11 +107,15 @@ function localizer() {
 			"rec_size_changed" : "The change was saved.<br/> In order to apply the change on your site, please copy the updated script and place it in every product page you want to get the recommendations ",
 			"save_rec_size" : "Save Changes",
 			"show_more_configuration" : "Additional Configuration",
+			"upgrade_body" : "Here you find the latest information about our product offering, technical documentation and contracts.",
+			"show_license_key": "Show License Key",
 			"index_logout" : "Logout",
 			"index_dashboard" : "Dashboard",
+			"back_dashboard" :	"Back to dashboard",
 			"index_help" : "Help",
 			"index_login" : "Login: ",
 			"index_license_key":"License key: ", 
+			"index_license_key_message":"Your license key <span id='licenseKey'></span>",
 			"index_edit_personal" : "Edit personal and contact data",
 			"index_switch_mandant" : "Switch Customer ID",
 			"index_auto_refresh" : "Auto refresh",
@@ -137,11 +162,12 @@ function localizer() {
 			"filters_partly_available" : "Partly available",
 			"filters_save_go_dashboard" : "Save and exit to dashboard",
 			"filters_standard_filters" : "Standard filters",
-			"filters_filters_profile_options" : "User profile related",
+			"filters_filters_profile_options" : "Filters based on the user profile",
 			"filters_no_already_purchased" : "Do not recommend items the user already purchased",
 			"filters_enable_limit_max" : "Max. repeated shows of identical recommendations per session",
+			"filters_enable_min_price" : "Minimum price of the recommended product",
 			"filters_no_black_list_items_user" : "Exclude content that was blacklisted by the user",
-			"filters_filters_on_item" : "Content object related",
+			"filters_filters_on_item" : "Filters based on the content",
 			"filters_outdated_products" : "Do not recommend outdated items",
 			"filters_currently_viewed" : "Do not recommend the item currently viewed",
 			"filters_no_cheaper_products" : "Item price should equal or higher than the price of the context item",
@@ -205,6 +231,7 @@ function localizer() {
 			"configurator_drag_and_drop" : "Drag and drop<br/>a model",
 			"configurator_fall_back" : "Fall-back",
 			"configurator_fall_back_2" : "Fail-safe",
+			"configurator_fall_back_3" : "Ultimate Fail-safe",
 			"configurator_setting_up" : "Model setup ",
 			"configurator_setting_up_cb_model" : "Content Based Model Configuration ",
 			"configurator_relevant" : "Relevant event history:",
@@ -221,7 +248,7 @@ function localizer() {
 			"configurator_save_changes" : "Save changes",
 			"configurator_model_name" : "Model name",
 			"configurator_context" : "Context",
-			"configurator_profile" : "User Profile",
+			"configurator_profile" : "Personalized",
 			"configurator_site" : "Site",
 			"configurator_item" : "Item",
 			"configurator_weight" : "Weight:",
@@ -252,6 +279,8 @@ function localizer() {
 			"reset_password_reset_your_password_text" : "If you need to reset your password,<br/>we send you an Email with a link to get a new one.",
 			"reset_password_email" : "Email:",
 			"reset_password_send" : "Send",
+			"reset_password_message_new_password_to_short" : "Password is too short, please use at least 8 characters",
+			"reset_password_message_invalid_forgotten_password_code" : "The temporary password reset code is not valid anymore, please start the reset process again",
 			"edit_contact_logout" : "Logout",
 			"edit_contact_dashboard" : "Dashboard",
 			"edit_contact_help" : "Help",
@@ -300,17 +329,22 @@ function localizer() {
 			"registration_step_1_message_captcha_not_correct" : "The captcha is not correct. Please try again with another captcha.",
 			"error_required_fields" : "All required fields have to be filled.",
 			"error_session_old" : "Your session is expired",
+			"error_wrongmail" : "Invalid email address",
 			"message_data_saved_successfully" : "The data was saved successfully.",
 			"error_scenario_id_already_exists" : "The scenario id already exists. Please choose an other one.",
 			"error_fill_required_fields" : "All required fields must be filled",
 			"error_url_protocol" : "URL should contain http or https protocol as prefix",
-			"error_url_prefix" : "Product page URL should begin with the Website URL that has been defined during the registration",
+			"error_url_prefix" : "Product page URL should begin with the Website URL",
 			"reset_password_message_email_sent" : "An email was sent to your email adress. Please follow the next steps",
 			"reset_password_message_captcha_not_correct" : "The captcha is not correct. Please try again with another captcha.",
 			"reset_password_message_password_set" : "Your password was successfully updated",
 			"error_login_not_valid_email_address" : "You entered an invalid username. The username must be an email address.",
 			"model_CF_I2I_CLICK_title" : "Also clicked",
 			"model_CF_I2I_CONSUME_title" : "Also consumed",
+			"model_CF_I2I_RATE_title": "Similar rated",
+			"model_CF_I2I_RATE_description" : "Similar rated items based on the explicit ratings of users",
+			"model_CBFT_title": "Content Analysis",
+			"model_CBFT_description" : "Similar items based on content analysis",
 			"model_CF_I2I_BUY_title" : "Also purchased",
 			"model_CF_I2I_MIX_CLICK_BUY_title" : "Ultimately bought",
 			"model_CF_I2I_MIX_CLICK_CONSUME_title" : "Ultimately consumed",
@@ -365,11 +399,11 @@ function localizer() {
 			"model_CF_I2I_CONSUME_description" : "User who consumed this content(read article, view image, etc.), also consumed the following content",
 			"model_POPULARITY_LONG_CLICK_description" : "Most popular content (products, article, etc.) based on the overall usage history",
 			"model_POPULARITY_LONG_BUY_description" : "Most popular items based on the overall purchasing history",
-			"model_POPULARITY_LONG_RATE_description" : "Most popular content (article, image, etc) based on the rating history",
+			"model_POPULARITY_LONG_RATE_description" : "Best rated content",
 			"model_POPULARITY_LONG_CONSUME_description" : "Most popular content (article, image, etc) based on the consumption (articles read, images viewed, etc.) history",
 			"model_POPULARITY_SHORT_CLICK_description" : "Most popular content (product, article, etc.) based on a weighted overall usage history",
 			"model_POPULARITY_SHORT_BUY_description" : "Most popular content (product, article, etc.) based on a weighted purchase history",
-			"model_POPULARITY_SHORT_RATE_description" : "Most popular content based on a weighted amount of ratings",
+			"model_POPULARITY_SHORT_RATE_description" : "Best rated content",
 			"model_POPULARITY_SHORT_CONSUME_description" : "Most popular content based on a weighted amount of consumes",
 			"model_CF_I2I_MIX_CLICK_BUY_description" : "User who clicked on this content (articles, images, etc), also bought the following products",
 			"model_CF_I2I_MIX_TIMED_CLICK_BUY_description" : "User who clicked on this content (products, articles, etc), immediately after bought the following products",
@@ -391,10 +425,11 @@ function localizer() {
 			"webpage_code" : "Customer ID:",
 			"message_want_delete_scenario" : "Do you really want to delete this scenario?",
 			"message_want_change_key" : "Do you really want to change this attribute?",
-			"regstep1_legal_text" : '<br/>Furthermore, it is necessary that you allow us to process the data of your users on your behalf. This kind of information is involved, usage consumption and the like. Please confirm your subscription by entering your e-mail address and your company under the following agreement. All data is been sent to us by you, and according to the equirements of the currently applicable data protection laws. You may also <a href="/pdf/datahandling.pdf" class="pdf">view and download the PDF version</a>',
+			"regstep1_legal_text" : '<br/>Furthermore, it is necessary that you allow us to process the data of your users on your behalf. This kind of information is involved, usage consumption and the like. Please confirm your subscription by entering your e-mail address and your company under the following agreement. All data is been sent to us by you, and according to the equirements of the currently applicable data protection laws. You may also <a href="https://admin.yoochoose.net/pdf/datahandling.pdf" class="pdf">view and download the PDF version</a>',
 			"registration_step2_create_new_password" : "Create new password",
 			"welcome_page_headline" : "Thanks for your registration",
 			"welcome_page_body" : "<strong>Welcome to your Recommendation Service</strong><br/><br/>You will receive an automatical confirmation E-Mail to your specified E-Mail adress.Please confirm your registration by clicking the included link and follow the next steps.Afterwards you will be able to login with your choosen E-Mail adress and password.<br/><br/>",
+			"welcome_page_body2" : "You will receive an automatical confirmation E-Mail to your E-Mail adress. Please confirm your registration by clicking the included link and follow the next steps. Afterwards you will be able to login with your E-Mail adress and password.",
 			"welcome_page_button" : "Back to login page",
 			"message_positive_data_saved_successfully" : "Data saved successfully",
 			"templates_own_scenario_title" : "Totally new, empty scenario",
@@ -404,13 +439,13 @@ function localizer() {
 			"data_privacy_logout" : "logout",
 			"data_privacy_title1" : "Data privacy",
 			"data_privacy_paragraph1" : 'Based on visiting this website (yoochoose.net), information regarding access (date, time, page viewed) may be stored. This information is not person-related but anonymized and used for statistical evaluations only (see also paragraph on "Data Privacy - Google Analytics"). It is not released to any third party for commercial or non-commercial purposes.',
-			"data_privacy_paragraph2" : 'The information you submitted via the <a href="contact.html">contact form</a> or via e-mail will be stored and used by YOOCHOOSE GmbH and the affiliated partner network (subcontractor) exclusively for quotes and order processing. The release to any third party outside of YOOCHOOSE GmbH for commercial or non-commercial purposes is strictly excluded. Any release of such information to any third party outside of YOOCHOOSE GmbH requires the express, personal consent of the rights holder in question.',
+			"data_privacy_paragraph2" : 'The information you submitted via the contact form or via e-mail will be stored and used by YOOCHOOSE GmbH and the affiliated partner network (subcontractor) exclusively for quotes and order processing. The release to any third party outside of YOOCHOOSE GmbH for commercial or non-commercial purposes is strictly excluded. Any release of such information to any third party outside of YOOCHOOSE GmbH requires the express, personal consent of the rights holder in question.',
 			"data_privacy_paragraph3" : 'YOOCHOOSE GmbH expressly points out that data transmission on the Internet (e.g. during communication via e-mail) may not be fully secure and cannot be protected completely from third-party access.',
 			"data_privacy_paragraph4" : 'We expressly do not wish that the contact information on our website be used for commercial advertising, unless YOOCHOOSE GmbH has given prior written consent or a business relationship between the parties already exists. YOOCHOOSE GmbH and all individuals named on this website hereby object to any commercial use and transmission of their data.',
 			"data_privacy_title2" : "Google Analytics",
-			"data_privacy_paragraph5" : 'For this website, YOOCHOOSE GmbH uses Google Analytics to analyze this website and its visitor numbers. According to <a href="http://www.google.com/analytics/de-DE/tos.html">Section 8.1 of its UK terms of service</a>, Google itself requires that all participants incorporate the data privacy statement below (UK TERMS OF SERVICE) on their websites:',
+			"data_privacy_paragraph5" : 'For this website, YOOCHOOSE GmbH uses Google Analytics to analyze this website and its visitor numbers. According to <a href="http://www.google.com/analytics/de-DE/tos.html" target="_blank">Section 8.1 of its UK terms of service</a>, Google itself requires that all participants incorporate the data privacy statement below (UK TERMS OF SERVICE) on their websites:',
 			"data_privacy_paragraph6" : '<em>“This website uses Google Analytics, a web analytics service provided by Google, Inc. (“Google”). Google Analytics uses “cookies”, which are text files placed on your computer, to help the website analyze how users use the site. The information generated by the cookie about your use of the website (including your IP address) will be transmitted to and stored by Google on servers in the United States. Google will use this information for the purpose of evaluating your use of the website, compiling reports on website activity for website operators and providing other services relating to website activity and internet usage. Google may also transfer this information to third parties where required to do so by law, or where such third parties process the information on Google´s behalf. Google will not associate your IP address with any other data held by Google. You may refuse the use of cookies by selecting the appropriate settings on your browser, however please note that if you do this you may not be able to use the full functionality of this website. By using this website, you consent to the processing of data about you by Google in the manner and for the purposes set out above.”</em>',
-			"data_privacy_paragraph7" : 'Source: <a href="http://www.google.com/analytics/de-DE/tos.html">Section 8.1 of the UK terms of service of Google Analytics</a>',
+			"data_privacy_paragraph7" : 'Source: <a href="http://www.google.com/analytics/de-DE/tos.html" target="_blank">Section 8.1 of the UK terms of service of Google Analytics</a>',
 			"corporate_information_title" : "Corporate Information",
 			"corporate_information_directors" : "Managing Directors:",
 			"corporate_information_tax" : "Tax ID:",
@@ -423,6 +458,8 @@ function localizer() {
 			"corporate_information_copyrights_text" : "The content published on this website is subject to German law in terms of copyrights and ancillary copyrights. Each use that is not expressly permitted under the copyright laws and ancillary copyright laws of Germany requires the prior written consent of YOOCHOOSE GmbH or the holder of the copyright in question.</br></br>This applies in particular to the duplication, editing, translation, storage, processing or reproduction of content in databases or other electronic media and systems. The content and rights of any third party shall be labeled as such.</br></br><strong>In principle, the following shall apply:</strong></br>The unauthorized duplication or transmission of individual content or complete web pages is not permitted and constitutes a punishable offense. Furthermore, the representation of this website in third-party frames is also subject to written authorization from YOOCHOOSE GmbH.",
 			"corporate_information_third_party" : "Third-party copyrights",
 			"corporate_information_third_party_text" : 'For copyright information pertaining to images, photographs and illustrations on our website, please go to <a href="copyrights.html">Third-party copyrights</a>.',
+			"corporate_information_third_party_text2" : 'For copyright information pertaining to images, photographs and illustrations on our website, please go to ',
+			"copyrightlink" : "Third-party copyrights.",
 			"contact_title" : "Contact",
 			"contact_form" : "Contact form",
 			"contact_paragraph1" : "Please use the contact form below to get in touch with us. Your message will be delivered directly to our mailbox.",
@@ -444,6 +481,7 @@ function localizer() {
 			"error_server_error_403" : "You do not have sufficient privileges to perform this action.",
 			"error_server_error_404" : "The element you are looking for is not available.",
 			"error_server_error_409" : "This name is already used. Please select another one.",
+			"error_server_error_409_nonCompatibleItemTypes" : "The chosen scenarios are not compatible.",
 			"error_server_error_500" : "The server does not answer correctly. Please try again later.",
 			"index_delivered_recommendations_scenario" : "Delivered recommendations",
 			"error_wrong_characters_in_id" : "Wrong characters in Szenario ID",
@@ -488,14 +526,16 @@ function localizer() {
 			"editorial_list_error_invalid_id" : 'The item id you entered is invalid, it must be a natural number!',
 			"editorial_list_error_id_out_of_bounds" : 'The item id must be smaller than 2147483647!',
 			"editorial_list_error_duplicate_item" : 'You have specified an item which is already in your list!',
+			
+			// Crawler
 			"crawler_status" : 'Recommendation status:',
 			"crawler_date" : 'Last scan date:',
 			"crawler_amount_of_items" : 'Amount of items:',
 
 			// A/B Tests
 			"ab_test_confirm_delete_heading": 'Delete Test',
-			"ab_test_confirm_delete_msg": 'Deleting ab test instance will remove all records related to ie from the system. <br> Are you sure you want to delete it?',
-			"ab_test_confirm_delete_cancel_msg": 'You are about to cancel and delete a running test. <br> Deleting ab test instance will remove all records related to ie from the system. <br> Are you sure you want to delete it?',
+			"ab_test_confirm_delete_msg": 'Are you sure you want to delete the test "<span id="testName">replace this</span>"? Deleting an A/B Test instance will remove all records related to it from the system. <br>',
+			"ab_test_confirm_delete_cancel_msg": 'You are about to cancel and delete a running test "<span id="testName">replace this</span>".<br> Deleting an A/B Test instance will remove all records related to it from the system. <br> Are you sure you want to delete it?',
 			"ab_test_confirm_delete_accept": 'Delete',
 			"ab_test_confirm_delete_reject": 'Cancel',
 
@@ -505,13 +545,11 @@ function localizer() {
 			"ab_test_status_NEW": 'new',
 
 			"ab_test_create_new_test": 'Create new Test',
-			"ab_test_ab_tests": 'AB Tests',
-			"ab_test_results": 'Results',
-			"ab_test_loading_test_results": 'Loading test results ...',
+			"ab_test_ab_tests": 'A/B Tests (beta)',
 			"ab_test_no_tests_configured": 'You have no tests defined.',
 
 			// A/B Tests Table headings
-			"ab_test_name_of_test" : 'Name of AB Test',
+			"ab_test_name_of_test" : 'Name of A/B Test',
 			"ab_test_scenarios": 'Scenarios',
 			"ab_test_status": 'Status',
 			"ab_test_duration": 'From - To',
@@ -519,22 +557,24 @@ function localizer() {
 			"ab_test_configuration": 'View Config',
 			"ab_test_delete": 'Delete',
 
-			"ab_test_vs": 'vs',
+			"ab_test_vs": 'vs.',
 			"ab_test_view_results": 'View Results',
 			"ab_test_empty_string": '',
 			"ab_test_edit_test_configuration": 'Edit Test',
 			"ab_test_show_test_configuration": 'Show Test',
 
+			
 			//test Editor
-			"ab_test_test_configurator": 'Test Configurator',
-			"ab_test_percent_users_in_test": 'Users in test: ',
-			"ab_test_scenario_a": 'Scenario A',
-			"ab_test_scenario_b": 'Scenario B',
-			"ab_test_users_in_base_scenario": 'Users in base Scenario',
-			"ab_test_users_in_test_scenario": 'Users in test scenario',
+			"ab_test_test_configurator": 'A/B-Test Configurator',
+			"ab_test_percent_users_in_test": 'Overall participating users',
+			"ab_test_scenario_a": 'Original variant A',
+			"ab_test_scenario_b": 'Target variant B',
+			"ab_test_users_in_base_scenario": 'Participating users',
+			"ab_test_users_in_test_scenario": 'Participating users',
 			"ab_test_start_date": 'Start date',
-			"ab_test_test_duration": 'Duration of the test',
+			"ab_test_test_duration": 'Duration',
 			"ab_test_save_test": 'Save Test',
+			"ab_test_saving_test": 'Saving Test ...',
 			"ab_test_cancel": 'Cancel',
 			"ab_test_test_duration_1" : '1 week',
 			"ab_test_test_duration_2" : '2 weeks',
@@ -547,39 +587,134 @@ function localizer() {
 
 			//test result indicators
 
-			"ab_test_result_not_significant":'This test did not deliver significant results',
-			"ab_test_result_significant":'This test did deliver significant results',
+			"ab_test_results": 'Results',
+			"ab_test_show_graph": 'Graph',
+			"ab_test_result_not_significant":'This test did not deliver significant results.',
+			"ab_test_result_significant":'This test did deliver significant results.',
+			"ab_test_result_warning_t_t_f":'Advice: The test did not deliver a significant difference in the results between the orginal variant A and the target variant B. Stay ' + 
+			'with the current scenario settings and try out new settings in a new A/B-Test',
+			"ab_test_result_warning_t_f_f":
+				'<p>The test did not deliver a significant difference in the results between the orginal variant A and the target variant B.</p>' +
+				'<ul>' +
+					'<li>Try to extend the test period</li>' +
+					'<li>Try to raise the percentage of useres who participate in the test</li>' +
+					'<li>Place the recommendations on a location which is more often visited</li>' +
+					'<li>If you already have reached the maximum time frame or percentage of users who participate in the test, change the settings in the Scenario you test.</li>' +
+				'</ul',
+			"ab_test_result_warning_f_t_f":
+				'<p>The amount of users participating in the test was below <span id="sizeTestThreshold"></span>. Therefore the test could not deliver a significant difference in ' + 
+				'the results between the orginal variant A and the target variant B.</p>' +
+				'<ul>' +
+					'<li>Try to extend the test period</li>' +
+					'<li>Try to raise the percentage of useres who participate in the test</li>' +
+					'<li>Place the recommendations on a location which is more often visited</li>' +
+					'<li>If you already have reached the maximum time frame or percentage of users who participate in the test, change the settings in the Scenario you test.</li>' +
+				'</ul',
+			"ab_test_result_warning_f_f_f":
+				'<p>The amount of users participating in the test was below <span id="sizeTestThreshold"></span>. Therefore the test could not deliver a significant difference in ' + 
+				'the results between the orginal variant A and the target variant B.</p>' +
+				'<ul>' +
+					'<li>Try to extend the test period</li>' +
+					'<li>Try to raise the percentage of useres who participate in the test</li>' +
+					'<li>Place the recommendations on a location which is more often visited</li>' +
+					'<li>If you already have reached the maximum time frame or percentage of users who participate in the test, change the settings in the Scenario you test.</li>' +
+				'</ul',
+			"ab_test_result_advice_a": 'Stay with the current scenario settings and continue with a new A/B Test for further optimization.',
+			"ab_test_result_advice_b": 'Please use the settings of the winning scenario B in your original scenario',
+			"ab_test_result_advice_indifferent": 'There is no significant results of this thest.',
+			"ab_test_result_error_unable_to_fetch_results": 'Sorry, an error occurred. We could not fetch the results of the test, please try again later.',
+			
+			
+			"ab_test_indicator":'Indicator',
+			"ab_test_scenario_a":'Scenario A',
+			"ab_test_scenario_b":'Scenario B',
+			"ab_test_ratio":'B vs. A',
+			"ab_test_winner":'Winner',
+			"ab_test_view":'View',
+			"ab_test_result_description_clickedRecommended":'Clicked recommendations',
+			"ab_test_result_description_purchasedRecommended":'Bought recommendations',
+			"ab_test_result_description_consumeEvents":'Consumed recommendations',
+			"ab_test_result_description_revenue":'Additional revenue by recommendations',
+			"ab_test_result_description_activeUsers":'Amount of participating test users',
+			"ab_test_result_no_winner" : '-',
+			"ab_test_result_date" : 'Date',
+			"ab_test_loading_test_results" : 'Loading test results ...',
+			"ab_test_result_differenceTest_PASSED" : 'The distribution of participants to both groups was almost equal. The difference was below <span id="differenceTestThreshold"></span>%.',
+			"ab_test_result_differenceTest_FAILED" : 'The distribution of participants was not equal and differed at least <spann id="differenceTestThreshold"></span>%. <div id="differenceTestSizeA"></div> ' + 
+			'participants received recommendations from scenario A, <span id="differenceTestSizeB"></span> participants received recommendations from scenario B.',
+			"ab_test_result_sizeTest_FAILED" : 'There were not enough participants taking part in the test, at least <span id="sizeTestThreshold"></span> are needed. Please increase the number of ' + 
+			'participating users and/or the timeframe of this test.',
+			"ab_test_result_studentTest_PASSED" : 'According to the t-Test Analysis the above mentioned winner scenario will probably perform better.',
+			"ab_test_result_studentTest_FAILED" : 'According to the t-Test Analysis the difference between both scenarios is not significant. The winner might be random or they perform equally.',
+			"ab_test_result_studentTest_SKIPPED" : 'There was not enough test data. Please increase the number of participating users and/or the timeframe of this test.',
+			"ab_test_result_indicator_clickedRecommended" : 'Clicked recommendations',
+			"ab_test_result_indicator_purchasedRecommended" : 'Purchased recommendations',
+			"ab_test_result_indicator_consumeEvents" : 'Consumed recommendations',
+			"ab_test_result_indicator_revenue" : 'Revenue',
 
-			//"ab_test_result_description_clickedUsers":'Number of users who clicked on recommendations',
-			"ab_test_result_description_clickedRecommended":'Number of clicked recommendations',
-			"ab_test_result_description_purchasedRecommended":'Number of buys of recommended items',
-			"ab_test_result_description_consumeEvents":'Number of consumed of recommended items',
-			"ab_test_result_description_revenue":'Revenue generated from recommendations',
-			"ab_test_result_description_activeUsers":'Number of test users visiting the website',
-
-			//test FAQ
-			"ab_test_faq_q_1": 'What is ab testing all about?',
-			"ab_test_faq_a_1": 'AB testing is a method for comparing two variants, A and B, given some specif measure. A and B also known as as the "Control Group" and "Treatment Group". In our context these will be scenario A and Scenario B in which we want to compare.',
+			// FAQs
+			"ab_test_faq_q_1": 'What is A/B testing all about?',
+			"ab_test_faq_a_1": 'An A/B test is a method in which the visitors to a website or a shop are divided into two groups to assess the impact of changes to the displayed pages, '+
+				'to be able to measure the performance of the displayed recommendations. Based on the original version A, an alternative version, B, of the website is created that provides other content or products. ' + 
+				'In our context these will be scenario A and scenario B in which we want to compare.',
 			"ab_test_faq_q_2": 'What can be done with this feature?',
-			"ab_test_faq_a_2": 'This feature enable you to compare the performance of two scenarios. Also to examine new scenario over your active users with minor damage in case the new scenario is bad, if any.',
-			"ab_test_faq_q_3": 'What cannot be done?',
-			"ab_test_faq_a_3": 'The feature is purely enable the comparison of the recommendations coming out from two different scenarios. The feature is not for testing GUI, applying AA test, or any non specified purpose.',
-			"ab_test_faq_q_4": 'Do\'s',
-			"ab_test_faq_a_4": '<ol>' +
-				'<li>Apply AB testing constantly on your system - these will improve your system.</li>' +
-				'<li>Configure the number of users in the treatment group (Other scenario = Scenario B) to reasonable size, says no more than 15% of the users.</li>' +
-				'<li>Stop the AB testing from running when you realize you got meaningful results. This depend of the volume of the data etc.</li>' +
-				'</ol>',
-			"ab_test_faq_q_5": 'Dont\'s',
-			"ab_test_faq_a_5": '<ol>' +
-				'<li>Do not stop the ab testing prematurely.</li>' +
-				'<li>Do not reach fast conclusions 0 Wait until clear trends are rising.</li>' +
-				'<li>Do not apply ab test over all your users, unless you confident with the recommendations coming from both of the scenarios</li>' +
-				'</ol>',
-			"ab_test_faq_q_6": 'Examples',
-			"ab_test_faq_a_6": 'todo',
-
+			"ab_test_faq_a_2": 'With A/B testing, two reference scenarios with different settings can be tested against each other at the same location on the website. The original scenario code used in the recommendation ' + 
+				'retrieval remains unchanged. No changes to the store or the website are necessary. If there is a significant difference in the acceptance and conversation rate at the end of the trial period one ' +
+				'takes the settings from the profitable variant and attempts, by means of new tests, to further optimize them.',
+			"ab_test_faq_q_3": 'What cannot be tested with A/B tests?',
+			"ab_test_faq_a_3": 'A/B tests only allow the comparison of recommendations from two differently configured recommendation scenarios. No conclusions are possible regarding the optimization of ' +
+				'representation and placements of recommendations in the website or the shop.',
+			"ab_test_faq_q_4": 'Do\'s and Dont\'s',
+			"ab_test_faq_a_4": '<ul>' +
+					'<li>Disable caching for the posts on your web site or in the shop in which the A/B testing can be performed. A/B tests give wrong results when performed with enabled caching for recommendations!</li>' +
+					'<li>Apply A/B testing to your system continuously to determine the optimal settings recommendation for your website/shop.</li>' +
+					'<li>In an A/B test, define participant numbers of 20-30% of the total number of users. This provides you with a sufficiently large target group, but reduce the impact in the event that the target variant B '+
+						' turns out to be the worse option.</li>' +
+					'<li>You need to wait until the predetermined end of the pre-A/B tests to interpret the results. This is why the YOOCHOOSE A/B testing does not show any intermediate results. The YOOCHOOSE A/B test ' + 
+						'was designed in such a way that run times of full weeks are utilized in order to balance out the effects of e.g. weekends and/or school starting periods.</li>' +
+					'<li>Do not draw fast conclusions. Wait until clear trends are rising.</li>' +
+				'</ul>',
+			"ab_test_faq_q_5": 'Examples',
+			"ab_test_faq_a_5": '<ul>' +
+					'<li>Activate personalized recommendations, and compare them with product-based, context-based recommendations. Note, however, that especially new users cannot get personalized '+
+					'recommendations due to the lack of a profile history. In addition, a popular model can be used as a fallback to play out recommendations.</li>' +
+					'<li>Try out different models. Instead of plain buying-models. Try, for example. a click-to-buy model or a pure-click model. Or test content-based models against collaborative filtering models.</li>' +
+					'<li>Compare descending weighted best-seller models in which past purchases will be weighted less, with equally weighted best-seller models in which all purchases are equally weighted.</li>'+
+					'<li>Test different periods for the calculation of a recommendation. Define another model of the same type, but with a longer period for the model calculation. For example, the purchases of the last ' +
+						'60 days instead of the last 30 days.</li>'+
+					'<li>Act with manually-maintained lists of recommendations for certain products customized to a specific A/B test-defined group of users. In this way, products can be "pushed" for sale.</li>'+
+				'</ul>',
+			"ab_test_faq_q_6": 'How to configure an A/B test',
+			"ab_test_faq_a_6": 'Prerequisiste for an A/B Test is the selection or creation of a compatible scenario. Afterwards A/B tests can be created by clicking on the \"Create New Test\"–link on the right side ' +
+				'of the page. This will open a configuration window in which you can select the two scenarios to be compared and define the name of the A/B test, the amount of paricipating users, and the running-time.',
+					
+			"scenario_faq_q_1" : 'What is a scenario?',
+			"scenario_faq_a_1" : 'A scenario is a \'frame\' that holds information about what type of items can be delivered, what kind of algorithms are used and what should be filtered when getting recommendations.',
+			"scenario_faq_q_2" : 'What can be configured in a scenario?',
+			"scenario_faq_a_2" : 'In a scenario the following configurations can be set: ' + 
+				'<ul>' +
+					'<li>what type of items can be recommended (products, articles images etc.)</li>' +
+					'<li>what combination of algorithms (models) and their settings are used like personalization, item related or category prefiltered</li>' +
+					'<li>what filters are active, e.g. \"do not show recommendations that a user already bought or dislikes\" or \"do not recommend cheaper products than the current one\"</li>' +
+				'</ul>',
+			"scenario_faq_q_3" : 'Where can a scenario be used?',
+			"scenario_faq_a_3" : 'A scenario can be used or better \"wired\" to certain places on a customer\'s website. Typical places are:<br/>' + 
+				'<ul>' +
+					'<li>a landing page to recommend personalized items, top sellers or most viewed items</li>' +
+					'<li>a category page to recommend top sellers or most viewed items in the selected category</li>' +
+					'<li>a detail page to recommend similar items</li>' +
+					'<li>a page to provide personalized recommendations</li>' +
+					'<li>a shopping basket to recommend items for upselling</li>' +
+				'</ul><br/><br/>' + 
+				'There are of course additional use cases depending on the customer\'s site.',
+			"scenario_faq_q_4" : 'How can a scenario be accessed?',
+			"scenario_faq_a_4" : 'A scenario can be accessed by REST calls against the YOOCHOOSE API and delivers recommendations in .json or .xml format. Delivered recommendations must then be rendered in the website',
+			"scenario_faq_q_5" : 'How do I create a scenario?',
+			"scenario_faq_a_5" : 'With the link \"Create new scenario\" scenarios can be created. Use easy to understand names and descriptions that simplifies the associations of scenario configurations ' +
+				'and the location in the website. For example an article detail page, categorypage or similar.',
+			
 			//configuration errors
+			"ab_test_error_no_test_name": 'Please specify a name for the test',
 			"ab_test_error_invalid_user_share": 'Please provide an integer between 1 and 50 for the share of users in the test.',
 			"ab_test_error_start_date_must_be_in_future": 'The start date must be in the future.',
 			"ab_test_error_end_date_must_be_after_start": 'The end data must be after the start date.',
@@ -587,23 +722,36 @@ function localizer() {
 			"ab_test_error_incompatible_scenarios": 'The Scenarios are not compatible. Please select two compatible scenarios (same output items).',
 			"ab_test_error_select_2_different_scenarios": 'You must select two different scenarios for a test.',
 			"ab_test_error_current_scenario_already_in_use": 'Scenario A is already used in an other concurrent test!',
-			"ab_test_error_no_test_name": 'Please insert a name for the test.',
 
 			//Tooltips
-			"ab_test_tt_name_of_test": 'A unique name representing the ab test instance',
-			"ab_test_tt_users_in_test": 'In percent - the amount of users that will participate in the test.',
-			"ab_test_tt_scenario_a": 'The control group.',
-			"ab_test_tt_scenario_b": 'The treatment group',
-			"ab_test_tt_participants_a": 'Amount of users that will be in the control group',
-			"ab_test_tt_participants_b": 'Amount of users that will be in the treatment group',
-			"ab_test_tt_start_date": 'The date in which the test will start',
-			"ab_test_tt_end_date": 'The date in which the test will end.'
+			"ab_test_tt_name_of_test": 'A unique name representing the A/B-Test instance',
+			"ab_test_tt_users_in_test": 'In percent - the amount of participating users',
+			"ab_test_tt_scenario_a": 'The original variant (control group)',
+			"ab_test_tt_scenario_b": 'The target variant (treatment group)',
+			"ab_test_tt_participants_a": 'Amount of users in the original variant',
+			"ab_test_tt_participants_b": 'Amount of users in the target variant',
+			"ab_test_tt_start_date": 'The end date on which the test will start',
+			"ab_test_tt_end_date": 'The end date on which the test will end',
+			"ab_test_tt_test_duration": 'Amount of weeks to run the test',
 
+			//Buttons
+			'button_ok': 'OK',
+			"empty_string": '',
+
+			"index_help_about_scenarios": 'Scenarios',
+			"index_help_about_ab_testing": 'A/B Testing',
+				
+			//Preview
+			"preview_userid": "User ID",
+			"preview_topn": "Number of recommendations",
+			"preview_contextitems": "Context Items"
 			},
 
 
 	"de": {"login_welcometo": "Willkommen bei Ihrem Empfehlungsdienst",
-			"login_dont_have_account":"Neuen Account erstellen",
+		 	"login_slogon": "und erhalten Sie in nur 5 Minuten kostenlose Empfehlungen auf Ihrer Website",
+		 	"login_ad": "Jede Empfehlungsanfrage liefert drei Empfehlungen und eine GoogleAd",
+			"login_dont_have_account":"Registrieren Sie sich",
 			"login_email": "Email:",
 			"login_password": "Passwort:",
 			"login_forgot": "Passwort vergessen?",
@@ -615,7 +763,7 @@ function localizer() {
 			"regstep1_createaccount_information": 'Erstellen Sie einen neuen Account für Ihren Empfehlungsdienst. Wenn Sie bereits über einen Zugang verfügen, können Sie sich hier anmelden <a href="login.html">',
 			"regstep1_email": "Email:",
 			"regstep1_company_name": "Unternehmen:",
-			"regstep1_publisher_basic": "Publisher (Basic)",
+			"regstep1_publisher_basic": "eZ Publish, Publisher (Basic)",
 			"regstep1_publisher_advanced": "eZ Publish, Publisher (Advanced)",
 			"regstep1_ebh": "Online shop (Advanced)",
 			"regstep1_ebl" : "Online shop (Basic)",
@@ -625,7 +773,7 @@ function localizer() {
 			"regstep1_checkbox2" : "Ich erkläre, dass ich berechtigt bin, die Vereinbarung zur Auftragsdatenverarbeitung im Namen des Unternehmens abzuschliessen.",
 			"regstep1_register" : "Registrierung",
 			"regstep1_licence_and_legal" : "Lizenzbedingungen",
-			"regstep1_licence_and_legal_information" : 'Es sind nur noch wenige Schritte zu Ihrem kostenfreien Testzugang für den Empfehlungsdienst. Bevor wir den Dienst für Sie freischalten, weisen wir Sie auf einige rechtliche Punkte hin. Wir nehmen das Thema Datenschutz und Privatsphäre sehr ernst und bitten Sie daher, die folgenden Hinweise aufmerksam zu lesen und die Datenschutzrechtlichen Hinweise in Ihrem Webauftritt umzusetzen <a href="/pdf/HinweisezumDatenschutz.pdf" class="pdf">',
+			"regstep1_licence_and_legal_information" : 'Es sind nur noch wenige Schritte zu Ihrem kostenfreien Testzugang für den Empfehlungsdienst. Bevor wir den Dienst für Sie freischalten, weisen wir Sie auf einige rechtliche Punkte hin. Wir nehmen das Thema Datenschutz und Privatsphäre sehr ernst und bitten Sie daher, die folgenden Hinweise aufmerksam zu lesen und die Datenschutzrechtlichen Hinweise in Ihrem Webauftritt umzusetzen <a href="https://admin.yoochoose.net/pdf/HinweisezumDatenschutz.pdf" class="pdf">',
 			"regstep2_createaccount" : "Neuen Account erstellen",
 			"regstep2_createaccount_information" : "Bitte füllen Sie die Felder vollständig aus:",
 			"regstep2_email" : "Email:",
@@ -640,26 +788,32 @@ function localizer() {
 			"regstep2_country" : "Land:",
 			"regstep2_finish_registration" : "Registrierung abschließen",
 			"regstep3_createaccount" : "Konfigurieren Empfehlungen",
-			"regstep3_rec_size" : "Empfehlungen Größe",
-			"regstep3_rec_content" : "Empfehlung Typ",
+			"regstep3_rec_size" : "Größe der eingeblendeten Empfehlungen",
+			"regstep3_rec_content" : "Darstellungstyp",
 			"regstep3_product_url" : "URL einer Produktseite",
-			"regstep3_createaccount_information" : "Bitte wählen Sie, wie Ihre Empfehlungen aussehen wird, wird die Probe Produkt-URL benötigt, um die Empfehlung Inhalte gesetzt.",
+			"regstep3_createaccount_information" : "Bitte wählen Sie, wie Ihre Empfehlungen dargestellt werden sollen. Dafür wird die URL einer Produktseite benötigt.",
 			"regstep3_finish_registration" :"Setzen Sie die Konfiguration",
 			"regstep3_preview" : "Vorschau",
+			"regstep3_site_tooltip": "Bitte geben Sie Ihre Web-Site URL (Hauptseite) an, zum Beispiel http://www.mydomain.com",
+			"regstep3_product_tooltip": "Bitte geben Sie beispielhaft eine Produkt-URL von Ihrer Web-Site an, z.B wenn Ihre Website http://www.mydomain.com ist, könnte eine Produktseite unter http://www.mydomain.com/somepath/someproduct.html zu erreichen sein ",
 			"script_main": "<br/> Kopieren Sie bitte das folgende Skript und platzieren Sie es in jedem Produkt-Seite, die Sie wollen, um die Empfehlungen zu erhalten",
 			"script" : "Skript",
 			"statistics" : "Statistik",
-			"edit_style" : "Ändern Vortragsstil",
+			"edit_style" : "Präsentationsstil ändern",
 			"upgrade" : "Kundenspezifische Lösungen",
-			"rec_size_changed" : "Die Änderung wurde gespeichert. <br/> Um die Änderung auf Ihrer Website bewerben, kopieren Sie bitte den aktualisierten Skript und platzieren Sie es in jeder Produktseite Sie die Empfehlungen zu erhalten ",
+			"rec_size_changed" : "Die Änderung wurde gespeichert. <br/> Um die Änderung auf Ihrer Website bewerben, kopieren Sie bitte das aktualisierte Skript und platzieren Sie es auf jeder Produktseite, die Empfehlungen beinhalten soll",
 			"save_rec_size" : "Änderungen speichern",
 			"show_more_configuration" : "Zusätzliche Konfiguration",
-			"regstep1_legal_text" : '<br/>Weiterhin ist es notwendig, dass Sie uns erlauben, die Daten Ihrer Nutzer in ihrem Auftrag zu verarbeiten. Um welche Daten es sich handelt können Sie dem obigen Dokument entehmen. Bitte bestätigen Sie mit der Eingabe Ihrer E-Mail-Adresse unter der folgenden Vereinbarung, dass Sie uns mit dieser Datenverarbeitung beauftragen. Wir benötigen diese Freigabe, um die Anforderungen aus den derzeitig geltenden Datenschutzgesetzen zu erfüllen und nachweisen zu können, dass wir mit Ihrem Einverständnis die Daten für Sie verarbeiten dürfen.<a href="/pdf/VereinbarungAuftragsdatenverarbeitung.pdf" class="pdf"></a>',
+			"upgrade_body" : "Hier finden Sie die neuesten Informationen über unser Produktangebot, technische Dokumente und Verträge.",
+			"show_license_key" : 'Lizenzschlüssel anzeigen',
+			"regstep1_legal_text" : '<br/>Weiterhin ist es notwendig, dass Sie uns erlauben, die Daten Ihrer Nutzer in ihrem Auftrag zu verarbeiten. Um welche Daten es sich handelt können Sie dem obigen Dokument entehmen. Bitte bestätigen Sie mit der Eingabe Ihrer E-Mail-Adresse unter der folgenden Vereinbarung, dass Sie uns mit dieser Datenverarbeitung beauftragen. Wir benötigen diese Freigabe, um die Anforderungen aus den derzeitig geltenden Datenschutzgesetzen zu erfüllen und nachweisen zu können, dass wir mit Ihrem Einverständnis die Daten für Sie verarbeiten dürfen.<a href="https://admin.yoochoose.net/pdf/VereinbarungAuftragsdatenverarbeitung.pdf" class="pdf"></a>',
 			"index_logout" : "Logout",
 			"index_dashboard" : "Dashboard",
+			"back_dashboard" :	"Zurück zur Übersicht",
 			"index_help" : "Hilfe",
 			"index_login" : "Login: ",
 			"index_license_key":"Lizenzschlüssel: ", 
+			"index_license_key_message":"Ihr Lizenzschlüssel <span id='licenseKey'></span>",	
 			"index_edit_personal" : "Profil und Kontaktdaten ändern",
 			"index_switch_mandant" : "Kundennummer wechseln",
 			"index_auto_refresh" : "Auto-refresh",
@@ -706,11 +860,12 @@ function localizer() {
 			"filters_partly_available" : "Teilweise verfügbar",
 			"filters_save_go_dashboard" : "Speichern und zurück zum Dashboard",
 			"filters_standard_filters" : "Standard Filter",
-			"filters_filters_profile_options" : "Bezogen auf das User Profil",
+			"filters_filters_profile_options" : "Filter basierend auf dem Benutzerprofil",
 			"filters_no_already_purchased" : "Vom Anwender bereits gekaufte Items nicht empfehlen",
 			"filters_enable_limit_max" : "Das gleiche Item in einer Session nicht öfter als X-mal anzeigen",
+			"filters_enable_min_price" : "Mindestpreis des empfohlenen Produktes",
 			"filters_no_black_list_items_user" : "Die Items aus der Blacklist eines Anwenders nicht anzeigen",
-			"filters_filters_on_item" : "Bezogen auf Content Objekte",
+			"filters_filters_on_item" : "Filter basierend auf dem Inhalt",
 			"filters_outdated_products" : "Empfehle keine abgelaufenen Items",
 			"filters_currently_viewed" : "Empfehle nicht das Item, das gerade angezeigt wird",
 			"filters_no_cheaper_products" : "Keine günstigeren Items empfehlen",
@@ -778,6 +933,7 @@ function localizer() {
 			"configurator_drag_and_drop" : "Drag and Drop<br/> Modelle",
 			"configurator_fall_back" : "Fall-back",
 			"configurator_fall_back_2" : "Fail-safe",
+			"configurator_fall_back_3" : "Ultimate Fail-safe",
 			"configurator_setting_up" : "Modell konfigurieren",
 			"configurator_setting_up_cb_model" : "Inhaltsbasierte Model Konfiguration",
 			"configurator_relevant" : "Relevante Event-Historie:",
@@ -794,11 +950,11 @@ function localizer() {
 			"configurator_save_changes" : "Änderungen speichern",
 			"configurator_model_name" : "Modell Name",
 			"configurator_context" : "Kontext:",
-			"configurator_profile" : "User Profil",
+			"configurator_profile" : "Personalisiert",
 			"configurator_site" : "Seitenkontext",
 			"configurator_item" : "Item",
 			"configurator_weight" : "Gewichtung:",
-			"configurator_use_submodels" : "Submodelle verwenden:",
+			"configurator_use_submodels" : "Submodelle verwenden",
 			"configurator_scenario_name" : "Szenaro Name: ",
 			"configurator_header_title_output" : "Output Item-Type: ",
 			"configurator_group_from": "von",
@@ -822,6 +978,8 @@ function localizer() {
 			"reset_password_reset_your_password_text" : "Sie haben Ihr Passwort vergessen? Eine Email mit dem Link zur Passwortänderung wird Ihnen umgehend zugesandt.",
 			"reset_password_email" : "Email:",
 			"reset_password_send" : "Senden",
+			"reset_password_message_new_password_to_short" : "Das Passwort ist zu kurz, bitte nutzen sie mindestens 8 Zeichen",
+			"reset_password_message_invalid_forgotten_password_code" : "Der temporäre Code zum Rücksetzen des Passworts ist nicht mehr gültig. Bitte starten den Prozess zum Rücksetzen des Passworts erneut",
 			"edit_contact_data_old_password_incorrect" : "Das alte Passwort ist nicht korrekt.",
 			"edit_contact_data_new_password_saved" : "Das neue Passwort wurde erfolgreich gespeichert.",
 			"data_saved_successfully" : "Daten erfolgreich gespeichert.",
@@ -855,11 +1013,12 @@ function localizer() {
 			"registration_step_1_message_captcha_not_correct" : "Der Capture Code wurde nicht korrekt eingegeben.Bitte versuchen Sie es mit einem neuen Capture Code.",
 			"error_required_fields" : "Alle Pflichtfelder müssen angegeben werden.",
 			"error_session_old" : "Ihre Anmeldesitzung ist abgelaufen.",
+			"error_wrongmail" : "Ungültige E-Mail-Adresse",
 			"message_data_saved_successfully" : "Die Daten wurden erfolgreich gespeichert.",
 			"error_scenario_id_already_exists" : "Die Szenario ID existiert bereits.Bitte wählen Sie eine andere",
 			"error_fill_required_fields" : "Alle Pflichtfelder müssen angegeben werden.",
 			"error_url_protocol" : "URL sollte http oder https-Protokoll als Präfix enthalten",
-			"error_url_prefix" : "Produkt-URL sollte mit der Website-URL, die definiert wurde bei der Registrierung beginnen",
+			"error_url_prefix" : "Produkt-URL sollte mit der Website-URL beginnen",
 			"reset_password_message_email_sent" : "Eine E-Mail an Sie wurde versendet.Um das Passwort zurückzusetzen folgen Sie dem Link in der E-Mail.",
 			"reset_password_message_captcha_not_correct" : "Der Capture Code wurde nicht korrekt eingegeben.Bitte versuchen Sie es mit einem neuen Capture Code.",
 			"reset_password_message_password_set" : "Ihr Passwort wurde erfolgreich aktualisiert",
@@ -880,6 +1039,10 @@ function localizer() {
 			"help_contact" : "Kontakt",
 			"model_CF_I2I_CLICK_title" : "Also clicked",
 			"model_CF_I2I_CONSUME_title" : "Also consumed",
+			"model_CF_I2I_RATE_title": "Ähnlich bewertet",
+			"model_CF_I2I_RATE_description" : "Ähnlich bewertete items basierend auf expliziten Bewertungen von Nutzern",
+			"model_CBFT_title": "Content analysis",
+			"model_CBFT_description" : "Ähnliche items basierend auf Inhaltsanalyse",
 			"model_CF_I2I_BUY_title" : "Also purchased",
 			"model_CF_I2I_MIX_CLICK_BUY_title" : "Ultimately bought",
 			"model_CF_I2I_MIX_CLICK_CONSUME_title" : "Ultimately consumed",
@@ -934,11 +1097,11 @@ function localizer() {
 			"model_CF_I2I_CONSUME_description" : "Anwender, die diesen Inhalt konsumierten (Artikel gelesen, Video angesehen), haben auch die folgenden Inhalte konsumiert",
 			"model_POPULARITY_LONG_CLICK_description" : "Populärste Inhalte (Produkte, Artikel, Bilder, etc), basierend auf der Anzahl der Klicks",
 			"model_POPULARITY_LONG_BUY_description" : "Populärste Items basierend auf der Anzahl der Kaufereignisse",
-			"model_POPULARITY_LONG_RATE_description" : "Populärste Items (Produkte, Artikel, Bilder, etc), basierend auf der Anzahl der Bewertungen",
+			"model_POPULARITY_LONG_RATE_description" : "Populärste bewertete Items",
 			"model_POPULARITY_LONG_CONSUME_description" : "Populärste Items, basierend auf dem Konsumverhalten (Artikel gelesen, Video angesehen)",
 			"model_POPULARITY_SHORT_CLICK_description" : "Populärste Items basierend auf der gewichteten Anzahl der Klicks",
 			"model_POPULARITY_SHORT_BUY_description" : "Populärste Items basierend auf der gewichteten Anzahl der Kaufereignisse",
-			"model_POPULARITY_SHORT_RATE_description" : "Populärste Items (Produkte, Artikel, Bilder, etc), basierend auf der gewichteten Anzahl der Bewertungen",
+			"model_POPULARITY_SHORT_RATE_description" : "Populärste bewertete Items",
 			"model_POPULARITY_SHORT_CONSUME_description" : "Populärste Items, basierend auf dem gewichteten Konsumverhalten (Artikel gelesen, Video angesehen)",
 			"model_CF_I2I_MIX_CLICK_BUY_description" : "Anwender, welche diese Items (Produkt, Bild, etc.) angeklickt haben, haben auch folgende Items gekauft",
 			"model_CF_I2I_MIX_TIMED_CLICK_BUY_description" : "Anwender, welche diese Items (Produkt, Bild, etc.) angeklickt haben, haben anschließend folgende Items gekauft",
@@ -962,6 +1125,7 @@ function localizer() {
 			"registration_step2_create_new_password" : "Neues Passwort erstellen",
 			"welcome_page_headline" : "Vielen Dank für Ihre Registrierung",
 			"welcome_page_body" : "<strong>Herzlich Willkommen bei Ihrem Empfehlungsdienst</strong><br/><br/>Sie erhalten nun eine automatische Best&auml;tigungs an Ihre angegebene E-Mail-Adresse. Bitte best&auml;tigen Sie Ihre Registrierung durch einen Klick auf den darin enhaltenden Link.Danach k&ouml;nnen Sie sich mit Ihrer E-Mail und dem von Ihnen gew&auml;hlten Passwort anmelden.<br/><br/>",
+			"welcome_page_body2" : "Sie erhalten nun eine automatische Best&auml;tigungs an Ihre angegebene E-Mail-Adresse. Bitte best&auml;tigen Sie Ihre Registrierung durch einen Klick auf den darin enhaltenden Link.Danach k&ouml;nnen Sie sich mit Ihrer E-Mail und dem von Ihnen gew&auml;hlten Passwort anmelden.",
 			"welcome_page_button" : "Zur Login Seite",
 			"message_positive_data_saved_successfully" : "Daten erfolgreich gespeichert",
 			"regstep1_reload_captcha" : "Captcha erneut laden",
@@ -977,9 +1141,11 @@ function localizer() {
 			"corporate_information_copyrights_text" : "Die auf dieser Website veröffentlichten Inhalte unterliegen dem deutschen Urheber- und Leistungsschutzrecht. Jede vom deutschen Urheber- und Leistungsschutzrecht nicht zugelassene Verwertung bedarf der vorherigen schriftlichen Zustimmung der YOOCHOOSE GmbH oder des jeweiligen Rechteinhabers. Dies gilt insbesondere für Vervielfältigung, Bearbeitung, Übersetzung, Einspeicherung, Verarbeitung bzw. Wiedergabe von Inhalten in Datenbanken oder anderen elektronischen Medien und Systemen. Inhalte und Rechte Dritter sind dabei als solche gekennzeichnet.Grundsätzlich gilt: Die unerlaubte Vervielfältigung oder Weitergabe einzelner Inhalte oder kompletter Seiten ist nicht gestattet und strafbar. Ebenfalls ist die Darstellung dieser Website in fremden Frames nur mit schriftlicher Erlaubnis der YOOCHOOSE GmbH zulässig.",
 			"corporate_information_third_party" : "Urheberrechte Dritter",
 			"corporate_information_third_party_text" : 'Copyright-Informationen für Bilder, Fotos und Illustrationen auf unserem Internetauftritt finden Sie hier unter <a href="copyrights.html">Urheberrechte Dritter.</a>',
+			"corporate_information_third_party_text2" : 'Copyright-Informationen für Bilder, Fotos und Illustrationen auf unserem Internetauftritt finden Sie hier unter ',
+			"copyrightlink" : "Urheberrechte Dritter.",
 			"data_privacy_title1" : "Datenschutz",
 			"data_privacy_paragraph1" : 'Durch den Besuch dieser Website (yoochoose.net) können Informationen über den Zugriff (Datum, Uhrzeit, betrachtete Seite) gespeichert werden. Diese Daten gehören nicht zu den personenbezogenen Daten, sondern sind anonymisiert. Sie werden ausschließlich zu statistischen Zwecken ausgewertet (siehe ebenfalls dazu Absatz "Datenschutz-Google Analytics"). Eine Weitergabe von Daten an Dritte, zu kommerziellen oder nichtkommerziellen Zwecken, findet nicht statt.',
-			"data_privacy_paragraph2" : 'Die von Ihnen über das <a href="contact.html">Kontaktformular</a> oder E-Mail übermittelten Daten werden von der YOOCHOOSE GmbH und dem zur Angebots- und Auftragserledigung angeschlossenem Partner-Netzwerk (Subunternehmen), ausschließlich zu Zwecken der Angebots- oder Auftragsbearbeitung gespeichert und verwendet. Eine Weitergabe an Dritte außerhalb der YOOCHOOSE GmbH, zu kommerziellen oder nichtkommerziellen Zwecken, ist ausgeschlossen. Die Weitergabe der Daten an Dritte, außerhalb der YOOCHOOSE GmbH, bedarf der ausdrücklichen, persönlichen Zustimmung des jeweiligen Rechtinhabers.',
+			"data_privacy_paragraph2" : 'Die von Ihnen über das Kontaktformular oder E-Mail übermittelten Daten werden von der YOOCHOOSE GmbH und dem zur Angebots- und Auftragserledigung angeschlossenem Partner-Netzwerk (Subunternehmen), ausschließlich zu Zwecken der Angebots- oder Auftragsbearbeitung gespeichert und verwendet. Eine Weitergabe an Dritte außerhalb der YOOCHOOSE GmbH, zu kommerziellen oder nichtkommerziellen Zwecken, ist ausgeschlossen. Die Weitergabe der Daten an Dritte, außerhalb der YOOCHOOSE GmbH, bedarf der ausdrücklichen, persönlichen Zustimmung des jeweiligen Rechtinhabers.',
 			"data_privacy_paragraph3" : ' Die YOOCHOOSE GmbH weist ausdrücklich darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen und nicht lückenlos vor dem Zugriff durch Dritte geschützt werden kann.',
 			"data_privacy_paragraph4" : 'Die Verwendung der Kontaktdaten unserer Websites zur kommerziellen Werbung ist ausdrücklich nicht erwünscht, es sei denn die YOOCHOOSE GmbH hat zuvor seine schriftliche Einwilligung erteilt oder es besteht bereits eine Geschäftsbeziehung. Die YOOCHOOSE GmbH und alle auf dieser Website genannten Personen widersprechen hiermit jeder kommerziellen Verwendung und Weitergabe ihrer Daten.',
 			"data_privacy_title2" : "",
@@ -1005,6 +1171,7 @@ function localizer() {
 			"error_server_error_403" : "Sie besitzen nicht die erforderlichen Rechte, um diesen Vorgang auszuführen",
 			"error_server_error_404" : "Das von Ihnen gesuchte Element wurde nicht gefunden.",
 			"error_server_error_409" : "Der Name wird bereits verwendet.Bitte verwenden Sie einen anderen.",
+			"error_server_error_409_nonCompatibleItemTypes" : "Die ausgewählten Szenarien sind nicht kompatibel.",
 			"error_server_error_500" : "Der Server antwortet nicht. Bitte versuchen Sie es zu einem späteren Zeitpunkt.",
 			"error_login_not_valid_email_address" : "Der angegebene Benutzername ist nicht korrekt.Der Benutzername muss eine E-Mail Adresse sein.",
 			"copyright_header_left" : "Urheberrechte Dritter",
@@ -1014,6 +1181,7 @@ function localizer() {
 			"error_wrong_characters_in_id" : "Nicht erlaubte Zeichen in der Szenario ID",
 			"duration_days": "Tage",
 			"duration_hours": "Stunden",
+			"duration_hour": "Stunde",
 			"configuration_help_maximum_item_age" : "Es werden nur Items für die Modellberechnung verwendet, die in der definierten Periode gültig sind. Empfohlener Wert für einen e-commerce shop ist 1 Monat, für eine Online Zeitung 7 Tage.",
 			"configuration_help_cb_model_weight" : "Das Gewicht eines Attributs, welches für die Berechnung verwendet wird. Ist die Gewichtung des Attributs Autor für die Ähnlichkeit eines Items doppelt so hoch wie die von Preis, so sind Items des gleichen Autors ähnlicher als diejenigen aus der gleichen Preisklasse.",
 			"configuration_help_cb_model_attribute" : "Das Attribut eines Items, das für die Berechnung des Modells genutzt wird. Attribute sind im Export enthalten.",
@@ -1051,12 +1219,223 @@ function localizer() {
 			"editorial_list_error_invalid_id" : 'Die eingegebene Id ist nicht gültig. Es muss ein Integer-Wert sein!',
 			"editorial_list_error_id_out_of_bounds" : 'Die eingegebene Id muss kleiner als 2147483647 sein!',
 			"editorial_list_error_duplicate_item" : 'Die eingegeben Id ist schon auf der Liste!',
-			"crawler_status" : 'Empfehlung Status:',
-			"crawler_date" : 'Neue Scan-Datum:',
-			"crawler_amount_of_items" : 'Anzahl der Einheiten:'
+			
+			// Crawler
+			"crawler_status" : 'Empfehlungsstatus:',
+			"crawler_date" : 'Letzter Site-Scan:',
+			"crawler_amount_of_items" : 'Empfehlbare Produkte:',
+			
+			// A/B Tests
+			"ab_test_confirm_delete_heading": 'Test löschen',
+			"ab_test_confirm_delete_msg": 'Sind Sie sicher, dass Sie den Test "<span id="testName">replace this</span>" löschen wollen?<br/> Alle im System vorhandenen Informationen werden dabei unwiderruflich gelöscht. <br>',
+			"ab_test_confirm_delete_cancel_msg": 'Sind Sie sicher, dass Sie den Test "<span id="testName">replace this</span>" abbrechen und löschen wollen?<br/>Alle im System bereits vorhandenen Informationen werden dabei unwiderruflich gelöscht.',
+			"ab_test_confirm_delete_accept": 'Löschen',
+			"ab_test_confirm_delete_reject": 'Abbrechen',
+
+			"ab_test_status_ARCHIVED": 'archiviert',
+			"ab_test_status_RUNNING": 'laufend',
+			"ab_test_status_PREPARED": 'geplant',
+			"ab_test_status_NEW": 'neu',
+
+			"ab_test_create_new_test": 'Neuen Test erstellen',
+			"ab_test_ab_tests": 'A/B-Tests (beta)',
+			"ab_test_no_tests_configured": 'Es sind keine Tests definiert.',
+
+			// A/B Tests Table headings
+			"ab_test_name_of_test" : 'Name des A/B-Tests',
+			"ab_test_scenarios": 'Szenarien',
+			"ab_test_status": 'Status',
+			"ab_test_duration": 'von - bis',
+			"ab_test_statistics": 'Statistiken',
+			"ab_test_configuration": 'Konfiguration',
+			"ab_test_delete": 'Löschen',
+
+			"ab_test_vs": 'vs.',
+			"ab_test_view_results": 'Ergebnisse',
+			"ab_test_empty_string": '',
+			"ab_test_edit_test_configuration": 'Bearbeiten',
+			"ab_test_show_test_configuration": 'Anzeigen',
+
+			//test Editor
+			"ab_test_test_configurator": 'A/B-Test Konfigurator',
+			"ab_test_percent_users_in_test": 'Teilnehmeranteil gesamt',
+			"ab_test_scenario_a": 'Originalvariante A',
+			"ab_test_scenario_b": 'Zielvariante B',
+			"ab_test_users_in_base_scenario": 'Teilnehmeranteil',
+			"ab_test_users_in_test_scenario": 'Teilnehmeranteil',
+			"ab_test_start_date": 'Start',
+			"ab_test_test_duration": 'Dauer',
+			"ab_test_save_test": 'Speichern',
+			"ab_test_saving_test": 'speichern ...',
+			"ab_test_cancel": 'Abbrechen',
+			"ab_test_test_duration_1" : '1 Woche',
+			"ab_test_test_duration_2" : '2 Wochen',
+			"ab_test_test_duration_3" : '3 Wochen',
+			"ab_test_test_duration_4" : '4 Wochen',
+			"ab_test_test_duration_5" : '5 Wochen',
+			"ab_test_test_duration_6" : '6 Wochen',
+			"ab_test_test_duration_7" : '7 Wochen',
+			"ab_test_test_duration_8" : '8 Wochen',
+
+			//test result indicators
+
+			"ab_test_results": 'Ergebnisse',
+			"ab_test_show_graph": 'Graph',
+			"ab_test_result_not_significant" : 'Der Test lieferte keine signifikanten Ergebnisse',
+			"ab_test_result_significant" : 'Der Test lieferte signifikante Ergebnisse',
+				"ab_test_result_warning_t_t_f" : 'Der Test lieferte keine signifikanten Abweichungen zwischen Szenario A und B. Behalten Sie die Einstellungen für das aktuelle Szenario bei.',
+			"ab_test_result_warning_t_f_f":
+				'<p>Der Test lieferte keine signifikanten Ergebnisse, da die Anzahl der Teilnehmer nicht annähernd gleichverteilt war. Bitte prüfen Sie folgende Möglichkeiten, um aussagekräftige Ergebnisse zu erhalten:</p>' +
+				'<ul>' +
+					'<li>Verlängern Sie den Testzeitraum.</li>' +
+					'<li>Erhöhen Sie den prozentualen Anteil der Testteilnehmer.</li>' +
+					'<li>Positionieren sie die Empfehlungen an eine stärker besuchte Stelle.</li>' +
+					'<li>Wenn sie den Testzeitraum weder verlängern noch die Teilnehmeranzahl erhöhen können, ändern Sie die Einstellungen in den eingebundenen Szenarien.</li>' +
+				'</ul',
+			"ab_test_result_warning_f_t_f":
+				'<p>Der Test lieferte keine signifikanten Ergebnisse, da weniger als <span id="sizeTestThreshold"></span> Nutzer teilgenommen haben. Bitte prüfen Sie folgende Möglichkeiten, um aussagekräftige Ergebnisse zu erhalten:</p>' +
+				'<ul>' +
+					'<li>Verlängern Sie den Testzeitraum.</li>' +
+					'<li>Erhöhen Sie den prozentualen Anteil der Testteilnehmer.</li>' +
+					'<li>Positionieren sie die Empfehlungen an eine stärker besuchte Stelle.</li>' +
+					'<li>Wenn sie den Testzeitraum weder verlängern noch die Teilnehmeranzahl erhöhen können, ändern Sie die Einstellungen in den eingebundenen Szenarien.</li>' +
+				'</ul',
+			"ab_test_result_warning_f_f_f":
+				'<p>Der Test lieferte keine signifikanten Ergebnisse, da zu wenig Nutzer teilgenommen haben. Bitte prüfen Sie folgende Möglichkeiten, um aussagekräftige Ergebnisse zu erhalten:</p>' +
+				'<ul>' +
+					'<li>Verlängern Sie den Testzeitraum.</li>' +
+					'<li>Erhöhen Sie den prozentualen Anteil der Testteilnehmer.</li>' +
+					'<li>Positionieren sie die Empfehlungen an eine stärker besuchte Stelle.</li>' +
+					'<li>Wenn sie den Testzeitraum weder verlängern noch die Teilnehmeranzahl erhöhen können, ändern Sie die Einstellungen in den eingebundenen Szenarien.</li>' +
+				'</ul',
+			"ab_test_result_advice_a": 'Behalten Sie die aktuellen Einstellungen von Szenario A und/oder konfigurieren Sie einen neuen A/B-Test.',
+			"ab_test_result_advice_b": 'Bitte übernehmen Sie die Einstellungen von Szenario B in ihrem Basisszenario.',
+			"ab_test_result_advice_indifferent": 'Es konnten keine signifikanten Ergebnisse ermittelt werden.',
+			"ab_test_result_error_unable_to_fetch_results": 'Es konnten keine Ergebnisse geladen werden, bitte versuchen Sie es später noch einmal.',
+
+
+			"ab_test_indicator":'Indikator',
+			"ab_test_scenario_a":'Szenario A',
+			"ab_test_scenario_b":'Szenario B',
+			"ab_test_ratio":'B vs. A',
+			"ab_test_winner":'Gewinner',
+			"ab_test_view":'Ansicht',
+			"ab_test_result_description_clickedUsers":'Teilnehmende Nutzer',
+			"ab_test_result_description_clickedRecommended":'Geklickte Empfehlungen',
+			"ab_test_result_description_purchasedRecommended":'Gekaufte Empfehlungen',
+			"ab_test_result_description_consumeEvents":'Konsumierte Empfehlungen',
+			"ab_test_result_description_revenue":'Zusätzlicher Umsatz durch Empfehlungen',
+			"ab_test_result_description_activeUsers":'Aktive Teilnehmer',
+			"ab_test_result_no_winner" : '-',
+			"ab_test_result_date" : 'Datum',
+			"ab_test_loading_test_results" : 'Laden der Testergebnisse ...',
+			"ab_test_result_indicator_clickedRecommended" : 'Geklickte Empfehlungen',
+			"ab_test_result_indicator_purchasedRecommended" : 'Gekaufte Empfehlungen',
+			"ab_test_result_indicator_consumeEvents" : 'Konsumierte Empfehlungen',
+			"ab_test_result_indicator_revenue" : 'Generierter Umsatz',
+
+			//test FAQ
+			"ab_test_faq_q_1": 'Was sind A/B-Tests?',
+			"ab_test_faq_a_1": 'Ein A/B-Test ist ein Verfahren, bei dem die Besucher einer Webseite oder eines Shops in zwei Gruppen eingeteilt werden, um die Auswirkung von Änderungen am Inhalt der ' +
+				'angezeigten Seiten, in diesem Falle der Empfehlungen, messen zu können. Ausgehend von der Originalvariante A wird eine Zielvariante B der Webseite erstellt, die andere Inhalte oder Produkte präsentiert. ',
+			"ab_test_faq_q_2": 'Wozu werden A/B-Tests benötigt?',
+			"ab_test_faq_a_2": 'A/B-Tests dienen der Empfehlungsakzeptanzanalyse und der Optimierung von Szenariokonfigurationen. Mit A/B-Tests können zwei Empfehlungsszenarien mit unterschiedlichen Einstellungen ' +
+				'an derselben Stelle auf der Webseite gegeneinander getestet werden. Der ursprüngliche Szenariocode welcher beim Empfehlungsabruf genutzt wird bleibt dabei unverändert. ' +
+				'Es sind keine Änderungen am Shop oder der Webseite nötig. Gibt es am Ende des Testzeitraumes einen signifikanten Unterschied in der Akzeptanz und Konversationsrate, so übernimmt man die '+
+				'Einstellungen aus der Gewinnervariante und versucht durch neue Tests diese weiter zu optimieren..',
+			"ab_test_faq_q_3": 'Was mit A/B-Tests nicht getestet werden kann',
+			"ab_test_faq_a_3": 'A/B-Tests ermöglichen nur den Vergleich von Empfehlungen aus zwei unterschiedlich konfigurierten Empfehlungsszenarien. Es sind keine Rückschlüsse bzgl. der Optimierung von Darstellungsweise '+
+				'und Platzierungen in der Webseite oder des Shops möglich.',
+			"ab_test_faq_q_4": 'Do\'s and Dont\'s',
+			"ab_test_faq_a_4": 
+				'<ul>' +
+					'<li>Deaktivieren Sie das Caching für die Stellen auf Ihrer Webseite oder im Shop in dem die A/B-Tests durchgeführt werden. A/B-Tests, die mit eingeschaltetem Caching für Empfehlungen durchgeführt ' +
+						'werden liefern falsche Ergebnisse!</li>' +
+					'<li>Wenden Sie A/B-Tests kontinuierlich auf Ihrem System an, um die optimalen Empfehlungseinstellungen für ihre Webseite/Shop zu ermitteln.</li>' +
+					'<li>Definieren Sie in einem A/B-Test Teilnehmeranzahlen von 20-30% der Gesamtnutzerzahl.</li>' +
+					'<li>Warten Sie bis zum vordefinierten Ende des A/B-Tests, um die Ergebnisse zu interpretieren. Zufällige Ereignisse (Special-Offers, Top-News, Ferien, ...) können die Ergebnisse stark beeinflussen ' +
+						'und voreilige Schlüsse nahelegen. Aus diesem Grund zeigen die YOOCHOOSE A/B-Tests keine Zwischenergebnisse, sondern nur Endergebnisse an.</li>' +
+					'<li>Stoppen Sie A/B-Tests NICHT vor dem vorher festgelegten Endzeitpunkt. Die Ergebnisse sind damit nicht belastbar, werden vom YOOCHOOSE A/B-Testsystem nicht angezeigt und automatisch verworfen.</li>' +
+					'<li>Ziehen Sie keine voreiligen Schlüsse ... warten Sie mit der Interpretation bis eindeutige Trends erkennbar sind.</li>' +
+				'</ul>',
+			"ab_test_faq_q_5": 'Beispiele',
+			"ab_test_faq_a_5": 
+				'<ul>' +
+					'<li>Aktivieren Sie personalisierte Empfehlungen und vergleichen diese mit produktbezogenen, kontextbasierten Empfehlungen.</li>' +
+					'<li>Probieren Sie unterschiedliche Modelle aus. Verwenden Sie z.B. an Stelle von Kaufmodellen ein Klick-zu-Kaufmodell oder ein reines Klickmodell. Testen Sie Content-basierte Modelle gegen Collaborative Filtering Modelle.</li>' +
+					'<li>Vergleichen Sie absteigend gewichtete Bestsellermodelle, in denen zurückliegende Käufe werden weniger stark gewichtet werden, mit gleichgewichteten Bestsellermodellen, in denen alle Käufe gleich stark gewichtet werden.</li>' +
+					'<li>Testen Sie unterschiedliche Zeiträume für die Empfehlungsberechnung. Definieren Sie ein weiteres Modell des gleichen Typs, jedoch mit einem längeren Zeitraum für die Modellberechnung. Z.B. die Käufe der letzten 60 anstatt der letzten 30 Tage.</li>' +
+					'<li>Agieren Sie mit manuell gepflegten Empfehlungslisten, die bestimmte Produkte an einen kleinen im A/B-Test definierten Nutzerkreis ausliefern. Damit können Produkte für den Verkauf "gepushed" werden.</li>' +
+				'</ul>',
+			"ab_test_faq_q_6": 'Wie konfiguriert man einen A/B-Test?',
+			"ab_test_faq_a_6": 'Voraussetzung für einen A/B-Test ist die Wahl bzw. Erstellung eines kompatiblen Szenarios. Anschließend können A/B-Tests über den Link \"Neuen Test erstellen\" auf der rechten ' +
+				'Seite konfiguriert werden. Daraufhin öffnet sich ein Fenster, in dem man den Namen des A/B-Tests, den involvierten Nutzeranteil, die zwei zu vergleichenden Szenarien, den Startzeitpunkt und die ' +
+				'Laufzeit definieren kann.',
+			
+			// scenario FAQ
+			"scenario_faq_q_1" : 'Was sind Szenarien?',
+			"scenario_faq_a_1" : 'Ein Szenario ist eine Konfiguration zur Ausspielung von Empfehlungen, die Modelle, Filter und Empfehlungstypen definiert.',
+			"scenario_faq_q_2" : 'Was kann in einem Szenario konfiguriert werden?',
+			"scenario_faq_a_2" : 'In einem Szenario kann definiert werden:<br/><br/>' +
+				'<ul>' +
+					'<li>Welche Itemtypen (Produkte, Artikel, Bilder ...) ausgeliefert werden können</li>' +
+					'<li>Welche Kombination von Algorithmen (Modelle) und deren Einstellungen wie Zeitraum, Personalisierung, kontextbasiert und kategoriebasiert in die Berechnung von Empfehlungen einfließen</li>' +
+					'<li>Welche Filter eingesetzt werden sollen wie z.B. \"Keine Empfehlungen, die der Nutzer schon gekauft hat oder nicht mag\" oder \"Keine Produkte, die billiger als das aktuell angezeigte Produkt sind\"</li>' +
+				'</ul>',
+			"scenario_faq_q_3" : 'Wo kann ein Szenario eingesetzt werden',
+			"scenario_faq_a_3" : 'Ein Szenario kann auf unterschiedlichen Stellen einer Webseite eingesetzt bzw. mit diesen verdrahtet werden. Typische Plätze sind:<br/><br/>' + 
+				'<ul>' +
+					'<li>Eine Startseite, um personalisierte Empfehlungen, Topseller oder meistbesuchte Items zu empfehlen</li>' +
+					'<li>Eine Kategorieeinstiegsseite, auf der Topseller oder meistbesuchte Items dieser Kategorie empfohlen werden</li>' +
+					'<li>Eine Detailseite, auf der ähnliche Items angezeigt werden.</li>' +
+					'<li>Eine Profilseite mit personalisierten Empfehlungen</li>' +
+					'<li>Eine Warenkorbseite mit passenden Items, um den \"Upsell\" zu steigern</li>' +
+				'</ul>' + 
+				'<br/>Darüberhinaus existieren andere Stellen zum Einblenden von Empfehlungen, die spezifisch auf den Webseitenbetreiber zugeschnitten sind',
+			"scenario_faq_q_4" : 'Wie kann ein Szenario angesprochen werden?',
+			"scenario_faq_a_4" : 'Ein Szenario kann mittels REST Aufrufen gegen die YOOCHOOSE API angesprochen werden und liefert Antworten im .json oder .xml Format. Die gelieferten Empfehlungen müssen anschließend in der ' + 
+				'aufrufenden Seite dargestellt werden.',
+			"scenario_faq_q_5" : 'Wie legt man Szenarien an?',
+			"scenario_faq_a_5" : 'Über den Link \"Neues Szenario erstellen\" können neue Szenarien konfiguriert werden. Nutzen Sie bei der Konfiguration sprechende Namen und Beschreibungen, damit Sie das Szenario einfacher mit ' +
+				'der Position auf der Webseite assoziieren können. Zum Beispiel Artikeldetailseite, Kategorieseite o.ä.',
+			
+			//configuration errors
+			"ab_test_error_no_test_name": 'Bitte geben Sie dem Test einen Namen',
+			"ab_test_error_invalid_user_share": 'Bitte definieren Sie einen Wert zwischen 1 und 50% für den Nutzeranteil im A/B-Test.',
+			"ab_test_error_start_date_must_be_in_future": 'Der Startzeitpunkt des A/B-Tests muss in der Zukunft liegen.',
+			"ab_test_error_end_date_must_be_after_start": 'Der Endzeitpunkt muss nach dem Startzeitpunkt liegen.',
+			"ab_test_error_select_2_scenarios": 'Bitte wählen sie zwei kompatible Szenarien mit dem gleichen Ausgabetyp aus.',
+			"ab_test_error_incompatible_scenarios": 'Die Szenarien sind nicht kompatibel. Bitte wählen sie Szenarien mit dem gleichen Ausgabetyp aus.',
+			"ab_test_error_select_2_different_scenarios": 'Bitte wählen Sie zwei unterschiedliche Szenarien für den A/B-Test aus.',
+			"ab_test_error_current_scenario_already_in_use": 'Szenario A wird schon in einem anderen A/B-Test im gleichen Zeitraum verwendet.',
+
+			//Tooltips
+			"ab_test_tt_name_of_test": 'Eindeutiger Name des A/B-Tests',
+			"ab_test_tt_users_in_test": 'Prozentualer Anteil an Nutzern, die an dem Test teilnehmen',
+			"ab_test_tt_scenario_a": 'Kontrollgruppe (Originalvariante)',
+			"ab_test_tt_scenario_b": 'Testgruppe (Zielvariante)',
+			"ab_test_tt_participants_a": 'Prozentualer Anteil an Nutzern in der Kontrollgruppe',
+			"ab_test_tt_participants_b": 'Prozentualer Anteil an Nutzern in der Testgruppe',
+			"ab_test_tt_start_date": 'Startzeitpunkt',
+			"ab_test_tt_end_date": 'Endzeitpunkt',
+			"ab_test_tt_test_duration": 'Dauer des Tests',
+
+			//Buttons
+			'button_ok': 'OK',
+			"empty_string": '',
+
+			"index_help_about_scenarios": 'Szenarien',
+			"index_help_about_ab_testing": 'A/B Tests',
+			
+			//Preview
+			"preview_userid": "Benutzer ID",
+			"preview_topn": "Anzahl der Empfehlungen",
+			"preview_contextitems": "Kontext-Artikel"
 	},
 	"fr": { "login_welcometo": "Bienvenus sur votre service de Recommandation (optimisé pour Mozilla Firefox)",
-			"login_dont_have_account":"Créer un nouveau compte",
+			"login_slogon": "Et obtenir gratuitement des recommandations sur votre site en 5 minutes",
+			"login_ad": "Chaque réponse sera composée de trois recommandations et une annonce Google",
+			"login_dont_have_account":"Inscription",
 			"login_email": "Email :",
 			"login_password": "Mot de passe :",
 			"login_forgot": "Mot de passe oublié ?",
@@ -1068,7 +1447,7 @@ function localizer() {
 			"regstep1_createaccount_information": 'Votre compte YOOCHOOSE vous donne accès aux services de Recommandation. Si vous possédez déjà un compte, vous pouvez vous <a href="login.html">identifier ici',
 			"regstep1_email": "Email :",
 			"regstep1_company_name": "Entreprise :",
-			"regstep1_publisher_basic": "Editeur (Basic)",
+			"regstep1_publisher_basic": "eZ Publish, Editeur (Basic)",
             "regstep1_publisher_advanced": "eZ Publish, Editeur (Advancé)",
 			"regstep1_ebh": "Boutique en ligne (Avancé)",
 			"regstep1_ebl" : "Boutique en ligne (Basic)",
@@ -1078,7 +1457,7 @@ function localizer() {
 			"regstep1_checkbox2" : "je suis authoriser à passer commande, !!!!!!I am authorized to order, close and confirm the data processing agreement on behalf of the given company.",
 			"regstep1_register" : "Enregistrer",
 			"regstep1_licence_and_legal" : "Licence et informations légales",
-			"regstep1_licence_and_legal_information" : 'You are only a few steps away from your free trial YOOCHOOSE Recommender Engine. Before you create an account, we request your attention for some legal issues. We take data protection and privacy issues very seriously and ask you to carefully read the following instructions and align the data protection information in your website accordingly. You may also <a href="/pdf/dataprivacy.pdf" class="pdf">view and download the PDF version',
+			"regstep1_licence_and_legal_information" : 'You are only a few steps away from your free trial YOOCHOOSE Recommender Engine. Before you create an account, we request your attention for some legal issues. We take data protection and privacy issues very seriously and ask you to carefully read the following instructions and align the data protection information in your website accordingly. You may also <a href="https://admin.yoochoose.net/dataprivacy.pdf" class="pdf">view and download the PDF version',
 			"regstep2_createaccount" : "Créer un compte",
 			"regstep2_createaccount_information" : "Merci de fournir plus d'information sur votre entreprise :",
 			"regstep2_email" : "Email :",
@@ -1099,6 +1478,8 @@ function localizer() {
 			"regstep3_createaccount_information" : "S'il vous plaît, choisissez comment vos recommandations vont ressembler, l'échantillon URL du produit est nécessaire pour définir le contenu de la recommandation.",
 			"regstep3_finish_registration" :"Poursuivre la configuration",
 			"regstep3_preview" : "Avant-première",
+			"regstep3_site_tooltip": "Veuillez fournir votre site Web URL (page principale), par exemple http://www.mydomain.com",
+			"regstep3_product_tooltip": "Veuillez fournir un échantillon fiche produit URL de votre site web, par exemple si votre site est http://www.mydomain.com, une page produit pourrait être http://www.mydomain.com/ somepath/someproduct.html ",
 			"script_main": "<br/> Veuillez copier le script suivant et le placer dans chaque produit-page que vous souhaitez obtenir des recommandations",
 			"script" : "Script",
 			"statistics" : "Statistiques",
@@ -1107,11 +1488,15 @@ function localizer() {
 			"rec_size_changed" : "Le changement a été enregistré. <br/> Pour appliquer la modification sur votre site, merci de copier le script mis à jour et le placer dans chaque page de produit que vous souhaitez obtenir des recommandations ",
 			"save_rec_size" : "Enregistrer les modifications",
 			"show_more_configuration" : "Configuration supplémentaire",
+			"upgrade_body" : "Ici, vous trouverez les dernières informations sur notre offre de produits, la documentation technique et des contrats.",
+			"show_license_key" : 'Montre la license',
 			"index_logout" : "Déconnexion",
 			"index_dashboard" : "Tableau de bord",
+			"back_dashboard" :	"Back to tableau de bord",
 			"index_help" : "Aide",
 			"index_login" : "Identifiant : ",
-			"index_license_key":"Clé de licence : ", 
+			"index_license_key":"Clé de licence : ",
+			"index_license_key_message":"Votre clé de licence <span id='licenseKey'></span>",			
 			"index_edit_personal" : "Editer vos données personnelles et de contact",
 			"index_switch_mandant" : "Changer d'utilisateur ID",
 			"index_auto_refresh" : "Rafraîchir automatiquement",
@@ -1156,11 +1541,12 @@ function localizer() {
 			"filters_partly_available" : "Partiellement disponible",
 			"filters_save_go_dashboard" : "Enregister et retrouner au tableau de bord",
 			"filters_standard_filters" : "Filtres standards",
-			"filters_filters_profile_options" : "Liées au profil autilisateur",
+			"filters_filters_profile_options" : "Des filtres basés sur le profil de l'utilisateur",
 			"filters_no_already_purchased" : "Ne pas recommander des produits précédemment acheté par l'utilsiateur",
 			"filters_enable_limit_max" : "Nombre d'affichage maximum d'une recommandation identique par session",
+			"filters_enable_min_price" : "Mindestpreis des empfohlenen Produktes",
 			"filters_no_black_list_items_user" : "Exclure les contenus blacklistés par l'utilisateur",
-			"filters_filters_on_item" : "Lié à l'objet de contenu",
+			"filters_filters_on_item" : "Des filtres basés sur la teneur en",
 			"filters_outdated_products" : "Ne pas recommander de produits dont la date est dépassée",
 			"filters_currently_viewed" : "Ne pas recommander le produit affiché",
 			"filters_no_cheaper_products" : "Le prix du produit doit être égal ou suppérieur au produit du contexte",
@@ -1179,6 +1565,7 @@ function localizer() {
 			"templates_description" : "Description :",
 			"settings_return_to_dashboard" : "Retour au Tableau de bord",
 			"settings_scenario_configuration" : "Paramètres",
+			"settings_cancel" : "Cancel",
 			"status_available" : "Disponible ",
 			"status_not_available" : "Indisponible ",
 			"status_partly_available" : "Partiellement disponible ",
@@ -1224,6 +1611,7 @@ function localizer() {
 			"configurator_drag_and_drop" : "Glisser déposer<br/>un modèle ici",
 			"configurator_fall_back" : "Fall-back",
 			"configurator_fall_back_2" : "Fail-safe",
+			"configurator_fall_back_3" : "Ultimate Fail-safe",
 			"configurator_setting_up" : "Définition de sous-modèle ",
 			"configurator_setting_up_cb_model" : "Content Based Model Configuration ",
 			"configurator_relevant" : "Relevant event history:",
@@ -1239,7 +1627,7 @@ function localizer() {
 			"configurator_save_changes" : "Enregistrer les modifications",
 			"configurator_model_name" : "Nom du modèle",
 			"configurator_context" : "Contexte",
-			"configurator_profile" : "Profil utilisateur",
+			"configurator_profile" : "Personnalisé",
 			"configurator_site" : "Site",
 			"configurator_item" : "Item",
 			"configurator_weight" : "Poids :",
@@ -1267,6 +1655,8 @@ function localizer() {
 			"reset_password_reset_your_password_text" : "En cas de réinitialisation du mot de passe,<br/>vous recevrez un e-mail contenant un lien afin d'en obtenir un nouveau.",
 			"reset_password_email" : "E-mail :",
 			"reset_password_send" : "Envoyer",
+			"reset_password_message_new_password_to_short" : "Mot de passe est trop court, s'il vous plaît utiliser au moins 8 caractères",
+			"reset_password_message_invalid_forgotten_password_code" : "Le mot de passe code de réinitialisation temporaire n'est plus valide, s'il vous plaît recommencer le processus de réinitialisation",
 			"edit_contact_logout" : "Deconnexion",
 			"edit_contact_dashboard" : "Tableau de bord",
 			"edit_contact_help" : "Aide",
@@ -1312,19 +1702,21 @@ function localizer() {
 			"registration_step_1_message_captcha_not_correct" : "Le contrôle n'est pas valide. Merci de réessayer avec une autre image de contrôle.",
 			"error_required_fields" : "Tous les champs obligatoires doivent être remplis.",
 			"error_session_old" : "Votre session a expiré",
+			"error_wrongmail" : "Adresse email invalide",
 			"message_data_saved_successfully" : "Les données ont été enregistrée avec succès.",
 			"error_password_or_login_not_correct" : "Vos mot de passe ou identifiant ne sont pas valides. Merci de réessayer",
 			"error_server_error" : "Le serveur n'a pas été en mesure de répondre. Merci de réessayer plus tard.",
 			"error_scenario_id_already_exists" : "L'ID de scénario existe déjà. Merci d'en essayer un autre.",
 			"error_fill_required_fields" : "Tous les champs obligatoires doivent être remplis.",
 			"error_url_protocol" : "URL doit contenir protocole HTTP ou HTTPS comme préfixe",
-			"error_url_prefix" : "Page Produit URL doit commencer par le Site Web qui a été défini lors de l'inscription",
+			"error_url_prefix" : "Page Produit URL doit commencer par le Site Web",
 			"error_no_customer_select" : "Sélectionner un utilisateur",
 			"error_server_error_400" : "Error: Please check your entries.",
 			"error_server_error_401" : "Your session is expired. Please login.",
 			"error_server_error_403" : "You do not have sufficient privileges to perform this action.",
 			"error_server_error_404" : "The element you are looking for is not available.",
 			"error_server_error_409" : "This name is already used. Please select another one.",
+			"error_server_error_409_nonCompatibleItemTypes" : "The chosen scenarios are not compatible.",
 			"error_server_error_500" : "The server does not answer correctly. Please try again later.",
 			"reset_password_message_email_sent" : "Un e-mail vous a été envoyé. Merci de suivre les étapes suivantes.",
 			"reset_password_message_captcha_not_correct" : "Le contrôle n'est pas valide. Merci de réessayer avec une autre image de contrôle.",
@@ -1332,6 +1724,10 @@ function localizer() {
 			"error_login_not_valid_email_address" : "Vous avez saisi un nom d'utilisateur invalide. Ce dernier doit être une adresse e-mail.",
 			"model_CF_I2I_CLICK_title" : "Aussi cliqués",
 			"model_CF_I2I_CONSUME_title" : "Aussi consommés",
+			"model_CF_I2I_RATE_title": "Similar rated",
+			"model_CF_I2I_RATE_description" : "Similar rated items based on the explicit ratings of users",
+			"model_CBFT_title": "Content Analysis",
+			"model_CBFT_description" : "Similar items based on content analysis",
 			"model_CF_I2I_BUY_title" : "Aussi achetés",
 			"model_CF_I2I_MIX_CLICK_BUY_title" : "Ultimately bought",
 			"model_CF_I2I_MIX_CLICK_CONSUME_title" : "Ultimately consumed",
@@ -1383,8 +1779,8 @@ function localizer() {
 			"model_CF_I2I_CONSUME_description" : "Les utilisateurs qui ont consommés ce contenu (article lu, image vue...), ont aussi consommés les contenus suivants",
 			"model_POPULARITY_LONG_CLICK_description" : "Contenus les plus populaires (produits, articles...) sur la base de l'hitorique des usages",
 			"model_POPULARITY_LONG_BUY_description" : "Produits les plus populaires sur la base de l'historique des achats",
-			"model_POPULARITY_LONG_RATE_description" : "Contenus les plus populaires (articles, images...) sur la base de l'historique des notations",
-			"model_POPULARITY_SHORT_RATE_description" : "Contenus les plus populaires (articles, images...) sur la base de l'historique des notations",
+			"model_POPULARITY_LONG_RATE_description" : "Contenus les meilleurs évaluer",
+			"model_POPULARITY_SHORT_RATE_description" : "Contenus les meilleurs évaluer",
 			"model_POPULARITY_SHORT_BUY_description" : "Produits les plus populaires sur la base de l'historique des achats",
 			"model_POPULARITY_SHORT_CONSUME_description" : "Contenus les plus populaires (articles, images...) sur la base de l'historique de consommation (articles lus, images vues...)",
 			"model_POPULARITY_LONG_CONSUME_description" : "Contenus les plus populaires (articles, images...) sur la base de l'historique de consommation (articles lus, images vues...)",
@@ -1407,22 +1803,23 @@ function localizer() {
 			"webpage_code" : "ID du client : ",
 			"message_want_delete_scenario" : "Voulez-vous réellement supprimer ce scénario?",
 			"message_want_change_key" : "Voulez-vous réellement changer le ID du scénario?",
-			"regstep1_legal_text" : '<br/>Furthermore, it is necessary that you allow us to process the data of your users on your behalf. This kind of information is involved, usage consumption and the like. Please confirm your subscription by entering your e-mail address and your company under the following agreement. All data is been sent to us by you, and according to the equirements of the currently applicable data protection laws. You may also <a href="/pdf/datahandling.pdf" class="pdf">view and download the PDF version</a>',
+			"regstep1_legal_text" : '<br/>Furthermore, it is necessary that you allow us to process the data of your users on your behalf. This kind of information is involved, usage consumption and the like. Please confirm your subscription by entering your e-mail address and your company under the following agreement. All data is been sent to us by you, and according to the equirements of the currently applicable data protection laws. You may also <a href="https://admin.yoochoose.net/pdf/datahandling.pdf" class="pdf">view and download the PDF version</a>',
 			"registration_step2_create_new_password" : "Créer un nouveau mot de passe",
 			"welcome_page_headline" : "Merci de vous être enregistrés",
 			"welcome_page_body" : "<strong>Bienvenue sur votre service de Recommandation</strong><br/><br/>Vous allez recevoir automatiquement un e-mail de confirmation ) l'adresse saisie précédemment. Merci de confirmer votre enregistrement en cliquant sur le lien inclus dans ce dernier et d'effectuer les étapes suivantes. Vous serez alors en mesure de vous identifier avec votre adresse e-mail et votre mot de passe.<br/><br/>",
+			"welcome_page_body2" : "Vous allez recevoir automatiquement un e-mail de confirmation ) l'adresse saisie précédemment. Merci de confirmer votre enregistrement en cliquant sur le lien inclus dans ce dernier et d'effectuer les étapes suivantes. Vous serez alors en mesure de vous identifier avec votre adresse e-mail et votre mot de passe.",
 			"welcome_page_button" : "Retour à la page d'identification",
 			"message_positive_data_saved_successfully" : "Données sauvegardées avec succès",
 			"data_privacy_logout" : "logout",
 			"data_privacy_title1" : "Data privacy",
 			"data_privacy_paragraph1" : 'Based on visiting this website (yoochoose.net), information regarding access (date, time, page viewed) may be stored. This information is not person-related but anonymized and used for statistical evaluations only (see also paragraph on "Data Privacy - Google Analytics"). It is not released to any third party for commercial or non-commercial purposes.',
-			"data_privacy_paragraph2" : 'The information you submitted via the <a href="contact.html">contact form</a> or via e-mail will be stored and used by YOOCHOOSE GmbH and the affiliated partner network (subcontractor) exclusively for quotes and order processing. The release to any third party outside of YOOCHOOSE GmbH for commercial or non-commercial purposes is strictly excluded. Any release of such information to any third party outside of YOOCHOOSE GmbH requires the express, personal consent of the rights holder in question.',
+			"data_privacy_paragraph2" : 'The information you submitted via the contact form or via e-mail will be stored and used by YOOCHOOSE GmbH and the affiliated partner network (subcontractor) exclusively for quotes and order processing. The release to any third party outside of YOOCHOOSE GmbH for commercial or non-commercial purposes is strictly excluded. Any release of such information to any third party outside of YOOCHOOSE GmbH requires the express, personal consent of the rights holder in question.',
 			"data_privacy_paragraph3" : 'YOOCHOOSE GmbH expressly points out that data transmission on the Internet (e.g. during communication via e-mail) may not be fully secure and cannot be protected completely from third-party access.',
 			"data_privacy_paragraph4" : 'We expressly do not wish that the contact information on our website be used for commercial advertising, unless YOOCHOOSE GmbH has given prior written consent or a business relationship between the parties already exists. YOOCHOOSE GmbH and all individuals named on this website hereby object to any commercial use and transmission of their data.',
 			"data_privacy_title2" : "Google Analytics",
-			"data_privacy_paragraph5" : 'For this website, YOOCHOOSE GmbH uses Google Analytics to analyze this website and its visitor numbers. According to <a href="http://www.google.com/analytics/de-DE/tos.html">Section 8.1 of its UK terms of service</a>, Google itself requires that all participants incorporate the data privacy statement below (UK TERMS OF SERVICE) on their websites:',
+			"data_privacy_paragraph5" : 'For this website, YOOCHOOSE GmbH uses Google Analytics to analyze this website and its visitor numbers. According to <a href="http://www.google.com/analytics/de-DE/tos.html" target="_blank">Section 8.1 of its UK terms of service</a>, Google itself requires that all participants incorporate the data privacy statement below (UK TERMS OF SERVICE) on their websites:',
 			"data_privacy_paragraph6" : '<em>“This website uses Google Analytics, a web analytics service provided by Google, Inc. (“Google”). Google Analytics uses “cookies”, which are text files placed on your computer, to help the website analyze how users use the site. The information generated by the cookie about your use of the website (including your IP address) will be transmitted to and stored by Google on servers in the United States. Google will use this information for the purpose of evaluating your use of the website, compiling reports on website activity for website operators and providing other services relating to website activity and internet usage. Google may also transfer this information to third parties where required to do so by law, or where such third parties process the information on Google´s behalf. Google will not associate your IP address with any other data held by Google. You may refuse the use of cookies by selecting the appropriate settings on your browser, however please note that if you do this you may not be able to use the full functionality of this website. By using this website, you consent to the processing of data about you by Google in the manner and for the purposes set out above.”</em>',
-			"data_privacy_paragraph7" : 'Source: <a href="http://www.google.com/analytics/de-DE/tos.html">Section 8.1 of the UK terms of service of Google Analytics</a>',
+			"data_privacy_paragraph7" : 'Source: <a href="http://www.google.com/analytics/de-DE/tos.html" target="_blank">Section 8.1 of the UK terms of service of Google Analytics</a>',
 			"contact_form" : "Contact form",
 			"contact_paragraph1" : "Please use the contact form below to get in touch with us. Your message will be delivered directly to our mailbox.",
 			"contact_paragraph2" : "Of course, we are also available at any time via the contact information listed at the left.",
@@ -1445,10 +1842,13 @@ function localizer() {
 			"corporate_information_copyrights_text" : "The content published on this website is subject to German law in terms of copyrights and ancillary copyrights. Each use that is not expressly permitted under the copyright laws and ancillary copyright laws of Germany requires the prior written consent of YOOCHOOSE GmbH or the holder of the copyright in question.</br></br>This applies in particular to the duplication, editing, translation, storage, processing or reproduction of content in databases or other electronic media and systems. The content and rights of any third party shall be labeled as such.</br></br><strong>In principle, the following shall apply:</strong></br>The unauthorized duplication or transmission of individual content or complete web pages is not permitted and constitutes a punishable offense. Furthermore, the representation of this website in third-party frames is also subject to written authorization from YOOCHOOSE GmbH.",
 			"corporate_information_third_party" : "Third-party copyrights",
 			"corporate_information_third_party_text" : 'For copyright information pertaining to images, photographs and illustrations on our website, please go to <a href="copyrights.html">Third-party copyrights</a>.',
+			"corporate_information_third_party_text2" : 'For copyright information pertaining to images, photographs and illustrations on our website, please go to ',
+			"copyrightlink" : "Third-party copyrights.",
 			"index_delivered_recommendations_scenario" : "Delivered recommendations",
 			"error_wrong_characters_in_id" : "Wrong characters in Szenario ID",
 			"duration_days": "Jours",
 			"duration_hours": "Heures",
+			"duration_hour": "Heure",
 			"configuration_help_maximum_item_age" : "Seuls les éléments les plus récents de cet âge sont utilisées pour le calcul des modèles. Pour une boutique en ligne classique, il est logique de définir cette valeur à un mois. Pour une agence de presse ou nouvelles du periond devrait être plus courte, par exemple, 7 jours.",
 			"configuration_help_cb_model_weight" : "Le poids d'un attribut qui est utilisé pour le calcul. Est le poids de l'attribut «auteur» pour la ressemblance d'un article deux fois plus élevé que le prix, les articles du même auteur sont «plus proche» que ceux de la même gamme de prix.",
 			"configuration_help_cb_model_attribute" : "L'attribut d'un élément qui est utilisé pour le calcul du modèle. Les attributs sont inclus dans le fichier d'exportation.",
@@ -1490,15 +1890,236 @@ function localizer() {
 			"editorial_list_error_invalid_id" : 'L\'id que vous avez entré n\'est pas valide (doit être un nombre integer)!',
 			"editorial_list_error_id_out_of_bounds" : 'L\'id doit être moins de 2147483647!',
 			"editorial_list_error_duplicate_item" : 'Vous avez l\'élément spécifié déjà dans votre liste!',
-			"crawler_status" : 'Statut de recommandation:',
-			"crawler_date" : 'Date du dernier scan:',
-			"crawler_amount_of_items" : 'Montant des articles:'
+			
+			// Crawler
+			"crawler_status" : 'Recommendation status:',
+			"crawler_date" : 'Last scan date:',
+			"crawler_amount_of_items" : 'Amount of items:',
+
+			// A/B Tests
+			"ab_test_confirm_delete_heading": 'Delete Test',
+			"ab_test_confirm_delete_msg": 'Are you sure you want to delete the test "<span id="testName">replace this</span>"? Deleting an A/B Test instance will remove all records related to it from the system. <br>',
+			"ab_test_confirm_delete_cancel_msg": 'You are about to cancel and delete a running test "<span id="testName">replace this</span>".<br> Deleting an A/B Test instance will remove all records related to it from the system. <br> Are you sure you want to delete it?',
+			"ab_test_confirm_delete_accept": 'Delete',
+			"ab_test_confirm_delete_reject": 'Cancel',
+
+			"ab_test_status_ARCHIVED": 'archived',
+			"ab_test_status_RUNNING": 'running',
+			"ab_test_status_PREPARED": 'prepared',
+			"ab_test_status_NEW": 'new',
+
+			"ab_test_create_new_test": 'Create new Test',
+			"ab_test_ab_tests": 'A/B Tests (beta)',
+			"ab_test_no_tests_configured": 'You have no tests defined.',
+
+			// A/B Tests Table headings
+			"ab_test_name_of_test" : 'Name of A/B Test',
+			"ab_test_scenarios": 'Scenarios',
+			"ab_test_status": 'Status',
+			"ab_test_duration": 'From - To',
+			"ab_test_statistics": 'Statistics',
+			"ab_test_configuration": 'View Config',
+			"ab_test_delete": 'Delete',
+
+			"ab_test_vs": 'vs.',
+			"ab_test_view_results": 'View Results',
+			"ab_test_empty_string": '',
+			"ab_test_edit_test_configuration": 'Edit Test',
+			"ab_test_show_test_configuration": 'Show Test',
+
+			
+			//test Editor
+			"ab_test_test_configurator": 'A/B-Test Configurator',
+			"ab_test_percent_users_in_test": 'Overall participating users',
+			"ab_test_scenario_a": 'Original variant A',
+			"ab_test_scenario_b": 'Target variant B',
+			"ab_test_users_in_base_scenario": 'Participating users',
+			"ab_test_users_in_test_scenario": 'Participating users',
+			"ab_test_start_date": 'Start date',
+			"ab_test_test_duration": 'Duration',
+			"ab_test_save_test": 'Save Test',
+			"ab_test_saving_test": 'Saving Test ...',
+			"ab_test_cancel": 'Cancel',
+			"ab_test_test_duration_1" : '1 week',
+			"ab_test_test_duration_2" : '2 weeks',
+			"ab_test_test_duration_3" : '3 weeks',
+			"ab_test_test_duration_4" : '4 weeks',
+			"ab_test_test_duration_5" : '5 weeks',
+			"ab_test_test_duration_6" : '6 weeks',
+			"ab_test_test_duration_7" : '7 weeks',
+			"ab_test_test_duration_8" : '8 weeks',
+
+			//test result indicators
+
+			"ab_test_results": 'Results',
+			"ab_test_show_graph": 'Graph',
+			"ab_test_result_not_significant":'This test did not deliver significant results.',
+			"ab_test_result_significant":'This test did deliver significant results.',
+			"ab_test_result_warning_t_t_f":'Advice: The test did not deliver a significant difference in the results between the orginal variant A and the target variant B. Stay ' + 
+			'with the current scenario settings and try out new settings in a new A/B-Test',
+			"ab_test_result_warning_t_f_f":
+				'<p>The test did not deliver a significant difference in the results between the orginal variant A and the target variant B.</p>' +
+				'<ul>' +
+					'<li>Try to extend the test period</li>' +
+					'<li>Try to raise the percentage of useres who participate in the test</li>' +
+					'<li>Place the recommendations on a location which is more often visited</li>' +
+					'<li>If you already have reached the maximum time frame or percentage of users who participate in the test, change the settings in the Scenario you test.</li>' +
+				'</ul',
+			"ab_test_result_warning_f_t_f":
+				'<p>The amount of users participating in the test was below <span id="sizeTestThreshold"></span>. Therefore the test could not deliver a significant difference in ' + 
+				'the results between the orginal variant A and the target variant B.</p>' +
+				'<ul>' +
+					'<li>Try to extend the test period</li>' +
+					'<li>Try to raise the percentage of useres who participate in the test</li>' +
+					'<li>Place the recommendations on a location which is more often visited</li>' +
+					'<li>If you already have reached the maximum time frame or percentage of users who participate in the test, change the settings in the Scenario you test.</li>' +
+				'</ul',
+			"ab_test_result_warning_f_f_f":
+				'<p>The amount of users participating in the test was below <span id="sizeTestThreshold"></span>. Therefore the test could not deliver a significant difference in ' + 
+				'the results between the orginal variant A and the target variant B.</p>' +
+				'<ul>' +
+					'<li>Try to extend the test period</li>' +
+					'<li>Try to raise the percentage of useres who participate in the test</li>' +
+					'<li>Place the recommendations on a location which is more often visited</li>' +
+					'<li>If you already have reached the maximum time frame or percentage of users who participate in the test, change the settings in the Scenario you test.</li>' +
+				'</ul',
+			"ab_test_result_advice_a": 'Stay with the current scenario settings and continue with a new A/B Test for further optimization.',
+			"ab_test_result_advice_b": 'Please use the settings of the winning scenario B in your original scenario',
+			"ab_test_result_advice_indifferent": 'There is no significant results of this thest.',
+			"ab_test_result_error_unable_to_fetch_results": 'Sorry, an error occurred. We could not fetch the results of the test, please try again later.',
+			
+			"ab_test_indicator":'Indicator',
+			"ab_test_scenario_a":'Scenario A',
+			"ab_test_scenario_b":'Scenario B',
+			"ab_test_ratio":'B vs. A',
+			"ab_test_winner":'Winner',
+			"ab_test_view":'View',
+			"ab_test_result_description_clickedRecommended":'Clicked recommendations',
+			"ab_test_result_description_purchasedRecommended":'Bought recommendations',
+			"ab_test_result_description_consumeEvents":'Consumed recommendations',
+			"ab_test_result_description_revenue":'Additional revenue by recommendations',
+			"ab_test_result_description_activeUsers":'Amount of participating test users',
+			"ab_test_result_no_winner" : '-',
+			"ab_test_result_date" : 'Date',
+			"ab_test_loading_test_results" : 'Loading test results ...',
+			"ab_test_result_differenceTest_PASSED" : 'The distribution of participants to both groups was almost equal. The difference was below <span id="differenceTestThreshold"></span>%.',
+			"ab_test_result_differenceTest_FAILED" : 'The distribution of participants was not equal and differed at least <spann id="differenceTestThreshold"></span>%. <div id="differenceTestSizeA"></div> ' + 
+			'participants received recommendations from scenario A, <span id="differenceTestSizeB"></span> participants received recommendations from scenario B.',
+			"ab_test_result_sizeTest_FAILED" : 'There were not enough participants taking part in the test, at least <span id="sizeTestThreshold"></span> are needed. Please increase the number of ' + 
+			'participating users and/or the timeframe of this test.',
+			"ab_test_result_studentTest_PASSED" : 'According to the t-Test Analysis the above mentioned winner scenario will probably perform better.',
+			"ab_test_result_studentTest_FAILED" : 'According to the t-Test Analysis the difference between both scenarios is not significant. The winner might be random or they perform equally.',
+			"ab_test_result_studentTest_SKIPPED" : 'There was not enough test data. Please increase the number of participating users and/or the timeframe of this test.',
+			"ab_test_result_indicator_clickedRecommended" : 'Clicked recommendations',
+			"ab_test_result_indicator_purchasedRecommended" : 'Purchased recommendations',
+			"ab_test_result_indicator_consumeEvents" : 'Consumed recommendations',
+			"ab_test_result_indicator_revenue" : 'Revenue',
+
+			// FAQs
+			"ab_test_faq_q_1": 'What is A/B testing all about?',
+			"ab_test_faq_a_1": 'An A/B test is a method in which the visitors to a website or a shop are divided into two groups to assess the impact of changes to the displayed pages, '+
+				'to be able to measure the performance of the displayed recommendations. Based on the original version A, an alternative version, B, of the website is created that provides other content or products. ' + 
+				'In our context these will be scenario A and scenario B in which we want to compare.',
+			"ab_test_faq_q_2": 'What can be done with this feature?',
+			"ab_test_faq_a_2": 'With A/B testing, two reference scenarios with different settings can be tested against each other at the same location on the website. The original scenario code used in the recommendation ' + 
+				'retrieval remains unchanged. No changes to the store or the website are necessary. If there is a significant difference in the acceptance and conversation rate at the end of the trial period one ' +
+				'takes the settings from the profitable variant and attempts, by means of new tests, to further optimize them.',
+			"ab_test_faq_q_3": 'What cannot be tested with A/B tests?',
+			"ab_test_faq_a_3": 'A/B tests only allow the comparison of recommendations from two differently configured recommendation scenarios. No conclusions are possible regarding the optimization of ' +
+				'representation and placements of recommendations in the website or the shop.',
+			"ab_test_faq_q_4": 'Do\'s and Dont\'s',
+			"ab_test_faq_a_4": '<ul>' +
+					'<li>Disable caching for the posts on your web site or in the shop in which the A/B testing can be performed. A/B tests give wrong results when performed with enabled caching for recommendations!</li>' +
+					'<li>Apply A/B testing to your system continuously to determine the optimal settings recommendation for your website/shop.</li>' +
+					'<li>In an A/B test, define participant numbers of 20-30% of the total number of users. This provides you with a sufficiently large target group, but reduce the impact in the event that the target variant B '+
+						' turns out to be the worse option.</li>' +
+					'<li>You need to wait until the predetermined end of the pre-A/B tests to interpret the results. This is why the YOOCHOOSE A/B testing does not show any intermediate results. The YOOCHOOSE A/B test ' + 
+						'was designed in such a way that run times of full weeks are utilized in order to balance out the effects of e.g. weekends and/or school starting periods.</li>' +
+					'<li>Do not draw fast conclusions. Wait until clear trends are rising.</li>' +
+				'</ul>',
+			"ab_test_faq_q_5": 'Examples',
+			"ab_test_faq_a_5": '<ul>' +
+					'<li>Activate personalized recommendations, and compare them with product-based, context-based recommendations. Note, however, that especially new users cannot get personalized '+
+					'recommendations due to the lack of a profile history. In addition, a popular model can be used as a fallback to play out recommendations.</li>' +
+					'<li>Try out different models. Instead of plain buying-models. Try, for example. a click-to-buy model or a pure-click model. Or test content-based models against collaborative filtering models.</li>' +
+					'<li>Compare descending weighted best-seller models in which past purchases will be weighted less, with equally weighted best-seller models in which all purchases are equally weighted.</li>'+
+					'<li>Test different periods for the calculation of a recommendation. Define another model of the same type, but with a longer period for the model calculation. For example, the purchases of the last ' +
+						'60 days instead of the last 30 days.</li>'+
+					'<li>Act with manually-maintained lists of recommendations for certain products customized to a specific A/B test-defined group of users. In this way, products can be "pushed" for sale.</li>'+
+				'</ul>',
+			"ab_test_faq_q_6": 'How to configure an A/B test',
+			"ab_test_faq_a_6": 'Prerequisiste for an A/B Test is the selection or creation of a compatible scenario. Afterwards A/B tests can be created by clicking on the \"Create New Test\"–link on the right side ' +
+				'of the page. This will open a configuration window in which you can select the two scenarios to be compared and define the name of the A/B test, the amount of paricipating users, and the running-time.',
+			
+			"scenario_faq_q_1" : 'What is a scenario?',
+			"scenario_faq_a_1" : 'A scenario is a \'frame\' that holds information about what type of items can be delivered, what kind of algorithms are used and what should be filtered when getting recommendations.',
+			"scenario_faq_q_2" : 'What can be configured in a scenario?',
+			"scenario_faq_a_2" : 'In a scenario the following configurations can be set: ' + 
+				'<ul>' +
+					'<li>what type of items can be recommended (products, articles images etc.)</li>' +
+					'<li>what combination of algorithms (models) and their settings are used like personalization, item related or category prefiltered</li>' +
+					'<li>what filters are active, e.g. \"do not show recommendations that a user already bought or dislikes\" or \"do not recommend cheaper products than the current one\"</li>' +
+				'</ul>',
+			"scenario_faq_q_3" : 'Where can a scenario be used?',
+			"scenario_faq_a_3" : 'A scenario can be used or better \"wired\" to certain places on a customer\'s website. Typical places are:<br/>' + 
+				'<ul>' +
+					'<li>a landing page to recommend personalized items, top sellers or most viewed items</li>' +
+					'<li>a category page to recommend top sellers or most viewed items in the selected category</li>' +
+					'<li>a detail page to recommend similar items</li>' +
+					'<li>a page to provide personalized recommendations</li>' +
+					'<li>a shopping basket to recommend items for upselling</li>' +
+				'</ul><br/><br/>' + 
+				'There are of course additional use cases depending on the customer\'s site.',
+			"scenario_faq_q_4" : 'How can a scenario be accessed?',
+			"scenario_faq_a_4" : 'A scenario can be accessed by REST calls against the YOOCHOOSE API and delivers recommendations in .json or .xml format. Delivered recommendations must then be rendered in the website',
+			"scenario_faq_q_5" : 'How do I create a scenario?',
+			"scenario_faq_a_5" : 'With the link \"Create new scenario\" scenarios can be created. Use easy to understand names and descriptions that simplifies the associations of scenario configurations ' +
+				'and the location in the website. For example an article detail page, categorypage or similar.',
+			
+			//configuration errors
+			"ab_test_error_no_test_name": 'Please specify a name for the test',
+			"ab_test_error_invalid_user_share": 'Please provide an integer between 1 and 50 for the share of users in the test.',
+			"ab_test_error_start_date_must_be_in_future": 'The start date must be in the future.',
+			"ab_test_error_end_date_must_be_after_start": 'The end data must be after the start date.',
+			"ab_test_error_select_2_scenarios": 'Please select two compatible scenarios (same output items).',
+			"ab_test_error_incompatible_scenarios": 'The Scenarios are not compatible. Please select two compatible scenarios (same output items).',
+			"ab_test_error_select_2_different_scenarios": 'You must select two different scenarios for a test.',
+			"ab_test_error_current_scenario_already_in_use": 'Scenario A is already used in an other concurrent test!',
+
+			//Tooltips
+			"ab_test_tt_name_of_test": 'A unique name representing the A/B-Test instance',
+			"ab_test_tt_users_in_test": 'In percent - the amount of participating users',
+			"ab_test_tt_scenario_a": 'The original variant (control group)',
+			"ab_test_tt_scenario_b": 'The target variant (treatment group)',
+			"ab_test_tt_participants_a": 'Amount of users in the original variant',
+			"ab_test_tt_participants_b": 'Amount of users in the target variant',
+			"ab_test_tt_start_date": 'The end date on which the test will start',
+			"ab_test_tt_end_date": 'The end date on which the test will end',
+			"ab_test_tt_test_duration": 'Amount of weeks to run the test',
+
+			//Buttons
+			'button_ok': 'OK',
+			"empty_string": '',
+
+			"index_help_about_scenarios": 'Scenarios',
+			"index_help_about_ab_testing": 'A/B Testing',
+				
+			//Preview
+			"preview_userid": "ID utilisateur",
+			"preview_topn": "Nombre de recommandations",
+			"preview_contextitems": "Contexte Articles"
 			}};
 	
     var containers = $("[data-translate]");
     
     containers.each(function() {
       var term = $(this).attr("data-translate");
+      var appendix = $(this).attr("refCode");
+      if(appendix == null ||typeof appendix == 'undefined'){
+    	  appendix = '';
+      }else{
+    	  appendix = ' '+appendix; 
+      }
       //var translation = translate[term][in_to_language];
 	  var translation = translate[in_to_language][term];
 	  if (typeof translation == 'undefined')
@@ -1506,7 +2127,7 @@ function localizer() {
 		translation = 'missing_translation_for_'+term;
 	  }
 	  
-      $(this).html(translation);
+      $(this).html(translation+appendix);
 	  
 	  if($('#legal_text_1').length != 0)
 	  {
@@ -1542,9 +2163,25 @@ function localizer() {
 		}
 		$this.attr('data-tt_content', translation);
 	});
+	var containerstitle = $("[title-translate]");
+	if(containerstitle != null){
+		containerstitle.each(function(){
+			var $this = $(this),
+				term = $this.attr("title-translate"),
+				translation = translate[in_to_language][term];
+			if (typeof translation === 'undefined')
+			{
+				translation = 'missing_translation_for_'+term;
+			}
+			$this.attr('title', translation);
+		});
+	}
     
   }
 
+function getLocalString(key){
+	return typeof translate[in_to_language][key] === 'string' ? translate[in_to_language][key] : 'missing string: "' + key + '"';
+}
   $(document).ready(function () {
     localizer();
 	

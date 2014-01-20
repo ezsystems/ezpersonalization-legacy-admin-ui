@@ -1,197 +1,350 @@
 var customerID = $.cookie('customerID');
 
+
+
+	
 $(document).ready(function () {
-
-    var loginName = $.cookie('email');
-		$('.account_data').children('li').first().find('strong').text(loginName);
-		setLoadingDiv($('section.mandant > header'));
-		setLoadingDiv($('.available_scenarios'));
-		setLoadingDiv($('#conversion_rate'));
-		setLoadingDiv($('#collected_events'));
-		setLoadingDiv($('#delivered_recommendations'));
-		$.ajax({
-			dataType: "json",
-			beforeSend: function (req) {
-            	req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-			url: "ebl/v3/registration/get_accesible_mandator_list/",
-			success: function (json) {
-
-
-				var isInList = false;
-				if(json.mandatorInfoList.length != 0)
-				{
-					if (json.mandatorInfoList.length > 1) {
-						$('.switch').show();
-						for (var i = 0; i < json.mandatorInfoList.length; i++) {
-							var mandatorInfo = json.mandatorInfoList[i];
-							$('#choose_mandant').append('<option value="' + mandatorInfo.name + '">' + mandatorInfo.name + ': ' + mandatorInfo.website + '</option>');
-							$('body').data('mandatorInfoList', json);
-							if ($.cookie('customerID') != null) {
-								if ($.cookie('customerID') == mandatorInfo.name) {
-									isInList = true;
-								}
-							}
-						}
-						if (isInList == false) {
-							$.cookie('customerID', null);
-						}
-					} else if (json.mandatorInfoList.length == 1) {
-						$('.switch').hide();
-						for (var i = 0; i < json.mandatorInfoList.length; i++) {
-							var mandatorInfo = json.mandatorInfoList[i];
-							$('#choose_mandant').append('<option value="' + mandatorInfo.name + '">' + mandatorInfo.name + ': ' + mandatorInfo.website + '</option>');
-							$('body').data('mandatorInfoList', json);
-							$.cookie('customerID', mandatorInfo.name, { expires: 365 });
-						}
-					}
-
-					if ($.cookie('customerID') == null) {
-						$('.overlay').show();
-						$('.dialog_body').show();
-					} else {
-
-						//$('.edit_contact_data').attr('href', 'edit_contact_data.html?customer_id=' + $.cookie('customerID'));
-						initialLoadData();
-						setMandantData();
-					}
-				unsetLoadingDiv($('section.mandant > header'));
-				}
-				else{
-					setMessagePopUp("problem", "error_no_mandators_in_list");
-				}
-			},
-			error: function (jqXHR, textStatus, errorThrown) {
-				if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
+	
+	
+	showEmptyCharts();
+	showEmptyEventChart();
+	
+	setLoadingDiv($('section.mandant > header'));
+	setLoadingDiv($('.available_scenarios'));
+	
+	setLoadingDiv($('#conversion_rate'));
+	setLoadingDiv($('#collected_events'));
+	setLoadingDiv($('#delivered_recommendations'));
+	
+	
+	include(["/js/switch_mandator.js", "/js/user.js"], function() {
+		
+		getCurrentUser(function(loginInfo) {
+			
+			var name = "";
+			if (loginInfo.firstName) name += loginInfo.firstName;
+			if (loginInfo.lastName && name) name += " ";
+			if (loginInfo.lastName) name += loginInfo.lastName;
+			
+			if ( ! name) {
+				name += loginInfo.id;
 			}
+			
+			$('.account_data').children('li').first().find('strong').text(name);
+			
+		    if (loginInfo.provider == "ibs") {
+		    	$('#edit_contact_datal').attr('href', "api/v4/registration/selfcare");
+		    } else {
+		    	$('#edit_contact_datal').off('click').click(function() {
+		    		$('#editDataOverlay').show();
+		    	});
+		    }
 		});
-
-	$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
-	$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
-	$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
-	localizer();
-	$('#copyrightsLink').off('click').click(function() {
-    	console.log("should close corporate1");
-    	$('#messageCorporate').hide();
-    	console.log("should close corporate2");
-    	$('#messageCopyrights').show();
-    });
+		
+		getAccesibleMandators(function(mandatorList) {
+			
+			var currentMandator = null;
+			
+			if (mandatorList.length > 1) {
+				$('.switch').show();
+				for (var i = 0; i < mandatorList.length; i++) {
+					var mandatorInfo = mandatorList[i];
+					$('#choose_mandant').append('<option value="' + mandatorInfo.name + '">' + mandatorInfo.name + ': ' + mandatorInfo.website + '</option>');
+					if ($.cookie('customerID') != null) {
+						if ($.cookie('customerID') == mandatorInfo.name) {
+							currentMandator = mandatorInfo;
+						}
+					}
+				}
+			} else if (mandatorList.length == 1) {
+				$('.switch').hide();
+				currentMandator = mandatorList[0];
+				$('#choose_mandant').append('<option value="' + currentMandator.name + '">' + currentMandator.name + ': ' + currentMandator.website + '</option>');
+			}
+			if(currentMandator !=null ){
+			
+			}
 	
-    //set drop down field to default values: click, purchase, consume
-    $('#events_select_for_chart_bar_1').val('click');
-    $('#events_select_for_chart_bar_2').val('purchase');
-    $('#events_select_for_chart_bar_3').val('consume');
-
-
-
-    //Change the value in selectbox 1 in collected events
-    $('select[id^="events_select_for_chart_bar"]').change(function () {
-
-        var json = $('.collected_events_chart').data('currentJSON');
-
-        if ($('li.current').hasClass('view_option_day')) {
-            renderCollectedEvents(json, "day");
-        } else if ($('li.current').hasClass('view_option_week')) {
-            renderCollectedEvents(json, "week");
-        } else if ($('li.current').hasClass('view_option_month')) {
-            renderCollectedEvents(json, "month");
-        }
-    });
-
-
-
-    $('select[id^="select_for_delivered_recommendations_chart_bar"]').change(function () {
-
-        var json = $('.delivered_recommendation_chart').data('currentJSON');
-
-        if ($('li.current').hasClass('view_option_day')) {
-            renderRecommendationChart(json, "day");
-        } else if ($('li.current').hasClass('view_option_week')) {
-            renderRecommendationChart(json, "week");
-        } else if ($('li.current').hasClass('view_option_month')) {
-            renderRecommendationChart(json, "month");
-        }
-    });
-
-    //Last day click event
-    $('#view_option_day').click(function () {
+			if (currentMandator == null) {
+				if(mandatorList.length == 0) {
+					showNoAvailableMandatorPopup();
+				} else {
+					showSwitchMandatorPopup(false);
+				}
+			} else {
+				$.cookie('customerID', currentMandator.name, { expires: 365 });
+				initialLoadData();
+				setMandantData(currentMandator);
+			}
+			unsetLoadingDiv($('section.mandant > header'));
+		});
 	
+		
 		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
 		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
 		$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
-		localizer();
-	
-        setLoadingDiv($('#conversion_rate'));
-        setLoadingDiv($('#collected_events'));
-        setLoadingDiv($('#delivered_recommendations'));
-        fillConversionRateDay();
-        fillRecommendationDay();
-    });
-
-    $('#view_option_week').click(function () {
-
-		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
-		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_week');
-		$('#index_collected_events').attr('data-translate', 'index_collected_events_week');
-		localizer();
-	
-        //calculate the from_date_time and to_date_time
-        var currentDate = getCurrentDateMinusDays(7);
-        var from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-        currentDate = getCurrentDateMinusDays(0);
-        var to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-        var granularity = "PT12H";
 		
-        setLoadingDiv($('#collected_events'));
-        setLoadingDiv($('#conversion_rate'));
-
-        customerID = $.cookie('customerID');
-		$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
-        $.ajax({
-            dataType: "json",
-			beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-            url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-			success: function (data) {
-				var json = {
+		
+		$('#copyrightsLink').off('click').click(function() {
+	    	console.log("should close corporate1");
+	    	$('#messageCorporate').hide();
+	    	console.log("should close corporate2");
+	    	$('#messageCopyrights').show();
+	    });
+		
+	    //set drop down field to default values: click, purchase, consume
+	    $('#events_select_for_chart_bar_1').val('click');
+	    $('#events_select_for_chart_bar_2').val('purchase');
+	    $('#events_select_for_chart_bar_3').val('consume');
+	
+	
+	
+	    //Change the value in selectbox 1 in collected events
+	    $('select[id^="events_select_for_chart_bar"]').change(function () {
+	
+	        var json = $('.collected_events_chart').data('currentJSON');
+	
+	        if ($('li.current').hasClass('view_option_day')) {
+	            renderCollectedEvents(json, "day");
+	        } else if ($('li.current').hasClass('view_option_week')) {
+	            renderCollectedEvents(json, "week");
+	        } else if ($('li.current').hasClass('view_option_month')) {
+	            renderCollectedEvents(json, "month");
+	        }
+	    });
+	
+	
+	
+	    $('select[id^="select_for_delivered_recommendations_chart_bar"]').change(function () {
+	
+	        var json = $('.delivered_recommendation_chart').data('currentJSON');
+	
+	        if ($('li.current').hasClass('view_option_day')) {
+	            renderRecommendationChart(json, "day");
+	        } else if ($('li.current').hasClass('view_option_week')) {
+	            renderRecommendationChart(json, "week");
+	        } else if ($('li.current').hasClass('view_option_month')) {
+	            renderRecommendationChart(json, "month");
+	        }
+	    });
+	
+	    //Last day click event
+	    $('#view_option_day').click(function () {
+		
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
+			localizer();
+			
+			showEmptyCharts();
+			showEmptyEventChart();
+			
+	        setLoadingDiv($('#conversion_rate'));
+	        setLoadingDiv($('#collected_events'));
+	        setLoadingDiv($('#delivered_recommendations'));
+	        
+	        fillConversionRateDay();
+	        fillRecommendationDay();
+	    });
+	
+	    $('#view_option_week').click(function () {
+	
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_week');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_week');
+			localizer();
+		
+	        //calculate the from_date_time and to_date_time
+	        var currentDate = getCurrentDateMinusDays(7);
+	        var from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+	        currentDate = getCurrentDateMinusDays(0);
+	        var to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+	        var granularity = "PT12H";
+			
+			showEmptyCharts();
+			showEmptyEventChart();
+			
+	        setLoadingDiv($('#collected_events'));
+	        setLoadingDiv($('#conversion_rate'));
+	
+	        customerID = $.cookie('customerID');
+			$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
+	        $.ajax({
+	            dataType: "json",
+				beforeSend: function (req) {
+	            req.setRequestHeader('no-realm', 'realm1');
+				},
+				 statusCode: {
+	                    401: function (jqXHR, textStatus, errorThrown) {
+							$.cookie('password', null);
+							$.cookie('email', null);
+							window.location = "login.html";
+	                    }
+	            },
+	            url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
+				success: function (data) {
+					var json = {
+								'revenueResponse': {
+									'items' : data
+								}
+							},
+							conversionRateObject = {
+								'relative' : [0],
+								'absolute' : [0]
+							},
+							l, i, convRate;
+					if (json.revenueResponse.items.length < 1) {
+	
+						//To prevent old data in the graphs the use the "zero" object
+						showEmptyCharts();
+						showEmptyEventChart();
+						console.log("no items available");
+					} else {
+						conversionRateObject.relative = [];
+						conversionRateObject.absolute = [];
+						l = json.revenueResponse.items.length;
+						for(i = 0; i < l; i++){
+							convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/parseFloat(json.revenueResponse.items[i].clickEvents);
+							conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
+							conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
+						}
+						renderCollectedEvents(json, "week");
+						$('.collected_events_chart').data('currentJSON', json);
+	                    updateCharts(getGraphDescriptionOfLastWeek(), conversionRateObject.relative, percentFormatter);
+	                }
+					$('body').data('conversionRateObject', conversionRateObject);
+	                unsetLoadingDiv($('#collected_events'));
+	                unsetLoadingDiv($('#conversion_rate'));
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                if(jqXHR.status != null && jqXHR.status == 403)
+						{
+							setMessagePopUp("problem", "error_server_error_403");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 401)
+						{
+							setMessagePopUp("problem", "error_server_error_401");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 400)
+						{
+							setMessagePopUp("problem", "error_server_error_400");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 404)
+						{
+							setMessagePopUp("problem", "error_server_error_404");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 409)
+						{
+							setMessagePopUp("problem", "error_server_error_409");
+						}
+						else
+						{
+							setMessagePopUp("problem", "error_server_error");
+						}
+	            }
+	        });
+			
+			
+			
+	        granularity = "P1D";
+	        setLoadingDiv($('#delivered_recommendations'));
+	
+	        $.ajax({
+	            dataType: "json",
+				beforeSend: function (req) {
+	            req.setRequestHeader('no-realm', 'realm1');
+				},
+				 statusCode: {
+	                    401: function (jqXHR, textStatus, errorThrown) {
+							$.cookie('password', null);
+							$.cookie('email', null);
+							window.location = "login.html";
+	                    }
+	            },
+				beforeSend: function (req) {
+	            req.setRequestHeader('no-realm', 'realm1');
+				},
+	            url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
+	            success: function (json) {
+	
+	                if (json.scenarioInfoList.length < 1) {
+	                    showEmptyRecommendationChart();
+	                    console.log("no scenarios");
+	                } else {
+	                    $('.delivered_recommendation_chart').data('currentJSON', json);
+	                    renderRecommendationChart(json, "week");
+	                }
+	                unsetLoadingDiv($('#delivered_recommendations'));
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                if(jqXHR.status != null && jqXHR.status == 403)
+						{
+							setMessagePopUp("problem", "error_server_error_403");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 401)
+						{
+							setMessagePopUp("problem", "error_server_error_401");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 400)
+						{
+							setMessagePopUp("problem", "error_server_error_400");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 404)
+						{
+							setMessagePopUp("problem", "error_server_error_404");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 409)
+						{
+							setMessagePopUp("problem", "error_server_error_409");
+						}
+						else
+						{
+							setMessagePopUp("problem", "error_server_error");
+						}
+	            }
+	        });
+	
+	
+	    });
+	
+	    $('#view_option_month').click(function () {
+	
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_month');
+			localizer();
+	
+	        //calculate the from_date_time and to_date_time
+	        var currentDate = getCurrentDateMinusDays(30);
+	        var from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+	        currentDate = getCurrentDateMinusDays(0);
+	        var to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+	        var granularity = "P1D";
+	        
+			showEmptyCharts();
+			showEmptyEventChart();
+	
+	        setLoadingDiv($('#conversion_rate'));
+	        setLoadingDiv($('#collected_events'));
+	
+	        customerID = $.cookie('customerID');
+			$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
+	        $.ajax({
+	            dataType: "json",
+				beforeSend: function (req) {
+	            req.setRequestHeader('no-realm', 'realm1');
+				},
+				 statusCode: {
+	                    401: function (jqXHR, textStatus, errorThrown) {
+							$.cookie('password', null);
+							$.cookie('email', null);
+							window.location = "login.html";
+	                    }
+	            },
+	            url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
+	            success: function (data) {
+	
+					var json = {
 							'revenueResponse': {
 								'items' : data
 							}
@@ -201,342 +354,153 @@ $(document).ready(function () {
 							'absolute' : [0]
 						},
 						l, i, convRate;
-				if (json.revenueResponse.items.length < 1) {
-
-					//To prevent old data in the graphs the use the "zero" object
-					showEmptyCharts();
-					showEmptyEventChart();
-					console.log("no items available");
-				} else {
-					conversionRateObject.relative = [];
-					conversionRateObject.absolute = [];
-					l = json.revenueResponse.items.length;
-					for(i = 0; i < l; i++){
-						var clevents = parseFloat(json.revenueResponse.items[i].clickEvents);
-						if(clevents == 0){
-							convRate = 0.0;
-						}else{
-							convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/clevents;
-						}
-						conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
-						conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
-					}
-					renderCollectedEvents(json, "week");
-					$('.collected_events_chart').data('currentJSON', json);
-                    updateCharts(getGraphDescriptionOfLastWeek(), conversionRateObject.relative, percentFormatter);
-                }
-				$('body').data('conversionRateObject', conversionRateObject);
-                unsetLoadingDiv($('#collected_events'));
-                unsetLoadingDiv($('#conversion_rate'));
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-            }
-        });
-		
-		
-		
-        granularity = "P1D";
-        setLoadingDiv($('#delivered_recommendations'));
-
-        $.ajax({
-            dataType: "json",
-			beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-			beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-            url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-            success: function (json) {
-
-                if (json.scenarioInfoList.length < 1) {
-                    showEmptyRecommendationChart();
-                    console.log("no scenarios");
-                } else {
-                    $('.delivered_recommendation_chart').data('currentJSON', json);
-                    renderRecommendationChart(json, "week");
-                }
-                unsetLoadingDiv($('#delivered_recommendations'));
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-            }
-        });
-
-
-    });
-
-    $('#view_option_month').click(function () {
-
-		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
-		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
-		$('#index_collected_events').attr('data-translate', 'index_collected_events_month');
-		localizer();
-
-        //calculate the from_date_time and to_date_time
-        var currentDate = getCurrentDateMinusDays(30);
-        var from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-        currentDate = getCurrentDateMinusDays(0);
-        var to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-        var granularity = "P1D";
-
-        setLoadingDiv($('#conversion_rate'));
-        setLoadingDiv($('#collected_events'));
-
-        customerID = $.cookie('customerID');
-		$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
-        $.ajax({
-            dataType: "json",
-			beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-            url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-            success: function (data) {
-
-				var json = {
-						'revenueResponse': {
-							'items' : data
-						}
-					},
-					conversionRateObject = {
-						'relative' : [0],
-						'absolute' : [0]
-					},
-					l, i, convRate;
-
-                if (json.revenueResponse.items.length < 1) {
-					//To prevent old data in the graphs the objects have to be deleted
-                    showEmptyCharts();
-                    console.log("no items available");
-                } else {
-					conversionRateObject.relative = [];
-					conversionRateObject.absolute = [];
-					l = json.revenueResponse.items.length;
-					for(i = 0; i < l; i++){
-						var clevents = parseFloat(json.revenueResponse.items[i].clickEvents);
-						if(clevents == 0){
-							convRate = 0.0;
-						}else{
-							convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/clevents;
-						}
-						conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
-						conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
-					}
-                    renderCollectedEvents(json, "month");
-                    $('.collected_events_chart').data('currentJSON', json);
-                    updateCharts(getGraphDescriptionOfLastMonth(), conversionRateObject.relative, percentFormatter);
-                }
-
-				$('body').data('conversionRateObject', conversionRateObject);
-                unsetLoadingDiv($('#conversion_rate'));
-                unsetLoadingDiv($('#collected_events'));
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-            }
-        });
-
-        setLoadingDiv($('#delivered_recommendations'));
-
-        $.ajax({
-            dataType: "json",
-			beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-            url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-            success: function (json) {
-
-                if (json.scenarioInfoList.length < 1) {
-                    showEmptyRecommendationChart();
-                    console.log("no scenarios");
-                } else {
-                    $('.delivered_recommendation_chart').data('currentJSON', json);
-                    renderRecommendationChart(json, "month");
-                }
-                unsetLoadingDiv($('#delivered_recommendations'));
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-            }
-        });
-
-    });
-
-    
-    
-    // is called if right converison unit is changed from relative -> absolute and vice versa
-	$('#conversion_units').change(function () {
-		var conversionRateObject = $('body').data('conversionRateObject');
-		
-		var statusObject,
-			formatter;
-		if($(this).val() == 'relative')
-		{
-			statusObject = conversionRateObject.relative;
-			//console.log(statusObject);
-			formatter = percentFormatter;
-		}
-		else
-		{
-			statusObject = conversionRateObject.absolute;
-			formatter = myFormatter;
-		}
-		console.log(statusObject);
-		if($('li.current').hasClass('view_option_day'))
-		{
-			updateCharts(getGraphDescriptionOf24h(), statusObject, formatter);
-		}
-		else if($('li.current').hasClass('view_option_week'))
-		{
-			updateCharts(getGraphDescriptionOfLastWeek(), statusObject, formatter);
-		}
-		else if($('li.current').hasClass('view_option_month'))
-		{
-			updateCharts(getGraphDescriptionOfLastMonth(), statusObject, formatter);
-		}
-		
-	});
 	
+	                if (json.revenueResponse.items.length < 1) {
+						//To prevent old data in the graphs the objects have to be deleted
+	                    showEmptyCharts();
+	                    console.log("no items available");
+	                } else {
+						conversionRateObject.relative = [];
+						conversionRateObject.absolute = [];
+						l = json.revenueResponse.items.length;
+						for(i = 0; i < l; i++){
+							convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/parseFloat(json.revenueResponse.items[i].clickEvents);
+							conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
+							conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
+						}
+	                    renderCollectedEvents(json, "month");
+	                    $('.collected_events_chart').data('currentJSON', json);
+	                    updateCharts(getGraphDescriptionOfLastMonth(), conversionRateObject.relative, percentFormatter);
+	                }
+	
+					$('body').data('conversionRateObject', conversionRateObject);
+	                unsetLoadingDiv($('#conversion_rate'));
+	                unsetLoadingDiv($('#collected_events'));
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                if(jqXHR.status != null && jqXHR.status == 403)
+						{
+							setMessagePopUp("problem", "error_server_error_403");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 401)
+						{
+							setMessagePopUp("problem", "error_server_error_401");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 400)
+						{
+							setMessagePopUp("problem", "error_server_error_400");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 404)
+						{
+							setMessagePopUp("problem", "error_server_error_404");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 409)
+						{
+							setMessagePopUp("problem", "error_server_error_409");
+						}
+						else
+						{
+							setMessagePopUp("problem", "error_server_error");
+						}
+	            }
+	        });
+	
+	        setLoadingDiv($('#delivered_recommendations'));
+	
+	        $.ajax({
+	            dataType: "json",
+				beforeSend: function (req) {
+	            req.setRequestHeader('no-realm', 'realm1');
+				},
+				 statusCode: {
+	                    401: function (jqXHR, textStatus, errorThrown) {
+							$.cookie('password', null);
+							$.cookie('email', null);
+							window.location = "login.html";
+	                    }
+	            },
+	            url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
+	            success: function (json) {
+	
+	                if (json.scenarioInfoList.length < 1) {
+	                    showEmptyRecommendationChart();
+	                    console.log("no scenarios");
+	                } else {
+	                    $('.delivered_recommendation_chart').data('currentJSON', json);
+	                    renderRecommendationChart(json, "month");
+	                }
+	                unsetLoadingDiv($('#delivered_recommendations'));
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                if(jqXHR.status != null && jqXHR.status == 403)
+						{
+							setMessagePopUp("problem", "error_server_error_403");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 401)
+						{
+							setMessagePopUp("problem", "error_server_error_401");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 400)
+						{
+							setMessagePopUp("problem", "error_server_error_400");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 404)
+						{
+							setMessagePopUp("problem", "error_server_error_404");
+						}
+						else if(jqXHR.status != null && jqXHR.status == 409)
+						{
+							setMessagePopUp("problem", "error_server_error_409");
+						}
+						else
+						{
+							setMessagePopUp("problem", "error_server_error");
+						}
+	            }
+	        });
+	
+	    });
+	
+	    
+	    
+	    // is called if right converison unit is changed from relative -> absolute and vice versa
+		$('#conversion_units').change(function () {
+			var conversionRateObject = $('body').data('conversionRateObject');
+			
+			var statusObject,
+				formatter;
+			if($(this).val() == 'relative')
+			{
+				statusObject = conversionRateObject.relative;
+				//console.log(statusObject);
+				formatter = percentFormatter;
+			}
+			else
+			{
+				statusObject = conversionRateObject.absolute;
+				formatter = myFormatter;
+			}
+			console.log(statusObject);
+			if($('li.current').hasClass('view_option_day'))
+			{
+				updateCharts(getGraphDescriptionOf24h(), statusObject, formatter);
+			}
+			else if($('li.current').hasClass('view_option_week'))
+			{
+				updateCharts(getGraphDescriptionOfLastWeek(), statusObject, formatter);
+			}
+			else if($('li.current').hasClass('view_option_month'))
+			{
+				updateCharts(getGraphDescriptionOfLastMonth(), statusObject, formatter);
+			}
+			
+		});
+	});
+
 
 });
 
 
-$('#saveMandatorChange').live("click", function (event) {
-	if($('#choose_mandant').val() != "")
-	{
-		$.cookie('customerID', $('#choose_mandant').val(), { expires: 365 });
-		customerID = $.cookie('customerID');
-		//$('.edit_contact_data').attr('href', 'edit_contact_data.html?customer_id=' + $.cookie('customerID'));
-		$('.overlay').hide();
-		$('.dialog_body').hide();
-		initialLoadData();
-		setMandantData();
-		
-		$('.available_view_options').children('li').removeClass('current');
-		$('.available_view_options').children('li').first().addClass('current');
-		console.log('triggering mandatorChanged');
-		var event = new Event('mandatorChanged');
-		document.dispatchEvent(event);
-	}
-	else
-	{
-		setMessagePopUp("problem", "error_no_customer_select");
-	}
-});
 
 function updateDatae() {
 
@@ -558,85 +522,58 @@ function updateDatae() {
 function saveForme() {
 
 	var showError = false;
-	if($('#ecompany').val() == "")
-	{
+	if($('#ecompany').val() == "") {
 		$('label[for="ecompany"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
 		$('label[for="ecompany"]').parent().removeClass("problem");
 	}
-	if($('#efname').val() == "")
-	{
+	if($('#efname').val() == "") {
 		$('label[for="efname"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
 		$('label[for="efname"]').parent().removeClass("problem");
 	}
-	if($('#elname').val() == "")
-	{
+	if($('#elname').val() == "") {
 		$('label[for="elname"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
 		$('label[for="elname"]').parent().removeClass("problem");
 	}
-	if($('#estreet_and_house').val() == "")
-	{
+	if($('#estreet_and_house').val() == "") {
 		$('label[for="estreet_and_house"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
 		$('label[for="estreet_and_house"]').parent().removeClass("problem");
 	}
-	if($('#ezip').val() == "")
-	{
+	if($('#ezip').val() == "") {
 		$('label[for="ezip"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
 		$('label[for="ezip"]').parent().removeClass("problem");
 	}
-	if($('#ecity').val() == "")
-	{
+	if($('#ecity').val() == "") {
 		$('label[for="ecity"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
 		$('label[for="ecity"]').parent().removeClass("problem");
 	}
-	if($('#ecountry').val() == "")
-	{
+	if($('#ecountry').val() == "") {
 		$('label[for="ecountry"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
 		$('label[for="ecountry"]').parent().removeClass("problem");
 	}
-	if($('#ephone').val() == "")
-	{
+	if($('#ephone').val() == "") {
 		$('label[for="ephone"]').parent().addClass("problem");
 		showError = true;
-	}
-	else
-	{
+	} else {
 		$('label[for="ephone"]').parent().removeClass("problem");
 	}
 	
-	if(showError == true)
-	{
+	if(showError == true) {
 		setMessagePopUp("problem", "error_fill_required_fields");
-	}
-	else
-	{
+	} else {
 		var json = $('body').data('dataprp'),
 			customer = json.profilePack.customer;
 
@@ -658,28 +595,22 @@ function saveForme() {
 				setMessagePopUp("positive", "message_data_saved_successfully");
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				if(jqXHR.status != null && jqXHR.status == 403)
-					{
+				if(jqXHR.status != null && jqXHR.status == 403) {
 						setMessagePopUp("problem", "error_server_error_403");
 					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
+					else if(jqXHR.status != null && jqXHR.status == 401) {
 						setMessagePopUp("problem", "error_server_error_401");
 					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
+					else if(jqXHR.status != null && jqXHR.status == 400) {
 						setMessagePopUp("problem", "error_server_error_400");
 					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
+					else if(jqXHR.status != null && jqXHR.status == 404) {
 						setMessagePopUp("problem", "error_server_error_404");
 					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
+					else if(jqXHR.status != null && jqXHR.status == 409) {
 						setMessagePopUp("problem", "error_server_error_409");
 					}
-					else
-					{
+					else {
 						setMessagePopUp("problem", "error_server_error");
 					}
 			}
@@ -690,120 +621,46 @@ function saveForme() {
 
 function getEditData(json) {
 
-	//var licenceKey = $.cookie('licenceKey');
-
     $('#editDataOverlay').find("input").off('change').change(function () {
         updateDatae();
     });
     $('#showLicenseKey').off('click').on('click', function(){
         $('#thekeyid').html(json.profilePack.mandator.licenseKey);
         $('#licenceKeyId').show();
-	
 	});
 	
     var customer = json.profilePack.customer;
     $('body').data('dataprp', json);
-			if(customer.email == null)
-			{
-				$('#eemail').val("");
-			}
-			else
-			{
-				$('#eemail').val(customer.email);
-			}
-			if(customer.company == null)
-			{
-				$('#ecompany').val("");
-			}
-			else
-			{
-				 $('#ecompany').val(customer.company);
-			}
-			if(customer.firstName == null)
-			{
-				$('#efname').val("");
-			}
-			else
-			{
-				$('#efname').val(customer.firstName);
-			}
-			if(customer.lastName == null)
-			{
-				$('#elname').val("");
-			}
-			else
-			{
-				$('#elname').val(customer.lastName);
-			}
-			if(customer.phone == null)
-			{
-				$('#ephone').val("");
-			}
-			else
-			{
-				$('#ephone').val(customer.phone);
-			}
-			if(customer.address.street == null)
-			{
-				$('#estreet_and_house').val("");
-			}
-			else
-			{
-				$('#estreet_and_house').val(customer.address.street);
-			}
-			if(customer.address.zip == null)
-			{
-				$('#ezip').val("");
-			}
-            else
-			{
-				$('#ezip').val(customer.address.zip);
-			}
-			if(customer.address.city == null)
-			{
-				$('#ecity').val("");
-			}
-            else
-			{
-				$('#ecity').val(customer.address.city);
-			}
 			
-			if(customer.address.country == null)
-			{
-				$('#ecountry').val("");
-			}
-			else
-			{
-				$('#ecountry').val(customer.address.country);
-			}
-            
-        
+	$('#eemail').val(ifnull(customer.email, ""));
+	$('#ecompany').val(ifnull(customer.company, ""));
+	$('#efname').val(ifnull(customer.firstName, ""));
+	$('#elname').val(ifnull(customer.lastName, ""));
+	$('#ephone').val(ifnull(customer.phone, ""));
+	$('#estreet_and_house').val(ifnull(customer.address.street, ""));
+	$('#ezip').val(ifnull(customer.address.zip, ""));
+	$('#ecity').val(ifnull(customer.address.city, ""));
+	$('#ecountry').val(ifnull(customer.address.country, ""));
        
-
     $('#changeEditdata').click(function () {
         saveForme();
     });
-
 }
 
-function setMandantData() {
-    var json = $('body').data('mandatorInfoList');
-    var customerID = $.cookie('customerID');
-    for (var i = 0; i < json.mandatorInfoList.length; i++) {
-        if (json.mandatorInfoList[i].name == customerID) {
-            $('.info').children('strong').text(json.mandatorInfoList[i].website);
-            $('.info').children('p').text(json.mandatorInfoList[i].type + " (" + json.mandatorInfoList[i].version + ")");
-            $('.info').children('span').children('.codeid').text(json.mandatorInfoList[i].name);
-			$.cookie('mandatorType', json.mandatorInfoList[i].type);
-        }
-    }
+
+function setMandantData(mandatorInfo) {
+    
+    $('.info').children('strong').text(mandatorInfo.website);
+    $('.info').children('p').text(mandatorInfo.type + " (" + mandatorInfo.version + ")");
+    $('.info').children('span').children('.codeid').text(mandatorInfo.name);
+	$.cookie('mandatorType', mandatorInfo.type);
 
     $.ajax({
         dataType: "json",
 		beforeSend: function (req) {
             req.setRequestHeader('no-realm', 'realm1');
 		},
-        url: "/ebl/v3/profile/get_mandator_statistic/" + customerID,
+        url: "/ebl/v3/profile/get_mandator_statistic/" + mandatorInfo.name,
         success: function (json) {
 
             var mandatorStatistic = json.mandatorStatistic;
@@ -817,30 +674,24 @@ function setMandantData() {
         },
         error: function (jqXHR, textStatus, errorThrown) {
 
-            if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
+            if(jqXHR.status != null && jqXHR.status == 403) {
+				setMessagePopUp("problem", "error_server_error_403");
+				
+			} else if(jqXHR.status != null && jqXHR.status == 401) {
+				setMessagePopUp("problem", "error_server_error_401");
+				
+			} else if(jqXHR.status != null && jqXHR.status == 400) {
+				setMessagePopUp("problem", "error_server_error_400");
+				
+			} else if(jqXHR.status != null && jqXHR.status == 404) {
+				setMessagePopUp("problem", "error_server_error_404");
+						
+			} else if(jqXHR.status != null && jqXHR.status == 409) {
+				setMessagePopUp("problem", "error_server_error_409");
+				
+			} else {
+				setMessagePopUp("problem", "error_server_error");
+			}
         }
     });
 }
@@ -876,14 +727,6 @@ function initialLoadData() {
     	console.log("should close corporate2");
     	$('#messageCopyrights').show();
     });
-    
-    $('#edit_contact_datal').off('click').click(function() {
-    	$('#editDataOverlay').show();
-    }); 
-    
-    
-   
-    
     
 
 	var yesterday = new Date(Date.now() - 24*3600000);
@@ -976,6 +819,9 @@ function initialLoadData() {
 			}else{
 				$('#ABTestTab').hide();
 			}
+			$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
+			$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
+			
 			getEditData(json);
 			//To show this parameters on other screens, the will be saved in the session storage
 			//$.cookie('licenceKey', mandator.licenseKey);
@@ -1014,6 +860,7 @@ function initialLoadData() {
     loadScenarios();
     
 }
+
 
 function loadScenarios(){
 	var customerID = $.cookie('customerID');
@@ -1078,7 +925,7 @@ function loadScenarios(){
                     $(dummyClone).children("div").children("p.data").removeClass("unavailable").removeClass("ascending").removeClass("descending");
                     if (scenario.statisticItems.length < 1 || scenario.statisticItems.length > 2) {
                         //if the response have not correct data, the arrow gets an unavailable icon
-                        console.log("no correct number of items to show delivered recommendations");
+                        console.log("No correct number of items to show delivered recommendations");
                         $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
                         if (scenario.statisticItems.length == 0) {
                             $(dummyClone).children("div").children("p.data").children("span").children("strong").text("0");
@@ -1116,10 +963,10 @@ function loadScenarios(){
                         $(dummyClone).children("div#scenario_" + j).addClass("partly_available");
                     }
                     if(j == 0){
-                    	console.log( $('.available_scenarios').children('li').length);
+//                    	console.log( $('.available_scenarios').children('li').length);
                     	$('.available_scenarios').empty();
                     	$('.available_scenarios').append(dummy);
-                    	console.log( $('.available_scenarios').children('li').length);
+//                    	console.log( $('.available_scenarios').children('li').length);
                     }
                   
                     $('.available_scenarios').append(dummyClone);
@@ -1287,12 +1134,7 @@ function fillConversionRateDay() {
 				conversionRateObject.absolute = [];
 				l = json.revenueResponse.items.length;
 				for(i = 0; i < l; i++){
-					var clevents = parseFloat(json.revenueResponse.items[i].clickEvents);
-					if(clevents == 0){
-						convRate = 0.0;
-					}else{
-						convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/clevents;
-					}
+					convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/parseFloat(json.revenueResponse.items[i].clickEvents);
 					conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
 					conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
 				}
@@ -1756,8 +1598,8 @@ function showEmptyRecommendationChart() {
 }
 
 function updateCharts(labels, conversionValues, formatter) {
-	console.log('updating convRate chart');
-	console.log(conversionValues);
+//	console.log('updating convRate chart');
+//	console.log(conversionValues);
     RGraph.Clear(document.getElementById("conversion_rate"));
 
     rightLine = new RGraph.Line('conversion_rate', conversionValues);
