@@ -9,7 +9,9 @@
     <meta name="viewport" content="width:device-width,initial-scale=1">
     <link rel="stylesheet" href="css/reset.css">
     <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    
     <link rel="stylesheet" href="css/styles_new.css">
+    <link rel="stylesheet" href="css/configurator.css">
 
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/jquery-ui.js"></script>
@@ -20,9 +22,11 @@
     <script src="js/equalize.js"></script>
     <script src="js/things.js"></script>
     <script src="js/helper.js"></script>
-    <script src="js/filter.js"></script>
     
     <script src="js/i18n.js" data-i18n-files="scenario,common"></script>
+    
+    <script src="js/configurator_header.js"></script>
+    <script src="js/settings.js"></script>
 	
 	
   </head>
@@ -58,27 +62,12 @@
    
       <section style="margin: 0;">
       	
-        <header class="scenario_settings clearfix">
-          <div class="s1_5">
-            <label for="scenario_title" class="header_title_basis" data-translate="settings_scenario_title">Scenario title:</label>
-          </div>
-		  <div class="s2_5">
-			<div class="header_title_values text_field">
-				<input type="text" id="scenario_title" name="scenario_title" placeholder="Title of scenario" autofocus="autofocus" />
-			</div>
-		  </div>
-		  <a style="float:right; right: 4em;" class="button with_icon save_state" id="button_save" data-translate="settings_save_and_go_next">Save</a>
-		  
-		    <div class="styled">
-		      <ul>
-		        <li class="top" id="toparrow"><a class="button" id="atoparrow"> &#9660;</a></li>
-		        <li style="min-height: 0.5em; float: right; min-width: 5em;"/>
-		        <li class="item"><a id="adelete" class="delete button" data-translate="settings_delete_description">Delete scenario</a></li>
-		        <li class="item"><a id="acancel" class="cancel button" style="width:100%;" data-translate="back_dashboard" >Cancel</a></li>
-		      </ul>
-			</div>
+    <section style="margin: 0;" >
+        <header class="scenario_settings">
+        	<!-- configurator_header.html must be included here.  -->
+			<a class="button" style="visibility: hidden;">&nbsp;</a> 
         </header>
-       </section >
+    </section >
        
        <section style="width:80%; margin:0 auto;">
         <form action="#" method="get" id="scenario_primary_settings">

@@ -1,10 +1,21 @@
  var reference_code = gup('reference_code');
   var customerID = gup('customer_id');
   var saved = gup('saved');
-  //console.log(saved);
-  var showdelete = false;
+ 
+  
+  
   
   $(document).ready(function() {
+		
+	  // load included files and call initializer
+	  initialize_configurator_header(function() {
+		  initialize();
+	  });
+  });
+	  
+	  
+var initialize = function() {
+	  
 
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
 	  $('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
@@ -132,8 +143,8 @@
 			  window.parent.$("#contentFrame").height( '100%');
 		  },
 		  error: stdAjaxErrorHandler
-	  })
-			  .then(function() {
+		  
+		  }).then(function() {
 				  $(".models_groups").equalize({
 					  eqItems: ".model",
 					  exclItems: '.dummymodel',
@@ -145,100 +156,8 @@
 	  if(saved == "true") {
 		  setMessagePopUp("positive", "message_data_saved_successfully");
 	  }
-	  
-	  $(document).click(function(e){
-			var tid = e.target.id;
-			if(tid != 'atoparrow' && tid !='toparrow' && showdelete){
-				$('.item').hide();
-				showdelete = false;
-			}
-		});
-		
-		$('.cancel').click(function (){
-			cancelScenario();
-		});
-		
-		$('#toparrow').click(function (){
-			if(!showdelete){
-				$('.item').show();
-				showdelete = true;
-			}else{
-				$('.item').hide();
-				showdelete = false;
-			}
-		});
-		
-		$('.delete').click(function () {		
-			deleteScenario();
-		});
-	  
 
-	  $("#button_save").click(function() {
-
-		  setLoadingDiv($('#button_save'));
-		  var json = $('body').data('scenario');
-
-		  //the stage categorypath can not be triggered and write in the json object on change
-		  //it has to be set in the save method
-		   var stages = json.scenario.stages;
-		  if(stages[0] != null) {
-			  if($('#primary_category_path').val() == "null") {
-				  stages[0].useCategoryPath = null;
-			  }
-			  else {
-				  stages[0].useCategoryPath = $('#primary_category_path').val();
-			  }
-		  }
-		 
-		  for( var k = 1; k < 4; k ++){
-			  if(stages[k] != null) {
-				  var strn = '#fallback'+k+'_category_path';
-				  if($(strn).val() == "null") {
-					  stages[k].useCategoryPath = null;
-				  }
-				  else {
-					  stages[k].useCategoryPath = $(strn).val();
-				  }
-			  }
-		  }
-		 
-		 
-		  
-		  //clear the xingModel arrays (remove undefined elements
-		  var j;
-		  for( var i = 3 ; i > -1; i --){
-			  if(! stages[i]) {
-				  continue;
-			  }
-			  j = stages[i].xingModels.length;
-			  while(j --) {
-				  if(stages[i].xingModels[j]) {
-					  continue;
-				  }
-				  stages[i].xingModels.splice(j, 1);
-			  }
-		  }
-
-		  $.ajax({
-			  type: "POST",
-			  beforeSend: function(x) {
-				  if(x && x.overrideMimeType) {
-					  x.overrideMimeType("application/json;charset=UTF-8");
-				  }
-				  x.setRequestHeader('no-realm', 'realm1');
-			  },
-			  mimeType: "application/json",
-			  contentType: "application/json;charset=UTF-8",
-			  dataType: "json",
-			  data: JSON.stringify(json.scenario),
-			  url: "ebl/v3/" + customerID + "/structure/update_scenario/",
-			  success: function(json) {
-				  window.location = "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID + "&saved=true";
-			  },
-			  error: stdAjaxErrorHandler
-		  });
-
-	  });
+	  $("#button_save").click(saveScenario);
 
 	  $('body')
 			  .on("change", '.placed_model input', function() {
@@ -252,75 +171,84 @@
 
 			  });
 	  initHelpBtn();
-  });
+  };
   
-  function cancelScenario() {
-	  window.parent.$("#settingsP").hide();
-	  window.parent.$('#cover').hide();
-}
+  
+function saveScenario() {
+	
+	  setLoadingDiv($('body'));
+	  
+	  var json = $('body').data('scenario');
 
-function deleteScenario() {
-	
-	  var translationConfirm = translate[in_to_language]["message_want_delete_scenario"];
-	  if (typeof translationConfirm == 'undefined')
-	  {
-		translationConfirm = 'missing_translation_for_message_want_delete_scenario';
+	  //the stage categorypath can not be triggered and write in the json object on change
+	  //it has to be set in the save method
+	  var stages = json.scenario.stages;
+	   
+	  if(stages[0] != null) {
+		  if($('#primary_category_path').val() == "null") {
+			  stages[0].useCategoryPath = null;
+		  }
+		  else {
+			  stages[0].useCategoryPath = $('#primary_category_path').val();
+		  }
 	  }
-	
-	if(!confirm(translationConfirm))
-	{
-		//do nothing
-	}
-	else
-	{
-	
-		url = "ebl/v3/"+customerID+"/structure/delete_scenario/";
-	
-		$.ajax({
-			type:"POST",
-			beforeSend: function(x) {
-				if (x && x.overrideMimeType) {
+	 
+	  for( var k = 1; k < 4; k ++){
+		  if(stages[k] != null) {
+			  var strn = '#fallback'+k+'_category_path';
+			  if($(strn).val() == "null") {
+				  stages[k].useCategoryPath = null;
+			  }
+			  else {
+				  stages[k].useCategoryPath = $(strn).val();
+			  }
+		  }
+	  }
+
+	  //clear the xingModel arrays (remove undefined elements)
+	  var j;
+	  for( var i = 3 ; i > -1; i --){
+		  if(! stages[i]) {
+			  continue;
+		  }
+		  j = stages[i].xingModels.length;
+		  while(j --) {
+			  if(stages[i].xingModels[j]) {
+				  continue;
+			  }
+			  stages[i].xingModels.splice(j, 1);
+		  }
+	  }
+
+	  $.ajax({
+		  type: "POST",
+		  beforeSend: function(x) {
+			  if(x && x.overrideMimeType) {
 				  x.overrideMimeType("application/json;charset=UTF-8");
-				}
-			  },
-			mimeType: "application/json",
-			contentType: "application/json",
-			dataType: "json",
-			data: JSON.stringify(reference_code),
-			url: url,
-			success: function(json){
-				//on success
-				window.parent.location = "index.html";
-			},
-			error : function(jqXHR, textStatus, errorThrown)
-			{
-				if(jqXHR.status != null && jqXHR.status == 403)
-				{
-					setMessagePopUp("problem", "error_server_error_403");
-				}
-				else if(jqXHR.status != null && jqXHR.status == 401)
-				{
-					setMessagePopUp("problem", "error_server_error_401");
-				}
-				else if(jqXHR.status != null && jqXHR.status == 400)
-				{
-					setMessagePopUp("problem", "error_server_error_400");
-				}
-				else if(jqXHR.status != null && jqXHR.status == 404)
-				{
-					setMessagePopUp("problem", "error_server_error_404");
-				}
-				else if(jqXHR.status != null && jqXHR.status == 409)
-				{
-					setMessagePopUp("problem", "error_server_error_409");
-				}
-				else
-				{
-					setMessagePopUp("problem", "error_server_error");
-				}
-			}
-		});
-	}
+			  }
+			  x.setRequestHeader('no-realm', 'realm1');
+		  },
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  data: JSON.stringify(json.scenario),
+		  url: "ebl/v3/" + customerID + "/structure/update_scenario/",
+		  success: function(json) {
+			  window.location = "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID + "&saved=true";
+		  },
+		  error: function() {
+			  unsetLoadingDiv($('body'));
+			  stdAjaxErrorHandler();
+		  }
+	  });
+	
+}
+  
+  
+  
+function cancelScenario() {
+	window.parent.$("#settingsP").hide();
+	window.parent.$('#cover').hide();
 }
   
 
@@ -783,19 +711,19 @@ function deleteScenario() {
   }
 
   function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
-	  if(jqXHR.status != null && jqXHR.status == 403) {
+	  if(jqXHR != null && jqXHR.status == 403) {
 		  setMessagePopUp("problem", "error_server_error_403");
 	  }
-	  else if(jqXHR.status != null && jqXHR.status == 401) {
+	  else if(jqXHR != null && jqXHR.status == 401) {
 		  setMessagePopUp("problem", "error_server_error_401");
 	  }
-	  else if(jqXHR.status != null && jqXHR.status == 400) {
+	  else if(jqXHR != null && jqXHR.status == 400) {
 		  setMessagePopUp("problem", "error_server_error_400");
 	  }
-	  else if(jqXHR.status != null && jqXHR.status == 404) {
+	  else if(jqXHR != null && jqXHR.status == 404) {
 		  setMessagePopUp("problem", "error_server_error_404");
 	  }
-	  else if(jqXHR.status != null && jqXHR.status == 409) {
+	  else if(jqXHR != null && jqXHR.status == 409) {
 		  setMessagePopUp("problem", "error_server_error_409");
 	  }
 	  else {

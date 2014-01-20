@@ -129,19 +129,6 @@ a:focus {
  }  
 
 
-#atoparrow{
-	padding: 0;
-	width: 100%;
-	text-decoration: none;
-	margin: 0;
-	display: inline-block;
-	position: relative;
-	right: 0;
-	top: 0;
-	margin-top: -1px;
-	margin-left: -1px;
-}
-
 a.button {
 	display: block;
 	line-height: 30px;
@@ -203,11 +190,6 @@ a.button.with_icon:before {
 
 a.button.with_icon.create_new:before {
   background: transparent url("../img/yoosprite.png") no-repeat -204px -22px;
-}
-
-
-a.button.with_icon.save_state:before {
-  background: transparent url("../img/yoosprite.png") no-repeat -140px -22px;
 }
 
 
@@ -346,19 +328,19 @@ a.inverted:visited {
   color: rgba(171, 220, 245, 1);
 }
 
-section > header a:not(.button):hover,
-section > header a:not(.button):focus,
-a.inverted:hover,
-a.inverted:focus {
-  color: rgba(13, 189, 254, 1);
-  text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
-}
+/* section > header a:not(.button):hover, */
+/* section > header a:not(.button):focus, */
+/* a.inverted:hover, */
+/* a.inverted:focus { */
+/*   color: rgba(13, 189, 254, 1); */
+/*   text-shadow: -1px -1px 0 rgba(0, 0, 0, 1); */
+/* } */
 
-section > header a.button {
-	position: absolute;
-	right: 10px;
-	top: 13px;
-}
+/* section > header a.button { */
+/* 	position: absolute; */
+/* 	right: 10px; */
+/* 	top: 13px; */
+/* } */
 
 section > header .header_title_basis {
 	display: block;
@@ -1028,11 +1010,7 @@ h1 > a {
 
 .wizard_steps > li > a {
 	cursor: pointer;
-	-webkit-transition: all linear 0.2s;
-	-moz-transition: all linear 0.2s;
-	-ms-transition: all linear 0.2s;
-	-o-transition: all linear 0.2s;
-	transition: all linear 0.2s;
+	transition: all 0.2s linear ;
 	text-decoration: none;
 	line-height: 27px;
 	border: 1px solid rgba(140, 150, 138, 0.33);
@@ -1044,7 +1022,7 @@ h1 > a {
 
 .wizard_steps > li:not(.no_link) > a:hover,
 .wizard_steps > li:not(.no_link) > a:focus {
-  background-color: rgba( 238, 236, 225, 1);
+	background-color: rgba( 238, 236, 225, 1);
 }
 
 .wizard_steps > li.no_link{
@@ -1058,8 +1036,6 @@ h1 > a {
 
 .wizard_steps > li:first-child > a,
 .wizard_steps > li:first-child > span {
-	-moz-border-radius: 5px 0 0 0;
-	-webkit-border-radius: 5px 0 0 0;
 	border-radius: 5px 0 0 0;
 	border-right: 0;
 }

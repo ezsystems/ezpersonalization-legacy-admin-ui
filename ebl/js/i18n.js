@@ -154,7 +154,7 @@ function localizer() {
 function i18n() {
 	
 	if (! _i18n_ready) {
-		return "[]";
+		return;
 	}
 	
 	if (arguments.length == 0) {
@@ -178,6 +178,13 @@ function i18n() {
 	}
 	
 	var term = $(element).attr("data-translate");
+	
+	if (!term) {
+		$(element).find("[data-translate]").each(function() {
+			i18n($(this));	
+		});
+		return;
+	}
 	
 	var params = i18n_params(element); 
 	var asHtml = to_outer_html(params);

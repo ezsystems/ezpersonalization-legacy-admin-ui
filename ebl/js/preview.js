@@ -2,10 +2,18 @@
  var customerID = gup('customer_id');
  var outputtypes = gup('outputtypes');
  var inputtype = gup('inputtype');
+
  
- var showdelete = false;
-  
-  $(document).ready(function() {
+ $(document).ready(function() {
+		
+	  // load included files and call initializer
+	  initialize_configurator_header(function() {
+		  initialize();
+	  }, "preview_send");
+ });
+	
+ var initialize = function() {
+	 
 	  window.parent.$("#contentFrame").height( '100%');
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
 	  $('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
@@ -20,37 +28,9 @@
 		  }
 		});
 	  
-	  $(document).click(function(e){
-			var tid = e.target.id;
-			if(tid != 'atoparrow' && tid !='toparrow' && showdelete){
-				$('.item').hide();
-				showdelete = false;
-			}
-		});
-		
-		$('.cancel').click(function (){
-			cancelScenario();
-		});
-		
-		$('#toparrow').click(function (){
-			if(!showdelete){
-				$('.item').show();
-				showdelete = true;
-			}else{
-				$('.item').hide();
-				showdelete = false;
-			}
-		});
-		
-		$('.delete').click(function () {		
-			deleteScenario();
-		});
-	  
 
 	  $("#button_save").click(function() {
-
 		  call_recs();
-
 	  });
 	  
 	  $('#addItem').click(function() {
@@ -87,7 +67,7 @@
 		  }
 		  });
 	 
-  });
+  };
   
   
   /**

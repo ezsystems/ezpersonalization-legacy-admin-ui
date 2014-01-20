@@ -13,8 +13,10 @@ var include = function(scripts, callback) {
 		arguments.push(cachedScript(scripts[i]));
 	}
     
-	$.when.apply(null, arguments).done(function() {
-		callback();
+	return $.when.apply(null, arguments).done(function() {
+		if (callback) {
+			callback();
+		}
 	});
 };
 
