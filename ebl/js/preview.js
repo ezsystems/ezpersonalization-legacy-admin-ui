@@ -75,20 +75,50 @@
    * @param id
    * @returns {*}
    */
-  function getItem(type, id) {
+  function getItems(type, ids,jsonToshow) {
 	  $.ajax({
 		  dataType: "json",
 		  beforeSend: function(req) {
 			  req.setRequestHeader('no-realm', 'realm1');
 		  },
-		  async: false, 
-		  url: "ebl/v4/" + customerID + "/elist/get_single_item/" + type + '/' + id,
+		  url: "ebl/v4/" + customerID + "/elist/get_list_items/" + type + '/' + id,
 		  success: function(json) {
-			 return json.title;
+			var list = jsonToshow.recommendationResponseList;
+			for(var i in list){
+				var id = list[i].itemId;
+				for(var j in json){
+					var id2 = json[j].id;
+					if(id == id2){
+						console.log("found id ="+id);
+						var title = json[j].title;
+						if(title !=null){
+							list[i].title = title;
+						}
+					 }
+				}	
+			}
+			console.log("json="+JSON.stringify(jsonToshow));
+			showJson(jsonToshow);
 		  }
 	 });
   };
  
+  function showWithTitles(json){
+		var list = json.recommendationResponseList;
+		var it = inputtype;
+		if(it == null || it == ''){
+			it = 1;
+		}
+		var ids ='';
+		for(var i in list){
+			var id = list[i].itemId;
+			ids += id+",";
+		}
+		if(ids.length > 0){
+			ids = ids.substring(0, ids.length-1);
+		}
+		getItems(it, ids, json);
+	}
   
   function addItem(){
 	  var id = $('#itemId').val();
@@ -198,25 +228,7 @@ function jsonpCallback(json){
 	
 }
 
-function showWithTitles(json){
-	var titles = false;
-	var list = json.recommendationResponseList;
-	var it = inputtype;
-	if(it == null || it == ''){
-		it = 1;
-	}
-	for(var i in list){
-		var id = list[i].itemId;
-		var title = getItem(it, id);
-		if(title !=null){
-			titles = true;
-			list[i].title = title;
-		}
-	}
-	if(titles){
-		showJson(json);
-	}
-}
+
 
 function showJson(json){
 	var strjs = JSON.stringify(json,null,'&nbsp;');
@@ -225,7 +237,7 @@ function showJson(json){
 	strjs = strjs.replace(/{/g , "{<br/>");
 	strjs = strjs.replace("[" , "[<br/>");
 	strjs = strjs.replace("]" , "<br/>]");
-	console.log("json="+JSON.stringify(strjs));
+	
 	$("#prettyprint").html(strjs);
 	$("#prettyprint").removeClass("prettyprinted"); 
 	prettyPrint();
