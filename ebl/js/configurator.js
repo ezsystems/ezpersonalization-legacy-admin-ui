@@ -274,8 +274,7 @@ function saveScenario() {
 
 			  var modelRefList = $('body').data('model_list');
 
-			  var outputItemTypes = "",
-					  outputType;
+			  var outputType;
 			  if(json.scenario.outputItemTypes.length > 0) {
 
 				  for(var i = 0; i < json.scenario.outputItemTypes.length; i ++) {
@@ -283,45 +282,6 @@ function saveScenario() {
 					  previewTypes += outputType;
 					  if(i < (json.scenario.outputItemTypes.length-1)){
 						  previewTypes += ",";
-					  }
-					  if(outputItemTypes == "") {
-						  switch(outputType) {
-							  case 1:
-								  outputItemTypes = '<span data-translate="settings_product"></span>';
-								  break;
-							  case 2:
-								  outputItemTypes = '<span data-translate="settings_article"></span>';
-								  break;
-							  case 3:
-								  outputItemTypes = '<span data-translate="settings_image"></span>';
-								  break;
-							  case 4:
-								  outputItemTypes = '<span data-translate="settings_media"></span>';
-								  break;
-							  case 5:
-								  outputItemTypes = '<span data-translate="settings_user_generated_content"></span>';
-								  break;
-						  }
-					  }
-					  else {
-						  switch(outputType) {
-							  case 1:
-								  outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_product"></span>';
-								  break;
-							  case 2:
-								  outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_article"></span>';
-								  break;
-							  case 3:
-								  outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_image"></span>';
-								  break;
-							  case 4:
-								  outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_media"></span>';
-								  break;
-							  case 5:
-								  outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_user_generated_content"></span>';
-								  break;
-						  }
-
 					  }
 				  }
 			  }
@@ -601,8 +561,10 @@ function saveScenario() {
 							  ghostModel.find("h4").attr('refCode', str);
 							  ghostModel.find("h4").attr('title-translate',modelDescription);
 							 // ghostModel.find("p.description").attr('data-translate', modelDescription);
+							  
+							  var solution = mandatorInfo.baseInformation.version;
 
-							  if(! submodelsSupported) {
+							  if(! submodelsSupported || solution != 'EXTENDED') {
 								  ghostModel.find(".usesubmodels").hide();
 							  }
 							  if(websiteContextSupported == false || profileContextSupported == false) {

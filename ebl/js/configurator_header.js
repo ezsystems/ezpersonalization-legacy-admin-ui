@@ -52,7 +52,7 @@ function loadMandatorInfo(callback) {
 			beforeSend: function (req) {
 			req.setRequestHeader('no-realm', 'realm1');
 		},
-		url: "http://localhost:84/ebl/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration",
+		url: "/api/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration",
 		success: callback,
 		error : function(jqXHR, textStatus, errorThrown) {
 			settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
