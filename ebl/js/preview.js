@@ -81,7 +81,7 @@
 		  beforeSend: function(req) {
 			  req.setRequestHeader('no-realm', 'realm1');
 		  },
-		  url: "ebl/v4/" + customerID + "/elist/get_list_items/" + type + '/' + id,
+		  url: "ebl/v4/" + customerID + "/elist/get_list_items/" + type + '/' + ids,
 		  success: function(json) {
 			var list = jsonToshow.recommendationResponseList;
 			for(var i in list){
