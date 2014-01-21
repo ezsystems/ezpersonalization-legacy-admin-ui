@@ -2193,18 +2193,17 @@ section.help > article img {
   margin-right: 20px;
   min-height: 100px;
   display: block;
-  border: 1px solid rgba(140, 150, 138, 0.33);
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
+  border: 1px solid rgba(216, 216, 216, 1);
+  border-top: 10px solid rgba(216, 216, 216, 1);
   border-radius: 10px;
   padding: 0 0 16px 0;
   position: relative;
 }
 
 .placed_model .destroy_placed_model {
-	top: 12px;
-	right: 4px;
-	background-color: #fff;
+	top: -5px;
+	right: 2px;
+	
 }
 
 .placed_model h4,
@@ -2212,9 +2211,10 @@ section.help > article img {
   display: block;
   background-color: rgba(216, 216, 216, 1);
   color: rgba(6, 9, 4, 1);
-  margin: 9px 0 11px 0;
-  padding: 14px 14px 12px 9px;
+  margin:  0 0 11px 0;
+  padding: 4px 14px 12px 9px;
   border-left: 5px solid transparent;
+  border-bottom: 0;
   overflow: hidden;
 }
 

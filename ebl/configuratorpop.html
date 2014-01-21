@@ -359,7 +359,7 @@
 					<div id="hasNominalMessage"></div>
 					<div id="attrCountMessage"></div>
 	        	</div>
-	        	<a id="save_cbmodel" class="save" data-translate="configurator_save_changes" style="float: right;">Save Changes</a>
+	        	<a id="save_cbmodel" class="save button inline" data-translate="configurator_save_changes" style="float: right;">Save Changes</a>
 				<div style="clear: both;"></div>
 	        </form>
         </div>
@@ -395,7 +395,7 @@
 				</form>
 			</div>
 			<div>
-				<a id="save_editorial_model" class="save" data-translate="editorial_list_save_changes" style="float: right;">Save Changes</a>
+				<a id="save_editorial_model" class="save button inline" data-translate="editorial_list_save_changes" style="float: right;">Save Changes</a>
 				<div style="clear: both;"></div>
 			</div>
         </div>
@@ -420,7 +420,7 @@
 						</select><a class="help"></a>
 					</label>
 					<div class="hintSpace">Space for hints and warnings.</div>
-					<a id="save_random_model" class="save" data-translate="configurator_save_changes">Änderungen speichern</a>
+					<a id="save_random_model" class="save button inline" data-translate="configurator_save_changes">Änderungen speichern</a>
 				</form>
 			</div>
 		</div>
@@ -464,8 +464,9 @@
 						
 					</div>
 					
-					<div class="hintSpace" data-translate="configurator_changes_on_category_path">Changes on categorypath configuration only affects models of type Popularity, Random and Stereotypes.</div>
-					<a id="save_category_path_settings" class="save" data-translate="configurator_button_ok">OK</a>
+					<div style="text-align: center;">
+						<a id="save_category_path_settings" class="save button inline" data-translate="configurator_button_ok">OK</a>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -473,18 +474,17 @@
 
 	<div class="placed_model ghost" style="padding: 0;">
       <a class="destroy_placed_model">X</a>
-      <h4 data-translate="configurator_model_name"></h4>
+      <h4 data-translate="configurator_model_name">Model Name</h4>
       <form action="#" method="get">
         <ul class="placed_model_settings clearfix">
           <li class="context_options">
-            <strong data-translate="configurator_context">Context</strong>
             <label for="placed_model_context_type_website">
               <input type="radio" name="placed_model_context_type" id="placed_model_context_type_website" value="site" checked="checked" />
-              <span data-translate="configurator_item">Item</span>
+              <span data-translate="configurator_model_item_context">Item Context</span>
             </label>
 			<label for="placed_model_context_type_profile">
 			  <input type="radio" name="placed_model_context_type" id="placed_model_context_type_profile" value="profile"/>
-			  <span data-translate="configurator_profile">Profile</span>
+			  <span data-translate="configurator_model_profile_context">User Profile</span>
 			</label>
           </li>
 		  <li class="usesubmodels" style="margin-top: 10px;">

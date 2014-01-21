@@ -69,6 +69,7 @@ var setEquals = function () {
 	});
 
 	$(".storyboards_base").equalize({
+		equalize: 		   'outerHeight',
 		eqItems:           "> div > ul > li",
 		segmentSize:       3,
 		applicantSelector: "> div"
