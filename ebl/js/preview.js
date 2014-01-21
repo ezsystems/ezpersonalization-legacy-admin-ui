@@ -176,6 +176,7 @@
 		var dev2 = 'development';
 	    var test = '.test.';
 	    var recoHost ='';
+	    console.log(cur_host);
 		if(cur_host.indexOf(dev)!=-1 ){
 			recoHost = 'http://cat.development.yoochoose.com:8080/recocontroller';
 		}else{
@@ -257,74 +258,7 @@ function showJson(json){
 }
 
 
-function cancelScenario() {
-	  window.parent.$("#settingsP").hide();
-	  window.parent.$('#cover').hide();
-}
 
-function deleteScenario() {
-	
-	  var translationConfirm = translate[in_to_language]["message_want_delete_scenario"];
-	  if (typeof translationConfirm == 'undefined')
-	  {
-		translationConfirm = 'missing_translation_for_message_want_delete_scenario';
-	  }
-	
-	if(!confirm(translationConfirm))
-	{
-		//do nothing
-	}
-	else
-	{
-	
-		url = "ebl/v3/"+customerID+"/structure/delete_scenario/";
-	
-		$.ajax({
-			type:"POST",
-			beforeSend: function(x) {
-				if (x && x.overrideMimeType) {
-				  x.overrideMimeType("application/json;charset=UTF-8");
-				}
-			  },
-			mimeType: "application/json",
-			contentType: "application/json",
-			dataType: "json",
-			data: JSON.stringify(reference_code),
-			url: url,
-			success: function(json){
-				//on success
-				window.parent.location = "index.html";
-			},
-			error : function(jqXHR, textStatus, errorThrown)
-			{
-				if(jqXHR.status != null && jqXHR.status == 403)
-				{
-					setMessagePopUp("problem", "error_server_error_403");
-				}
-				else if(jqXHR.status != null && jqXHR.status == 401)
-				{
-					setMessagePopUp("problem", "error_server_error_401");
-				}
-				else if(jqXHR.status != null && jqXHR.status == 400)
-				{
-					setMessagePopUp("problem", "error_server_error_400");
-				}
-				else if(jqXHR.status != null && jqXHR.status == 404)
-				{
-					setMessagePopUp("problem", "error_server_error_404");
-				}
-				else if(jqXHR.status != null && jqXHR.status == 409)
-				{
-					setMessagePopUp("problem", "error_server_error_409");
-				}
-				else
-				{
-					setMessagePopUp("problem", "error_server_error");
-				}
-			}
-		});
-	}
-}
   
 
   //ajax request for the right section
