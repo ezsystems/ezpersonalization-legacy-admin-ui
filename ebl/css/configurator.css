@@ -48,3 +48,10 @@
 	ul.dropdown-menu li:hover {
 		background-color: rgba( 238, 236, 225, 1);
 	}
+	
+	ul.dropdown-menu li.item  a{     
+		color: rgba(171, 220, 245, 1);
+	}
+    ul.dropdown-menu li.item a:hover, ul.dropdown-menu li.item a:active {
+		color: rgba(13, 189, 254, 1);
+ 	}
