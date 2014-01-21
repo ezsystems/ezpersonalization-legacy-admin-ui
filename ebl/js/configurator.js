@@ -1,12 +1,13 @@
- var reference_code = gup('reference_code');
+  var reference_code = gup('reference_code');
   var customerID = gup('customer_id');
   var saved = gup('saved');
  
   
   
-  
   $(document).ready(function() {
-		
+	  
+	  setLoadingDiv($('body'));
+	  
 	  // load included files and call initializer
 	  initialize_configurator_header(function() {
 		  initialize();
@@ -20,8 +21,7 @@ var initialize = function() {
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
 	  $('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
 
-	  
-	  setLoadingDiv($('body'));
+
 
 	  //ajax request for the models on the left side
 	  $.ajax({
@@ -243,16 +243,23 @@ function saveScenario() {
 	  });
 	
 }
-  
-  
-  
-function cancelScenario() {
-	window.parent.$("#settingsP").hide();
-	window.parent.$('#cover').hide();
-}
-  
 
   //ajax request for the right section
+
+  function itemTypeTreeAsText(input, output) {
+	  
+	  var result = "";
+	  
+	  if (input) {
+		  result += getItemTypeDescription(input); 
+		  result += ' ► ';
+	  }
+	  
+	  result += getItemTypeDescriptions(output);
+	  
+	  return result;
+  }
+  
 
   function loadRightSection() {
 	  $.ajax({

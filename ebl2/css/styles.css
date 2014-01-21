@@ -1142,98 +1142,17 @@ ul.placed_model_settings > li.context_options > label > input {
   padding: 4px 0;
 }
 
-#scenario_primary_settings label {
-  font-weight: bold;
-  display: inline-block;
-  width: 150px;
-  text-align: right;
-}
-
-#scenario_primary_settings input[type="text"],
-#scenario_primary_settings textarea {
-  border: 1px solid rgba(140, 150, 138, 0.75);
-  line-height: 18px;
-  font-size: 14px;
-  font-weight: bold;
-  width: 200px;
-  padding: 1px 3px;
-  display: inline-block;
-  margin: 0;
-  margin-left: 5px;
-}
-
-#scenario_primary_settings textarea {
-  width: 400px;
-  font-weight: normal;
-  font-style: italic;
-}
-
-#scenario_primary_settings .setting_list {
-  margin-top: 10px;
-}
-
-#scenario_primary_settings .setting_list li {
-  display: block;
-  margin-top: 10px;
-}
-
-#scenario_primary_settings .setting_list label:not(.input_label) {
-  width: 165px;
-  font-weight: normal;
-}
-
-#scenario_primary_settings .setting_list .text_area label {
-  vertical-align: top;
-}
-
-#scenario_primary_settings .setting_list li.actions {
-  border-top: 1px solid rgba( 216, 216, 216, 1);
-  padding-top: 15px;
-}
-
-#scenario_primary_settings .setting_list li.actions a.save {
-  float: right;
-}
-
-.types_base {
-  display: block;
-  padding-left: 165px;
-  position: relative;
-}
-
-#scenario_primary_settings .types_base h2,
-#scenario_primary_settings .input_label {
-  display: block;
-  width: 150px;
-  margin-left: -150px;
-  text-align: right;
-  float: left;
-  font-weight: normal;
-}
 
 .setting_list {
   display: block;
   float: left;
 }
 
-#scenario_primary_settings .setting_list .output_types li,
-#scenario_primary_settings .setting_list .input_types li {
-  margin-top: 5px;
-}
 
-#scenario_primary_settings .setting_list .output_types > li:first-child,
-#scenario_primary_settings .setting_list .input_types > li:first-child {
-  margin-top: 0;
-}
-
-#scenario_primary_settings .setting_list .output_types li input[type="checkbox"],
-#scenario_primary_settings .setting_list .input_types li select {
-  margin-left: 5px;
-}
-
-#scenario_primary_settings .setting_list .output_types li label,
-#scenario_primary_settings .setting_list .input_types li label {
-  text-align: left;
+.types_base {
+  display: block;
+  padding-left: 165px;
+  position: relative;
 }
 
 .models_used_in_this_scenario {
