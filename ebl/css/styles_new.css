@@ -3069,7 +3069,6 @@ ul.dropdown-menu li.item {
 	-ms-transition: all linear 0.2s;
 	-o-transition: all linear 0.2s;
 	transition: all linear 0.2s;
-        display: none;  /* By default, do not display the items (which contains the links) */
 }  
 
 
