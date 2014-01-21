@@ -50,8 +50,8 @@
 	}
 	
 	ul.dropdown-menu li.item  a{     
-		color: rgba(171, 220, 245, 1);
+		color: rgba(171, 220, 245, 1)!important;
 	}
     ul.dropdown-menu li.item a:hover, ul.dropdown-menu li.item a:active {
-		color: rgba(13, 189, 254, 1);
+		color: rgba(13, 189, 254, 1)!important;
  	}
