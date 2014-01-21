@@ -3045,7 +3045,8 @@ section.scenarios > header a:not(.button):hover, section.scenarios > header a:no
 }
 
 ul.dropdown-menu li.item {
-	float:right;
+	line-height: 2em;
+	height: 2em;
     padding-right: 5px;
     margin-right: -5px;    
     border: 1px solid black;
@@ -3099,3 +3100,10 @@ ul.dropdown-menu li.item {
 	-o-transition: all linear 0.2s;
 	transition: all linear 0.2s;
       }
+ ul.dropdown-menu li.item  a{     
+	color: rgba(171, 220, 245, 1);
+ }
+ ul.dropdown-menu li.item a:hover, ul.dropdown-menu li.item a:active {
+	color: rgba(13, 189, 254, 1);
+ }
+       
