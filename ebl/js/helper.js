@@ -205,6 +205,32 @@ function setLoadingDiv(element) {
 }
 
 
+function setLockedDiv(element) {
+    var width  = $(element).outerWidth();
+    var height = $(element).outerHeight();
+	
+	if($(element).is(":visible")) {
+		$(element).each(function() {
+		 	var disableddiv = $(this).prev();
+		 	var style = 'position: absolute; z-index: 10; width: ' + width + 'px; height: ' + height + "px;";
+		 	
+		 	if (! disableddiv || ! disableddiv.hasClass("locked")) {
+		
+		 		$(this).before('<div class="locked" style="' + style + '"></div>');
+		 		disableddiv = $(this).prev();
+		 	}
+		 	
+		 	disableddiv.attr('style', style);
+		 	
+	 		copyCss(this, disableddiv, [ 
+      	             	"margin", "margin-top", "margin-left", "margin-bottom", "margin-right",
+      	             	"border-top-left-radius", "border-top-right-radius", "border-bottom-right-radius",
+      					"border-bottom-left-radius"]);
+		 });
+	}
+}
+
+
 function copyCss(from, to, props) {
 	for (var i in props) {
 		var prop = props[i];
@@ -216,14 +242,14 @@ function copyCss(from, to, props) {
 }
 
 
-function unsetLoadingDiv(element) {
-	
-	//if(!$(element).is(":visible")) {
-		$(element).parent().find('> .loading').hide();
-		//$(element).show();
-	//}
+function unsetLockedDiv(element) {
+	$(element).parent().find('> .locked').hide();
 }
 
+
+function unsetLoadingDiv(element) {
+	$(element).parent().find('> .loading').hide();
+}
 
 function validateEmail(email) {
  

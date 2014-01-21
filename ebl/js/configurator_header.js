@@ -1,48 +1,90 @@
 
-
-
-
-
-	  
+var mandatorInfo;
 	  
 function initialize_configurator_header(callback, i18n_save_button) {
-	
-  $.get("/includes/configurator_header.html", '', function (data) { 
-	  $("header.scenario_settings").html(data);
-	  
-	  if (i18n_save_button) {
-	  	$("#button_save").attr("data-translate" ,i18n_save_button);
-  	  }
-	  
-	  i18n($("header.scenario_settings")); // internationalize just loaded file
-	  
-		$('.extended-config .delete').click(function () {		
-			deleteScenario();
-		});
-		
-		$('.extended-config .cancel').click(function (){
-			cancelScenario();
-		});
-		
-		$('#toparrow').click(function (){
-			if ($(".extended-config").is(":visible")) {
-				$('.extended-config').hide();
-			} else {
-				$('.extended-config').show();
-			}
-		});
-	  
-	  if (callback) { 
-		  callback();
-	  }
-  });
 
+	$.when(
+		$.get("/includes/configurator_header.html", '', function(data) {
+	
+			$("header.scenario_settings").html(data);
+	
+			if (i18n_save_button) {
+				$("#button_save").attr("data-translate", i18n_save_button);
+			}
+	
+			i18n($("header.scenario_settings")); // internationalize just loaded
+													// file
+	
+			$('.extended-config .delete').click(function() {
+				deleteScenario();
+			});
+	
+			$('.extended-config .cancel').click(function() {
+				cancelScenario();
+			});
+	
+			$('#toparrow').click(function() {
+				if ($(".extended-config").is(":visible")) {
+					$('.extended-config').hide();
+				} else {
+					$('.extended-config').show();
+				}
+			});
+		}), 
+		loadMandatorInfo(function(json) {
+			mandatorInfo = json;
+		})
+	).done(function(json) {
+		if (!mandatorInfo) {
+			alert('!!!');
+		}
+		if (callback) {
+			callback();
+		}
+	});
+}
+
+
+function loadMandatorInfo(callback) {
+	
+	var result = $.ajax({
+			dataType: "json",
+			beforeSend: function (req) {
+			req.setRequestHeader('no-realm', 'realm1');
+		},
+		url: "http://localhost:84/ebl/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration",
+		success: callback,
+		error : function(jqXHR, textStatus, errorThrown) {
+			settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
+        }
+	});
+	return result;
 }
 		
 
 function cancelScenario() {
 	  window.parent.$("#settingsP").hide();
 	  window.parent.$('#cover').hide();
+}
+
+
+function getItemTypeDescriptions(ids) {
+	var result = [];
+	for (var i in ids) {
+		result.push(getItemTypeDescription(ids[i]));
+	}
+	return result;
+}
+
+
+function getItemTypeDescription(id) {
+	for (var i in mandatorInfo.itemTypeConfiguration.types) {
+		var t = mandatorInfo.itemTypeConfiguration.types[i];
+		if (id == t.id) {
+			return  t.description + ' (' + t.id + ')';
+		}
+	}
+	return 'Unknown (' + t.id + ')';
 }
 
 

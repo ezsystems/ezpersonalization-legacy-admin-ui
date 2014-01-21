@@ -48,3 +48,58 @@
 	ul.dropdown-menu li:hover {
 		background-color: rgba( 238, 236, 225, 1);
 	}
+
+
+
+	ul.scenario_setting_list {
+		margin-top: 0.5em;
+		float: left;
+		width: 50%;
+	}
+	
+	ul.scenario_setting_list label {
+	    white-space: nowrap; 
+	}
+	
+	ul.scenario_setting_list .basis {
+	    float: left;
+	    width: 25%;
+	    padding-right: 9px;
+	    line-height: 35px;
+	}
+	
+	ul.scenario_setting_list .value {
+		float: left;
+		width: 70%;
+		line-height: 35px;
+	}
+		
+	ul.scenario_setting_list .value input {
+	 	margin: 0;
+	}
+	
+	ul.scenario_setting_list .value textarea {
+		margin-top: 5px;
+		padding-top: 4px;
+	 	width: 95%;
+	}
+	
+	section.settings .problem {
+	  	box-shadow: 0 0 8px rgba(192, 80, 77, 1);
+	}
+	
+	h4 {
+		font-weight: bold;
+		border-bottom: 1px solid rgba(140, 150, 138, 1);
+		margin-bottom: 1px;
+		margin-top: 1.5ex;
+	}
+	
+	.annotation {
+		display: block;
+		font-style: italic;
+		color: rgba(192, 80, 77, 1);
+	}
+	
+	
+	

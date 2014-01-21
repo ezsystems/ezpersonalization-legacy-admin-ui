@@ -21,6 +21,10 @@ div.loading {
 	background-color: rgba(63, 63, 63, 0.05);
 }
 
+div.locked {
+	background-color: rgba(63, 63, 63, 0.5);
+}
+
 /*Fixes end*/
 
 /*------------*/
@@ -364,7 +368,6 @@ section > header .header_title_values > input[type="text"] {
 	margin: -5px -10px;
 	border: 0;
 	line-height: 30px;
-	font-size: 14px;
 }
 
 section.scenario > header h3 {
@@ -434,13 +437,19 @@ h3 {
 /*Globals form elements*/
 
 input[type="text"],
-input[type="password"] {
-  border: 1px solid rgba( 165, 165, 165, 1);
-  font-family: 'Istok Web', sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  padding: 0 3px;
-  height: 2em;
+input[type="password"],
+select {
+ 	margin: 0;
+  	border: 1px solid rgba( 165, 165, 165, 1);
+ 	font-family: 'Istok Web', sans-serif;
+  	font-size: 14px;
+  	padding: 0 3px;
+  	height: 2em;
+}
+
+
+textarea {
+	border: 1px solid rgba( 165, 165, 165, 1);
 }
 
 input[type="text"].inverted {
@@ -548,14 +557,9 @@ input[type="text"].inverted {
 
 .normal_form input {
   display: inline-block;
-  font-size: 14px;
   margin-left: 9px;
   border: 1px solid rgba(127, 127, 127, 1);
-  -webkit-transition: all linear 0.2s;
-  -moz-transition: all linear 0.2s;
-  -ms-transition: all linear 0.2s;
-  -o-transition: all linear 0.2s;
-  transition: all linear 0.2s;
+  transition: all 0.2s linear;
 }
 
 .normal_form input[type="text"],
@@ -565,7 +569,6 @@ input[type="text"].inverted {
 
 .normal_form select {
   display: inline-block;
-  font-size: 14px;
   border: 1px solid rgba(127, 127, 127, 1);
   padding: 5px 0;
 }
@@ -1691,8 +1694,6 @@ font.settings:hover{
   height: 300px;
   overflow-y: scroll;
   border: 1px solid rgba(140, 150, 138, 0.33);
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
   border-radius: 10px;
   padding: 10px 20px;
 }
@@ -2378,7 +2379,6 @@ ul.placed_model_settings > li.usesubmodels > div > input {
 .custom_filters li input[type="text"] {
   border: 1px solid rgba(140, 150, 138, 0.75);
   line-height: 18px;
-  font-size: 14px;
   font-weight: bold;
   width: 30%;
   padding: 1px 3px;
