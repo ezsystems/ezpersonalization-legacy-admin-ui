@@ -58,9 +58,7 @@ var initSwitchMandator = function() {
 			$.cookie('customerID', customerID, { expires: 365 });
 			
 			var mandatorInfo = getAccesibleMandator(customerID);
-			
-			//$('.edit_contact_data').attr('href', 'edit_contact_data.html?customer_id=' + $.cookie('customerID'));
-			
+		
 			initialLoadData();
 			setMandantData(mandatorInfo);
 			
