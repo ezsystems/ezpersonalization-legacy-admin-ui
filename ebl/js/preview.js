@@ -173,15 +173,20 @@
 		var customerID = $.cookie('customerID');
 		var cur_host = window.location.host;
 		var dev = 'cat.dev';
+		var dev2 = 'development';
 	    var test = '.test.';
 	    var recoHost ='';
 		if(cur_host.indexOf(dev)!=-1 ){
 			recoHost = 'http://cat.development.yoochoose.com:8080/recocontroller';
 		}else{
-			if(cur_host.indexOf(test)!=-1 ){
-				recoHost = 'https://reco.test.yoochoose.net';
+			if(cur_host.indexOf(dev2)!=-1 ){
+				recoHost = 'http://admin.development.yoochoose.com:8080/recocontroller';
 			}else{
-				recoHost = 'https://reco.yoochoose.net';
+				if(cur_host.indexOf(test)!=-1 ){
+					recoHost = 'https://reco.test.yoochoose.net';
+				}else{
+					recoHost = 'https://reco.yoochoose.net';
+				}
 			}
 		}
 		var scriptSrc = recoHost+'/ebh/'+customerID+'/'+userId+'/'+reference_code+'.jsonp';
