@@ -12,12 +12,14 @@ var include = function(scripts, callback) {
 	for (var i in scripts) {
 		arguments.push(cachedScript(scripts[i]));
 	}
+	
+	var result = $.when.apply(null, arguments);
     
-	return $.when.apply(null, arguments).done(function() {
-		if (callback) {
-			callback();
-		}
-	});
+	if (callback) {
+		result.done(callback);
+	}
+	
+	return result;
 };
 
 
@@ -68,12 +70,12 @@ var setEquals = function () {
 		applicantSelector: "> div"
 	});
 
-	$(".storyboards_base").equalize({
-		equalize: 		   'outerHeight',
-		eqItems:           "> div > ul > li",
-		segmentSize:       3,
-		applicantSelector: "> div"
-	});
+//	$(".storyboards_base").equalize({
+//		equalize: 		   'outerHeight',
+//		eqItems:           "> div > ul > li",
+//		segmentSize:       3,
+//		applicantSelector: "> div"
+//	});
 
 	$(".available_scenarios").equalize({
 		eqItems:           "> li:visible",
@@ -183,116 +185,6 @@ var ifnull = function() {
 	}
 	
 	return null;
-};
-
-
-var setLiveDragDrop = function (element) {
-	element.draggable({
-		//connectToSortable: ".empty_model_place",
-		//helper: "clone",
-		helper:            function (event) {
-			$.cookie('draggedId', $(this).attr("id"));
-			return $('<div class="helper_on_the_move"/>').text($(this).find("h5").text());
-		},
-		cursorAt:          {
-			left:   100,
-			bottom: 0},
-		start:             function (event, ui) {
-			$(this).addClass('dropable_model');
-			setEquals();
-		},
-		stop:              function (event, ui) {
-			$('.empty_model_place').removeAttr('style');
-			setEquals();
-		},
-		revert:            "invalid"
-	});
-
-	$(".empty_model_place").droppable({
-		'revert':  true,
-		//over:    function (event, ui) {
-		//	$(this).css({'padding': '0'});
-		//},
-		'accept': '.dropable_model',
-		'drop': function (event, ui) {
-//			createPlacedModel($(this));
-			createPlacedModel($(this), $(ui.draggable));
-		}
-	});
-};
-
-var createPlacedModel = function (placed_model, model) {
-	var nest = placed_model.parent();
-	var ghostModel = $(".placed_model.ghost");
-	var refCode = $.cookie('draggedId');
-	var refCodeWithoutStage = refCode.substring(6, refCode.length);
-	refCode = refCode.substring(6, refCode.length);
-	var parentStage = nest.parent().parent();
-	var stageId = parentStage.attr("id");
-	var modelIndex = nest.attr("id").substring(5, 6);
-	var stageNumber = stageId.charAt(stageId.length - 1);
-	refCode = (parseInt(stageNumber, 10) - 1) + "_" + modelIndex + "_" + refCode;
-//	var title = placed_model.find("li.model").children("div").children("h5").text();
-	var title = model.find("div > h5 > span.mtitle").text();
-	var infos = $("span.info");
-	if(infos != null &&  infos != 'undefined'){
-		var infos2 = model.find(infos);
-		if(infos2 != null &&  infos2 != 'undefined'){
-			title = title +infos2.html();
-		}
-	}
-	
-	placed_model.remove();
-	ghostModel = ghostModel.clone().appendTo(nest).removeClass("ghost").fadeIn();
-	//ghostModel = nest.children("div");
-	ghostModel.attr("id", refCode);
-	ghostModel.find("h4").html(title);
-//	ghostModel.find("p.description").text(placed_model.find("li.model").children("div").children("p").children("span").text());
-	var $span = model.find("div > p > span");
-	ghostModel.find("h4").attr('title-translate',$span.attr('data-translate'));
-	ghostModel.find("h4").attr('title',$span.text());
-//	ghostModel.find("p.description").text($span.text()).attr('data-translate', $span.attr('data-translate'));
-
-	ghostModel.children("form").find('label[for="placed_model_context_type_profile"]').attr("for", "placed_model_context_type_profile" + "_" + refCode);
-	ghostModel.children("form").find('label[for="placed_model_context_type_website"]').attr("for", "placed_model_context_type_website" + "_" + refCode);
-	ghostModel.children("form").find('input[id="placed_model_context_type_profile"]').attr("id", "placed_model_context_type_profile" + "_" + refCode).attr("name", "placed_model_context_type" + "_" + refCode);
-	ghostModel.children("form").find('input[id="placed_model_context_type_website"]').attr("id", "placed_model_context_type_website" + "_" + refCode).attr("name", "placed_model_context_type" + "_" + refCode);
-//		ghostModel.children("form").find('input[id="weight_model"]').attr("id", "weight_model" + "_" + refCode);
-//		ghostModel.children("form").find('label[for="weight_model"]').attr("for", "weight_model" + "_" + refCode);
-	ghostModel.children("form").find('input[id="use_submodels"]').attr("id", "use_submodels_" + refCode);
-	var modelRefList = $('body').data('model_list');
-	for (var l = 0; l < modelRefList.modelRefArray.length; l++) {
-		if (modelRefList.modelRefArray[l].referenceCode === refCodeWithoutStage) {
-			//hide the elements, that are not supported.
-			submodelsSupported = modelRefList.modelRefArray[l].submodelsSupported;
-			websiteContextSupported = modelRefList.modelRefArray[l].websiteContextSupported;
-			profileContextSupported = modelRefList.modelRefArray[l].profileContextSupported;
-		}
-	}
-
-	if (!submodelsSupported) {
-		ghostModel.find(".usesubmodels").hide();
-	}
-	if (websiteContextSupported == false || profileContextSupported == false) {
-		ghostModel.find(".context_options").hide();
-	}
-
-
-	createJsonModel(ghostModel, refCodeWithoutStage);
-
-	setEquals();
-};
-
-var destroyPlacedModel = function () {
-	$('body').on("click",".destroy_placed_model" ,  function (event) {
-		var placedModel = $(this).parent();
-		var nest = $(this).parent().parent();
-		var dummy = $(".empty_model_place.ghost");
-		deleteJsonModelWithName($(this).parent().attr("id"));
-		placedModel.remove();
-		dummy.clone().appendTo(nest).removeClass("ghost").fadeIn();
-		setEquals();
-	});
 };
 
 var setTimeRanges = function () {
@@ -959,8 +851,6 @@ $(document).ready(function () {
 	setFilterGroups();
 	destroyGroup();
 	initRemoveAttributeValue();
-	destroyPlacedModel();
-
 });
 
 $(window).load(function () {

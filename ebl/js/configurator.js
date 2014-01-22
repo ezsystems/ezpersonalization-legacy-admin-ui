@@ -8,150 +8,120 @@
 	  
 	  setLoadingDiv($('body'));
 	  
-	  // load included files and call initializer
-	  initialize_configurator_header(function() {
-		  initialize();
+	  $.when(
+		  initialize_configurator_header(),
+		  include(["/js/dao/models.js"]).then(function() {
+			  return modelDao.init(customerID);
+		  })
+      ).done(function() {
+		  initialize();  
 	  });
+	  
+	  destroyPlacedModel();
   });
 	  
 	  
 var initialize = function() {
+	
+	var row = 0;
+	var column = 0;
+	$(".storyboards_base .ui-stage").each(function() {
+		column = 0;
+		$(this).find("li").each(function() {
+			$(this).attr("data-column", column);
+			$(this).attr("data-row", row);
+			
+			column++;
+		});
+		row++;
+	});
 	  
 
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
 	  $('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
 
-
-
-	  //ajax request for the models on the left side
-	  $.ajax({
-		  dataType: "json",
-		  beforeSend: function(req) {
-			  req.setRequestHeader('no-realm', 'realm1');
-		  },
-		  statusCode: {
-			  401: function(jqXHR, textStatus, errorThrown) {
-				  $.cookie('password', null);
-				  $.cookie('email', null);
-				  window.parent.location = "login.html";
-			  }
-		  },
-		  url: "ebl/v3/" + customerID + "/structure/get_model_list",
-		  success: function(json) {
-
-			  $('.models_base').children('h3').children('span').first().text(json.modelList.length);
-
-			  var modelRefList = new Object();
-			  var modelRefArray = new Array();
-			  var wasOtherli = false;
-			  if(json.modelList.length > 0) {
-
-				  for(var i = 0; i < json.modelList.length; i ++) {
-					  var nest,
-							  ghostModel,
-							  model = json.modelList[i];
-					  var dummy = $('.dummymodel');
-					  var dummyClone = $(dummy).clone();
-					  $(dummyClone).show();
-					  $(dummyClone).attr("id", "model_" + model.referenceCode);
-
-					  if(model.modelType == "CF_I2I" || model.modelType == "CF_I2I_MIX") {
-						  nest = $('#collaborative_list');
-					  }
-					  else if(model.modelType === "POPULARITY_SHORT" || model.modelType === "POPULARITY_LONG") {
-						  nest = $('#popularity_list');
-					  }
-					  else {
-						  wasOtherli = true;
-						  nest = $('#other_list');
-					  }
-					  $(dummyClone).appendTo(nest).removeClass("dummymodel");
-					  ghostModel = $('#model_' + model.referenceCode)
-							  .removeAttr("style");
-					  var additionalModelName = 'model_' + model.modelType;
-					  if(model.keyEventType != null) {
-						  additionalModelName = additionalModelName + '_' + model.keyEventType;
-					  }
-					  if(model.valueEventType != null) {
-						  additionalModelName = additionalModelName + '_' + model.valueEventType;
-					  }
-					  if(model.modelType === 'EDITOR_BASED') {
-						  additionalModelName = additionalModelName + '_' + (model.referenceCode === 'editor_blacklist' ? 'editor_blacklist' : 'editorial_list');
-					  }
-
-					  var refModel = new Object();
-					  refModel.referenceCode = model.referenceCode;
-					  refModel.additionalModelName = additionalModelName;
-					  refModel.submodelsSupported = model.submodelsSupported;
-					  refModel.websiteContextSupported = model.websiteContextSupported;
-					  refModel.profileContextSupported = model.profileContextSupported;
-					  refModel.itemTypeTrees = model.itemTypeTrees;
-					  refModel.maximumRatingAge = model.maximumRatingAge;
-					  refModel.size = model.size;
-				 
-
-					  modelRefArray[i] = refModel;
-
-					  ghostModel.children("div").children("h5").children("span.mtitle").attr('data-translate', additionalModelName + '_title');
-					  ghostModel.children("div").children("p").children("span").attr('data-translate', additionalModelName + '_description');
-					  //handing the current model to a self executing anonymous function which returns the actual callback function.
-					  //this is necessary, because we are in a loop and have to stay in the right context
-					  ghostModel.find('a.configure_model').on('click', function(model) {
-						  return function(e) {
-							  e.preventDefault;
-							  var str = $(this).closest('li.model').find('h5').children("span").html();
-							  if(startsWith('CB', model.modelType, true)) {
-								  activateCBModelDialog(model, str);
-								  return;
-							  } else if(startsWith('random', model.modelType, true)) {
-								  activateRandomModelDialog(model, str);
-								  return;
-							  } else if(startsWith('EDITOR_BASED', model.modelType, true)) {
-								  app.gui.showEditorialListEditor(model, str);
-								  return;
-							  }
-							  activateSubmodelDialog(model.referenceCode, str);
-						  };
-					  }(model));
-					  if(! model.submodelsSupported
-							  && ! startsWith('CB', model.modelType, true)
-							  && ! startsWith('random', model.modelType, true)
-							  && ! startsWith('EDITOR_BASED', model.modelType, true)) {
-						  ghostModel.find('a.configure_model').hide();
-					  }
-					  updateModelInfo(ghostModel, model);
-
-				  }
-			  }
-			  if(!wasOtherli){
-				  $('#other_list_li').hide();
-			  }
-			  modelRefList.modelRefArray = modelRefArray;
-			  $('body').data('model_list', modelRefList);
 			  
-			  loadRightSection(); // ONE MORE THREAD IS STARTED HERE
+	  json = modelDao.getModels(); // must be already loaded at this moment
 
-			  $('body').on('mouseover', '.model', function() {
-				  setLiveDragDrop($(this));
-			  });
-			  //live was deprecated for a long time and removed in jQuery 1.9
-			  //$('.model').live('mouseover',function(){
-			  //	setLiveDragDrop($(this));
-			  //});
+	  $('.models_base').children('h3').children('span').first().text(json.length);
 
-			  localizer();
-			  window.parent.$("#contentFrame").height( '100%');
-		  },
-		  error: stdAjaxErrorHandler
-		  
-		  }).then(function() {
-				  $(".models_groups").equalize({
-					  eqItems: ".model",
-					  exclItems: '.dummymodel',
-					  segmentSize: 2,
-					  applicantSelector: "> div"
-				  });
-			  });
+	  var modelRefArray = new Array();
+	  var wasOtherli = false;
+	  if(json.length > 0) {
+
+		  for(var i = 0; i < json.length; i ++) {
+			  var nest, ghostModel, model = json[i];
+			  
+			  var dummy = $('.dummymodel');
+			  var dummyClone = $(dummy).clone();
+			  $(dummyClone).show();
+			  $(dummyClone).attr("id", "model_" + model.referenceCode);
+
+			  if(model.modelType == "CF_I2I" || model.modelType == "CF_I2I_MIX") {
+				  nest = $('#collaborative_list');
+			  }
+			  else if(model.modelType === "POPULARITY_SHORT" || model.modelType === "POPULARITY_LONG") {
+				  nest = $('#popularity_list');
+			  }
+			  else {
+				  wasOtherli = true;
+				  nest = $('#other_list');
+			  }
+			  $(dummyClone).appendTo(nest).removeClass("dummymodel");
+			  ghostModel = $('#model_' + model.referenceCode).removeAttr("style");
+			  
+			  var additionalModelName = modelDao.getModelNameKey(model.referenceCode);
+
+			  ghostModel.children("div").children("h5").children("span.mtitle").attr('data-translate', additionalModelName + '_title');
+			  ghostModel.children("div").children("p").children("span").attr('data-translate', additionalModelName + '_description');
+			  //handing the current model to a self executing anonymous function which returns the actual callback function.
+			  //this is necessary, because we are in a loop and have to stay in the right context
+			  ghostModel.find('a.configure_model').on('click', function(model) {
+				  return function(e) {
+					  e.preventDefault;
+					  var str = $(this).closest('li.model').find('h5').children("span").html();
+					  if(startsWith('CB', model.modelType, true)) {
+						  activateCBModelDialog(model, str);
+						  return;
+					  } else if(startsWith('random', model.modelType, true)) {
+						  activateRandomModelDialog(model, str);
+						  return;
+					  } else if(startsWith('EDITOR_BASED', model.modelType, true)) {
+						  app.gui.showEditorialListEditor(model, str);
+						  return;
+					  }
+					  activateSubmodelDialog(model.referenceCode, str);
+				  };
+			  }(model));
+			  if(! model.submodelsSupported
+					  && ! startsWith('CB', model.modelType, true)
+					  && ! startsWith('random', model.modelType, true)
+					  && ! startsWith('EDITOR_BASED', model.modelType, true)) {
+				  ghostModel.find('a.configure_model').hide();
+			  }
+			  var addInfo = getModelAdditionalInfo(model);
+
+			  if (addInfo){
+				  ghostModel.find('.info').html(" (" + addInfo + ")");
+			  }
+		  }
+	  }
+	  if(!wasOtherli){
+		  $('#other_list_li').hide();
+	  }
+	  
+	  loadRightSection(); // ONE MORE THREAD IS STARTED HERE
+
+	  $('body').on('mouseover', '.model', function() {
+		  setLiveDragDrop($(this));
+	  });
+	  //live was deprecated for a long time and removed in jQuery 1.9
+	  //$('.model').live('mouseover',function(){
+	  //	setLiveDragDrop($(this));
+	  //});
+
+	  localizer();
+	  window.parent.$("#contentFrame").height( '100%');
 
 	  if(saved == "true") {
 		  setMessagePopUp("positive", "message_data_saved_successfully");
@@ -159,8 +129,7 @@ var initialize = function() {
 
 	  $("#button_save").click(saveScenario);
 
-	  $('body')
-			  .on("change", '.placed_model input', function() {
+	  $('body').on("change", '.placed_model input', function() {
 				  if($(this).attr("type") === "radiobutton") {
 					  $('input[name="' + $(this).attr("name") + '"]').removeAttr("checked");
 					  $(this).attr("checked", "checked");
@@ -272,7 +241,7 @@ function saveScenario() {
 			  var previewTypes ='';
 			  $('body').data('scenario', json);
 
-			  var modelRefList = $('body').data('model_list');
+			  var modelRefList = modelDao.getModels();
 
 			  var outputType;
 			  if(json.scenario.outputItemTypes.length > 0) {
@@ -288,8 +257,8 @@ function saveScenario() {
 			  $('.preview_tab').find('a').attr("href", $('.preview_tab').find('a').attr("href")+"&outputtypes="+previewTypes+"&inputtype="+json.scenario.inputItemType);
 			  //set the colors of the models on the left side
 
-			  for(var l = 0; l < modelRefList.modelRefArray.length; l ++) {
-				  var model = modelRefList.modelRefArray[l];//TODO check for multiple declaration
+			  for(var l = 0; l < modelRefList.length; l ++) {
+				  var model = modelRefList[l];//TODO check for multiple declaration
 				  var color = "";
 				  if(model.itemTypeTrees.length < 1) {
 					  color = "red";
@@ -365,9 +334,6 @@ function saveScenario() {
 
 
 			  function setCategoryPath(path, value) {
-// 						console.log(path);
-// 						console.log(value);
-// 						console.log(typeof value);
 				  $('#' + path).val(value === null ? 'null' : value);
 				  if(value === 0) {
 					  $('#' + path + '_str').attr('data-translate', 'configurator_category_disabled');
@@ -504,94 +470,15 @@ function saveScenario() {
 
 					  if(json.scenario.stages[j].xingModels.length > 0) {
 						  for(var k = 0; k < json.scenario.stages[j].xingModels.length; k ++) {
-							  var model = json.scenario.stages[j].xingModels[k];
+							  var xing = json.scenario.stages[j].xingModels[k];
 							  var childnumberdiv = j;
 							  var childnumberli = k + 1;
 							  var nest = $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")");
-							  var ghostModel = $(".placed_model.ghost");
-							  ghostModel = ghostModel.clone().appendTo(nest).removeClass("ghost").fadeIn();
+							  
+							  var ghostModel = generatePlacedModel(xing.modelReferenceCode, j, k);
+							  
+							  ghostModel.appendTo(nest);
 							  //ghostModel = $('.ui-stage:eq('+childnumberdiv+')').children("ul").children("li:nth-child("+childnumberli+")").children(".placed_model");
-							  ghostModel.attr("id", j + "_" + k + "_" + model.modelReferenceCode);
-
-							 
-
-							  var modelTitle = "";
-							  var modelDescription = "";
-							  var submodelsSupported = true;
-							  var websiteContextSupported = true;
-							  var profileContextSupported = true;
-							 
-							  var str = '';
-							  
-							  for(var l = 0; l < modelRefList.modelRefArray.length; l ++) {
-								  if(modelRefList.modelRefArray[l].referenceCode == model.modelReferenceCode) {
-									  modelTitle = modelRefList.modelRefArray[l].additionalModelName + '_title';
-									  var maxRating = modelRefList.modelRefArray[l].maximumRatingAge;
-									  if(maxRating != null){
-										  maxRating = parseDuration(maxRating);
-										  str += ' ('+((maxRating.getHours() < 48) ? (maxRating.getHours()
-												  + ' <span data-translate="'
-												  + (maxRating.getHours() > 1 ? 'model_duration_hours'
-												  : 'model_duration_hour') + '">Hours</span>')
-												  : (maxRating.getDays()
-												  + ' <span data-translate="model_duration_days">Days</span>'))
-												  + ')';
-									  }else{
-										 str += ' ('+ modelRefList.modelRefArray[l].referenceCode + ')';									  
-									  }
-									  modelDescription = modelRefList.modelRefArray[l].additionalModelName + '_description';
-
-									  if(model.contextFlag == "PROFILE") {
-										  //modelTitle = modelRefList.modelRefArray[l].additionalModelName + '_profile_title';
-										  //modelDescription = modelRefList.modelRefArray[l].additionalModelName + '_profile_description';
-									  }
-									  else {
-										  //modelTitle = modelRefList.modelRefArray[l].additionalModelName + '_site_title';
-										  //modelDescription = modelRefList.modelRefArray[l].additionalModelName + '_site_description';
-									  }
-
-									  //hide the elements, that are not supported.
-									  submodelsSupported = modelRefList.modelRefArray[l].submodelsSupported;
-									  websiteContextSupported = modelRefList.modelRefArray[l].websiteContextSupported;
-									  profileContextSupported = modelRefList.modelRefArray[l].profileContextSupported;
-								  }
-							  }
-
-							  ghostModel.find("h4").attr('data-translate', modelTitle);
-							  ghostModel.find("h4").attr('refCode', str);
-							  ghostModel.find("h4").attr('title-translate',modelDescription);
-							 // ghostModel.find("p.description").attr('data-translate', modelDescription);
-							  
-							  var solution = mandatorInfo.baseInformation.version;
-
-							  if(! submodelsSupported || solution != 'EXTENDED') {
-								  ghostModel.find(".usesubmodels").hide();
-							  }
-							  if(websiteContextSupported == false || profileContextSupported == false) {
-								  ghostModel.find(".context_options").hide();
-							  }
-
-							  ghostModel.children("form").find('label[for="placed_model_context_type_profile"]').attr("for", "placed_model_context_type_profile" + "_" + j + "_" + k + "_" + model.modelReferenceCode);
-							  ghostModel.children("form").find('label[for="placed_model_context_type_website"]').attr("for", "placed_model_context_type_website" + "_" + j + "_" + k + "_" + model.modelReferenceCode);
-							  ghostModel.children("form").find('input[id="placed_model_context_type_profile"]').attr("id", "placed_model_context_type_profile" + "_" + j + "_" + k + "_" + model.modelReferenceCode).attr("name", "placed_model_context_type" + "_" + j + "_" + k + "_" + model.modelReferenceCode);
-							  ghostModel.children("form").find('input[id="placed_model_context_type_website"]').attr("id", "placed_model_context_type_website" + "_" + j + "_" + k + "_" + model.modelReferenceCode).attr("name", "placed_model_context_type" + "_" + j + "_" + k + "_" + model.modelReferenceCode);
-							  ;
-							  //ghostModel.children("form").find('input[id="weight_model"]').attr("id", "weight_model"  + "_" + j + "_" + k + "_" + model.modelReferenceCode);
-							  //ghostModel.children("form").find('label[for="weight_model"]').attr("for", "weight_model"  + "_" + j + "_" + k + "_" + model.modelReferenceCode);
-							  ghostModel.children("form").find('input[id="use_submodels"]').attr("id", "use_submodels" + "_" + j + "_" + k + "_" + model.modelReferenceCode).attr("name", "use_submodels" + "_" + j + "_" + k + "_" + model.modelReferenceCode).val("use_submodels" + "_" + j + "_" + k + "_" + model.modelReferenceCode);
-							  ghostModel.children("form").find('label[for="use_submodels"]').attr("for", "use_submodels" + "_" + j + "_" + k + "_" + model.modelReferenceCode);
-
-							  if(model.contextFlag === "PROFILE") {
-								  ghostModel.children("form").find('input[id="placed_model_context_type_profile_' + j + "_" + k + "_" + model.modelReferenceCode + '"]').attr("checked", "checked");
-							  }
-							  else if(model.contextFlag === "ITEM") {
-								  ghostModel.children("form").find('input[id="placed_model_context_type_website_' + j + "_" + k + "_" + model.modelReferenceCode + '"]').attr("checked", "checked");
-							  }
-
-							  //ghostModel.children("form").find('input[id="weight_model_'+ j + "_" + k + "_" + model.modelReferenceCode+'"]').val(model.weight);
-							  if(model.useSubmodels) {
-								  ghostModel.children("form").find('input[id="use_submodels_' + j + "_" + k + "_" + model.modelReferenceCode + '"]').attr("checked", "checked");
-							  }
 
 							  $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")").children('.empty_model_place').remove();
 						  }
@@ -600,12 +487,103 @@ function saveScenario() {
 			  }
 			  localizer();
 			  unsetLoadingDiv($('body'));
-			  setEquals();
 		  },
 		  error: stdAjaxErrorHandler
 	  });
-
   }
+  
+  
+  
+  /**
+   * @param model
+   * 	model reference code of model JSON
+   * @param j
+   * 	row
+   * @param k
+   * 	column
+   * @returns
+   * 	deattached HTML code of the generated model
+   */
+  function generatePlacedModel(model, j, k) {
+	  
+	  if (typeof model == 'string') {
+		  model = modelDao.getModel(model);
+		  if (!model) {
+			  throw { code: 'MODEL_NOT_FOUND', message: "Model ["+model+"] was not found." };
+		  }
+	  } 
+	  
+	  var modelRefCode = model.referenceCode;
+	  var ghostModel = $(".placed_model.ghost");
+	  
+	  ghostModel = ghostModel.clone();
+	  ghostModel.removeClass("ghost").fadeIn();
+	  
+	  ghostModel.attr("id", j + "_" + k + "_" + modelRefCode);
+
+	  var submodelsSupported = true;
+	  var websiteContextSupported = true;
+	  var profileContextSupported = true;
+	  
+	  
+			  
+	  var key = modelDao.getModelNameKey(modelRefCode);
+	  
+	  var info = getModelAdditionalInfo(model);
+	  var modelTitle = key + '_title';
+	  var modelDescription = key + '_description';
+
+	  //hide the elements, that are not supported.
+	  submodelsSupported = model.submodelsSupported;
+	  websiteContextSupported = model.websiteContextSupported;
+	  profileContextSupported = model.profileContextSupported;
+
+	  ghostModel.find("h4 span.name").attr('data-translate', modelTitle);
+	  if (info) {
+		  ghostModel.find("h4 span.info").html(info);
+	  } else {
+		  ghostModel.find("h4 span.info").hide();
+	  }
+	  ghostModel.find("span.tooltip").attr('data-translate', modelDescription);
+	 // ghostModel.find("p.description").attr('data-translate', modelDescription);
+	  
+	  var solution = mandatorInfo.baseInformation.version;
+
+	  if(! submodelsSupported || solution != 'EXTENDED') {
+		  ghostModel.find(".usesubmodels").hide();
+	  }
+	  if(websiteContextSupported == false || profileContextSupported == false) {
+		  ghostModel.find(".context_options").hide();
+	  }
+
+	  ghostModel.children("form").find('label[for="placed_model_context_type_profile"]').attr("for", "placed_model_context_type_profile" + "_" + j + "_" + k + "_" + modelRefCode);
+	  ghostModel.children("form").find('label[for="placed_model_context_type_website"]').attr("for", "placed_model_context_type_website" + "_" + j + "_" + k + "_" + modelRefCode);
+	  ghostModel.children("form").find('input[id="placed_model_context_type_profile"]').attr("id", "placed_model_context_type_profile" + "_" + j + "_" + k + "_" + modelRefCode).attr("name", "placed_model_context_type" + "_" + j + "_" + k + "_" + modelRefCode);
+	  ghostModel.children("form").find('input[id="placed_model_context_type_website"]').attr("id", "placed_model_context_type_website" + "_" + j + "_" + k + "_" + modelRefCode).attr("name", "placed_model_context_type" + "_" + j + "_" + k + "_" + modelRefCode);
+	  ;
+	  //ghostModel.children("form").find('input[id="weight_model"]').attr("id", "weight_model"  + "_" + j + "_" + k + "_" + modelRefCode);
+	  //ghostModel.children("form").find('label[for="weight_model"]').attr("for", "weight_model"  + "_" + j + "_" + k + "_" + modelRefCode);
+	  ghostModel.children("form").find('input[id="use_submodels"]').attr("id", "use_submodels" + "_" + j + "_" + k + "_" + modelRefCode).attr("name", "use_submodels" + "_" + j + "_" + k + "_" + modelRefCode).val("use_submodels" + "_" + j + "_" + k + "_" + modelRefCode);
+	  ghostModel.children("form").find('label[for="use_submodels"]').attr("for", "use_submodels" + "_" + j + "_" + k + "_" + modelRefCode);
+
+	  if(model.contextFlag === "PROFILE") {
+		  ghostModel.children("form").find('input[id="placed_model_context_type_profile_' + j + "_" + k + "_" + modelRefCode + '"]').attr("checked", "checked");
+	  }
+	  else if(model.contextFlag === "ITEM") {
+		  ghostModel.children("form").find('input[id="placed_model_context_type_website_' + j + "_" + k + "_" + modelRefCode + '"]').attr("checked", "checked");
+	  }
+
+	  //ghostModel.children("form").find('input[id="weight_model_'+ j + "_" + k + "_" + modelRefCode+'"]').val(model.weight);
+	  if(model.useSubmodels) {
+		  ghostModel.children("form").find('input[id="use_submodels_' + j + "_" + k + "_" + modelRefCode + '"]').attr("checked", "checked");
+	  }
+	  
+	  i18n(ghostModel);
+	  
+	  return ghostModel;
+  }
+  
+  
 
   function loadAttributes(subModels) {
 	  window.subModels = {};
@@ -783,32 +761,17 @@ function saveScenario() {
 	  updateJsonValueForModel(modelName);
   }
 
-  function createJsonModel(modelDOM, modelName) {
+  
+  function createJsonModel(modelDOM, modelName, row, column) {
 
 	  var json = $('body').data('scenario');
 
-	  var id = modelDOM.parents('div[id^="stage"]').attr('id');
-	  var modelIndex = modelDOM.attr("id").substring(2, 3);
-	  var stage = "";
-	  if(id == "stage1") {
-		  stage = json.scenario.stages[0];
-		  createJsonXingModel(json, stage, 0, modelName, modelIndex);
-	  }
-	  else if(id == "stage2") {
-		  stage = json.scenario.stages[1];
-		  createJsonXingModel(json, stage, 1, modelName, modelIndex);
-	  }
-	  else if(id == "stage3") {
-		  stage = json.scenario.stages[2];
-		  createJsonXingModel(json, stage, 2, modelName, modelIndex);
-	  }
-	  else if(id == "stage4") {
-		  stage = json.scenario.stages[3];
-		  createJsonXingModel(json, stage, 3, modelName, modelIndex);
-	  }
-// 		$('body').data('scenario',json); //no need to do that, the object is not serialized with the data() method
+	  var stage = stage = json.scenario.stages[row];
+	  
+	  createJsonXingModel(json, stage, row, modelName, column);
   }
 
+  
   function updateJsonValueForModel(modelName) {
 	  var json = $('body').data('scenario');
 	  for(var i = 0; i < 4; i ++) {
@@ -1069,7 +1032,6 @@ function saveScenario() {
 								  $('.groups_base').children('li').last().prev()
 										  .find("ul.user_created_group > li")
 										  .remove();
-								  setEquals();
 								  setSortable();
 								  $('.groups_base')
 										  .children('li')
@@ -1098,7 +1060,6 @@ function saveScenario() {
 						  $container.append('<li data-value="' + json.attribute.values[i] + '">' + json.attribute.values[i] + '</li>');
 					  }
 				  }
-				  setEquals();
 			  });
   }
 
@@ -1406,8 +1367,13 @@ function saveScenario() {
 		  data: JSON.stringify(model.model),
 		  url: "ebl/v3/" + customerID + "/structure/update_model",
 		  success: function(json) {
-			  updateModelInfo($('#model_' + json.model.referenceCode),
-					  json.model);
+			  
+			  var info = getModelAdditionalInfo(json.model);
+			  
+			  if (info){
+				  $('#model_' + json.model.referenceCode).find('.info').text(" (" + info + ")");
+			  }
+			  
 			  setMessagePopUp("positive",
 					  "message_data_saved_successfully");
 		  },
@@ -1429,14 +1395,14 @@ function saveScenario() {
 	  });
   }
 
-  function updateModelInfo($model, model) {
-	  var type, maxRating, maxItemAge, str;
-	  type = model.modelType;
-	  maxRating = model.maximumRatingAge ? parseDuration(model.maximumRatingAge)
-			  : model.maximumRatingAge;
-	  maxItemAge = model.maximumItemAge ? parseDuration(model.maximumItemAge)
-			  : model.maximumItemAge;
-	  str = '';
+  
+  function getModelAdditionalInfo(model) {
+	  
+	  var type = model.modelType;
+	  var maxRating = model.maximumRatingAge ? parseDuration(model.maximumRatingAge) : model.maximumRatingAge;
+	  var maxItemAge = model.maximumItemAge ? parseDuration(model.maximumItemAge) : model.maximumItemAge;
+	  var str = '';
+	  
 	  //Algorithmic Models
 	  if(startsWith('CF_I2I', type, true)
 			  || startsWith('POPULARITY', type, true)
@@ -1483,12 +1449,82 @@ function saveScenario() {
 	  } else {
 		  str = '';
 	  }
-	  if(str !=''){
-		  $model.find('.info').html(" ("+str+")");
-	  }else{
-		  $model.find('.info').html("");
-	  }
+	  
+	  return str;
   }
+
+
+  var setLiveDragDrop = function (element) {
+  	element.draggable({
+  		//connectToSortable: ".empty_model_place",
+  		//helper: "clone",
+  		helper: function (event) {
+  			var result = $(this).clone();
+  			result.width(150).height(150);
+  			result.css('background-color', '#FFF');
+  			result.css('z-index', 10);
+  			return result;
+  		},
+  		cursorAt:  {
+  			left: 100,
+  			bottom: 0
+		},
+  		start: function (event, ui) {
+  			$(this).addClass('dropable_model');
+  		},
+  		stop: function (event, ui) {
+  			$('.empty_model_place').removeAttr('style');
+  		},
+  		revert: "invalid"
+  	});
+
+  	$(".empty_model_place").droppable({
+  		'revert':  true,
+  		//over:    function (event, ui) {
+  		//	$(this).css({'padding': '0'});
+  		//},
+  		'accept': '.dropable_model',
+  		'drop': function (event, ui) {
+//  			createPlacedModel($(this));
+  			createPlacedModel($(this), $(ui.draggable));
+  		}
+  	});
+  };
+
+  
+  var createPlacedModel = function (placed_model, model) {
+	  
+    var nest = placed_model.parent("li[data-row]");
+	  
+	var j = nest.attr("data-row");
+	var k = nest.attr("data-column");
+	
+	var mid = model.attr("id");
+	var refcode = mid.substring('model_'.length, mid.length);
+	
+	var htmlModel = generatePlacedModel(refcode, j, k);
+	
+	nest.html(htmlModel);
+	
+	createJsonModel(htmlModel, refcode, j, k);
+
+  };
+
+  
+  var destroyPlacedModel = function () {
+  	$('body').on("click",".destroy_placed_model" ,  function (event) {
+  		var placedModel = $(this).parent();
+  		var nest = $(this).parent().parent();
+  		var dummy = $(".empty_model_place.ghost");
+  		deleteJsonModelWithName($(this).parent().attr("id"));
+  		placedModel.remove();
+  		dummy.clone().appendTo(nest).removeClass("ghost").fadeIn();
+  	});
+  };
+
+  
+  
+  
 
   /**
    * the app variable holds the wrapper object for all functions to handle the editorial list
