@@ -98,7 +98,6 @@
 						if(price !=null){
 							var amount = price.value;
 							if(amount != null){
-								amount = amount/100;
 								list[i].price = amount+" "+price.currency;
 							}
 						}
