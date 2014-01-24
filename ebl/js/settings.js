@@ -6,7 +6,8 @@
 	
 	$(document).ready(function() {
 		
-		setLoadingDiv($('body'));
+//		  var body_size = window.parent.$("#contentFrame iframe").height();
+//		  $('body').height(body_size + "px" );
 		
 		initialize_configurator_header(function() {
 			initializeSolutionAndItemTypes();
@@ -69,7 +70,10 @@
 			$('#no_cheaper_products, #enable_min_price').parent().css("opacity",'0.50');
 		}
 		
-		window.parent.$("#contentFrame").height('90%');
+		$('#input_type_block .value').css('visibility', 'visible');
+		$('#output_type_block .value').css('visibility', 'visible');
+		
+//		window.parent.$("#contentFrame").height('90%');
 	}
 	
 	

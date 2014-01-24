@@ -974,107 +974,6 @@ h1 > a {
   padding-left: 10px;
 }
 
-.wizard_navi_wrapper {
-	min-height: 103px;
-}
-
-.wizard_navi_wrapper > h2,
-.wizard_navi_wrapper > .wizard_steps {
-	display: inline-block;
-}
-
-.wizard_navi_wrapper > h2 {
-	font-size: 18px;
-	position: absolute;
-	left: 10px;
-	top: 45px;
-}
-
-.wizard_steps {
-	width: 100%;
-	position: absolute;
-	bottom: -9px;
-	left: 10px;
-}
-
-.wizard_steps > li {
-	display: block;
-	float: left;
-	width: 25%;
-}
-
-.wizard_steps > li > a,
-.wizard_steps > li > span {
-	display: block;
-	line-height: 29px;
-	text-align: left;
-	padding: 4px 10px 0 10px;
-}
-
-.wizard_steps > li > a {
-	cursor: pointer;
-	transition: all 0.2s linear ;
-	text-decoration: none;
-	line-height: 27px;
-	border: 1px solid rgba(140, 150, 138, 0.33);
-}
-
-.wizard_steps > li > a > span {
-	text-decoration: underline;
-}
-
-.wizard_steps > li:not(.no_link) > a:hover,
-.wizard_steps > li:not(.no_link) > a:focus {
-	background-color: rgba( 238, 236, 225, 1);
-}
-
-.wizard_steps > li.no_link{
-  opacity: 0.33;
-}
-
-.wizard_steps > li > span {
-	background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
-	color: rgba(216, 216, 216, 1);
-}
-
-.wizard_steps > li:first-child > a,
-.wizard_steps > li:first-child > span {
-	border-radius: 5px 0 0 0;
-	border-right: 0;
-}
-
-.wizard_steps > li:last-child > a,
-.wizard_steps > li:last-child > span {
-	-moz-border-radius: 0 5px 0 0;
-	-webkit-border-radius: 0 5px 0 0;
-	border-radius: 0 5px 0 0;
-	border-left: 0;
-}
-
-.wizard_steps > li > a:before,
-.wizard_steps > li > span:before {
-	content: "";
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-	vertical-align: top;
-	margin-top: 5px;
-}
-
-.wizard_steps > li.settings_tab > a:before,
-.wizard_steps > li.settings_tab > span:before {
-	background: transparent url("../img/yoosprite.png") no-repeat -156px -22px;
-}
-
-.wizard_steps > li.configurator_tab > a:before,
-.wizard_steps > li.configurator_tab > span:before {
-	background: transparent url("../img/yoosprite.png") no-repeat -172px -22px;
-}
-
-.wizard_steps > li.filters_tab > a:before,
-.wizard_steps > li.filters_tab > span:before {
-	background: transparent url("../img/yoosprite.png") no-repeat -188px -22px;
-}
 
 .account_data > li:first-child {
   margin-top: 26px;
@@ -1771,7 +1670,6 @@ section.help > article img {
 	padding-bottom: 6px;
 }
 
-.setting_list .basis > label,
 .setting_list .basis > h3 {
 	display: block;
 	padding-right: 10px;

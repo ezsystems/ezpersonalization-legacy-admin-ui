@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en-US" style="height: 100%;">
   <head>
     <meta charset="utf-8">
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
@@ -32,43 +32,31 @@
 
 
   </head>
-  <body id="settings" class="scenario_configuration_steps" style="overflow: hidden; min-width: 0;">
-	<header class="clearfix top_head" style="min-height: 23px; margin-bottom: 0; padding: 0;overflow: hidden;">
-      <div class="logo_area s1_5">
-        <h1 title="YooChoose. We recommend." style="background: initial;height: 0;"></h1>
-      </div>
-     
-      <nav class="wizard_navi_wrapper s4_5"  style="min-height: 23px;top:1px;">
+  <body id="settings" class="scenario_configuration_steps" style="height: 100%; overflow-x: hidden; min-width: 0">
+  
+ 	<h2 data-translate="scenario_configuration_area">Scenario configuration</h2>
+
+	<header style="margin-bottom: 20px;">
 		<ul class="wizard_steps clearfix">
 			<li class="settings_tab">
-				<a href="#">
-					<span data-translate="settings_scenario_configuration">Settings</span>
-				</a>
+				<a href="#" data-translate="settings_scenario_configuration">Settings</a>
 			</li>
 			<li class="configurator_tab current">
-				<span>
-					<span data-translate="settings_placing_models">Placing models</span>
-				</span>
+				<span data-translate="settings_placing_models">Placing models</span>
 			</li>
 			<li class="preview_tab">
-				<a href="#">
-					<span data-translate="settings_preview">Preview</span>
-				</a>
+				<a href="#" data-translate="settings_preview">Preview</a>
 			</li>
 		</ul>
-      </nav>
-    </header>
-      
-    <section style="margin: 0;" >
-        <header class="scenario_settings">
-        	<!-- configurator_header.html must be included here.  -->
-			<a class="button" style="visibility: hidden;">&nbsp;</a> 
-        </header>
-    </section >
+		<section class="scenario_settings">
+			<!-- configurator_header.html will be included here.  -->
+			<a class="button" style="visibility: hidden;">&nbsp;</a>
+		</section>
+	</header>
     
-    <section  class="clearfix" style="margin: 20px auto 0 auto; width: 920px;">
+    <div class="configurator">
     
-        <div class="models_base" style="width: 390px;">
+   		<div class="models_base" style="position: absolute; bottom:0; top:0; left:0; right:530px; overflow-y: scroll;">
           <h3 class="clearfix">
             <span></span> <span data-translate="configurator_models">Models</span>
           </h3>
@@ -76,17 +64,6 @@
             <li>
               <h4 data-translate="configurator_collaborative">Collaborative</h4>
               <ul id="collaborative_list" class="list_of_models clearfix">
-                <li class="dummymodel model" style="display:none">
-	                <div>
-	                   <h5>
-	                    <a class="configure_model"><img src="/img/settings.png"></a>
-	                    <span class="mtitle">Dummy</span><span class="info" style="display: inline;">(60 Days / 90 Days)</span>
-	                   </h5>
-	                   <p>
-	                     <span class="model_description">DummyDescription</span> 
-	                   </p>
-	                </div>
-                </li>
               </ul>
             </li>
 			<li>
@@ -99,10 +76,25 @@
 			  <ul id="other_list" class="list_of_models clearfix">
               </ul>
 			</li>
+			<li style="visibility: hidden;"><!-- use hidden, not display:none -->
+              <h4>Hidden</h4>
+			  <ul id="other_list" class="list_of_models clearfix">
+              		<li class="dummymodel model"> 
+	                <div>
+	                   <h5>
+	                    <a class="configure_model"><img src="/img/settings.png"></a>
+	                    <span class="mtitle">Ultimately bought</span><span class="info" style="display: inline;">(60 Days / 90 Days)</span>
+	                   </h5>
+	                   <p>
+	                     <span class="model_description">User who clicked on this content (articles, images, etc), also bought the following products.</span> 
+	                   </p>
+	                </div>
+                </li>
+              </ul>
+			</li>
           </ul>
         </div>
-        <div class="storyboards_base" style="z-index: 0; width: 530px;">
-
+       	<div class="storyboards_base" style="position: absolute; width: 530px!important; bottom:0; top:0; right:0; overflow-y: scroll;">
           <h3>
             <input type="hidden" id="primary_category_path">
             <span data-translate="configurator_primary_recommendations"  style="float:left">Primary recommendation models</span>
@@ -232,9 +224,8 @@
               </li>
             </ul>
           </div>
-
-        </div>
-    </section>
+          </div>
+	</div>
 
     <div class="overlay">
       <div class="dialog_body model_settings">
