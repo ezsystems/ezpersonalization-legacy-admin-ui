@@ -2,22 +2,25 @@
  var customerID = gup('customer_id');
  var outputtypes = gup('outputtypes');
  var inputtype = gup('inputtype');
-
+ 
  
  $(document).ready(function() {
-		
-	  // load included files and call initializer
-	  initialize_configurator_header(function() {
-		  initialize();
-	  }, "preview_send");
+	 
+	  setLoadingDiv($('body'));
+	  	  
+	  $.when(
+		  initialize_configurator_header(null, "preview_send"),
+		  include(["/js/dao/scenario.js"]).then(function() {
+			  return scenarioDao.init(customerID, reference_code);
+	  	  })
+      ).done(function() {
+    	  unsetLoadingDiv($('body'));
+		  initialize();  
+	  });
  });
+ 
 	
  var initialize = function() {
-	 
-	  window.parent.$("#contentFrame").height( '100%');
-	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
-	  $('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
-	 
 
 	  var outputArray = outputtypes.split(',');
 	  $('#output_type').children('option').each(function(index){
@@ -27,6 +30,8 @@
 				}
 		  }
 		});
+	  
+	  $('').
 	  
 
 	  $("#button_save").click(function() {
@@ -50,23 +55,7 @@
 	  });
 	  initHelpBtn();
 	  
-	  $.ajax({
-		  dataType: "json",
-		  beforeSend: function(req) {
-			  req.setRequestHeader('no-realm', 'realm1');
-		  },
-		  url: "ebl/v3/" + customerID + "/structure/get_scenario/" + reference_code,
-		  success: function(json) {
-			  if(json.scenario.title == null || json.scenario.title == "") {
-				  $("#scenario_title").attr('placeholder',reference_code);
-				 
-			  }
-			  else {
-				 $("#scenario_title").attr('placeholder',json.scenario.title);
-			  }
-		  }
-		  });
-	 
+	  $("#scenario_title").attr('value', scenarioDao.scenario.title ? scenarioDao.scenario.title : reference_code);
   };
   
   
@@ -81,7 +70,7 @@
 		  beforeSend: function(req) {
 			  req.setRequestHeader('no-realm', 'realm1');
 		  },
-		  url: "ebl/v4/" + customerID + "/elist/get_list_items/" + type + '/' + ids,
+		  url: "ebl/v4/" + customerID + "/elist/get_list_items/" + encodeURIComponent(type) + '/' + ids,
 		  success: function(json) {
 			var list = jsonToshow.recommendationResponseList;
 			for(var i in list){

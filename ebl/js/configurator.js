@@ -1,23 +1,22 @@
   var reference_code = gup('reference_code');
   var customerID = gup('customer_id');
   var saved = gup('saved');
- 
-  
-  
+   
   $(document).ready(function() {
-	  
-//	  var body_size = window.parent.$("#contentFrame iframe").height();
-//	  $('body').height(body_size + "px" );
-	  
 	  setLoadingDiv($('body'));
 	  
 	  $.when(
 		  initialize_configurator_header(),
 		  include(["/js/dao/models.js"]).then(function() {
 			  return modelDao.init(customerID);
-		  })
+		  }),
+		  include(["/js/dao/scenario.js"]).then(function() {
+			  return scenarioDao.init(customerID, reference_code);
+	  	  })		  
       ).done(function() {
 		  initialize();  
+		  i18n();
+		  unsetLoadingDiv($('body'));
 	  });
 	  
 	  destroyPlacedModel();
@@ -25,8 +24,6 @@
 	  
 	  
 var initialize = function() {
-	
-//	$('.scrollable_content').height(($('body').height() - $('header').outerHeight() - 40) + "px" );
 	
 	var row = 0;
 	var column = 0;
@@ -44,7 +41,6 @@ var initialize = function() {
 
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
 	  $('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
-
 			  
 	  json = modelDao.getModels(); // must be already loaded at this moment
 
@@ -115,7 +111,7 @@ var initialize = function() {
 		  $('#other_list_li').hide();
 	  }
 	  
-	  loadRightSection(); // ONE MORE THREAD IS STARTED HERE
+	  loadRightSection();
 
 	  $('body').on('mouseover', '.model', function() {
 		  setLiveDragDrop($(this));
@@ -235,265 +231,235 @@ function saveScenario() {
   
 
   function loadRightSection() {
-	  $.ajax({
-		  dataType: "json",
-		  beforeSend: function(req) {
-			  req.setRequestHeader('no-realm', 'realm1');
-		  },
-		  url: "ebl/v3/" + customerID + "/structure/get_scenario/" + reference_code,
-		  success: function(json) {
-			  var previewTypes ='';
-			  $('body').data('scenario', json);
+	  
+	  var json = { scenario : scenarioDao.scenario };
+	  $('body').data('scenario', json); // backward compatibility
 
-			  var modelRefList = modelDao.getModels();
+	  var modelRefList = modelDao.getModels();
 
-			  var outputType;
-			  if(json.scenario.outputItemTypes.length > 0) {
+	  //set the colors of the models on the left side
 
-				  for(var i = 0; i < json.scenario.outputItemTypes.length; i ++) {
-					  outputType = json.scenario.outputItemTypes[i];
-					  previewTypes += outputType;
-					  if(i < (json.scenario.outputItemTypes.length-1)){
-						  previewTypes += ",";
-					  }
-				  }
-			  }
-			  $('.preview_tab').find('a').attr("href", $('.preview_tab').find('a').attr("href")+"&outputtypes="+previewTypes+"&inputtype="+json.scenario.inputItemType);
-			  //set the colors of the models on the left side
-
-			  for(var l = 0; l < modelRefList.length; l ++) {
-				  var model = modelRefList[l];//TODO check for multiple declaration
-				  var color = "";
-				  if(model.itemTypeTrees.length < 1) {
-					  color = "red";
+	  for(var l = 0; l < modelRefList.length; l ++) {
+		  var model = modelRefList[l];//TODO check for multiple declaration
+		  var color = "";
+		  if(model.itemTypeTrees.length < 1) {
+			  color = "red";
+		  }
+		  else {
+			  var hasSameItemType = true;
+			  for(var m = 0; m < model.itemTypeTrees.length; m ++) {
+				  var itemTypeTree = model.itemTypeTrees[m];
+				  if(itemTypeTree.inputItemType != null && itemTypeTree.inputItemType != json.scenario.inputItemType) {
+					  hasSameItemType = false;
 				  }
 				  else {
-					  var hasSameItemType = true;
-					  for(var m = 0; m < model.itemTypeTrees.length; m ++) {
-						  var itemTypeTree = model.itemTypeTrees[m];
-						  if(itemTypeTree.inputItemType != null && itemTypeTree.inputItemType != json.scenario.inputItemType) {
-							  hasSameItemType = false;
-						  }
-						  else {
-							  hasSameItemType = true;
-							  if(itemTypeTree.outputItemTypes.length > 0) {
-								  var counter = 0;
-								  for(var n = 0; n < itemTypeTree.outputItemTypes.length; n ++) {
-									  var modelOutputItemType = itemTypeTree.outputItemTypes[n];
+					  hasSameItemType = true;
+					  if(itemTypeTree.outputItemTypes.length > 0) {
+						  var counter = 0;
+						  for(var n = 0; n < itemTypeTree.outputItemTypes.length; n ++) {
+							  var modelOutputItemType = itemTypeTree.outputItemTypes[n];
 
-									  for(var o = 0; o < json.scenario.outputItemTypes.length; o ++) {
-										  var scenarioOutputItemType = json.scenario.outputItemTypes[o];
-										  if(modelOutputItemType == scenarioOutputItemType) {
-											  counter ++;
-										  }
-									  }
-								  }
-
-								  if(counter == json.scenario.outputItemTypes.length) {
-									  color = "green";
-									  break;
-								  }
-								  else if(counter == 0) {
-									  if(color != "yellow") {
-										  color = "red";
-									  }
-								  }
-								  else {
-									  color = "yellow";
+							  for(var o = 0; o < json.scenario.outputItemTypes.length; o ++) {
+								  var scenarioOutputItemType = json.scenario.outputItemTypes[o];
+								  if(modelOutputItemType == scenarioOutputItemType) {
+									  counter ++;
 								  }
 							  }
 						  }
+
+						  if(counter == json.scenario.outputItemTypes.length) {
+							  color = "green";
+							  break;
+						  }
+						  else if(counter == 0) {
+							  if(color != "yellow") {
+								  color = "red";
+							  }
+						  }
+						  else {
+							  color = "yellow";
+						  }
 					  }
-					  if(hasSameItemType == false) {
-						  if(color == "red")//TODO what is this statement for?
-							  color = "red";
-					  }
-				  }
-				  var $model = $('#model_' + model.referenceCode);
-				  if(color == "red") {
-					  $model.addClass('problem');
-				  }
-				  else if(color == "green") {
-					  $model.addClass('ready_to_use');
-				  }
-				  else if(color == "yellow") {
-					  $model.addClass('needs_building');
 				  }
 			  }
+			  if(hasSameItemType == false) {
+				  if(color == "red")//TODO what is this statement for?
+					  color = "red";
+			  }
+		  }
+		  var $model = $('#model_' + model.referenceCode);
+		  if(color == "red") {
+			  $model.addClass('problem');
+		  }
+		  else if(color == "green") {
+			  $model.addClass('ready_to_use');
+		  }
+		  else if(color == "yellow") {
+			  $model.addClass('needs_building');
+		  }
+	  }
 
-			  var referenceCodeServer = json.scenario.referenceCode,
-					  $scenarioSettings = $(".scenario_settings");
+	  var referenceCodeServer = json.scenario.referenceCode, 
+	  $scenarioSettings = $(".scenario_settings");
+
+	  $("#scenario_title").attr('value', json.scenario.title.title ? json.scenario.title : referenceCodeServer);
+
+	  $('#primary_category_path').val(json.scenario.useCategoryPath);
 
 
-			  if(json.scenario.title == null || json.scenario.title == "") {
-				  $scenarioSettings.find("#scenario_title").attr('placeholder',referenceCodeServer);
+	  function setCategoryPath(path, value) {
+		  $('#' + path).val(value === null ? 'null' : value);
+		  if(value === 0) {
+			  $('#' + path + '_str').attr('data-translate', 'configurator_category_disabled');
+			  $('#' + path + '_level').html('');
+		  }
+		  else if(value === null) {
+			  $('#' + path + '_str').attr('data-translate', 'configurator_category_same_category');
+			  $('#' + path + '_level').html('');
+		  }
+		  else if(value < 0) {
+			  $('#' + path + '_str').attr('data-translate', 'configurator_category_parent_category');
+			  $('#' + path + '_level').html(value);
+		  }
+		  else if(value > 0) {
+			  $('#' + path + '_str').attr('data-translate', 'configurator_category_main_category');
+			  $('#' + path + '_level').html(value);
+		  }
+		  localizer();
+	  }
+
+	  $(document).on('click', '.edit_category_path', function() {
+		  //init the configuration
+		  var $this = $(this),
+				  value = $this.siblings('input').val(),
+				  inputId = $this.data('inputid'),
+				  $inputs = $('input[name="category_filter"]');
+		  value = value === 'null' ? null : value;
+// 							console.log(value);
+		  function change(event, ui) {
+			  $(ui.handle).parent().siblings('.levelView').html(ui.value);
+		  }
+
+		  //prepare slider
+		  $('#levelsDown').slider({
+			  'min': 1,
+			  'max': 5,
+			  'slide': change,
+			  'change': change
+// 							'disabled': true
+		  })
+				  .slider('value', 1);
+		  $('#levelsUp').slider({
+			  'min': 1,
+			  'max': 5,
+			  'slide': change,
+			  'change': change
+// 							'disabled': true
+		  })
+				  .slider('value', 1);
+
+		  function click() {
+			  var $this = $(this);
+			  if($this.is(':checked') && $this.val() === 'sameCategory') {
+				  console.log('sameCat');
+				  $('#includeParent').removeAttr('disabled').prop('checked', true);
+				  $('#levelsUp').slider('enable');
 			  }
 			  else {
-				  $scenarioSettings.find("#scenario_title").attr('placeholder',json.scenario.title);
+				  console.log('not sameCat');
+				  $('#includeParent').attr('disabled', 'disabled').prop('checked', false);
+				  $('#levelsUp').slider('disable').slider('value', 1);
+			  }
+			  if($this.is(':checked') && $this.val() === 'sameMainCategory') {
+				  console.log('same Main');
+				  $('#levelsDown').slider('enable');
+			  }
+			  else {
+				  console.log('Not same Main');
+				  $('#levelsDown').slider('disable').slider('value', 1);
+			  }
+		  }
+
+		  $inputs.off('click').on('click', click);
+		  if(value === null) {
+			  $inputs.filter('[value="sameCategory"]').prop('checked', true).trigger('click');
+			  $('input[name="includeParent"]').prop('checked', false);
+		  } else if(parseInt(value, 10) === 0) {
+//					  window.test = $inputs;
+			  $inputs.filter('[value="noFilter"]').prop('checked', true).trigger('click');
+			  $('input[name="includeParent"]').prop('checked', false);
+		  } else if(parseInt(value, 10) < 0) {
+			  $inputs.filter('[value="sameCategory"]').prop('checked', true).trigger('click');
+			  $('input[name="includeParent"]').prop('checked', true);
+			  $('#levelsUp')
+					  .slider('value', Math.abs(parseInt(value, 10)))
+					  .slider('enable');
+		  } else if(parseInt(value, 10) > 0) {
+			  $inputs.filter('[value="sameMainCategory"]').prop('checked', true).trigger('click');
+			  $('input[name="includeParent"]').prop('checked', false);
+			  $('#levelsDown')
+					  .slider('value', parseInt(value, 10))
+					  .slider('enable');
+		  }
+
+		  $('#save_category_path_settings')
+				  .off('click')
+				  .on('click', function() {
+					  var filter = $inputs.filter(':checked').val(),
+							  value = 0;
+// 								console.log(filter);
+					  if(filter === 'noFilter') {
+						  value = 0;
+					  } else if(filter === 'sameCategory') {
+						  value = $('#includeParent').is(':checked') ? -1 * $('#levelsUp').slider('value') : null;
+					  } else if(filter === 'sameMainCategory') {
+						  value = $('#levelsDown').slider('value');
+					  }
+
+					  $('#' + inputId).val(value === null ? 'null' : value);
+					  setCategoryPath(inputId, value);
+					  $('#category_path_settings').hide();
+				  });
+		  $('#category_path_settings')
+				  .show()
+				  .find('.destroy_dialog')
+				  .off('click')
+				  .on('click', function() {
+					  $(this).closest('._overlay').hide();
+				  });
+	  });
+		
+	  var stages = json.scenario.stages;
+
+	  for(var j = 0; j < 4; j ++) {
+		  if(stages[j] != null) {
+
+			  if(j == 0) {
+				  setCategoryPath('primary_category_path', json.scenario.stages[j].useCategoryPath);
+			  }
+			  else  {
+				  setCategoryPath('fallback'+j+'_category_path', json.scenario.stages[j].useCategoryPath);
 			  }
 			  
 
-
-			  $('#primary_category_path').val(json.scenario.useCategoryPath);
-
-
-			  function setCategoryPath(path, value) {
-				  $('#' + path).val(value === null ? 'null' : value);
-				  if(value === 0) {
-					  $('#' + path + '_str').attr('data-translate', 'configurator_category_disabled');
-					  $('#' + path + '_level').html('');
-				  }
-				  else if(value === null) {
-					  $('#' + path + '_str').attr('data-translate', 'configurator_category_same_category');
-					  $('#' + path + '_level').html('');
-				  }
-				  else if(value < 0) {
-					  $('#' + path + '_str').attr('data-translate', 'configurator_category_parent_category');
-					  $('#' + path + '_level').html(value);
-				  }
-				  else if(value > 0) {
-					  $('#' + path + '_str').attr('data-translate', 'configurator_category_main_category');
-					  $('#' + path + '_level').html(value);
-				  }
-				  localizer();
-			  }
-
-			  $(document).on('click', '.edit_category_path', function() {
-				  //init the configuration
-				  var $this = $(this),
-						  value = $this.siblings('input').val(),
-						  inputId = $this.data('inputid'),
-						  $inputs = $('input[name="category_filter"]');
-				  value = value === 'null' ? null : value;
-// 							console.log(value);
-				  function change(event, ui) {
-					  $(ui.handle).parent().siblings('.levelView').html(ui.value);
-				  }
-
-				  //prepare slider
-				  $('#levelsDown').slider({
-					  'min': 1,
-					  'max': 5,
-					  'slide': change,
-					  'change': change
-// 							'disabled': true
-				  })
-						  .slider('value', 1);
-				  $('#levelsUp').slider({
-					  'min': 1,
-					  'max': 5,
-					  'slide': change,
-					  'change': change
-// 							'disabled': true
-				  })
-						  .slider('value', 1);
-
-				  function click() {
-					  var $this = $(this);
-					  if($this.is(':checked') && $this.val() === 'sameCategory') {
-						  console.log('sameCat');
-						  $('#includeParent').removeAttr('disabled').prop('checked', true);
-						  $('#levelsUp').slider('enable');
-					  }
-					  else {
-						  console.log('not sameCat');
-						  $('#includeParent').attr('disabled', 'disabled').prop('checked', false);
-						  $('#levelsUp').slider('disable').slider('value', 1);
-					  }
-					  if($this.is(':checked') && $this.val() === 'sameMainCategory') {
-						  console.log('same Main');
-						  $('#levelsDown').slider('enable');
-					  }
-					  else {
-						  console.log('Not same Main');
-						  $('#levelsDown').slider('disable').slider('value', 1);
-					  }
-				  }
-
-				  $inputs.off('click').on('click', click);
-				  if(value === null) {
-					  $inputs.filter('[value="sameCategory"]').prop('checked', true).trigger('click');
-					  $('input[name="includeParent"]').prop('checked', false);
-				  } else if(parseInt(value, 10) === 0) {
-//					  window.test = $inputs;
-					  $inputs.filter('[value="noFilter"]').prop('checked', true).trigger('click');
-					  $('input[name="includeParent"]').prop('checked', false);
-				  } else if(parseInt(value, 10) < 0) {
-					  $inputs.filter('[value="sameCategory"]').prop('checked', true).trigger('click');
-					  $('input[name="includeParent"]').prop('checked', true);
-					  $('#levelsUp')
-							  .slider('value', Math.abs(parseInt(value, 10)))
-							  .slider('enable');
-				  } else if(parseInt(value, 10) > 0) {
-					  $inputs.filter('[value="sameMainCategory"]').prop('checked', true).trigger('click');
-					  $('input[name="includeParent"]').prop('checked', false);
-					  $('#levelsDown')
-							  .slider('value', parseInt(value, 10))
-							  .slider('enable');
-				  }
-
-				  $('#save_category_path_settings')
-						  .off('click')
-						  .on('click', function() {
-							  var filter = $inputs.filter(':checked').val(),
-									  value = 0;
-// 								console.log(filter);
-							  if(filter === 'noFilter') {
-								  value = 0;
-							  } else if(filter === 'sameCategory') {
-								  value = $('#includeParent').is(':checked') ? -1 * $('#levelsUp').slider('value') : null;
-							  } else if(filter === 'sameMainCategory') {
-								  value = $('#levelsDown').slider('value');
-							  }
-
-							  $('#' + inputId).val(value === null ? 'null' : value);
-							  setCategoryPath(inputId, value);
-							  $('#category_path_settings').hide();
-						  });
-				  $('#category_path_settings')
-						  .show()
-						  .find('.destroy_dialog')
-						  .off('click')
-						  .on('click', function() {
-							  $(this).closest('._overlay').hide();
-						  });
-			  });
-				
-			  var stages = json.scenario.stages;
-
-			  for(var j = 0; j < 4; j ++) {
-				  if(stages[j] != null) {
-
-					  if(j == 0) {
-						  setCategoryPath('primary_category_path', json.scenario.stages[j].useCategoryPath);
-					  }
-					  else  {
-						  setCategoryPath('fallback'+j+'_category_path', json.scenario.stages[j].useCategoryPath);
-					  }
+			  if(json.scenario.stages[j].xingModels.length > 0) {
+				  for(var k = 0; k < json.scenario.stages[j].xingModels.length; k ++) {
+					  var xing = json.scenario.stages[j].xingModels[k];
+					  var childnumberdiv = j;
+					  var childnumberli = k + 1;
+					  var nest = $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")");
 					  
+					  var ghostModel = generatePlacedModel(xing.modelReferenceCode, j, k);
+					  
+					  ghostModel.appendTo(nest);
+					  //ghostModel = $('.ui-stage:eq('+childnumberdiv+')').children("ul").children("li:nth-child("+childnumberli+")").children(".placed_model");
 
-					  if(json.scenario.stages[j].xingModels.length > 0) {
-						  for(var k = 0; k < json.scenario.stages[j].xingModels.length; k ++) {
-							  var xing = json.scenario.stages[j].xingModels[k];
-							  var childnumberdiv = j;
-							  var childnumberli = k + 1;
-							  var nest = $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")");
-							  
-							  var ghostModel = generatePlacedModel(xing.modelReferenceCode, j, k);
-							  
-							  ghostModel.appendTo(nest);
-							  //ghostModel = $('.ui-stage:eq('+childnumberdiv+')').children("ul").children("li:nth-child("+childnumberli+")").children(".placed_model");
-
-							  $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")").children('.empty_model_place').remove();
-						  }
-					  }
+					  $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")").children('.empty_model_place').remove();
 				  }
 			  }
-			  localizer();
-			  unsetLoadingDiv($('body'));
-		  },
-		  error: stdAjaxErrorHandler
-	  });
+		  }
+	  }
+
   }
   
   
@@ -961,21 +927,7 @@ function saveScenario() {
 			  unsetLoadingDiv($('.filters_group'));
 
 		  },
-		  error: function(jqXHR, textStatus, errorThrown) {
-			  if(jqXHR.status != null && jqXHR.status == 403) {
-				  setMessagePopUp("problem", "error_server_error_403");
-			  } else if(jqXHR.status != null && jqXHR.status == 401) {
-				  setMessagePopUp("problem", "error_server_error_401");
-			  } else if(jqXHR.status != null && jqXHR.status == 400) {
-				  setMessagePopUp("problem", "error_server_error_400");
-			  } else if(jqXHR.status != null && jqXHR.status == 404) {
-				  setMessagePopUp("problem", "error_server_error_404");
-			  } else if(jqXHR.status != null && jqXHR.status == 409) {
-				  setMessagePopUp("problem", "error_server_error_409");
-			  } else {
-				  setMessagePopUp("problem", "error_server_error");
-			  }
-		  }
+		  error: stdAjaxErrorHandler
 	  });
   }
 
@@ -1333,21 +1285,7 @@ function saveScenario() {
 			  setMessagePopUp("positive",
 					  "message_data_saved_successfully");
 		  },
-		  error: function(jqXHR, textStatus, errorThrown) {
-			  if(jqXHR.status != null && jqXHR.status == 403) {
-				  setMessagePopUp("problem", "error_server_error_403");
-			  } else if(jqXHR.status != null && jqXHR.status == 401) {
-				  setMessagePopUp("problem", "error_server_error_401");
-			  } else if(jqXHR.status != null && jqXHR.status == 400) {
-				  setMessagePopUp("problem", "error_server_error_400");
-			  } else if(jqXHR.status != null && jqXHR.status == 404) {
-				  setMessagePopUp("problem", "error_server_error_404");
-			  } else if(jqXHR.status != null && jqXHR.status == 409) {
-				  setMessagePopUp("problem", "error_server_error_409");
-			  } else {
-				  setMessagePopUp("problem", "error_server_error");
-			  }
-		  }
+		  error: stdAjaxErrorHandler
 	  });
   }
 
@@ -1381,21 +1319,7 @@ function saveScenario() {
 			  setMessagePopUp("positive",
 					  "message_data_saved_successfully");
 		  },
-		  error: function(jqXHR, textStatus, errorThrown) {
-			  if(jqXHR.status != null && jqXHR.status == 403) {
-				  setMessagePopUp("problem", "error_server_error_403");
-			  } else if(jqXHR.status != null && jqXHR.status == 401) {
-				  setMessagePopUp("problem", "error_server_error_401");
-			  } else if(jqXHR.status != null && jqXHR.status == 400) {
-				  setMessagePopUp("problem", "error_server_error_400");
-			  } else if(jqXHR.status != null && jqXHR.status == 404) {
-				  setMessagePopUp("problem", "error_server_error_404");
-			  } else if(jqXHR.status != null && jqXHR.status == 409) {
-				  setMessagePopUp("problem", "error_server_error_409");
-			  } else {
-				  setMessagePopUp("problem", "error_server_error");
-			  }
-		  }
+		  error: stdAjaxErrorHandler
 	  });
   }
 
