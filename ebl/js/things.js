@@ -126,19 +126,19 @@ var setSortable = function () {
 	}
 };
 
-var setModelsGroupsHeight = function () {
-
-	var modelsContainer = $(".models_groups");
-	var storyContainer = $(".storyboards_base");
-	if (modelsContainer.length) {
-		var offset = modelsContainer.offset();
-		var screenHeight = $(window).height();
-		var mod = 20;
-		modelsContainer.css({'height': ( screenHeight - offset.top - mod ) + 'px'});
-		storyContainer.css({'height': ( screenHeight - offset.top + mod ) + 'px'});
-	}
-
-};
+//var setModelsGroupsHeight = function () {
+//
+//	var modelsContainer = $(".models_groups");
+//	var storyContainer = $(".storyboards_base");
+//	if (modelsContainer.length) {
+//		var offset = modelsContainer.offset();
+//		var screenHeight = $(window).height();
+//		var mod = 20;
+//		modelsContainer.css({'height': ( screenHeight - offset.top - mod ) + 'px'});
+//		storyContainer.css({'height': ( screenHeight - offset.top + mod ) + 'px'});
+//	}
+//
+//};
 
 
 var setDragDrop = function () {
@@ -837,7 +837,7 @@ function startsWith(needle, haystack, lower){
 }
 
 $(document).ready(function () {
-	setModelsGroupsHeight();
+//	setModelsGroupsHeight();
 	setChartsDimensions();
 	setTimeRanges();
 	//setToolTips();
@@ -859,7 +859,7 @@ $(window).load(function () {
 });
 
 $(window).resize(function () {
-	setModelsGroupsHeight();
+//	setModelsGroupsHeight();
 	setChartsDimensions();
 	setEquals();
 	if ($('.overlay').is(":visible")) {
