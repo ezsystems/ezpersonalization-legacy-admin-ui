@@ -22,17 +22,16 @@
 	
  var initialize = function() {
 
-	  var outputArray = outputtypes.split(',');
+	  var outputArray = scenarioDao.scenario.outputItemTypes;
+	  
+	  
 	  $('#output_type').children('option').each(function(index){
 		  if(index != 0){
-				if( $.inArray($(this).val(), outputArray) == -1){
+				if( $.inArray(parseInt($(this).val()), outputArray) == -1){
 					$(this).hide();
 				}
 		  }
 		});
-	  
-	  $('').
-	  
 
 	  $("#button_save").click(function() {
 		  call_recs();
