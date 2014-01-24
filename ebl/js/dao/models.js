@@ -1,14 +1,21 @@
 
 
 
+/** Model DAO service. It loads and caches all the models available for the
+ *  mandator.<br><br>
+ * 
+ *  Include it using "include" function and call "init" like this:<pre>
+ *  include(["/js/dao/models.js"]).then(function() {
+ *	   return modelDao.init(customerID);
+ *  })
+ * </pre>
+ * 
+ */
 var modelDao = {
-	
 	customerID: null,
 	models: [],
 	error: null
-	
 };
-	
 	
 	
 modelDao.init = function(customerID, callback) {
@@ -16,7 +23,7 @@ modelDao.init = function(customerID, callback) {
 	modelDao.customerID = customerID;
 	
 	var result = $.when(
-			modelDao.loadModels(customerID)
+		modelDao.loadModels(customerID)
 	).done(function(json) {
 		if (callback) {
 			callback();
@@ -72,9 +79,6 @@ modelDao.loadModels = function(customerID) {
 
 	var result =  $.ajax({
 		  dataType: "json",
-		  beforeSend: function(req) {
-			  req.setRequestHeader('no-realm', 'realm1');
-		  },
 		  statusCode: {
 			  401: function(jqXHR, textStatus, errorThrown) {
 				  $.cookie('password', null);
@@ -82,7 +86,7 @@ modelDao.loadModels = function(customerID) {
 				  window.parent.location = "login.html";
 			  }
 		  },
-		  url: "ebl/v3/" + modelDao.customerID + "/structure/get_model_list",
+		  url: "ebl/v3/" + modelDao.customerID + "/structure/get_model_list?no-realm",
 		  success: function(json) {
 			  modelDao.models = json.modelList;
 			  console.debug("Model list sucessfully loaded.");

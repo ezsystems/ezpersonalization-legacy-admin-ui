@@ -2,8 +2,15 @@
 var mandatorInfo;
 	  
 function initialize_configurator_header(callback, i18n_save_button) {
+	
+	var s = encodeURIComponent(reference_code);
+	var m = encodeURIComponent(customerID);
+	
+    $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + s + '&customer_id=' + m);
+    $('.configurator_tab').find('a').attr("href", 'configuratorpop.html?reference_code=' + s + '&customer_id=' + m);
+    $('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + s + "&customer_id=" + m);    
 
-	$.when(
+	var result = $.when(
 		$.get("/includes/configurator_header.html", '', function(data) {
 	
 			$(".scenario_settings").html(data);
@@ -35,13 +42,11 @@ function initialize_configurator_header(callback, i18n_save_button) {
 			mandatorInfo = json;
 		})
 	).done(function(json) {
-		if (!mandatorInfo) {
-			alert('!!!');
-		}
 		if (callback) {
 			callback();
 		}
 	});
+	return result;
 }
 
 
@@ -126,7 +131,7 @@ function deleteScenario() {
 				} else if(jqXHR.status != null && jqXHR.status == 409) {
 					setMessagePopUp("problem", "error_server_error_409");
 				} else {
-					setMessagePopUp("problem", "error_server_error");
+					setMessagePopUp("problem", "error_server_error", jqXHR.status);
 				}
 			}
 		});

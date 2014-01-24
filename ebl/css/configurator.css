@@ -12,8 +12,7 @@
 	 position: absolute; bottom:0; top:145px; left:0; right:0;
 }
 
-.settings,
-.preview {
+.settings {
 	overflow-y: scroll;
 	overflow-x: auto;
 }
@@ -187,8 +186,12 @@ ul.wizard_steps  {
 	 	width: 95%;
 	}
 	
-	section.settings .problem {
+	.problem {
 	  	box-shadow: 0 0 8px rgba(192, 80, 77, 1);
+	}
+	
+	.models_base .problem {
+		box-shadow: none;
 	}
 	
 	h4 {

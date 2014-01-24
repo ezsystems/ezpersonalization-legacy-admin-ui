@@ -4,18 +4,22 @@
 	var fromTemplate = gup('from_template');
 
 	
-	$(document).ready(function() {
-		
-//		  var body_size = window.parent.$("#contentFrame iframe").height();
-//		  $('body').height(body_size + "px" );
-		
-		initialize_configurator_header(function() {
+  $(document).ready(function() {
+	  setLoadingDiv($('body'));
+	  
+	  $.when(
+		  initialize_configurator_header(),
+		  include(["/js/dao/scenario.js"]).then(function() {
+			  return scenarioDao.init(customerID, reference_code, true);
+	  	  })		  
+      ).done(function() {
 			initializeSolutionAndItemTypes();
 			initialize();
-		});
-
-	});
-  
+			
+			unsetLoadingDiv($('body'));
+	  });
+  });
+	  
 	
 	/** It must be called as the <code>mandatorInfo</code> is loaded.
 	 */
@@ -72,8 +76,6 @@
 		
 		$('#input_type_block .value').css('visibility', 'visible');
 		$('#output_type_block .value').css('visibility', 'visible');
-		
-//		window.parent.$("#contentFrame").height('90%');
 	}
 	
 	
@@ -81,14 +83,10 @@
   		
   		$("#scenario_title").prop('disabled', false);
 
-		if(! fromTemplate) {
-			$('#scenario_id').prop('disabled', true);
-			$('.configurator_tab').find('a').attr("href", "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
-			$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
-		} else {
+		if (fromTemplate) {
 			$('#scenario_id').prop('disabled', false);
-			$('.configurator_tab').addClass("no_link").find('a').attr("href", "#").attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
-			$('.preview_tab').addClass("no_link").find('a').attr("href", "#").attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
+			$('.configurator_tab').addClass("no_link").find('a').attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
+			$('.preview_tab').addClass("no_link").find('a').attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
 			$('#button_save').attr('data-translate', 'settings_button_save_next_step');
 			$('.delete').attr('data-translate', 'settings_cancel');
 		}
@@ -107,7 +105,9 @@
 			}
 		};
 		
-		loadScenario(updateFunction);
+		renderScenario();
+		
+		updateFunction();
 		
 		$("input, textarea, select").change(updateFunction);
 		
@@ -322,10 +322,9 @@
 		setLoadingDiv($('body'));
 		
 		$.when(
-			loadScenarioOnly(),
-			loadFilterStandard(),
-			loadFilterProfile()
+			scenarioDao.init(customerID, refcode, withFilters)
 		).done(function() {
+			renderScenario();
 			unsetLoadingDiv($('body'));
 			if (callback) {
 				callback();
@@ -334,161 +333,77 @@
 	} 
 
 	
-	function loadScenarioOnly() {
+	function renderScenario() {
 		
-		if(reference_code == "") {
-
-			var json = new Object();
-			json.scenario = new Object();
-			json.scenario.title = $('#scenario_title').val();
-			json.scenario.referenceCode = $('#scenario_id').val();
-			json.scenario.inputItemType = $('#input_type').val();
-			json.scenario.description = $('#sc_description').val();
-			
-			json.scenario.outputItemTypes = new Array();
-			$('input[id^="output_type"]').each(function() {
-				if ($(this).prop("checked")) {
-					json.scenario.outputItemTypes.push(parseInt($(this).val()));
-				}
-			});
-			
-			$('body').data('scenario', json);
-			
-			return $.Deferred(function(deferred){
-		        $(deferred.resolve);
-		    });
-			
-		} else {
-
-			var url = "";
-			
-			if(fromTemplate == "2") {
-				url = "ebl/v3/"+customerID+"/structure/get_library_scenario/" +reference_code + "?locale=" + in_to_language;
-			} else {
-				url = "ebl/v3/"+customerID+"/structure/get_scenario/"+reference_code;
-			}
-			
-			var result =  $.ajax({
-					dataType: "json",
-					beforeSend: function (req) {
-					req.setRequestHeader('no-realm', '1');
-				},
-				statusCode: {
-					401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.parent.location = "login.html";
+		var json = { scenario : scenarioDao.scenario }; 
+		
+		$('body').data('scenario', json);
+	
+		$('#scenario_title').val(json.scenario.title);
+		$('#scenario_id').val(json.scenario.referenceCode);
+		$('#input_type').val(json.scenario.inputItemType);
+		
+		$('input[id^="output_type"]').each(function() {
+			if(json.scenario.outputItemTypes.length > 0) {
+				$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString()+"&inputtype="+json.scenario.inputItemType);
+				for(var i = 0; i < json.scenario.outputItemTypes.length; i++) {
+					if(json.scenario.outputItemTypes[i] == $(this).val()) {
+						$(this).prop("checked", true);
 					}
-				},
-				url: url,
-				success: function(json) {
-						$('body').data('scenario', json);
-						
-						console.debug("Scenario base configuration for [" + reference_code + "] sucessfully loaded.");
-					
-						$('#scenario_title').val(json.scenario.title);
-						$('#scenario_id').val(json.scenario.referenceCode);
-						$('#input_type').val(json.scenario.inputItemType);
-						
-						$('input[id^="output_type"]').each(function() {
-							
-						if(json.scenario.outputItemTypes.length > 0) {
-							$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID+"&outputtypes="+json.scenario.outputItemTypes.toString()+"&inputtype="+json.scenario.inputItemType);
-							for(var i = 0; i < json.scenario.outputItemTypes.length; i++) {
-								if(json.scenario.outputItemTypes[i] == $(this).val()) {
-									$(this).prop("checked", true);
-								}
-							}
-						}
-					});
-					var additionalParameter = "?reference_code=" + json.scenario.referenceCode + "&customer_id=" + customerID;
-					$('#sc_description').val(json.scenario.description);
-					$('.go_next').attr("href", "configuratorpop.html" + additionalParameter);
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
 				}
-			});
-			
-		}
-			
-		return result;
-	};
-
-	
-	function loadFilterStandard() {
-		
-		var result = $.ajax({
-			dataType: "json",
-			beforeSend: function (req) {
-			req.setRequestHeader('no-realm', '1');
-			},
-			url: "ebl/v3/"+customerID+"/structure/get_filter_set/standard" + (reference_code == "" ? "" : "/"+reference_code),
-			success: function(json){
-				$('body').data('filters_standard', json);
-				
-				console.debug("Standard filter configuration for [" + reference_code + "] sucessfully loaded.");
-				
-				var set = json.standardFilterSet;
-				
-				if (set.excludeCheaperItems == "YES") { 
-					$('#no_cheaper_products').prop("checked", true);
-				}
-				
-				if (set.excludeContextItems == true) { 
-					$('#currently_viewed').prop("checked", true);
-				}
-				
-				if (set.excludeTopSellingResults == true) {
-					$('#no_top_sellings').prop("checked", true);
-				}
-				
-				if (set.minimalItemPrice) {
-					$('#limit_min_price').val(set.minimalItemPrice);
-				}
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
-	        }
-		});	
-		
-		return result;
-	}
-
-	
-	function loadFilterProfile() {
-		var result = $.ajax({
-				dataType: "json",
-				beforeSend: function (req) {
-				req.setRequestHeader('no-realm', '1');
-			},
-			url: "ebl/v3/"+customerID+"/structure/get_filter_set/profile"+ (reference_code == "" ? "" : "/"+reference_code),
-			success: function(json){
-				$('body').data('filters_profile', json);
-				
-				console.debug("Profile filter configuration for [" + reference_code + "] sucessfully loaded.");
-			
-				var excludeAlreadyPurchased = json.profileFilterSet.excludeAlreadyPurchased;
-				var excludeRepeatedRecommendations = json.profileFilterSet.excludeRepeatedRecommendations;
-				
-				if(excludeAlreadyPurchased == true) {
-					$('#no_already_purchased').prop("checked", true);
-				}
-				
-				if(excludeRepeatedRecommendations != null) {
-					$('#enable_limit_max_recs_per_session').prop("checked", true);
-					$('#limit_max_recs_per_session').prop("disabled", false);
-					$('#limit_max_recs_per_session').val(excludeRepeatedRecommendations);
-				}
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
-	        }
+			}
 		});
+		var additionalParameter = "?reference_code=" + json.scenario.referenceCode + "&customer_id=" + customerID;
+		$('#sc_description').val(json.scenario.description);
+		$('.go_next').attr("href", "configuratorpop.html" + additionalParameter);
 		
-		return result;
+		
+		// standard filter
+		
+		json = { standardFilterSet : scenarioDao.standardFilterSet }; 
+		
+		$('body').data('filters_standard', json);
+		
+		var set = json.standardFilterSet;
+		
+		if (set.excludeCheaperItems == "YES") { 
+			$('#no_cheaper_products').prop("checked", true);
+		}
+		
+		if (set.excludeContextItems == true) { 
+			$('#currently_viewed').prop("checked", true);
+		}
+		
+		if (set.excludeTopSellingResults == true) {
+			$('#no_top_sellings').prop("checked", true);
+		}
+		
+		if (set.minimalItemPrice) {
+			$('#limit_min_price').val(set.minimalItemPrice);
+		}
+
+		
+		// profile filter
+		
+		json = { profileFilterSet : scenarioDao.profileFilterSet }; 
+		
+		$('body').data('filters_profile', json);
+			
+		var excludeAlreadyPurchased = json.profileFilterSet.excludeAlreadyPurchased;
+		var excludeRepeatedRecommendations = json.profileFilterSet.excludeRepeatedRecommendations;
+		
+		if(excludeAlreadyPurchased == true) {
+			$('#no_already_purchased').prop("checked", true);
+		}
+		
+		if(excludeRepeatedRecommendations != null) {
+			$('#enable_limit_max_recs_per_session').prop("checked", true);
+			$('#limit_max_recs_per_session').prop("disabled", false);
+			$('#limit_max_recs_per_session').val(excludeRepeatedRecommendations);
+		}
+
 	}
-	
+
 	
 	
 	function addScenarioToParent(){
@@ -598,40 +513,6 @@
 		$('body').data('scenario', json);
 		
 		return result;
-	}
-	
-
-	
-	function deleteScenario() {
-		
-		var translationConfirm = jQuery.i18n.prop("message_want_delete_scenario");
-		  
-		if(!confirm(translationConfirm)) {
-			//do nothing
-		} else {
-			url = "ebl/v3/" + customerID + "/structure/delete_scenario/";
-		
-			$.ajax({
-				type:"POST",
-				beforeSend: function(x) {
-					if (x && x.overrideMimeType) {
-					  x.overrideMimeType("application/json;charset=UTF-8");
-					}
-				  },
-				mimeType: "application/json",
-				contentType: "application/json",
-				dataType: "json",
-				data: JSON.stringify(reference_code),
-				url: url,
-				success: function(json){
-					//on success
-					window.parent.location = "index.html";
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
-				}
-			});
-		}
 	}
 	
 	
