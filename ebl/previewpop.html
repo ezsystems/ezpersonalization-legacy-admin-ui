@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en-US" style="height: 100%;">
   <head>
     <meta charset="utf-8">
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
@@ -30,64 +30,52 @@
     <script src="js/preview.js"></script>	
 	
   </head>
-  <body id="settings" class="scenario_configuration_steps" style="overflow-x: hidden; min-width: 0;">
-	<header class="clearfix top_head" style="min-height: 23px; margin-bottom: 0; padding: 0;overflow: hidden; min-width: 0;">
-      <div class="logo_area s1_5">
-        <h1 title="YooChoose. We recommend." style="background: initial;height: 0;"></h1>
-      </div>
+  <body id="settings" class="scenario_configuration_steps" style="height: 100%; overflow-x: hidden; min-width: 0">
+  
+    <h2 data-translate="scenario_configuration_area">Scenario configuration</h2>
      
-      <nav class="wizard_navi_wrapper s4_5"  style="min-height: 23px;top:1px;">
-		
+  	<header>
 		<ul class="wizard_steps clearfix">
-			<li class="settings_tab">
-				<a href="#">
-					<span data-translate="settings_scenario_configuration">Settings</span>
-				</a>
+			<li class="settings_tab current">
+				<a href="#" data-translate="settings_scenario_configuration">Settings</a>
 			</li>
 			<li class="configurator_tab">
-				<a href="#">
-					<span data-translate="settings_placing_models">Placing models</span>
-				</a>
+				<a href="#" data-translate="settings_placing_models">Placing models</a>
 			</li>
-			<li class="preview_tab current">
-				<span>
-					<span data-translate="settings_preview">Preview</span>
-				</span>
+			<li class="preview_tab">
+				<span data-translate="settings_preview">Preview</span>
 			</li>
 		</ul>
-      </nav>
-    </header>
-   
-    <section style="margin: 0;" >
-        <header class="scenario_settings">
-        	<!-- configurator_header.html must be included here.  -->
-			<a class="button" style="visibility: hidden;">&nbsp;</a> 
-        </header>
-    </section>
+		<section class="scenario_settings">
+			<!-- configurator_header.html will be included here.  -->
+			<a class="button" style="visibility: hidden;">&nbsp;</a>
+		</section>
+	</header>
        
-       <section style="width:80%; margin:0 auto;">
-       <br/>
-       <div style="text-align: center;" id="urlid"></div>
+    <div class="preview">
+
+       <div class="models_base" style="width:400px; position: absolute; bottom:0; top:0; left:0; overflow-y: hidden;">
+       
         <form action="#" method="get" id="scenario_primary_settings">
-        <ul class="setting_list normal_form s2_5 " style="overflow-y: hidden; width:50%;">
+        <ul class="setting_list normal_form">
           <li class="scenario_id text_field clearfix">
-			<div class="s1_5 basis tooltip_trigger" >
+			<div class="basis tooltip_trigger" >
 				<label for="user_id" data-translate="preview_userid" style="text-align: left;">User ID:</label>
         <span class="tooltip">
           <span data-translate="index_objects_tooltip">Some content.</span>
         </span>
 			</div>
-			<div class="s2_5 value" style="width: 75%;">
+			<div class="value">
 				<div>
 					<input type="text" id="user_id" name="user_id" placeholder="User ID" value="" />
 				</div>
 			</div>
           </li>
           <li class="types_base select_field clearfix">
-			<div class="s1_5 basis" >
+			<div class="basis" >
 				<label for="output_type" class="input_label" data-translate="settings_output_type" style="text-align: left;">Output type:</label>
             </div>
-			<div class="s2_5 value" style="width: 75%;">
+			<div class="value">
 				<div>
 					<select id="output_type" name="output_type">
 					    <option value="0" selected="selected" ></option>
@@ -102,10 +90,10 @@
           </li>
           
            <li class="types_base select_field clearfix">
-			<div class="s1_5 basis" >
+			<div class="basis" >
 				<label for="top_n" class="input_label" data-translate="preview_topn" style="text-align: left;">Number of recommendations:</label>
             </div>
-			<div class="s2_5 value" style="width: 75%;">
+			<div class="value">
 				<div>
 					<select id="top_n" name="top_n">
 						<option value="1" >1</option>
@@ -129,13 +117,13 @@
 			</div>
           </li>
           <li class="scenario_id text_field clearfix">
-			<div class="s1_5 basis" >
+			<div class="basis">
 				<label for="itemId" class="input_label" data-translate="editorial_list_form_item_id">Item Id:</label>
             </div>
-			<div class="s2_5 value" style="width: 75%;">
+			<div class="value">
 				<div>
-					<input id="itemId" type="text" name="itemId" size="10" maxlength="10" style=" width: 60%;"/>
-					<a id="addItem" class="save" data-translate="editorial_list_form_add_item" style="margin-right: -8px; right: 0px; position: absolute;">Add</a>
+					<input id="itemId" type="text" name="itemId" size="10" maxlength="10" style=" width: 60%;">
+					<a id="addItem" class="save" data-translate="editorial_list_form_add_item" style="right: 30px; position: absolute;">Add</a>
 				</div>
 			</div>
 			
@@ -144,10 +132,10 @@
 			<p class="error" id="validation_message" style="margin-left: 20%;" data-translate="">All required fields must be filled</p>
 		</li>	
           <li class="page_id text_area clearfix">
-			<div class="s1_5 basis">
+			<div class="basis">
 				<label for="context_items" data-translate="preview_contextitems"  style="text-align: left;">Context Items:</label>
 			</div>
-			<div class="s2_5 value" style="width: 75%;">
+			<div class="value">
 				<div>
 					<textarea rows="8" cols="50" id="context_items" name="context_items" disabled="disabled"></textarea>
 				</div>
@@ -156,19 +144,21 @@
          
         </ul>
         </form>
-        
-        
-        <div class="clearfix">
+       </div>
+       
+       	<div class="storyboards_base" style="position: absolute; left: 400px; bottom:0; top:0; right:0; overflow-y: scroll; border-left: 1px solid rgba(217, 226, 216, 1);">
+       	
+       	<div style="text-align: center;" id="urlid"></div>
+       	
         <div class="filters_base s2_5" style="overflow-y: hidden; width:48%; margin-left: 1.5%;">
-        
-        <br/>
-        <code class="prettyprint" id="prettyprint" style="height: 470px; display: block; overflow-y: scroll;background: url('/img/previewbg.gif'); border-left: 1px solid rgba(217, 226, 216, 1);padding-left: 1em;">
-        </code>
+	        
+	        <code class="prettyprint" id="prettyprint" style="height: 470px; display: block; overflow: visible; background: url('/img/previewbg.gif');padding-left: 1em;">
+	        </code>
           
         </div>
       </div>
         
-      </section>
+      </div>
       
       
 	<div class="message" style="display:none;">

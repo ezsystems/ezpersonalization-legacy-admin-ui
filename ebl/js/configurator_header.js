@@ -6,13 +6,13 @@ function initialize_configurator_header(callback, i18n_save_button) {
 	$.when(
 		$.get("/includes/configurator_header.html", '', function(data) {
 	
-			$("header.scenario_settings").html(data);
+			$(".scenario_settings").html(data);
 	
 			if (i18n_save_button) {
 				$("#button_save").attr("data-translate", i18n_save_button);
 			}
 	
-			i18n($("header.scenario_settings")); // internationalize just loaded
+			i18n($(".scenario_settings")); // internationalize just loaded
 													// file
 	
 			$('.extended-config .delete').click(function() {
