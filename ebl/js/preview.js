@@ -50,7 +50,9 @@
 		  getCallId();
 	  });
 	  $('#top_n').change(function(){
-		  getCallId();
+		  if(changeTop()){
+			  getCallId();
+		  }
 	  });
 	  initHelpBtn();
 	  
@@ -153,6 +155,28 @@
 		$('#urlid').text(url);
   }
   
+  function changeTop(){
+	  var topn = $('#top_n').val();
+	  if(! topn.length) {
+		  showError('editorial_list_error_empty_id_field');
+		  return false;
+	  }
+	  //test if the id contains just digits
+	  if(/\D/.test(topn)) {
+		  //we have non digits in the field
+		  showError('editorial_list_error_invalid_id');
+		  return false;
+	  }
+	  topn = parseInt(topn, 10);
+	  if(topn > 50 || id < 1) {
+		  showError('editorial_list_error_id_out_of_bounds');
+		  return false;
+	  }
+	  
+	  return true;
+  }
+  
+  
   function getCallSrc(){
 	  	var userId = $('#user_id').val();
 	  	var outputtype = $('#output_type').val();
@@ -192,7 +216,9 @@
   }
   
   function call_recs(){
-		
+		if(!changeTop()){
+			return;
+		}
 		
 		var scriptSrc = getCallSrc();
 		var heads = document.getElementsByTagName('head');
