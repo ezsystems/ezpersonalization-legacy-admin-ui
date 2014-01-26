@@ -133,7 +133,13 @@ ul.wizard_steps  {
 	
 	ul.dropdown-menu {
 		background-color: rgb(255, 255, 255);
-		border: 1px solid rgba(140, 150, 138, 1);
+		border: 1px solid rgba(0,0,0,.2);
+		-webkit-border-radius: 0;
+		border-radius: 0;
+		-webkit-box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+		box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+		-webkit-transition: opacity .218s;
+		transition: opacity .218s;
 		position: absolute; top: 40px;
 		z-index: 5;
 	}
