@@ -158,18 +158,18 @@
   function changeTop(){
 	  var topn = $('#top_n').val();
 	  if(! topn.length) {
-		  showError('editorial_list_error_empty_id_field');
+		  showError('preview_error_invalid_topn');
 		  return false;
 	  }
 	  //test if the id contains just digits
 	  if(/\D/.test(topn)) {
 		  //we have non digits in the field
-		  showError('editorial_list_error_invalid_id');
+		  showError('preview_error_invalid_topn');
 		  return false;
 	  }
 	  topn = parseInt(topn, 10);
-	  if(topn > 50 || id < 1) {
-		  showError('editorial_list_error_id_out_of_bounds');
+	  if(topn > 50 || topn < 1) {
+		  showError('preview_error_id_out_of_bounds');
 		  return false;
 	  }
 	  
