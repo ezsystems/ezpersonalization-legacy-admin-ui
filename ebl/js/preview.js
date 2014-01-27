@@ -41,6 +41,11 @@
 		  addItem();
 		  getCallId();
 	  });
+	  $('#addItem').click(function() {
+		  var items = $('#context_items');
+		  items.text('');
+		  getCallId();
+	  });
 	  $('#user_id').val('someuser');
 	  getCallId($('#user_id').val());
 	  $('#user_id').change(function(){
@@ -136,10 +141,10 @@
 	  }
 	  $('.validation_message').hide();
 	  var items = $('#context_items');
-	  if(items.val()!=null && items.val()!=''){
-		  items.val(items.val()+','+id); 
+	  if(items.text()!=null && items.text()!=''){
+		  items.text(items.text()+','+id); 
 	  }else{
-		  items.val(id);  
+		  items.text(id);  
 	  }
 	  $('#itemId').val('');
   }
@@ -204,8 +209,8 @@
 		var scriptSrc = recoHost+'/ebh/'+customerID+'/'+userId+'/'+reference_code+'.jsonp';
 		var items = $('#context_items');
 		
-		if(items.val()!=null && items.val()!=''){
-			scriptSrc += '?contextitems='+items.val()+'&numrecs='+topn; 
+		if(items.text()!=null && items.text()!=''){
+			scriptSrc += '?contextitems='+items.text()+'&numrecs='+topn; 
 		}else{
 			scriptSrc += '?numrecs='+topn; 
 		}
