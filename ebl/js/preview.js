@@ -41,7 +41,7 @@
 		  addItem();
 		  getCallId();
 	  });
-	  $('#addItem').click(function() {
+	  $('#clearText').click(function() {
 		  var items = $('#context_items');
 		  items.text('');
 		  getCallId();
