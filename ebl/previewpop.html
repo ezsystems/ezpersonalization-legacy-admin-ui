@@ -120,8 +120,30 @@
 				<label for="context_items" data-translate="preview_contextitems"  style="text-align: left;">Context Items:</label>
 			</div>
 			<div class="value">
-				<div>
-					<textarea rows="5" cols="50" id="context_items" name="context_items" disabled="disabled"></textarea>
+				<div style="
+				    width: 100%;
+				    background-color: rgb(226, 226, 226);
+				    height: 5em;
+				    margin-left: 9px;
+				    margin-top: 5px;
+				    border: 1px solid rgba(128, 129, 128, 1);
+				    overflow-y: hidden;
+					">
+				  
+					<div style="
+					    position: relative;
+					    top: -10px;
+					    right: 0px;
+					">
+				
+						<a id="clearText" style="
+						    position: absolute;
+						    right: 0px;
+						    top: 0px;
+						    text-decoration: none;
+						">X</a>
+					</div>
+					<p style="overflow-y: hidden;" id="context_items" ></p>
 				</div>
 			</div>
 		  </li>
@@ -134,9 +156,9 @@
        	
        		<div style="text-align: left; margin-left: 5px;word-wrap: break-word;" id="urlid"></div>
        	
-        	<div class="filters_base s2_5" style="overflow-y: scroll; width:100%; margin-left: 1.5%;">
+        	<div class="filters_base s2_5" style="overflow-y: scroll; width:100%; margin-left: 1.5%; background: url('/img/previewbg.gif');">
 	        
-	    		<code class="prettyprint language-javascript" id="prettyprint" style="height: 470px; display: block; overflow: visible; background: url('/img/previewbg.gif');padding-left: 1em;">
+	    		<code class="prettyprint" id="prettyprint" style="height: 470px; display: block; overflow: visible; padding-left: 1em;">
 	     		</code>
           
        		</div>
