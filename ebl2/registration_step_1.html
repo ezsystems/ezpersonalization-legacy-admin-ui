@@ -184,8 +184,8 @@ $(document).ready(function () {
 	console.log($(window).width());
 	if($(window).width()<1245){
 		
-		$('#userDataEntry').style.width =$(window).width()+'px';
-		$('#licenceDataEntry').style.width = $(window).width()+'px';
+		$('#userDataEntry').css('width',$(window).width()+'px');
+		$('#licenceDataEntry').css('width',$(window).width()+'px');
 	}
 
 });
