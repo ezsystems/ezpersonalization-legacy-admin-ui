@@ -208,56 +208,33 @@
 		return scriptSrc;
   }
   
-  function call_recs(){
-		if(!changeTop()){
-			return;
-		}
-		
-		var scriptSrc = getCallSrc();
-		var heads = document.getElementsByTagName('head');
-		var head = null;
-		if(heads != null){
-			head = heads[0];
-		}
-		
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = scriptSrc;
-		if(head != null){
-			head.appendChild(script);
-		}else{
-			if(typeof(document.readyState) == 'undefined' ||
-					document.readyState == 'complete' ||
-					document.readyState == 'loaded')
-			{
-				var body = document.getElementsByTagName('body')[0];
-				body.insertBefore(script, body.lastChild);
-			}
-			else
-			{
-				var id = new Date().getMilliseconds();
-				document.write('<p id="ycscrp'+id+'" style="display:none;"></p>');
-				document.getElementById('ycscrp'+id).insertBefore(script, null);
-			}
-		}
-	}
   
-function jsonpCallback(json){
-	showJson(json);
-	showWithTitles(json);
-	
+
+function call_recs() {
+	if (!changeTop()) {
+		return;
+	}
+
+	var scriptSrc = getCallSrc();
+	var head = $('head')[0];
+
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = scriptSrc;
+
+	head.appendChild(script);
 }
 
+
+function jsonpCallback(json) {
+	showJson(json);
+	showWithTitles(json);
+}
 
 
 function showJson(json){
 	var strjs = JSON.stringify(json, null, " &nbsp; ");
 	strjs = strjs.replace(/\n/g , "<br>");
-//	strjs = strjs.replace(/}/g , "<br/>}");
-//	strjs = strjs.replace(/{/g , "{<br/>");
-//	strjs = strjs.replace("[" , "[<br/>");
-//	strjs = strjs.replace("]" , "<br/>]");
-	
 	$("#prettyprint").html(strjs);
 	$("#prettyprint").removeClass("prettyprinted"); 
 	prettyPrint();

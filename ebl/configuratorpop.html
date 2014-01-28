@@ -2,14 +2,12 @@
 <html lang="en-US" style="height: 100%;">
   <head>
     <meta charset="utf-8">
-    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
     <title>YooChoose Recommendation Engine | Configurator | Step 2</title>
     <meta name="description" content="YooChoose recommendation engine configurator">
     <meta name="author" content="Jurij Burkanov">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css">
-    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
     
     <link rel="stylesheet" href="css/styles_new.css">
     <link rel="stylesheet" href="css/configurator.css">
@@ -18,7 +16,6 @@
     <script src="js/lib/jquery-ui.js"></script>
     <script src="js/lib/jquery.cookie.js"></script>
     <script src="js/lib/jquery.i18n.properties.js"></script>
-    <script src="js/lib/equalize.js"></script>
     
     <script src="js/form_submit_trigger.js"></script>
     <script src="js/equalize.js"></script>
@@ -56,7 +53,7 @@
     
     <div class="configurator">
     
-   		<div class="models_base" style="position: absolute; bottom:0; top:0; left:0; right:530px; overflow-y: scroll;">
+   		<div class="models_base" style="position: absolute; bottom:0; top:0; left:0; right:542px; overflow-y: scroll;">
           <h3 class="clearfix">
             <span></span> <span data-translate="configurator_models">Models</span>
           </h3>
@@ -94,7 +91,7 @@
 			</li>
           </ul>
         </div>
-       	<div class="storyboards_base" style="position: absolute; width: 530px!important; bottom:0; top:0; right:0; overflow-y: scroll;">
+       	<div class="storyboards_base" style="position: absolute; width: 542px!important; bottom:0; top:0; right:0; overflow-y: scroll;">
           <h3>
             <input type="hidden" id="primary_category_path">
             <span data-translate="configurator_primary_recommendations"  style="float:left">Primary recommendation models</span>
@@ -159,14 +156,14 @@
               </li>
             </ul>
           </div>
-          <h3>
+          <h3 class="extended_stage">
           	<input type="hidden" id="fallback2_category_path">
             <span data-translate="configurator_fall_back_2" style="float: left;">Fall back 2 (if everything else fails)</span>
             <span class="edit_category_path img" data-inputId="fallback2_category_path" style="float:right"></span>
             <span id="fallback2_category_path_level" style="float:right"></span>
             <span id="fallback2_category_path_str"  style="float:right"></span>
           </h3>
-          <div id="stage3" class="ui-stage">
+          <div id="stage3" class="ui-stage extended_stage">
             <ul class="clearfix">
               <li id="li_2_0">
                 <div class="empty_model_place">
@@ -191,15 +188,14 @@
               </li>
             </ul>
           </div>
-          
-          <h3>
+          <h3  class="extended_stage">
           	<input type="hidden" id="fallback3_category_path">
             <span data-translate="configurator_fall_back_3" style="float: left;">Fall back 3 (if everything else fails)</span>
             <span class="edit_category_path img" data-inputId="fallback3_category_path" style="float:right"></span>
             <span id="fallback3_category_path_level" style="float:right"></span>
             <span id="fallback3_category_path_str"  style="float:right"></span>
           </h3>
-          <div id="stage4" class="ui-stage">
+          <div id="stage4" class="ui-stage extended_stage">
             <ul class="clearfix">
               <li id="li_3_0">
                 <div class="empty_model_place">
@@ -249,13 +245,12 @@
           <div class="filters_base">
             <form class="filters_group clearfix" action="#" method="get" id="grouping_filters_scenario_land_page_13425">
               <h3>
-				<!--<span data-translate="configurator_grouping_submodels">Grouping submodels:</span>-->
-				  <div class="submodels_attributes">
+				 <span class="submodels_attributes" style="display: block">
 				    <label for="submodels_attributes" data-translate="configurator_attributes">Attributes:</label>
 				    <select id="submodels_attributes" name="submodels_attributes">
 						<option value="" data-translate="configurator_submodel_select_attribute" selected="selected">- Select an attribute -</option>
 					</select>
-				 </div>
+				 </span>
 			</h3>
 			<div id="nominalSubmodelValues" style="display:none;">
               <ul class="grouping_attributes droptrue clearfix">
@@ -462,28 +457,30 @@
 	</div>
 
 	<div class="placed_model ghost" style="padding: 0;">
-      <a class="destroy_placed_model">X</a>
-      <h4><span class="name">Model Name</span><br><span style="font-weight: normal; font-size: 12px;" class="info"></span></h4>
-      <form action="#" method="get">
-        <ul class="placed_model_settings clearfix">
-          <li class="context_options">
-            <label for="placed_model_context_type_website">
-              <input type="radio" name="placed_model_context_type" id="placed_model_context_type_website" value="site" checked="checked" />
-              <span data-translate="configurator_model_item_context">Item Context</span>
-            </label>
-			<label for="placed_model_context_type_profile">
-			  <input type="radio" name="placed_model_context_type" id="placed_model_context_type_profile" value="profile"/>
-			  <span data-translate="configurator_model_profile_context">User Profile</span>
-			</label>
-          </li>
-		  <li class="usesubmodels" style="margin-top: 10px;">
-            <div>
-				<input name="use_submodels" id="use_submodels" type="checkbox" value="true" ></input>
-				<label for="use_submodels"><span data-translate="configurator_use_submodels">Use submodels:</span></label>
-            </div>
-          </li>
-        </ul>
-      </form>
+		<a class="destroy_placed_model">X</a>
+		<h4 style="position: relative;">
+			<span class="name">Model Name</span><br>
+			<span style="font-weight: normal; font-size: 12px;" class="info"></span>
+			<span class="right-shadow"></span>
+		</h4>
+		<form action="#" method="get">
+			<ul class="placed_model_settings clearfix">
+				<li class="context_options">
+					<select class="placed_model_settings" name="placed_model_context_type">
+						<option value="AUTO" data-translate="model_configurator_context_AUTO" selected="selected">Auto</option>
+						<option value="ITEM" data-translate="model_configurator_context_ITEM">Page Context</option>
+						<option value="CLICKED" data-translate="model_configurator_context_CLICKED">Click List</option>
+						<option value="CONSUMED" data-translate="model_configurator_context_CONSUMED">Comsumed List</option>
+					</select>
+				</li>		
+			  	<li class="usesubmodels" style="margin-top: 10px;">
+		            <div>
+						<input name="use_submodels" id="use_submodels" type="checkbox" value="true" ></input>
+						<label for="use_submodels"><span data-translate="configurator_use_submodels">Use submodels:</span></label>
+		            </div>
+		          </li>
+	       	 </ul>
+	     </form>
     </div>
 
 	<div class="empty_model_place ghost"><div style="padding: 60px 0;" data-translate="configurator_drag_and_drop">drag and drop<br>a model here</div></div>

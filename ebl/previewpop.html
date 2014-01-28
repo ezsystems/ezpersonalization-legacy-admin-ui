@@ -54,114 +54,81 @@
        
     <div class="preview">
 
-       <div class="models_base" style="width:47%; position: absolute; bottom:0; top:0; left:0; overflow-y: hidden;">
+       <div class="models_base" style="width: 400px; position: absolute; overflow: hidden; bottom:0; top:0; left:0;">
        
-        <form action="#" method="get" id="scenario_primary_settings">
-        <ul class="setting_list normal_form">
-          <li class="scenario_id text_field clearfix">
-			<div class="basis tooltip_trigger" >
-				<label for="user_id" data-translate="preview_userid" style="text-align: left;">User ID:</label>
-        <span class="tooltip">
-          <span data-translate="index_objects_tooltip">Some content.</span>
-        </span>
-			</div>
-			<div class="value">
-				<div>
+	       <form action="#" method="get" id="scenario_primary_settings" style="display:block; padding-bottom: 7px;">
+	        <ul class="preview_settings normal_form">
+	          <li class="scenario_id text_field clearfix">
+				<div class="basis tooltip_trigger" >
+					<label for="user_id" data-translate="preview_userid" style="text-align: left;">User ID:</label>
+	        <span class="tooltip">
+	          <span data-translate="index_objects_tooltip">Some content.</span>
+	        </span>
+				</div>
+				<div class="value">
 					<input type="text" id="user_id" name="user_id" placeholder="User ID" value="" />
 				</div>
-			</div>
-          </li>
-          <li class="types_base select_field clearfix">
-			<div class="basis" >
-				<label for="output_type" class="input_label" data-translate="settings_output_type" style="text-align: left;">Output type:</label>
-            </div>
-			<div class="value">
-				<div>
+	          </li>
+	          <li class="types_base select_field clearfix">
+				<div class="basis" >
+					<label for="output_type" class="input_label" data-translate="settings_output_type" style="text-align: left;">Output type:</label>
+	            </div>
+				<div class="value">
 					<select id="output_type" name="output_type">
 					    <option value="0" selected="selected" ></option>
 						<option value="1" data-translate="settings_product">Product</option>
-						<option value="2" data-translate="settings_article">Article</option>
-						<option value="3" data-translate="settings_image">Image</option>
-						<option value="4" data-translate="settings_media">Media</option>
-						<option value="5" data-translate="settings_user_generated_content">User-generated content</option>
 					</select>
 				</div>
-			</div>
-          </li>
-          
-           <li class="types_base select_field clearfix">
-			<div class="basis" >
-				<label for="top_n" class="input_label" data-translate="preview_topn" style="text-align: left;">Number of recommendations:</label>
-            </div>
-			<div class="value">
-				<div>
-					<input type="number" id="top_n" name="top_n" value="5"  min="1" max="50" style="padding: 5px 0px 5px 5px; width: 50%;margin-left: 0px;" />
-					
+	          </li>
+	           <li class="types_base select_field clearfix">
+				<div class="basis" >
+					<label for="top_n" class="input_label" data-translate="preview_topn" style="text-align: left;">Number of recommendations:</label>
+	            </div>
+				<div class="value">
+					<input type="number" id="top_n" style="width: 70px;" name="top_n" value="5"  min="1" max="50">
 				</div>
-			</div>
-          </li>
-          <li class="scenario_id text_field clearfix">
-			<div class="basis">
-				<label for="itemId" class="input_label" data-translate="editorial_list_form_item_id">Item Id:</label>
-            </div>
-			<div class="value">
-				<div>
-					<input id="itemId" type="text" name="itemId" size="10" maxlength="10" style=" width: 50%;">
-					<a id="addItem" class="button inline  save" data-translate="editorial_list_form_add_item" style="margin: 0;float: right; margin-right: -10px;">Add</a>
+	          </li>
+	          <li class="scenario_id text_field clearfix">
+				<div class="basis">
+					<label for="itemId" class="input_label" data-translate="editorial_list_form_item_id">Item Id:</label>
+	            </div>
+				<div class="value">
+					<input id="itemId" type="text" name="itemId" style="width: 70px;" maxlength="10">
+					<a id="addItem" class="button inline" data-translate="preview_add_item" style="postion: absolute; width: 95px; text-align: center; padding-left: 0; padding-right: 0">Add</a>
 				</div>
-			</div>
-			
-          </li>
-        <li class="validation_message" style="display: none;">
-			<p class="error" id="validation_message" style="margin-left: 20%;" data-translate="">All required fields must be filled</p>
-		</li>	
-          <li class="page_id text_area clearfix">
-			<div class="basis">
-				<label for="context_items" data-translate="preview_contextitems"  style="text-align: left;">Context Items:</label>
-			</div>
-			<div class="value">
-				<div style="
-				    width: 100%;
-				    background-color: rgb(226, 226, 226);
-				    height: 5em;
-				    margin-left: 9px;
-				    margin-top: 5px;
-				    border: 1px solid rgba(128, 129, 128, 1);
-				    overflow-y: hidden;
-					">
-				  
-					<div style="
-					    position: relative;
-					    top: -10px;
-					    right: 0px;
-					">
 				
-						<a id="clearText" style="
-						    position: absolute;
-						    right: 0px;
-						    top: 0px;
-						    text-decoration: none;
-						">X</a>
-					</div>
-					<p style="overflow-y: hidden;" id="context_items" ></p>
+	          </li>
+	        <li class="validation_message" style="display: none;">
+				<p class="error" id="validation_message" style="margin-left: 20%;" data-translate="">All required fields must be filled</p>
+			</li>	
+	          <li class="page_id text_area clearfix">
+				<div class="basis">
+					<label for="context_items" data-translate="preview_contextitems"  style="text-align: left;">Context Items:</label>
 				</div>
-			</div>
-		  </li>
-         
-        </ul>
-        </form>
+				<div class="value">
+					<div class="content" style="background-color: rgb(226, 226, 226); height: 5em; padding-top: 5px;
+					    border: 1px solid rgba(128, 129, 128, 1);">
+
+						<div style="position: relative;">
+							<a id="clearText" style="position: absolute; right: -2px; top: -4px; text-decoration: none;">X</a>
+						</div>
+						<p style="overflow-y: hidden;" id="context_items" ></p>
+					</div>
+				</div>
+			  </li>
+	         
+	        </ul>
+	        </form>
+       
+       		<div style="padding: 10px 10px 0 0; word-wrap: break-word; border-top: 1px solid rgba(217, 226, 216, 1);" id="urlid"></div>
        </div>
        
-       <div class="storyboards_base" style="position: absolute; left: 48%; bottom:0; top:0; right:0;  border-left: 1px solid rgba(217, 226, 216, 1);">
-       	
-       		<div style="text-align: left; margin-left: 5px;word-wrap: break-word;" id="urlid"></div>
-       	
-        	<div class="filters_base s2_5" style="overflow-y: scroll; width:100%; margin-left: 1.5%; background: url('/img/previewbg.gif');">
-	        
-	    		<code class="prettyprint" id="prettyprint" style="height: 470px; display: block; overflow: visible; padding-left: 1em;">
-	     		</code>
-          
-       		</div>
+       <div class="storyboards_base" 
+            style="position: absolute; overflow: hidden; left: 400px; bottom:0; top:0; right:0; border-left: 1px solid rgba(217, 226, 216, 1);">
+       	       	
+        	<code class="prettyprint" id="prettyprint"
+                  style="font-family: monospace; white-space:nowrap; position: absolute; overflow: scroll; bottom:0; top:0px; left:0; right: 0px; background: url('/img/previewbg.gif');">
+     		</code>
        </div>
         
       </div>

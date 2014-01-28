@@ -437,6 +437,7 @@ h3 {
 /*Globals form elements*/
 
 input[type="text"],
+input[type="number"],
 input[type="password"],
 select {
  	margin: 0;
@@ -557,7 +558,6 @@ input[type="text"].inverted {
 
 .normal_form input {
   display: inline-block;
-  margin-left: 9px;
   border: 1px solid rgba(127, 127, 127, 1);
   transition: all 0.2s linear;
 }
@@ -1689,6 +1689,8 @@ section.help > article img {
 	padding-left: 9px;
 }
 
+
+.setting_list .value > div > input[type="number"],
 .setting_list .value > div > input[type="text"],
 .setting_list .value > div > textarea {
 	padding: 0 7px 0 10px;

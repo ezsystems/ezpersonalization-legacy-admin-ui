@@ -116,10 +116,6 @@ var initialize = function() {
 	  $('body').on('mouseover', '.model', function() {
 		  setLiveDragDrop($(this));
 	  });
-	  //live was deprecated for a long time and removed in jQuery 1.9
-	  //$('.model').live('mouseover',function(){
-	  //	setLiveDragDrop($(this));
-	  //});
 
 	  localizer();
 
@@ -234,6 +230,10 @@ function saveScenario() {
 	  
 	  var json = { scenario : scenarioDao.scenario };
 	  $('body').data('scenario', json); // backward compatibility
+	  
+	  
+	  
+	  
 
 	  var modelRefList = modelDao.getModels();
 
@@ -428,10 +428,26 @@ function saveScenario() {
 					  $(this).closest('._overlay').hide();
 				  });
 	  });
+	  
+	  
+	  var extendedSolution = ifExtended();
+	  var stagesAmount;
+	  
+	  if (extendedSolution) {
+		  $(".extended_stage").show();
+		  stagesAmount = 4;
+	  } else {
+		  $(".extended_stage").hide();
+		  stagesAmount = 2;
+	  }
+	  
+	  if (json.scenario.stages.length > stagesAmount) { // backward compatibility
+		  stagesAmount = json.scenario.stages.length;
+	  }
 		
 	  var stages = json.scenario.stages;
 
-	  for(var j = 0; j < 4; j ++) {
+	  for(var j = 0; j < stagesAmount; j ++) {
 		  if(stages[j] != null) {
 
 			  if(j == 0) {
@@ -463,6 +479,12 @@ function saveScenario() {
   }
   
   
+  var ifExtended = function() {
+	  var solution = mandatorInfo.baseInformation.version;
+	  var extendedSolution = (solution == 'EXTENDED');
+	  
+	  return extendedSolution;
+  };
   
   /**
    * @param model
@@ -517,9 +539,9 @@ function saveScenario() {
 	  ghostModel.find("span.tooltip").attr('data-translate', modelDescription);
 	 // ghostModel.find("p.description").attr('data-translate', modelDescription);
 	  
-	  var solution = mandatorInfo.baseInformation.version;
-
-	  if(! submodelsSupported || solution != 'EXTENDED') {
+	  var extendedSolution = ifExtended();
+	  
+	  if(! submodelsSupported || ! extendedSolution) {
 		  ghostModel.find(".usesubmodels").hide();
 	  }
 	  if(websiteContextSupported == false || profileContextSupported == false) {
@@ -530,12 +552,18 @@ function saveScenario() {
 	  ghostModel.children("form").find('label[for="placed_model_context_type_website"]').attr("for", "placed_model_context_type_website" + "_" + j + "_" + k + "_" + modelRefCode);
 	  ghostModel.children("form").find('input[id="placed_model_context_type_profile"]').attr("id", "placed_model_context_type_profile" + "_" + j + "_" + k + "_" + modelRefCode).attr("name", "placed_model_context_type" + "_" + j + "_" + k + "_" + modelRefCode);
 	  ghostModel.children("form").find('input[id="placed_model_context_type_website"]').attr("id", "placed_model_context_type_website" + "_" + j + "_" + k + "_" + modelRefCode).attr("name", "placed_model_context_type" + "_" + j + "_" + k + "_" + modelRefCode);
-	  ;
-	  //ghostModel.children("form").find('input[id="weight_model"]').attr("id", "weight_model"  + "_" + j + "_" + k + "_" + modelRefCode);
-	  //ghostModel.children("form").find('label[for="weight_model"]').attr("for", "weight_model"  + "_" + j + "_" + k + "_" + modelRefCode);
+
 	  ghostModel.children("form").find('input[id="use_submodels"]').attr("id", "use_submodels" + "_" + j + "_" + k + "_" + modelRefCode).attr("name", "use_submodels" + "_" + j + "_" + k + "_" + modelRefCode).val("use_submodels" + "_" + j + "_" + k + "_" + modelRefCode);
 	  ghostModel.children("form").find('label[for="use_submodels"]').attr("for", "use_submodels" + "_" + j + "_" + k + "_" + modelRefCode);
+	  
+	  var contexts = extendedSolution ? 
+			  ['AUTO', 'ITEM', 'CLICKED', 'OWNS', 'CONSUMED', 'BASKET', 'RATED'] : 
+			  ['AUTO', 'ITEM', 'CLICKED', 'OWNS'];
 
+	  for (var i in contexts) {
+		  
+	  }
+			  
 	  if(model.contextFlag === "PROFILE") {
 		  ghostModel.children("form").find('input[id="placed_model_context_type_profile_' + j + "_" + k + "_" + modelRefCode + '"]').attr("checked", "checked");
 	  }
@@ -667,7 +695,7 @@ function saveScenario() {
 			  $('#relevant_period').val(val);
 			  $('#relevant_period_unit').val(unit);
 		  },
-		  error: stdAjaxErrorHandler
+		  error: stdAjaxErrorHandler 
 	  });
   }
 
@@ -1322,6 +1350,22 @@ function saveScenario() {
 		  error: stdAjaxErrorHandler
 	  });
   }
+  
+  
+  function durationToString(duration) {
+	  
+	  var hh = jQuery.i18n.prop("model_duration_hours");
+	  var h = jQuery.i18n.prop("model_duration_hour");
+	  
+	  var dd = jQuery.i18n.prop("model_duration_days");
+	  var d = jQuery.i18n.prop("model_duration_day");
+	  
+	  result = (duration.getHours() < 48) 
+			? duration.getHours() + ' ' + (duration.getHours() > 1 ? hh : h)
+			: duration.getDays()  + ' ' + (duration.getHours() > 1 ? hh : h);
+		
+	  return result;
+  }
 
   
   function getModelAdditionalInfo(model) {
@@ -1332,29 +1376,18 @@ function saveScenario() {
 	  var str = '';
 	  
 	  //Algorithmic Models
-	  if(startsWith('CF_I2I', type, true)
-			  || startsWith('POPULARITY', type, true)
-			  || startsWith('STEREOTYPES', type, true)) {
+	  if(startsWith('CF_I2I', type, true) || startsWith('POPULARITY', type, true) || startsWith('STEREOTYPES', type, true)) {
+		  
 		  if(maxRating) {
-			  str += (maxRating.getHours() < 48) ? maxRating.getHours()
-					  + ' <font data-translate="'
-					  + (maxRating.getHours() > 1 ? 'model_duration_hours'
-					  : 'duration_hour') + '">Hours</font>'
-					  : maxRating.getDays()
-					  + ' <fontdata-translate="model_duration_days">Days</font>';
+			  str += durationToString(maxRating);
 		  }
+		  
 		  if(maxItemAge) {
 			  str += ' / ';
-			  str += (maxItemAge.getHours() < 48) ? maxItemAge.getHours()
-					  + ' <font data-translate="'
-					  + (maxRating.getHours() > 1 ? 'model_duration_hours'
-					  : 'duration_hour') + '">Hours</font>'
-					  : maxItemAge.getDays()
-					  + ' <font data-translate="model_duration_days">Days</font>';
+			  str += durationToString(maxItemAge);
 		  }
 
 	  } else if(startsWith('CB', type, true)&& !startsWith('CBFT', type, true) ) { //CB Model
-		  str += '<font data-translate="configurator_attributes">attributes</font> ';
 		  var l = model.attributes.length;
 		  while(l --) {
 			  str += model.attributes[l].key;
@@ -1363,13 +1396,13 @@ function saveScenario() {
 			  }
 		  }
 	  } else if(startsWith('EDITOR_BASED', type, true)) { //Editorial List model
-		  if(model.size && model.size!='undefined'){
-			  str += model.size + ' items (' + model.referenceCode + ')';
+		  str += model.referenceCode;
+		  
+		  if (model.size && model.size!='undefined'){
+			  str += '; ' + model.size;
 		  }
 	  } else if(startsWith('Profile', type, true)) { //Profile Model
 		  str += model.listType.toLowerCase();
-	  } else if(startsWith('Revenue', type, true)) { //Revenue Model
-		  //str += 'Revenue :missing example';
 	  } else if(startsWith('Random', type, true)) { //Random Model
 		  str += model.maximumItemAge;
 	  } else if(startsWith('CBFT', type, true)) { //Random Model
@@ -1421,7 +1454,7 @@ function saveScenario() {
   };
 
   
-  var createPlacedModel = function (placed_model, model) {
+var createPlacedModel = function (placed_model, model) {
 	  
     var nest = placed_model.parent("li[data-row]");
 	  
@@ -1437,7 +1470,7 @@ function saveScenario() {
 	
 	createJsonModel(htmlModel, refcode, j, k);
 
-  };
+};
 
   
   var destroyPlacedModel = function () {

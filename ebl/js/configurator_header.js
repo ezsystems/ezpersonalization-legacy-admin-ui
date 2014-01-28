@@ -137,3 +137,30 @@ function deleteScenario() {
 		});
 	}
 }
+
+
+function settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown) {
+	
+	unsetLoadingDiv($('body'));
+	
+	if(jqXHR.status != null && jqXHR.status == 403) {
+		setMessagePopUp("problem", "error_server_error_403");
+		
+	} else if(jqXHR.status != null && jqXHR.status == 401) {
+		$.cookie('password', null);
+		$.cookie('email', null);
+		window.parent.location = "login.html";
+		
+	} else if(jqXHR.status != null && jqXHR.status == 400) {
+		setMessagePopUp("problem", "error_server_error_400");
+		
+	} else if(jqXHR.status != null && jqXHR.status == 404) {
+		setMessagePopUp("problem", "error_server_error_404");
+		
+	} else if(jqXHR.status != null && jqXHR.status == 409) {
+		setMessagePopUp("problem", "error_server_error_409");
+		
+	} else {
+		setMessagePopUp("problem", "error_server_error");
+	}
+}
