@@ -182,25 +182,13 @@
 	  	var outputtype = $('#output_type').val();
 	  	var topn = $('#top_n').val();
 		var customerID = $.cookie('customerID');
-		var cur_host = window.location.host;
-		var dev = 'cat.dev';
-		var dev2 = 'development';
-	    var test = '.test.';
-	    var recoHost ='';
-	    console.log(cur_host);
-		if(cur_host.indexOf(dev)!=-1 ){
-			recoHost = 'http://cat.development.yoochoose.com:8080/recocontroller';
-		}else{
-			if(cur_host.indexOf(dev2)!=-1 ){
-				recoHost = 'http://admin.development.yoochoose.com:8080/recocontroller';
-			}else{
-				if(cur_host.indexOf(test)!=-1 ){
-					recoHost = 'https://reco.test.yoochoose.net';
-				}else{
-					recoHost = 'https://reco.yoochoose.net';
-				}
-			}
-		}
+	    
+	    var recoHost = $("#link-recocontroller").attr("href");
+	    
+	    if (recoHost.length > 0 && recoHost.charAt(recoHost.length - 1) == '/') {
+	    	recoHost = str.substring(0, recoHost.length - 1);
+	    }
+	    
 		var scriptSrc = recoHost+'/ebh/'+customerID+'/'+userId+'/'+reference_code+'.jsonp';
 		var items = $('#context_items');
 		
@@ -258,12 +246,12 @@ function jsonpCallback(json){
 
 
 function showJson(json){
-	var strjs = JSON.stringify(json,null,'&nbsp;');
-	strjs = strjs.replace(/,/g , ",<br/>");
-	strjs = strjs.replace(/}/g , "<br/>}");
-	strjs = strjs.replace(/{/g , "{<br/>");
-	strjs = strjs.replace("[" , "[<br/>");
-	strjs = strjs.replace("]" , "<br/>]");
+	var strjs = JSON.stringify(json, null, " &nbsp; ");
+	strjs = strjs.replace(/\n/g , "<br>");
+//	strjs = strjs.replace(/}/g , "<br/>}");
+//	strjs = strjs.replace(/{/g , "{<br/>");
+//	strjs = strjs.replace("[" , "[<br/>");
+//	strjs = strjs.replace("]" , "<br/>]");
 	
 	$("#prettyprint").html(strjs);
 	$("#prettyprint").removeClass("prettyprinted"); 
