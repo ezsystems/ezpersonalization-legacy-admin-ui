@@ -60,7 +60,7 @@ function loadMandatorInfo(callback) {
 		url: "/api/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration",
 		success: callback,
 		error : function(jqXHR, textStatus, errorThrown) {
-			settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
+			configuratorErrorHandler(jqXHR, textStatus, errorThrown);
         }
 	});
 	return result;
@@ -139,7 +139,7 @@ function deleteScenario() {
 }
 
 
-function settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown) {
+function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
 	
 	unsetLoadingDiv($('body'));
 	

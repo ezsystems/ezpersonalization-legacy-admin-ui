@@ -1,4 +1,37 @@
 
+/** It loads the specified scripts and call the specified callback functions.
+ *  It works similar to jQuery.getScript function with some additional features:<br>
+ *  
+ *     1. It is able to load multiple scripts simultaneously.<br>
+ *     2. It loads scripts in cross domain mode (see $.ajax description).<br>
+ *     3. It allows browser to use the cache.<br>
+ */
+var include = function(scripts, callback) {
+	var arguments = [];
+	
+	for (var i in scripts) {
+		arguments.push(cachedScript(scripts[i]));
+	}
+	
+	var result = $.when.apply(null, arguments);
+    
+	if (callback) {
+		result.done(callback);
+	}
+	
+	return result;
+};
+
+
+var cachedScript = function(url) {
+ 	  options = {
+ 			crossDomain: true, // it adds script tag and allows to debug included file 
+		    dataType: "script",
+		    cache: true,
+		    url: url
+	  };
+	  return jQuery.ajax( options );
+};
 
 
 
@@ -30,6 +63,61 @@ function gup(name) {
 function jq(myid) {
    return myid.replace(/(:|\.)/g,'\\$1');
 }
+
+
+
+/**
+ * returns an object which represents the duration string
+ * @author: maik.seyring
+ */
+var parseDuration = function(str) {
+	var getHours = function() {
+		return (((((this.Y * 12) + this.M) * 30) + this.D) * 24) + this.H + (this.m > 30 ? 1 : 0);
+	};
+
+	var getDays = function() {
+		return (((this.Y * 12) + this.M) * 30) + this.D + (this.H > 12 ? 1 : 0);
+	};
+
+	var getXSDuration = function() {
+
+		return this.getHours() ?
+			'P' +
+			(this.Y ? this.Y + 'Y' : '') +
+			(this.M ? this.M + 'M' : '') +
+			(this.D ? this.D + 'D' : '') +
+			(this.H || this.m || this.S ? 'T' : '') +
+			(this.H ? this.H + 'H' : '') +
+			(this.m ? this.m + 'M' : '') +
+			(this.S ? this.S + 'S' : ''):
+			null;
+	};
+
+	var RegEx = /(-?)P((\d{1,8})Y)?((\d{1,8})M)?((\d{1,8})D)?(T((\d{1,8})H)?((\d{1,8})M)?((\d{1,8}(\.\d{1,8})?)S)?)?/,
+		years = 3,
+		months = 5,
+		days = 7,
+		hours = 10,
+		minutes = 12,
+		seconds = 14,
+		match = [],
+		res = {
+			'getHours':      getHours,
+			'getDays':       getDays,
+			'getXSDuration': getXSDuration
+		};
+	if (typeof str === 'string') {
+		match = str.match(RegEx);
+	}
+	res.Y = match[years] | 0;
+	res.M = match[months] | 0;
+	res.D = match[days] | 0;
+	res.H = match[hours] | 0;
+	res.m = match[minutes] | 0;
+	res.S = match[seconds] | 0;
+	return res;
+};
+
 
 //this method generate the date time data for the statistic service
 function getDateTimeValue(year, month, day, hour, minute, second, encode) {
@@ -186,7 +274,7 @@ function setLoadingDiv(element) {
 			
 		 	var loaddiv = $(this).prev();
 		 	
-		 	var style = 'position: absolute; z-index: 10; width: ' + width + 'px; height: ' + height + "px;";
+		 	var style = 'position: absolute; z-index: 100; width: ' + width + 'px; height: ' + height + "px;";
 		 	
 		 	if (! loaddiv || ! loaddiv.hasClass("loading")) {
 		

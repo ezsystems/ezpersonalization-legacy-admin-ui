@@ -14,7 +14,10 @@
 			  return scenarioDao.init(customerID, reference_code);
 	  	  })		  
       ).done(function() {
-		  initialize();  
+		  initialize();
+		  
+		  initSubmodelDialog();
+		  
 		  i18n();
 		  unsetLoadingDiv($('body'));
 	  });
@@ -37,7 +40,6 @@ var initialize = function() {
 		});
 		row++;
 	});
-	  
 
 	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
 	  $('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
@@ -48,65 +50,29 @@ var initialize = function() {
 
 	  var modelRefArray = new Array();
 	  var wasOtherli = false;
-	  if(json.length > 0) {
 
-		  for(var i = 0; i < json.length; i ++) {
-			  var nest, ghostModel, model = json[i];
-			  
-			  var dummy = $('.dummymodel');
-			  var dummyClone = $(dummy).clone();
-			  $(dummyClone).show();
-			  $(dummyClone).attr("id", "model_" + model.referenceCode);
+	  for(var i = 0; i < json.length; i ++) {
+		  var nest, ghostModel, model = json[i];
+		  
+		  var dummy = $('.dummymodel');
+		  var dummyClone = $(dummy).clone();
+		  $(dummyClone).show();
+		  $(dummyClone).attr("id", "model_" + model.referenceCode);
 
-			  if(model.modelType == "CF_I2I" || model.modelType == "CF_I2I_MIX") {
-				  nest = $('#collaborative_list');
-			  }
-			  else if(model.modelType === "POPULARITY_SHORT" || model.modelType === "POPULARITY_LONG") {
-				  nest = $('#popularity_list');
-			  }
-			  else {
-				  wasOtherli = true;
-				  nest = $('#other_list');
-			  }
-			  $(dummyClone).appendTo(nest).removeClass("dummymodel");
-			  ghostModel = $('#model_' + model.referenceCode).removeAttr("style");
-			  
-			  var additionalModelName = modelDao.getModelNameKey(model.referenceCode);
-
-			  ghostModel.children("div").children("h5").children("span.mtitle").attr('data-translate', additionalModelName + '_title');
-			  ghostModel.children("div").children("p").children("span").attr('data-translate', additionalModelName + '_description');
-			  //handing the current model to a self executing anonymous function which returns the actual callback function.
-			  //this is necessary, because we are in a loop and have to stay in the right context
-			  ghostModel.find('a.configure_model').on('click', function(model) {
-				  return function(e) {
-					  e.preventDefault;
-					  var str = $(this).closest('li.model').find('h5').children("span").html();
-					  if(startsWith('CB', model.modelType, true)) {
-						  activateCBModelDialog(model, str);
-						  return;
-					  } else if(startsWith('random', model.modelType, true)) {
-						  activateRandomModelDialog(model, str);
-						  return;
-					  } else if(startsWith('EDITOR_BASED', model.modelType, true)) {
-						  app.gui.showEditorialListEditor(model, str);
-						  return;
-					  }
-					  activateSubmodelDialog(model.referenceCode, str);
-				  };
-			  }(model));
-			  if(! model.submodelsSupported
-					  && ! startsWith('CB', model.modelType, true)
-					  && ! startsWith('random', model.modelType, true)
-					  && ! startsWith('EDITOR_BASED', model.modelType, true)) {
-				  ghostModel.find('a.configure_model').hide();
-			  }
-			  var addInfo = getModelAdditionalInfo(model);
-
-			  if (addInfo){
-				  ghostModel.find('.info').html(" (" + addInfo + ")");
-			  }
+		  if(model.modelType == "CF_I2I" || model.modelType == "CF_I2I_MIX") {
+			  nest = $('#collaborative_list');
+		  } else if(model.modelType === "POPULARITY_SHORT" || model.modelType === "POPULARITY_LONG") {
+			  nest = $('#popularity_list');
+		  } else {
+			  wasOtherli = true;
+			  nest = $('#other_list');
 		  }
+		  
+		  $(dummyClone).appendTo(nest).removeClass("dummymodel");
+		  
+		  renderModel(model);
 	  }
+
 	  if(!wasOtherli){
 		  $('#other_list_li').hide();
 	  }
@@ -125,18 +91,52 @@ var initialize = function() {
 
 	  $("#button_save").click(saveScenario);
 
-	  $('body').on("change", '.placed_model input', function() {
-				  if($(this).attr("type") === "radiobutton") {
-					  $('input[name="' + $(this).attr("name") + '"]').removeAttr("checked");
-					  $(this).attr("checked", "checked");
-				  }
+	  $('body').on("change", '.placed_model input, .placed_model select', function() {
 				  var model = $(this).parents('.placed_model').attr('id');
 				  console.log(model);
 				  updateJsonValueForModel(model);
-
 			  });
 	  initHelpBtn();
   };
+  
+  
+function renderModel(model) {
+	  
+	  var ghostModel = $('#model_' + model.referenceCode).removeAttr("style");
+	  
+	  var modelNameKey = modelDao.getModelNameKey(model.referenceCode);
+
+	  ghostModel.children("div").children("h5").children("span.mtitle").attr('data-translate', modelNameKey + '_title');
+	  ghostModel.children("div").children("p").children("span").attr('data-translate', modelNameKey + '_description');
+	  //handing the current model to a self executing anonymous function which returns the actual callback function.
+	  //this is necessary, because we are in a loop and have to stay in the right context
+	  ghostModel.find('a.configure_model').on('click', function(model) {
+		  return function(e) {
+			  e.preventDefault;
+			  var str = $(this).closest('li.model').find('h5').children("span").html();
+			  if(startsWith('CB', model.modelType, true)) {
+				  activateCBModelDialog(model, str);
+			  } else if(startsWith('random', model.modelType, true)) {
+				  activateRandomModelDialog(model, str);
+			  } else if(startsWith('EDITOR_BASED', model.modelType, true)) {
+				  app.gui.showEditorialListEditor(model, str);
+			  } else {
+				  activateSubmodelDialog(model.referenceCode);
+			  }
+		  };
+	  }(model));
+	  if(! model.submodelsSupported
+			  && ! startsWith('CB', model.modelType, true)
+			  && ! startsWith('random', model.modelType, true)
+			  && ! startsWith('EDITOR_BASED', model.modelType, true)) {
+		  ghostModel.find('a.configure_model').hide();
+	  }
+	  var addInfo = getModelAdditionalInfo(model);
+
+	  if (addInfo){
+		  ghostModel.find('.info').html(" (" + addInfo + ")");
+	  }
+}
   
   
 function saveScenario() {
@@ -230,10 +230,6 @@ function saveScenario() {
 	  
 	  var json = { scenario : scenarioDao.scenario };
 	  $('body').data('scenario', json); // backward compatibility
-	  
-	  
-	  
-	  
 
 	  var modelRefList = modelDao.getModels();
 
@@ -447,31 +443,29 @@ function saveScenario() {
 		
 	  var stages = json.scenario.stages;
 
-	  for(var j = 0; j < stagesAmount; j ++) {
-		  if(stages[j] != null) {
+	  for (var j = 0; j < stagesAmount; j ++) {
+		  
+		  var stage = json.scenario.stages[j];
+		  
+		  if (stage) {
 
 			  if(j == 0) {
-				  setCategoryPath('primary_category_path', json.scenario.stages[j].useCategoryPath);
+				  setCategoryPath('primary_category_path', stage.useCategoryPath);
+			  } else  {
+				  setCategoryPath('fallback'+j+'_category_path', stage.useCategoryPath);
 			  }
-			  else  {
-				  setCategoryPath('fallback'+j+'_category_path', json.scenario.stages[j].useCategoryPath);
-			  }
-			  
 
-			  if(json.scenario.stages[j].xingModels.length > 0) {
-				  for(var k = 0; k < json.scenario.stages[j].xingModels.length; k ++) {
-					  var xing = json.scenario.stages[j].xingModels[k];
-					  var childnumberdiv = j;
-					  var childnumberli = k + 1;
-					  var nest = $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")");
-					  
-					  var ghostModel = generatePlacedModel(xing.modelReferenceCode, j, k);
-					  
-					  ghostModel.appendTo(nest);
-					  //ghostModel = $('.ui-stage:eq('+childnumberdiv+')').children("ul").children("li:nth-child("+childnumberli+")").children(".placed_model");
+			  for(var k = 0; k < stage.xingModels.length; k ++) {
+				  var xing = stage.xingModels[k];
+				  var childnumberdiv = j;
+				  var childnumberli = k + 1;
+				  var nest = $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")");
+				  
+				  var ghostModel = generatePlacedModel(xing.modelReferenceCode, j, k, xing);
+				  
+				  ghostModel.appendTo(nest);
 
-					  $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")").children('.empty_model_place').remove();
-				  }
+				  $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")").children('.empty_model_place').remove();
 			  }
 		  }
 	  }
@@ -496,7 +490,7 @@ function saveScenario() {
    * @returns
    * 	deattached HTML code of the generated model
    */
-  function generatePlacedModel(model, j, k) {
+  function generatePlacedModel(model, j, k, xing) {
 	  
 	  if (typeof model == 'string') {
 		  model = modelDao.getModel(model);
@@ -512,23 +506,11 @@ function saveScenario() {
 	  ghostModel.removeClass("ghost").fadeIn();
 	  
 	  ghostModel.attr("id", j + "_" + k + "_" + modelRefCode);
-
-	  var submodelsSupported = true;
-	  var websiteContextSupported = true;
-	  var profileContextSupported = true;
-	  
-	  
-			  
+		  
 	  var key = modelDao.getModelNameKey(modelRefCode);
 	  
 	  var info = getModelAdditionalInfo(model);
 	  var modelTitle = key + '_title';
-	  var modelDescription = key + '_description';
-
-	  //hide the elements, that are not supported.
-	  submodelsSupported = model.submodelsSupported;
-	  websiteContextSupported = model.websiteContextSupported;
-	  profileContextSupported = model.profileContextSupported;
 
 	  ghostModel.find("h4 span.name").attr('data-translate', modelTitle);
 	  if (info) {
@@ -536,44 +518,32 @@ function saveScenario() {
 	  } else {
 		  ghostModel.find("h4 span.info").hide();
 	  }
-	  ghostModel.find("span.tooltip").attr('data-translate', modelDescription);
-	 // ghostModel.find("p.description").attr('data-translate', modelDescription);
 	  
 	  var extendedSolution = ifExtended();
 	  
-	  if(! submodelsSupported || ! extendedSolution) {
+	  if(! model.submodelsSupported || ! extendedSolution) {
 		  ghostModel.find(".usesubmodels").hide();
 	  }
-	  if(websiteContextSupported == false || profileContextSupported == false) {
+	  if(! model.websiteContextSupported || ! model.profileContextSupported) {
 		  ghostModel.find(".context_options").hide();
 	  }
 
-	  ghostModel.children("form").find('label[for="placed_model_context_type_profile"]').attr("for", "placed_model_context_type_profile" + "_" + j + "_" + k + "_" + modelRefCode);
-	  ghostModel.children("form").find('label[for="placed_model_context_type_website"]').attr("for", "placed_model_context_type_website" + "_" + j + "_" + k + "_" + modelRefCode);
-	  ghostModel.children("form").find('input[id="placed_model_context_type_profile"]').attr("id", "placed_model_context_type_profile" + "_" + j + "_" + k + "_" + modelRefCode).attr("name", "placed_model_context_type" + "_" + j + "_" + k + "_" + modelRefCode);
-	  ghostModel.children("form").find('input[id="placed_model_context_type_website"]').attr("id", "placed_model_context_type_website" + "_" + j + "_" + k + "_" + modelRefCode).attr("name", "placed_model_context_type" + "_" + j + "_" + k + "_" + modelRefCode);
-
-	  ghostModel.children("form").find('input[id="use_submodels"]').attr("id", "use_submodels" + "_" + j + "_" + k + "_" + modelRefCode).attr("name", "use_submodels" + "_" + j + "_" + k + "_" + modelRefCode).val("use_submodels" + "_" + j + "_" + k + "_" + modelRefCode);
-	  ghostModel.children("form").find('label[for="use_submodels"]').attr("for", "use_submodels" + "_" + j + "_" + k + "_" + modelRefCode);
-	  
 	  var contexts = extendedSolution ? 
-			  ['AUTO', 'ITEM', 'CLICKED', 'OWNS', 'CONSUMED', 'BASKET', 'RATED'] : 
-			  ['AUTO', 'ITEM', 'CLICKED', 'OWNS'];
+			  ['AUTO', 'ITEM', 'CLICKED', 'OWNS', 'CONSUMED', 'BASKET', 'RATED', 'NONE'] : 
+			  ['AUTO', 'ITEM', 'CLICKED', 'OWNS', 'NONE'];
+			  
+	  ghostModel.find("select[name=placed_model_context_type] > option").remove();
 
 	  for (var i in contexts) {
-		  
-	  }
-			  
-	  if(model.contextFlag === "PROFILE") {
-		  ghostModel.children("form").find('input[id="placed_model_context_type_profile_' + j + "_" + k + "_" + modelRefCode + '"]').attr("checked", "checked");
-	  }
-	  else if(model.contextFlag === "ITEM") {
-		  ghostModel.children("form").find('input[id="placed_model_context_type_website_' + j + "_" + k + "_" + modelRefCode + '"]').attr("checked", "checked");
+		  var opt = $('<option value="' + contexts[i] + '" data-translate="model_configurator_context_' + contexts[i] + '">').clone();
+		  if (xing && contexts[i] == xing.contextFlag) {
+			  opt.attr("selected", "selected");
+		  }
+		  opt.appendTo(ghostModel.find("select[name=placed_model_context_type]"));
 	  }
 
-	  //ghostModel.children("form").find('input[id="weight_model_'+ j + "_" + k + "_" + modelRefCode+'"]').val(model.weight);
-	  if(model.useSubmodels) {
-		  ghostModel.children("form").find('input[id="use_submodels_' + j + "_" + k + "_" + modelRefCode + '"]').attr("checked", "checked");
+	  if(xing && xing.useSubmodels) {
+		  ghostModel.find('input[id="use_submodels_' + j + "_" + k + "_" + modelRefCode + '"]').attr("checked", "checked");
 	  }
 	  
 	  i18n(ghostModel);
@@ -582,77 +552,76 @@ function saveScenario() {
   }
   
   
+  /** Returns submodel by attribute. */
+  function getSubmodel(attributeKey, attributeType) {
+	  
+	  if (arguments.length == 1) {
+		  attributeKey = arguments[0];
+		  attributeType = arguments[1];
+	  }
+	  
+	  for (var i = 0; i < current_submodels.length; i++) {
+		  if (current_submodels[i].attributeKey === attributeKey && current_submodels[i].submodelType === attributeType) {
+			  return current_submodels[i];
+		  }
+	  }
+	  return null;
+  }
+  
+  
 
-  function loadAttributes(subModels) {
-	  window.subModels = {};
-	  return $.ajax({
-		  dataType: "json",
-		  beforeSend: function(req) {
-			  req.setRequestHeader('no-realm', 'realm1');
-		  },
-		  url: "ebl/v3/" + customerID + "/structure/get_attribute_pks",
-		  success: function(json) {
-			  var list, options, i, l;
-			  l = subModels.length;
-			  outer:
-					  while(l --) {
-						  i = json.attributePkList.length;
-						  while(i --) {
-							  if(subModels[l].attributeKey === json.attributePkList[i].key && subModels[l].submodelType === json.attributePkList[i].type) {
-								  continue outer;
-							  }
-						  }
-						  json.attributePkList.push({
-							  'key': subModels[l].attributeKey,
-							  'type': subModels[l].submodelType
-						  });
-					  }
+  
+  
+  function renderAttributes() {
+	  
+	  var subModels = current_submodels;
+	  var attributes = current_attributes;
 
-			  if(json.attributePkList.length > 0) {
-				  list = json.attributePkList;
-				  options = '<option value="" data-translate="configurator_submodel_select_attribute" disabled="disabled" selected="selected">- Select an attribute -</option>';
-				  for(i = 0; i < list.length; i ++) {
-					  l = subModels.length;
-					  while(l --) {
-						  if(subModels[l].attributeKey === list[i].key &&
-								  subModels[l].submodelType === list[i].type) {
-							  break;
-						  }
-					  }
-					  window.subModels[list[i].type + list[i].key] = l !== - 1 ? subModels[l] : null;
+	  var list, options, i, l;
+	  l = subModels.length;
 
-					  options = options +
-							  '<option data-type="' + list[i].type + '"value="' + list[i].key + '">'
-							  + (list[i].type === 'NUMERIC' ? '[123] ' : '')
-							  + (list[i].type === 'NOMINAL' ? '[ABC] ' : '')
-							  + list[i].key + ' ';
-					  if(list[i].type === 'NUMERIC' && l !== - 1) {
-						  if('intervals' in subModels[l]){
-							  options = options + '(' + subModels[l].intervals.length + ' intervals)';
-						  }
-					  } else if(list[i].type === 'NOMINAL' && l !== - 1) {
-						  var count = 0,
-								  keys = {},
-								  j = subModels[l].attributeValues.length,
-								  group;
-						  while(j --) {
-							  group = subModels[l].attributeValues[j].group;
-							  if(keys[group]) {
-								  continue;
-							  } else {
-								  keys[group] = true;
-								  count ++;
-							  }
-						  }
-						  options = options + '(' + count + ' groups)';
-					  }
-					  options = options + '</option>';
+	  if(attributes.length > 0) {
+		  list = attributes;
+		  options = '<option value="" data-translate="configurator_submodel_select_attribute" disabled="disabled" selected="selected">- Select an attribute -</option>';
+		  for(i = 0; i < list.length; i ++) {
+			  l = current_submodels.length;
+			  while(l --) {
+				  if(subModels[l].attributeKey === list[i].key &&
+						  subModels[l].submodelType === list[i].type) {
+					  break;
 				  }
-				  $('#submodels_attributes').html(options);
 			  }
-		  },
-		  error: stdAjaxErrorHandler
-	  });
+			  subModels[list[i].type + list[i].key] = l !== - 1 ? subModels[l] : null;
+
+			  options = options +
+					  '<option data-type="' + list[i].type + '"value="' + list[i].key + '">'
+					  + (list[i].type === 'NUMERIC' ? '[123] ' : '')
+					  + (list[i].type === 'NOMINAL' ? '[ABC] ' : '')
+					  + list[i].key + ' ';
+			  if(list[i].type === 'NUMERIC' && l !== - 1) {
+				  if('intervals' in subModels[l]){
+					  options = options + '(' + subModels[l].intervals.length + ' intervals)';
+				  }
+			  } else if(list[i].type === 'NOMINAL' && l !== - 1) {
+				  var count = 0,
+						  keys = {},
+						  j = subModels[l].attributeValues.length,
+						  group;
+				  while(j --) {
+					  group = subModels[l].attributeValues[j].group;
+					  if(keys[group]) {
+						  continue;
+					  } else {
+						  keys[group] = true;
+						  count ++;
+					  }
+				  }
+				  options = options + '(' + count + ' groups)';
+			  }
+			  options = options + '</option>';
+		  }
+		  $('#submodels_attributes').html(options);
+	  }
   }
 
   function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
@@ -676,86 +645,24 @@ function saveScenario() {
 	  }
   }
 
-  function loadDaysField(modelID) {
-
-	  $.ajax({
-		  dataType: "json",
-		  beforeSend: function(req) {
-			  req.setRequestHeader('no-realm', 'realm1');
-		  },
-		  url: "ebl/v3/" + customerID + "/structure/get_model/" + modelID,
-		  success: function(json) {
-
-			  $('body').data('ratingmodel', json);
-			  var model = json.model;
-			  var maxRating = model.maximumRatingAge ? parseDuration(model.maximumRatingAge) : model.maximumRatingAge;
-			  var val = maxRating.D >= 2 ? maxRating.getDays() : maxRating.getHours();
-			  var unit = maxRating.D >= 2 ? 'D' : 'H';
-			  //console.log(maxRating);
-			  $('#relevant_period').val(val);
-			  $('#relevant_period_unit').val(unit);
-		  },
-		  error: stdAjaxErrorHandler 
-	  });
-  }
-
-
   function createJsonXingModel(json, stage, stageIndex, modelName, modelIndex) {
-	  if(stage == null) {
-		  var modelNameWithStage = stageIndex + "_" + modelIndex + "_" + modelName;
+	  if (stage == null) {
 		  json.scenario.stages[stageIndex] = new Object();
 		  json.scenario.stages[stageIndex].xingModels = new Array();
-		  json.scenario.stages[stageIndex].xingModels[0] = new Object();
-		  json.scenario.stages[stageIndex].xingModels[0].modelReferenceCode = modelName;
-
-		  var domModel = $("#" + modelNameWithStage);
-// 				json.scenario.stages[stageIndex].xingModels[0].weight = domModel.children("form").find('input[id="weight_model_'+modelNameWithStage+'"]').val();
-		  if(domModel.children("form").find('input[id="use_submodels_' + modelNameWithStage + '"]').is(':checked')) {
-			  json.scenario.stages[stageIndex].xingModels[0].useSubmodels = true;
-		  }
-		  else {
-			  json.scenario.stages[stageIndex].xingModels[0].useSubmodels = false;
-		  }
-
-		  var flag = domModel.find('input[name=placed_model_context_type' + '_' + modelNameWithStage + ']:checked').val();
-
-		  if(flag == "profile") {
-			  json.scenario.stages[stageIndex].xingModels[0].contextFlag = "PROFILE";
-		  }
-		  else if(flag == "site") {
-			  json.scenario.stages[stageIndex].xingModels[0].contextFlag = "ITEM";
-		  }
-
 	  }
-	  else {
+	  
+	  var xing = json.scenario.stages[stageIndex].xingModels[modelIndex] = new Object();
+	  
+	  xing.modelReferenceCode = modelName;
+	  
+	  var modelNameWithStage = stageIndex + "_" + modelIndex + "_" + modelName;
 
-		  //var newIndex = json.scenario.stages[stageIndex].xingModels.length;
-		  json.scenario.stages[stageIndex].xingModels[modelIndex] = new Object();
-		  json.scenario.stages[stageIndex].xingModels[modelIndex].modelReferenceCode = modelName;
+	  var domModel = $("#" + modelNameWithStage);
 
-		  var modelNameWithStage = stageIndex + "_" + modelIndex + "_" + modelName;
+	  xing.useSubmodels = domModel.find('input[id="use_submodels_' + modelNameWithStage + '"]').is(':checked');
 
-		  var domModel = $("#" + modelNameWithStage);
-// 					json.scenario.stages[stageIndex].xingModels[newIndex].weight = domModel.children("form").find('input[id="weight_model_'+modelNameWithStage+'"]').val();
-		  json.scenario.stages[stageIndex].xingModels[modelIndex].weight = 0;
-
-		  if(domModel.children("form").find('input[id="use_submodels_' + modelNameWithStage + '"]').is(':checked')) {
-			  json.scenario.stages[stageIndex].xingModels[modelIndex].useSubmodels = true;
-		  }
-		  else {
-			  json.scenario.stages[stageIndex].xingModels[modelIndex].useSubmodels = false;
-		  }
-
-		  var flag = domModel.find('input[name=placed_model_context_type' + '_' + modelNameWithStage + ']:checked').val();
-
-		  if(flag == "profile") {
-			  json.scenario.stages[stageIndex].xingModels[modelIndex].contextFlag = "PROFILE";
-		  }
-		  else if(flag == "site") {
-			  json.scenario.stages[stageIndex].xingModels[modelIndex].contextFlag = "ITEM";
-		  }
-	  }
-// 			$('body').data('scenario', json);
+	  xing.contextFlag = domModel.find('select[name=placed_model_context_type]').val();
+	  
 	  updateJsonValueForModel(modelName);
   }
 
@@ -773,137 +680,90 @@ function saveScenario() {
   function updateJsonValueForModel(modelName) {
 	  var json = $('body').data('scenario');
 	  for(var i = 0; i < 4; i ++) {
-		  if(json.scenario.stages[i] != null) {
-			  for(var j = 0; j < json.scenario.stages[i].xingModels.length; j ++) {
-				  var model = json.scenario.stages[i].xingModels[j];
-				  if(typeof model != 'undefined') {
-					  //the weight is calculated for each model
-					  switch(json.scenario.stages[i].xingModels.length) {
-						  case 1:
-							  model.weight = 100;
-							  break;
-						  case 2:
-							  model.weight = 50;
-							  break;
-						  case 3:
-							  model.weight = j ? 33 : 34;
-					  }
-					  if((i + "_" + j + "_" + model.modelReferenceCode) == modelName) {
+		  if ( ! json.scenario.stages[i]) {
+			  continue;
+		  }
+		  for(var j = 0; j < json.scenario.stages[i].xingModels.length; j ++) {
+			  var model = json.scenario.stages[i].xingModels[j];
+			  if( ! model) {
+				  continue;
+			  }
+			  if((i + "_" + j + "_" + model.modelReferenceCode) == modelName) {
+				  var domModel = $("#" + modelName);
 
-						  var domModel = $("#" + modelName);
-// 							model.weight = domModel.children("form").find('input[id="weight_model_'+modelName+'"]').val();
-
-						  if(domModel.children("form").find('input[id="use_submodels_' + modelName + '"]').is(':checked')) {
-							  model.useSubmodels = true;
-						  }
-						  else {
-							  model.useSubmodels = false;
-						  }
-						  var flag = domModel.find('input[name=placed_model_context_type' + '_' + modelName + ']:checked').val();
-
-						  if(flag == "profile") {
-							  model.contextFlag = "PROFILE";
-						  }
-						  else if(flag == "site") {
-							  model.contextFlag = "ITEM";
-						  }
-					  }
-				  }
+				  model.useSubmodels  = domModel.find('input[id="use_submodels_' + modelName + '"]').is(':checked');
+				  
+				  model.contextFlag = domModel.find('select[name=placed_model_context_type]').val();
 			  }
 		  }
 	  }
   }
 
+  
   function deleteJsonModelWithName(modelName) {
 	  var json = $('body').data('scenario');
 	  for(var i = 0; i < 4; i ++) {
-		  if(json.scenario.stages[i] != null) {
-			  for(var j = 0; j < json.scenario.stages[i].xingModels.length; j ++) {
-				  var model = json.scenario.stages[i].xingModels[j];
-				  if(typeof model != 'undefined') {
-					  if((i + "_" + j + "_" + model.modelReferenceCode) == modelName) {
-						  json.scenario.stages[i].xingModels[j] = undefined;
-					  }
+		  if( ! json.scenario.stages[i]) {
+			  continue;
+		  }
+		  for(var j = 0; j < json.scenario.stages[i].xingModels.length; j ++) {
+			  var model = json.scenario.stages[i].xingModels[j];
+			  if(typeof model != 'undefined') {
+				  if((i + "_" + j + "_" + model.modelReferenceCode) == modelName) {
+					  json.scenario.stages[i].xingModels[j] = undefined;
 				  }
 			  }
 		  }
-
 	  }
 	  updateJsonValueForModel();
   }
 
+  
   function fillSubModels(modelID) {
-
-	  $.cookie('dialogModelID', modelID);
-
-	  function saveFunc() {
-		  if($(this).hasClass('inactive')) {
-			  return;
+	  
+	  current_attributes = [];
+	  current_submodels = [];
+	  current_submodel = null;
+	  
+	  modelDao.loadSubmodelsAndAttributes(model_reference_code, function(submodel, attributes) {
+		  
+		  current_attributes = attributes; // setting global variables
+		  current_submodels = submodel;   
+		  
+		  if (current_submodels.length) {
+			  current_submodel = current_submodels[0];
 		  }
-		  if(window.currentSubModel) {
-			  updateSubModel(window.currentSubModel);
+			  
+		  renderAttributes();
+
+		  $('#submodels_attributes').off('change').on('change', function(event) {
+			  var $this = $(this),
+			  type = $this.find('option:selected').data('type');
+			  fillSubModelsChange($this.val(), type, modelID);
+		  });
+		  
+		  if(current_submodel) {
+			  $('#submodels_attributes option').removeAttr('selected').filter(function() {
+				  return ($(this).data('type') === current_submodel.submodelType && $(this).val() === current_submodel.attributeKey);
+			  }).attr('selected', 'selected');
+			  $('#submodels_attributes').trigger('change');
+		  } else {
+			  $('.filters_group > div').hide();
+			  $('#relevant_period').off('change').on('change', function() {
+				  var val = checkRelevantPeriod();
+				  if(! val) {
+					  disableSubmodelActions();
+				  } else {
+					  enableSubmodelActions();
+				  }
+			  });
 		  }
-		  saveSubmodels(modelID);
-	  }
-
-	  $('#save_submodels')
-			  .off('click')
-			  .on('click', saveFunc);
-
-	  setLoadingDiv($('.filters_group'));
-	  $.ajax({
-		  dataType: "json",
-		  beforeSend: function(req) {
-			  req.setRequestHeader('no-realm', 'realm1');
-		  },
-		  url: "ebl/v3/" + customerID + "/structure/get_submodel_list/" + modelID
-	  })
-			  .then(
-			  function(json) {
-				  //setup the attribute selector
-				  loadAttributes(json.submodelList)
-						  .then(
-						  function() {
-							  //init the change handler for the attribute selector
-							  $('#submodels_attributes')
-									  .off('change')
-									  .on('change', function(event) {
-										  var $this = $(this),
-												  type = $this.find('option:selected').data('type');
-										  fillSubModelsChange($this.val(), type, modelID);
-									  });
-							  if(json.submodelList.length > 0) {
-								  $('#submodels_attributes option')
-										  .removeAttr('selected')
-										  .filter(function() {
-											  return ($(this).data('type') === json.submodelList[0].submodelType
-													  && $(this).val() === json.submodelList[0].attributeKey);
-										  }).attr('selected', 'selected');
-								  $('#submodels_attributes').trigger('change');
-							  } else {
-								  $('.filters_group > div').hide();
-								  $('#relevant_period')
-										  .off('change')
-										  .on('change', function() {
-											  var val = checkRelevantPeriod();
-											  if(! val) {
-												  disableSubmodelActions();
-											  } else {
-												  enableSubmodelActions();
-											  }
-										  });
-							  }
-							  enableSubmodelActions();
-							  unsetLoadingDiv($('.filters_group'));
-						  }
-				  );
-			  },
-			  function(jqXHR, textStatus, errorThrown) {
-				  setMessagePopUp("problem", "error_server_error");
-			  }
-
-	  );
+		  enableSubmodelActions();
+		  unsetLoadingDiv($('.filters_group'));
+		  
+	  }, configuratorErrorHandler);
   }
+  
 
   function updateSubModel(model) {
 	  if(model.submodelType === 'NUMERIC') {
@@ -913,52 +773,29 @@ function saveScenario() {
 	  }
   }
 
+  
   function fillSubModelsChange(attributeKey, type, modelID) {
 	  if(! attributeKey) {
 		  return;
 	  }
-	  $.cookie('dialogModelID', modelID);
 
-	  if(window.currentSubModel) {
-		  updateSubModel(window.currentSubModel);
+	  if(current_submodel) {
+		  updateSubModel(current_submodel);
 	  }
 
-	  window.currentSubModel = window.subModels[type + attributeKey];
+	  current_submodel = getSubmodel(attributeKey, type);
 
-	  if(window.subModels && window.subModels[type + attributeKey]) {
+	  if (current_submodel) {
 		  // we have already an instance
 		  if(type === "NUMERIC") {
-			  fillNumericSubmodelValues(window.subModels[type + attributeKey]);
+			  fillNumericSubmodelValues(current_submodel);
 		  } else if(type === "NOMINAL") {
-			  fillSubmodelValues(window.subModels[type + attributeKey]);
+			  fillSubmodelValues(current_submodel);
 		  }
-		  return;
 	  }
-
-	  setLoadingDiv($('.filters_group'));
-	  $.ajax({
-		  dataType: "json",
-		  beforeSend: function(req) {
-			  req.setRequestHeader('no-realm', 'realm1');
-		  },
-		  url: "ebl/v3/" + customerID + "/structure/get_submodel/"
-				  + encodeURIComponent(modelID) + "/" + encodeURIComponent(type) + "/" + encodeURIComponent(attributeKey),
-		  success: function(json) {
-			  window.subModels = window.subModels ? window.subModels : {};
-			  window.subModels[type + attributeKey] = json.submodel;
-			  window.currentSubModel = window.subModels[type + attributeKey];
-			  if(type === "NUMERIC") {
-				  fillNumericSubmodelValues(json.submodel);
-			  } else if(type === "NOMINAL") {
-				  fillSubmodelValues(json.submodel);
-			  }
-			  unsetLoadingDiv($('.filters_group'));
-
-		  },
-		  error: stdAjaxErrorHandler
-	  });
   }
 
+  
   function fillSubmodelValues(subModel) {
 
 	  $('.grouping_attributes').children('li').remove();
@@ -1071,22 +908,6 @@ function saveScenario() {
 	  $('#submodels_attributes').removeAttr('disabled');
   }
 
-  function checkRelevantPeriod() {
-	  var val = $('#relevant_period').val();
-	  if(val.length) {
-		  val = parseInt(val, 10);
-	  } else {
-		  $('.overlay .hintSpace').attr('data-translate',
-				  'configurator_message_invalid_relevant_period');
-		  return false;
-	  }
-	  if(isNaN(val) || val < 1) {
-		  $('.overlay .hintSpace').attr('data-translate',
-				  'configurator_message_invalid_relevant_period');
-		  return false;
-	  }
-	  return val;
-  }
 
   function createAttributeValueList() {
 	  var attributeValueList = [];
@@ -1116,39 +937,132 @@ function saveScenario() {
 	  });
 	  return attributeValueList;
   }
+  
 
-  function saveSubmodels(e) {
-	  //save all the sub models
-	  var model, arr = [];
-	  for(model in window.subModels) {
-		  setLoadingDiv('.filters_group');
-		  if(window.subModels[model]) {
-			  arr.push(pushSubmodel(window.subModels[model]));//we trigger the save for all submodels
-		  }
-	  }
-	  if(arr.length) {
-		  $.when.apply($, arr)//after all sub models have been saved
-				  .then(
-				  function() {
-					  setMessagePopUp("positive", "message_data_saved_successfully");
-					  fillSubModels($.cookie('dialogModelID'));
-				  },
-				  function() {
-					  setMessagePopUp('error', 'error_submodel_saving');
-				  }
-		  );
+  function checkRelevantPeriod() {
+	  var val = $('#relevant_period').val();
+	  if(val.length) {
+		  val = parseInt(val, 10);
 	  } else {
-		  fillSubModels($.cookie('dialogModelID'));
+		  $('.overlay .hintSpace').attr('data-translate', 'configurator_message_invalid_relevant_period');
+		  return false;
 	  }
-	  var ratingModel = $('body').data('ratingmodel');
-	  var duration = parseDuration();
-	  duration[$('#relevant_period_unit').val()] = checkRelevantPeriod();
-	  ratingModel.model.maximumRatingAge = duration.getXSDuration();
-	  setLoadingDiv($('.overlay .relevance'));
-	  pushModel(ratingModel).then(function() {
-		  unsetLoadingDiv($('.overlay .relevance'));
-	  });
+	  if(isNaN(val) || val < 1) {
+		  $('.overlay .hintSpace').attr('data-translate', 'configurator_message_invalid_relevant_period');
+		  return false;
+	  }
+	  
+	  var model = modelDao.getModel(model_reference_code);
+	  
+	  var duration = parseDuration(); // creating empty duration
+	  duration[$('#relevant_period_unit').val()] = val;
+	  model.maximumRatingAge = duration.getXSDuration();	  
+	  
+	  return val;
   }
+  
+
+/** This method must be called once during the initialisation. */
+function initSubmodelDialog() {
+	
+  	var layer = $('#model_configuration_classic');
+  	var overlay = $('#model_configuration_classic').parent(".model_config_overlay");
+
+  	$('#model_configuration_classic .destroy_dialog').on('click', function (e) {
+  		e.preventDefault();
+  		overlay.hide();
+  		model_reference_code = null;
+  	});
+  	
+  	$('#model_configuration_classic .form_submit_button').on('click', function (e) { // Save button
+  		e.preventDefault();
+  		saveModel();
+  	});
+
+  	$(document).on('keydown', function (e) {
+  		if (e.which === 27 && overlay.is(":visible")) {
+  			overlay.hide();
+  			model_reference_code = null;
+  		}
+  	});	
+  	
+	$('#relevant_period').on('change', function() {
+		checkRelevantPeriod();
+    });
+	
+}
+
+
+/** Currently selected model reference code. */
+var model_reference_code;
+var current_submodels = [];
+var current_submodel = null;
+var current_attributes = [];
+  
+
+function activateSubmodelDialog(modelID) {
+	
+	model_reference_code = modelID;
+
+  	var layer = $('#model_configuration_classic');
+  	var overlay = $('#model_configuration_classic').parent(".model_config_overlay");
+  	
+  	var extendedSolution = ifExtended();
+  	
+  	var modelNameKey = modelDao.getModelNameKey(modelID);
+  	
+  	var model = modelDao.getModel(modelID);
+  	
+    var maxRating = model.maximumRatingAge ? parseDuration(model.maximumRatingAge) : model.maximumRatingAge;
+	var val = maxRating.D >= 2 ? maxRating.getDays() : maxRating.getHours();
+	var unit = maxRating.D >= 2 ? 'D' : 'H';
+    $('#relevant_period').val(val);
+	$('#relevant_period_unit').val(unit);
+  	
+  	$('#model_configuration_classic h2').find("span[data-param=0]").attr("data-translate", modelNameKey);
+  	
+  	if ( ! extendedSolution) {
+  		layer.css("height", "auto");
+  		layer.css("width", "30em");
+  	}
+
+  	if (modelID.length) {
+  		layer.find("h2 .model_name").text(modelID);
+  	} 
+  	
+  	if (extendedSolution) {
+  		setSortable();
+  		setFilterGroups();
+  		fillSubModels(modelID);
+  	}
+
+  	overlay.show();
+}
+
+  
+  
+/** Saves the currently selected model
+  */
+function saveModel() {
+	
+	var model = modelDao.getModel(model_reference_code);
+	  
+	setLoadingDiv($('body'));
+	  
+	modelDao.updateModelWithSubmodels(model, submodels,
+		function (model) {
+			unsetLoadingDiv($('body'));
+			
+			var overlay = $('#model_configuration_classic').parent(".model_config_overlay");
+			overlay.hide();
+			
+			setMessagePopUp("positive", "message_data_saved_successfully");
+			renderModel(model);
+			model_reference_code = null;
+	  	}, 
+	  	configuratorErrorHandler);
+}
+  
 
   function fillNumericSubmodelValues(sm) {
 	  var $content = $('#numericSubmodelValues'),
@@ -1220,6 +1134,7 @@ function saveScenario() {
 						  .addClass('interval'));
 			  });
   }
+  
 
   function checkNumericSubModel($content) {
 	  //  		console.log('checkNumericSubModel');
@@ -1287,68 +1202,6 @@ function saveScenario() {
 		  val.rightValue = val.rightValue === Number.POSITIVE_INFINITY ? null : val.rightValue;
 	  }
 	  return values;
-  }
-  /**
-   * saves the submodel configuration on the server
-   * @param sm
-   * @returns jQuery.XHR
-   */
-  function pushSubmodel(sm) {
-	  var submodelRef = $.cookie('dialogModelID');
-	  return $.ajax({
-		  type: "POST",
-		  beforeSend: function(x) {
-			  if(x && x.overrideMimeType) {
-				  x.overrideMimeType("application/json;charset=UTF-8");
-			  }
-			  x.setRequestHeader('no-realm', 'realm1');
-		  },
-		  mimeType: "application/json",
-		  contentType: "application/json",
-		  dataType: "json",
-		  data: JSON.stringify(sm),
-		  url: "ebl/v3/" + customerID + "/structure/update_submodel/"
-				  + submodelRef,
-		  success: function(json) {
-			  setMessagePopUp("positive",
-					  "message_data_saved_successfully");
-		  },
-		  error: stdAjaxErrorHandler
-	  });
-  }
-
-  /**
-   * saves a model on the server
-   * @param model
-   * @returns {*}
-   */
-  function pushModel(model) {
-	  return $.ajax({
-		  type: "POST",
-		  beforeSend: function(x) {
-			  if(x && x.overrideMimeType) {
-				  x.overrideMimeType("application/json;charset=UTF-8");
-			  }
-			  x.setRequestHeader('no-realm', 'realm1');
-		  },
-		  mimeType: "application/json",
-		  contentType: "application/json;charset=UTF-8",
-		  dataType: "json",
-		  data: JSON.stringify(model.model),
-		  url: "ebl/v3/" + customerID + "/structure/update_model",
-		  success: function(json) {
-			  
-			  var info = getModelAdditionalInfo(json.model);
-			  
-			  if (info){
-				  $('#model_' + json.model.referenceCode).find('.info').text(" (" + info + ")");
-			  }
-			  
-			  setMessagePopUp("positive",
-					  "message_data_saved_successfully");
-		  },
-		  error: stdAjaxErrorHandler
-	  });
   }
   
   
@@ -1485,8 +1338,6 @@ var createPlacedModel = function (placed_model, model) {
   };
 
   
-  
-  
 
   /**
    * the app variable holds the wrapper object for all functions to handle the editorial list
@@ -1558,25 +1409,23 @@ var createPlacedModel = function (placed_model, model) {
 					  }
 			  );
 		  });
-		  this.$overlay.find('#save_editorial_model')
-				  .on('click', function clickFunc(){
-					  var $self = $(this).off('click').addClass('inactive');
-					  //self.$overlay.find('.cover').show();
-					  app.api.saveEditorialList(self.referenceCode, self.getItems())
-						.then(
-							function(list){
-								$('#model_' + self.referenceCode)
-										.find('.info')
-										.html(list.length + ' items');
-								setMessagePopUp("positive", "message_data_saved_successfully");
-							},
-							app.tools.stdAjaxErrorHandler
-					  	)
-						.always(function(){
-								  $self.on('click', clickFunc).removeClass('inactive');
-								  //self.$overlay.find('.cover').hide();
-							  });
-				  });
+		  this.$overlay.find('#save_editorial_model').on('click', function clickFunc(){
+			  var $self = $(this).off('click').addClass('inactive');
+			  //self.$overlay.find('.cover').show();
+			  app.api.saveEditorialList(self.referenceCode, self.getItems()).then(
+					function(list){
+						$('#model_' + self.referenceCode)
+								.find('.info')
+								.html(list.length + ' items');
+						setMessagePopUp("positive", "message_data_saved_successfully");
+					},
+					app.tools.stdAjaxErrorHandler
+			  	)
+				.always(function(){
+				    $self.on('click', clickFunc).removeClass('inactive');
+			    	//self.$overlay.find('.cover').hide();
+	            });
+		  });
 		  //replace the function to make it callable just once
 		  this.init = function() {
 		  };

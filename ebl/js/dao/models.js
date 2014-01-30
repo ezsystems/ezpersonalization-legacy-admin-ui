@@ -73,6 +73,155 @@ modelDao.getModel = function(refcode) {
 modelDao.getModels = function() {
 	return modelDao.models;
 };
+
+
+/**
+ * save a model on the server
+ * @param model - Model Object to be saved
+ *
+ * @author maik.seyring
+ */
+modelDao.updateModel = function(model, callback, errorCallback) {
+	return $.ajax({
+		type:        "POST",
+		mimeType:    "application/json",
+		contentType: "application/json;charset=UTF-8",
+		dataType:    "json",
+		data:        JSON.stringify(model),
+		url:         "ebl/v3/" + encodeURIComponent(modelDao.customerID) + "/structure/update_model?no-realm",
+		success:     function (json) {
+			var model = json.model;
+			for (var i in modelDao.models) {
+				if (modelDao.models[i].referenceCode == json.referenceCode) {
+					modelDao.models[i] = model;
+				}
+			}
+			if (callback) {
+				callback(model);
+			}
+		},
+		error: errorCallback
+	});
+};
+
+
+modelDao.loadAttributes = function(callBack, callBackError) {
+	  return $.ajax({
+		  dataType: "json",
+		  url: "ebl/v3/" + customerID + "/structure/get_attribute_pks?no-realm",
+		  success: function(json) {
+			  if (callBack) {
+				  callBack(json.attributePkList);
+			  }
+		  },
+		  error: callBackError
+	  });
+};
+
+
+modelDao.loadSubmodels = function(modelRefcode, callBack, callBackError) {
+	
+	return $.ajax({
+		  dataType: "json",
+		  url: "ebl/v3/" + encodeURIComponent(customerID) + "/structure/get_submodel_list/" + encodeURIComponent(modelRefcode) + "?no-realm",
+		  success: function(json) {
+			  if (callBack) {
+				  callBack(json.submodelList);
+			  }
+		  },
+		  error: callBackError
+	});
+};
+
+
+/** Returns attribute by key and type */
+modelDao.getAttribute = function(key, type, attributes) {
+	  for (var i = 0; i < attributes.length; i++) {
+		  if(key == attributes[i].key && type == attributes[i].type) {
+			  return attributes[i];
+		  }
+	  }
+	  return null;
+};
+
+
+modelDao.loadSubmodelsAndAttributes = function(modelRefcode, callBack, callBackError) {
+
+	var attributes = [];
+	var submodels = [];
+	
+	return $.when(
+		  modelDao.loadAttributes(
+			  function (json) {
+				  attributes = json;
+			  }, callBackError),
+			  
+		  modelDao.loadSubmodels(modelRefcode, 
+			  function (json) {
+		  		  submodels = json;
+	  		  }, callBackError)
+	).then(function() {
+
+	  for (var j = 0; j < current_submodels.length; j++) { // append attributes, if they exist only in submodel configuration
+		  var smodel = current_submodels[j];
+		  
+		  if ( ! modelDao.getAttribute(smodel.attributeKey, smodel.submodelType, attributes)) {
+			  attributes.push({ 'key': smodel.attributeKey, 'type': smodel.submodelType });
+		  }
+	  } 
+		
+	  if (callBack) {
+		  callBack(submodels, attributes);
+	  }
+	});
+};
+
+
+modelDao.updateModelWithSubmodels = function(model, submodels, callback, errorCallback) {
+	
+	var modelResult = [];
+	var submodelResults = [];
+	var errorResult = null;
+	
+	var tasks = [];
+	
+	for (var i in submodels) { // we trigger the save for all submodels
+		arr.push($.ajax({
+			  type: "POST",
+			  mimeType: "application/json",
+			  contentType: "application/json;charset=UTF-8",
+			  dataType: "json",
+			  data: JSON.stringify(submodels[i]),
+			  url: "ebl/v3/" + encodeURIComponent(modelDao.customerID) + "/structure/update_submodel/" + encodeURIComponent(model.referenceCode) + "?no-realm",
+			  success: function(json) {
+				  submodelResults.push(json.submodel);
+			  },
+			  error: function(jqXHR, textStatus, errorThrown) {
+				  errorResult = [jqXHR, textStatus, errorThrown];
+			  }
+		  }));
+	}
+	
+	tasks.push(modelDao.updateModel(model, function(m) {
+		modelResult = m;
+	}));
+
+	$.when.apply($, tasks).then(
+		function() {
+			callback(modelResult, submodelResults);
+		},
+		function() {
+			if (errorCallback) {
+				if (errorResult) {
+					errorCallback(errorResult[0], errorResult[1], errorResult[2]);
+				} else {
+					errorCallback();
+				}
+			}
+		}
+	);
+};
+	  
 	
 	
 modelDao.loadModels = function(customerID) {
@@ -86,7 +235,7 @@ modelDao.loadModels = function(customerID) {
 				  window.parent.location = "login.html";
 			  }
 		  },
-		  url: "ebl/v3/" + modelDao.customerID + "/structure/get_model_list?no-realm",
+		  url: "ebl/v3/" + encodeURIComponent(modelDao.customerID) + "/structure/get_model_list?no-realm",
 		  success: function(json) {
 			  modelDao.models = json.modelList;
 			  console.debug("Model list sucessfully loaded.");
@@ -101,4 +250,4 @@ modelDao.loadModels = function(customerID) {
 	});
 	
 	return result;
-};
+}; 

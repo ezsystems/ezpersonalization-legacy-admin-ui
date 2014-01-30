@@ -103,23 +103,17 @@
             <ul class="clearfix">
               <li id="li_0_0">
                 <div class="empty_model_place">
-					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
-                	drag and drop<br>a model here
-						</div>
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">drag and drop<br>a model here</div>
                 </div>
               </li>
               <li id="li_0_1">
                 <div class="empty_model_place">
-					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
-                  drag and drop<br>a model here
-					</div>
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">drag and drop<br>a model here</div>
                 </div>
               </li>
-              <li id="li_0_2">
+              <li id="li_0_2" class="extended_stage">
                 <div class="empty_model_place">
-					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
-                  drag and drop<br>a model here
-					</div>
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">drag and drop<br>a model here</div>
                 </div>
               </li>
             </ul>
@@ -147,7 +141,7 @@
 					</div>
                 </div>
               </li>
-              <li id="li_1_2">
+              <li id="li_1_2" class="extended_stage">
                 <div class="empty_model_place">
 					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
                   drag and drop<br>a model here
@@ -222,75 +216,74 @@
           </div>
           </div>
 	</div>
+	
+	
 
-    <div class="overlay">
-      <div class="dialog_body model_settings">
+    <div class="model_config_overlay" style="display:none; position:absolute; left:0; right:0; top:0; bottom:0; z-index:10;">
+      <div class="dialog_body model_settings" id="model_configuration_classic" style="position:relative; margin: 10% auto 0 auto;">
         <a class="destroy_dialog">X</a>
-        <h2 style="font-size: 1.3em;font-weight: 700;border-bottom: 2px solid gray;">
-        	"<span class="model_name"></span>"
-			<span data-translate="settings_placing_models">Model Configuration</span>
-		</h2>
+        <h2 style="border-bottom: 2px solid gray;" data-translate="model_configuration_classic">
+        	Model Configuration &quot;<span data-param="0">Also clicked</span>&quot; 
+        </h2>
         <div class="relevance">
           <label for="relevant_period" data-translate="configurator_relevant">Relevant:</label>
           <input id="relevant_period" type="number" name="relevant_period" min="1" max="999" step="1"/>
           <select id="relevant_period_unit" >
           	<option value="H" data-translate="model_duration_hours">Hours</option>
           	<option value="D" data-translate="model_duration_days">Days</option>
-          	
           </select>
-			<a class="helpBtn" data-helptxt="configuration_help_cb_model"></a>
         </div>
-		<h2 style="font-size: 1.3em;font-weight: 700;"><span data-translate="configurator_submodel">Model Configuration</span></h2>
-        <div class="clearfix">
-          <div class="filters_base">
-            <form class="filters_group clearfix" action="#" method="get" id="grouping_filters_scenario_land_page_13425">
-              <h3>
-				 <span class="submodels_attributes" style="display: block">
-				    <label for="submodels_attributes" data-translate="configurator_attributes">Attributes:</label>
-				    <select id="submodels_attributes" name="submodels_attributes">
-						<option value="" data-translate="configurator_submodel_select_attribute" selected="selected">- Select an attribute -</option>
-					</select>
-				 </span>
-			</h3>
-			<div id="nominalSubmodelValues" style="display:none;">
-              <ul class="grouping_attributes droptrue clearfix">
-              </ul>
-              <ul class="groups_base clearfix">
-                <li>
-                  <h5>Group #<span>1</span> <a class="destroy_group" title="Delete this group">X</a></h5>
-                  <ul class="user_created_group droptrue clearfix">
-                  </ul>
-                </li>
-                <li class="always_empty">
-                  <a href="#" class="create_one_more_group" data-translate="configurator_add_group">Add group</a>
-                </li>
-              </ul>
-              </div>
-			  <div id="numericSubmodelValues" style="display:none;">
-			  	  <h4 data-translate="configurator_value_range">Value range</h4>
-				  <div id="modelGroups" class="table">
-					  <div class="tr ghost">
-						  <div class="tc">
-							  <label for="" data-translate="configurator_group_from"></label>
-							  <input type="text" class="from">
+		<h2 style="" class="extended_stage" data-translate="configurator_submodel">Submodel Configurations</h2>
+	      <div class="clearfix extended_stage">
+	          <div class="filters_base">
+				  <span class="submodels_attributes" style="display: block">
+				      <label for="submodels_attributes" data-translate="configurator_attributes">Attributes:</label>
+				      <select id="submodels_attributes" name="submodels_attributes">
+						  <option value="" data-translate="configurator_submodel_select_attribute" selected="selected">- Select an attribute -</option>
+					  </select>
+				  </span>
+			  	  <div id="nominalSubmodelValues" style="display:none;">
+	              	  <ul class="grouping_attributes droptrue clearfix">
+	                  </ul>
+	              <ul class="groups_base clearfix">
+	                <li>
+	                  <h5>Group #<span>1</span> <a class="destroy_group" title="Delete this group">X</a></h5>
+	                  <ul class="user_created_group droptrue clearfix">
+	                  </ul>
+	                </li>
+	                <li class="always_empty">
+	                  <a href="#" class="create_one_more_group" data-translate="configurator_add_group">Add group</a>
+	                </li>
+	              </ul>
+	              </div>
+				  <div id="numericSubmodelValues" style="display:none;">
+				  	  <h4 data-translate="configurator_value_range">Value range</h4>
+					  <div id="modelGroups" class="table">
+						  <div class="tr ghost">
+							  <div class="tc">
+								  <label for="" data-translate="configurator_group_from"></label>
+								  <input type="text" class="from">
+							  </div>
+							  <div class="tc">
+								  <label for="" data-translate="configurator_group_to"></label>
+								  <input type="text" class="to">
+							  </div>
+							  <div class="tc"><div class="delete_interval"></div></div>
 						  </div>
-						  <div class="tc">
-							  <label for="" data-translate="configurator_group_to"></label>
-							  <input type="text" class="to">
-						  </div>
-						  <div class="tc"><div class="delete_interval"></div></div>
+					  </div>
+					  <div style="padding: 15px;">
+					  		<a class="button with_icon create_new inline" data-translate="configurator_add_group">Add Group</a>
 					  </div>
 				  </div>
-				  <div style="padding: 15px;">
-				  		<a class="button with_icon create_new inline" data-translate="configurator_add_group">Add Group</a>
-				  </div>
 			  </div>
-			  <p class="hintSpace"></p>
-              <a id="save_submodels" class="save button inline" data-translate="configurator_save_changes">Save changes</a>
-            </form>
-          </div>
-        </div>
-      </div>
+	         </div>
+	  		  <div>
+			  <p class="hintSpace" style="display:none;"></p>
+		  </div>
+		  <div style="text-align: center; margin-top: 10px;">
+		  	<a class="button inline form_submit_button" data-translate="configurator_save_changes">Save changes</a>
+	  	  </div>
+    </div>
     </div>
 
     <div id="CB_model_configuration" class="_overlay">

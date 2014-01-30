@@ -627,9 +627,8 @@ input[type="text"].inverted {
 	box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
 	border: 1px solid #000000;
 	border-radius: 6px; 
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
 }
+
 
 .overlay .dialog_body h2 {
     display: block;
@@ -638,6 +637,7 @@ input[type="text"].inverted {
     padding-bottom: 5px;
     margin: 0 0 10px 0;
 }
+
 
 .overlay .dialog_body h3 {
   	display: block;
@@ -650,11 +650,10 @@ input[type="text"].inverted {
   	margin: 40px 0 20px;
 }
 
+
 .overlay .dialog_body p {
 	margin-bottom: 10px;
 }
-		
-		
 		
 
 .overlay, ._overlay {
@@ -1788,23 +1787,6 @@ section.help > article img {
   border: 1px solid rgba(140, 150, 138, 0.5);
 }
 
-.model_settings .relevance {
-  display: block;
-  padding: 20px;
-}
-
-.model_settings .relevance select {
-  margin-right: 20px;
-}
-
-.model_settings > .clearfix {
-  display: block;
-  padding: 0 20px 20px 20px;
-}
-
-.model_settings .filters_base {
-  width: 100%;
-}
 
 .numeric_range {
   display: inline-block;
@@ -1812,11 +1794,6 @@ section.help > article img {
 
 .numeric_range > input[type="text"] {
   width: 250px;
-}
-
-.model_settings a.save {
-  margin-top: 20px;
-  float: right;
 }
 
 .filters_group > div {

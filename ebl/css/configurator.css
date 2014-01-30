@@ -24,6 +24,11 @@
 }
 
 
+.extended_stage {
+	display: none; /* Hidden by default. Must be activated in configurator.js*/
+}
+
+
 body.scenario_configuration_steps h2 {
 	display: block;
 	font-size: 24px;
@@ -531,6 +536,13 @@ ul.placed_model_settings > li.usesubmodels > div > input {
 }
 
 
+.placed_model select {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	height: auto;
+}
+
+
 .model {
   display: block;
   position: relative;
@@ -675,5 +687,55 @@ ul.placed_model_settings > li.usesubmodels > div > input {
 .preview_settings .value > div > textarea {
 	padding-top: 5px;
 }
+
+
+#model_configuration_classic {
+	padding: 40px;
+	position: relative;
+    background: white url("../img/rauschen.png") repeat left top;
+	box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+	border: 1px solid #000000;
+	border-radius: 6px; 
+}
+
+#model_configuration_classic h2 {
+    display: block;
+    font-size: 24px;
+    border-bottom: 1px solid rgba(216, 216, 216, 1);
+    padding-bottom: 5px;
+    margin: 0 0 10px 0;
+}
+
+#model_configuration_classic h3 {
+  	display: block;
+	background: none;
+  	color: inherit;
+  	padding: 0;
+  	position: inherit;
+  	text-shadow: none;
+  	font-size: 18px;
+  	margin: 40px 0 20px;
+}
+
+#model_configuration_classic p {
+	margin-bottom: 10px;
+}
+
+
+#model_configuration_classic .relevance {
+  display: block;
+  padding: 20px;
+}
+
+
+#model_configuration_classic .relevance select {
+  margin-right: 20px;
+}
+
+
+#model_configuration_classic .filters_base {
+  width: 100%;
+}
+
 
 	
