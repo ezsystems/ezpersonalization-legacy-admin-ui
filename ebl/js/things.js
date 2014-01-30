@@ -1,37 +1,4 @@
 
-/** It loads the specified scripts and call the specified callback functions.
- *  It works similar to jQuery.getScript function with some additional features:<br>
- *  
- *     1. It is able to load multiple scripts simultaneously.<br>
- *     2. It loads scripts in cross domain mode (see $.ajax description).<br>
- *     3. It allows browser to use the cache.<br>
- */
-var include = function(scripts, callback) {
-	var arguments = [];
-	
-	for (var i in scripts) {
-		arguments.push(cachedScript(scripts[i]));
-	}
-	
-	var result = $.when.apply(null, arguments);
-    
-	if (callback) {
-		result.done(callback);
-	}
-	
-	return result;
-};
-
-
-var cachedScript = function(url) {
- 	  options = {
- 			crossDomain: true, // it adds script tag and allows to debug included file 
-		    dataType: "script",
-		    cache: true,
-		    url: url
-	  };
-	  return jQuery.ajax( options );
-};
 
 
 var setChartsDimensions = function () {
@@ -70,13 +37,6 @@ var setEquals = function () {
 		applicantSelector: "> div"
 	});
 
-//	$(".storyboards_base").equalize({
-//		equalize: 		   'outerHeight',
-//		eqItems:           "> div > ul > li",
-//		segmentSize:       3,
-//		applicantSelector: "> div"
-//	});
-
 	$(".available_scenarios").equalize({
 		eqItems:           "> li:visible",
 		segmentSize:       5,
@@ -99,6 +59,7 @@ var setAccordions = function () {
 	}
 
 };
+
 
 var setSortable = function () {
 
@@ -125,20 +86,6 @@ var setSortable = function () {
 
 	}
 };
-
-//var setModelsGroupsHeight = function () {
-//
-//	var modelsContainer = $(".models_groups");
-//	var storyContainer = $(".storyboards_base");
-//	if (modelsContainer.length) {
-//		var offset = modelsContainer.offset();
-//		var screenHeight = $(window).height();
-//		var mod = 20;
-//		modelsContainer.css({'height': ( screenHeight - offset.top - mod ) + 'px'});
-//		storyContainer.css({'height': ( screenHeight - offset.top + mod ) + 'px'});
-//	}
-//
-//};
 
 
 var setDragDrop = function () {
@@ -287,122 +234,13 @@ function setDialogs(modelID) {
 			closeLayer(layerBody, layer, overlay);
 		}
 	});
-
 }
 
-var activateSubmodelDialog = function (modelID, title) {
-	$('.overlay').find('.model_name').html(title);
-	setDialogs(modelID);
-	fillSubModels(modelID);
-	loadDaysField(modelID);
-};
-
-/**
- * returns an object which represents the duration string
- * @author: maik.seyring
- */
-var parseDuration = (function () {
-	function getHours() {
-		return (((((this.Y * 12) + this.M) * 30) + this.D) * 24) + this.H + (this.m > 30 ? 1 : 0);
-	}
-
-	function getDays() {
-		return (((this.Y * 12) + this.M) * 30) + this.D + (this.H > 12 ? 1 : 0);
-	}
-
-	function getXSDuration() {
-
-		return this.getHours() ?
-			'P' +
-			(this.Y ? this.Y + 'Y' : '') +
-			(this.M ? this.M + 'M' : '') +
-			(this.D ? this.D + 'D' : '') +
-			(this.H || this.m || this.S ? 'T' : '') +
-			(this.H ? this.H + 'H' : '') +
-			(this.m ? this.m + 'M' : '') +
-			(this.S ? this.S + 'S' : ''):
-			null;
-	}
-
-	return function parseDuration(str) {
-
-		var RegEx = /(-?)P((\d{1,8})Y)?((\d{1,8})M)?((\d{1,8})D)?(T((\d{1,8})H)?((\d{1,8})M)?((\d{1,8}(\.\d{1,8})?)S)?)?/,
-			years = 3,
-			months = 5,
-			days = 7,
-			hours = 10,
-			minutes = 12,
-			seconds = 14,
-			match = [],
-			res = {
-				'getHours':      getHours,
-				'getDays':       getDays,
-				'getXSDuration': getXSDuration
-			};
-		if (typeof str === 'string') {
-			match = str.match(RegEx);
-		}
-		res.Y = match[years] | 0;
-		res.M = match[months] | 0;
-		res.D = match[days] | 0;
-		res.H = match[hours] | 0;
-		res.m = match[minutes] | 0;
-		res.S = match[seconds] | 0;
-		return res;
-	};
-})();
 
 
-/**
- * save a model on the server
- * @param model - Model Object to be saved
- * @param $content - Dom Object where the loading indicator is attached to
- * @return jqXHR
- *
- * @author maik.seyring
- */
-var saveModel = function(model, $content){
-	return $.ajax({
-		type:        "POST",
-		beforeSend:  function (x) {
-			setLoadingDiv($content);
-			if (x && x.overrideMimeType) {
-				x.overrideMimeType("application/json;charset=UTF-8");
-			}
-			x.setRequestHeader('no-realm', 'realm1');
-		},
-		mimeType:    "application/json",
-		contentType: "application/json;charset=UTF-8",
-		dataType:    "json",
-		data:        JSON.stringify(model),
-		url:         "ebl/v3/" + customerID + "/structure/update_model",
-		success:     function (json) {
-			unsetLoadingDiv($content);
-			setMessagePopUp("positive", "message_data_saved_successfully");
-			updateModelInfo($('#model_' + json.model.referenceCode), json.model);
-		},
-		error:       function (jqXHR, textStatus, errorThrown) {
-			if (jqXHR.status !== null && jqXHR.status === 403) {
-				setMessagePopUp("problem", "error_server_error_403");
-			}
-			else if (jqXHR.status !== null && jqXHR.status === 401) {
-				setMessagePopUp("problem", "error_server_error_401");
-			}
-			else if (jqXHR.status !== null && jqXHR.status === 400) {
-				setMessagePopUp("problem", "error_server_error_400");
-			}
-			else if (jqXHR.status !== null && jqXHR.status === 404) {
-				setMessagePopUp("problem", "error_server_error_404");
-			}
-			else if (jqXHR.status !== null && jqXHR.status === 409) {
-				setMessagePopUp("problem", "error_server_error_409");
-			}
-			else {
-				setMessagePopUp("problem", "error_server_error");
-			}
-		}
-	});
-};
+
+
+
 
 /**
  * stores the current changes in the local model
@@ -563,26 +401,8 @@ var activateCBModelDialog = function activateCBModelDialog(model, title) {
 				}
 				$attributes.append(options);
 			},
-			error:      function (jqXHR, textStatus, errorThrown) {
-				if (jqXHR.status !== null && jqXHR.status === 403) {
-					setMessagePopUp("problem", "error_server_error_403");
-				}
-				else if (jqXHR.status !== null && jqXHR.status === 401) {
-					setMessagePopUp("problem", "error_server_error_401");
-				}
-				else if (jqXHR.status !== null && jqXHR.status === 400) {
-					setMessagePopUp("problem", "error_server_error_400");
-				}
-				else if (jqXHR.status !== null && jqXHR.status === 404) {
-					setMessagePopUp("problem", "error_server_error_404");
-				}
-				else if (jqXHR.status !== null && jqXHR.status === 409) {
-					setMessagePopUp("problem", "error_server_error_409");
-				}
-				else {
-					setMessagePopUp("problem", "error_server_error");
-				}
-			}
+			error: configuratorErrorHandler
+			
 		}).done(function (data) {
 				//init the sliders
 				var $sliders = $overlay.find('div.attr_slider')
@@ -731,17 +551,6 @@ var activateRandomModelDialog = function (model, title) {
 };
 
 
-var activateDialog = function () {
-	var openButton = $(".configure_model");
-	openButton.on("click", function (event) {
-		var modelID = $(this).closest("li.model").find("h5").text();
-		setDialogs(modelID);
-		if (modelID !== "") {
-			fillSubModels(modelID);
-		}
-	});
-};
-
 var destroyGroup = function () {
 	$('body')
 	.on("click", ".destroy_group", function (event) {
@@ -801,29 +610,6 @@ var autodestructionMessage = function () {
 	alert('change');
 };
 
-/* var setToolTips = function()
- {
-
- var tipTrigger = $('.tooltip_trigger');
- tipTrigger.each(function()
- {
- var content = $(this).find('span.tooltip');
- $(this).qtip(
- {
- show: { event: 'click' },
- hide: { event: 'unfocus' },
- content: content,
- position:
- {
- my: 'top right',  // Position my top left...
- at: 'bottom center',
- viewport: $(window)
- }
- });
- });
-
- }; */
-
 
 //helper function which tests whether a string starts with a substring
 function startsWith(needle, haystack, lower){
@@ -837,17 +623,13 @@ function startsWith(needle, haystack, lower){
 }
 
 $(document).ready(function () {
-//	setModelsGroupsHeight();
 	setChartsDimensions();
 	setTimeRanges();
-	//setToolTips();
 	setEquals();
 	setAccordions();
 	setSortable();
-	//setDragDrop();
 	setMessages();
 	setOptionsBar();
-	activateDialog();
 	setFilterGroups();
 	destroyGroup();
 	initRemoveAttributeValue();

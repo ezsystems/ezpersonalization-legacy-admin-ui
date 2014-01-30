@@ -195,7 +195,7 @@
 					saveFiltersForm(callback);
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
+					configuratorErrorHandler(jqXHR, textStatus, errorThrown);
 				}
 			});
 		}
@@ -221,7 +221,7 @@
 				saveStandradFilters(callback);
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
-				settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
+				configuratorErrorHandler(jqXHR, textStatus, errorThrown);
 			}
 		});
 	}
@@ -246,7 +246,7 @@
 				callback();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
-				settingsDefaultErrorHandler(jqXHR, textStatus, errorThrown);
+				configuratorErrorHandler(jqXHR, textStatus, errorThrown);
 			}
 		});
 	}

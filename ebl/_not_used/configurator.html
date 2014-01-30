@@ -1970,6 +1970,40 @@
 		  }
 	  });
   }
+   
+   
+
+  /**
+   * save a model on the server
+   * @param model - Model Object to be saved
+   * @param $content - Dom Object where the loading indicator is attached to
+   * @return jqXHR
+   *
+   * @author maik.seyring
+   */
+  var saveModel = function(model, $content){
+  	return $.ajax({
+  		type:        "POST",
+  		beforeSend:  function (x) {
+  			setLoadingDiv($content);
+  			if (x && x.overrideMimeType) {
+  				x.overrideMimeType("application/json;charset=UTF-8");
+  			}
+  			x.setRequestHeader('no-realm', 'realm1');
+  		},
+  		mimeType:    "application/json",
+  		contentType: "application/json;charset=UTF-8",
+  		dataType:    "json",
+  		data:        JSON.stringify(model),
+  		url:         "ebl/v3/" + customerID + "/structure/update_model",
+  		success:     function (json) {
+  			unsetLoadingDiv($content);
+  			setMessagePopUp("positive", "message_data_saved_successfully");
+  			updateModelInfo($('#model_' + json.model.referenceCode), json.model);
+  		},
+  		error: defaultErrorHandler
+  	});
+  };
 
   function updateModelInfo($model, model) {
 	  var type, maxRating, maxItemAge, str;
