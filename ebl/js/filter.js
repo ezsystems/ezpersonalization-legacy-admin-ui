@@ -478,7 +478,7 @@
 			json.scenario.title = $('#scenario_title').val();
 			json.scenario.referenceCode = $('#scenario_id').val();
 			json.scenario.inputItemType = $('#input_type').val();
-			json.scenario.description = $('#sc_description').val();
+			json.scenario.description = $('#sc_description').val().replace(/\n/g,"");
 			
 			json.scenario.outputItemTypes = new Array();
 			$('input[id^="output_type"]').each(function() {
@@ -806,7 +806,7 @@
 		json.scenario.title = $('#scenario_title').val();
 		json.scenario.referenceCode = $.trim($('#scenario_id').val());
 		json.scenario.inputItemType = $('#input_type').val();
-		json.scenario.description = $('#sc_description').val();
+		json.scenario.description = $('#sc_description').val().replace(/\n/g,"");
 		
 		json.scenario.outputItemTypes = new Array();
 		$('input[id^="output_type"]').each(function() {
