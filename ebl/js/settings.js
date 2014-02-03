@@ -379,9 +379,10 @@
 		}
 		
 		if (set.minimalItemPrice) {
+			$('#enable_min_price').prop("checked", true);
+			$('#limit_min_price').prop("disabled", false);
 			$('#limit_min_price').val(set.minimalItemPrice);
 		}
-
 		
 		// profile filter
 		
