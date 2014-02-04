@@ -21,6 +21,7 @@ var setChartsDimensions = function () {
 	}
 };
 
+
 var setEquals = function () {
 
 	$(".groups_base").equalize({
@@ -45,6 +46,7 @@ var setEquals = function () {
 
 };
 
+
 var setAccordions = function () {
 
 	var accordion = $(".accordion");
@@ -61,61 +63,34 @@ var setAccordions = function () {
 };
 
 
-var setSortable = function () {
-
-	var sortable = $(".user_created_group, .grouping_attributes");
-
-	if (sortable.length) {
-
-		sortable.sortable({
-			//appendTo: document.body,
-			connectWith:     "ul",
-			forceHelperSize: true,
-			change:          function () {
-				setEquals();
-			},
-			receive: function(event, ui){
-				if($(this).hasClass('grouping_attributes')){
-					ui.item.find('a').remove();
-				}
-				else if(!ui.item.find('a').length){
-					ui.item.append(' <a class="remove_attribute_value">x</a>');
-				}
-			}
-		});
-
-	}
-};
-
-
-var setDragDrop = function () {
-	$(".model").draggable({
-		connectToSortable: ".empty_model_place",
-		helper:            "clone",
-		helper:            function (event) {
-			return $('<div class="helper_on_the_move"/>').text($(this).find("h5").text());
-		},
-		cursorAt:          {
-			left:   100,
-			bottom: 0},
-		start:             function (event, ui) {
-			setEquals();
-		},
-		stop:              function (event, ui) {
-			setEquals();
-		},
-		revert:            "invalid"
-	});
-	$(".empty_model_place").sortable({
-		revert:  true,
-		over:    function (event, ui) {
-			$(this).css({'padding': '0'});
-		},
-		receive: function (event, ui) {
-			createPlacedModel($(this));
-		}
-	});
-};
+//var setDragDrop = function () {
+//	$(".model").draggable({
+//		connectToSortable: ".empty_model_place",
+//		helper:            "clone",
+//		helper:            function (event) {
+//			return $('<div class="helper_on_the_move"/>').text($(this).find("h5").text());
+//		},
+//		cursorAt:          {
+//			left:   100,
+//			bottom: 0},
+//		start:             function (event, ui) {
+//			setEquals();
+//		},
+//		stop:              function (event, ui) {
+//			setEquals();
+//		},
+//		revert:            "invalid"
+//	});
+//	$(".empty_model_place").sortable({
+//		revert:  true,
+//		over:    function (event, ui) {
+//			$(this).css({'padding': '0'});
+//		},
+//		receive: function (event, ui) {
+//			createPlacedModel($(this));
+//		}
+//	});
+//};
 
 
 
@@ -205,40 +180,36 @@ var layerSizing = function (overlay) {
 	overlay.css({'height': fullHeight + 'px', 'width': fullWidth + 'px'});
 };
 
-
-function setDialogs(modelID) {
-
-	var overlay = $('.overlay');
-	var layer = $('.dialog_body');
-	var layerBody = overlay.parent('body');
-	var closeButton = $('.dialog_body .destroy_dialog');
-
-	if (modelID.length) {
-		layer.find("h2 > strong").text(modelID);
-	}
-
-	openLayer(overlay, layer, layerBody);
-	layerSizing(overlay);
-
-	setEquals();
-	setSortable();
-	setFilterGroups();
-	//destroyGroup();
-
-	closeButton.on('click',function () {
-		closeLayer(layerBody, layer, overlay);
-	});
-
-	$(document).on('keydown', function (e) {
-		if (e.which === 27) {
-			closeLayer(layerBody, layer, overlay);
-		}
-	});
-}
-
-
-
-
+//
+//function setDialogs(modelID) {
+//
+//	var overlay = $('.overlay');
+//	var layer = $('.dialog_body');
+//	var layerBody = overlay.parent('body');
+//	var closeButton = $('.dialog_body .destroy_dialog');
+//
+//	if (modelID.length) {
+//		layer.find("h2 > strong").text(modelID);
+//	}
+//
+//	openLayer(overlay, layer, layerBody);
+//	layerSizing(overlay);
+//
+//	setEquals();
+//	setSortable();
+////	setFilterGroups();
+//	//destroyGroup();
+//
+//	closeButton.on('click',function () {
+//		closeLayer(layerBody, layer, overlay);
+//	});
+//
+//	$(document).on('keydown', function (e) {
+//		if (e.which === 27) {
+//			closeLayer(layerBody, layer, overlay);
+//		}
+//	});
+//}
 
 
 
@@ -578,23 +549,10 @@ var initRemoveAttributeValue = function () {
 	initRemoveAttributeValue = function(){};
 };
 
-var setFilterGroups = function () {
-
-	var newButton = $(".create_one_more_group");
-	newButton.on("click", function (event) {
-
-		var original = $(this).parent().prev();
-		var inlineNumber = parseInt(original.find("h5 > span").text()) + 1;
-		// alert(inlineNumber);
-
-		$(original).clone().insertBefore($(this).parent());
-		$(this).parent().prev().find("h5 > span").text(inlineNumber);
-		$(this).parent().prev().find("ul.user_created_group > li").remove();
-		setEquals();
-		setSortable();
-
-	});
-};
+//var setFilterGroups = function () {
+//
+//
+//};
 
 var setMessages = function () {
 
@@ -627,10 +585,10 @@ $(document).ready(function () {
 	setTimeRanges();
 	setEquals();
 	setAccordions();
-	setSortable();
+//	setSortable();
 	setMessages();
 	setOptionsBar();
-	setFilterGroups();
+//	setFilterGroups();
 	destroyGroup();
 	initRemoveAttributeValue();
 });

@@ -41,63 +41,64 @@ var initialize = function() {
 		row++;
 	});
 
-	  $('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
-	  $('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
+	$('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
+	$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
 			  
-	  json = modelDao.getModels(); // must be already loaded at this moment
+	json = modelDao.getModels(); // must be already loaded at this moment
 
-	  $('.models_base').children('h3').children('span').first().text(json.length);
+	$('.models_base').children('h3').children('span').first().text(json.length);
 
-	  var modelRefArray = new Array();
-	  var wasOtherli = false;
+	var modelRefArray = new Array();
+	var wasOtherli = false;
 
-	  for(var i = 0; i < json.length; i ++) {
-		  var nest, ghostModel, model = json[i];
+	for(var i = 0; i < json.length; i ++) {
+		var nest, ghostModel, model = json[i];
 		  
-		  var dummy = $('.dummymodel');
-		  var dummyClone = $(dummy).clone();
-		  $(dummyClone).show();
-		  $(dummyClone).attr("id", "model_" + model.referenceCode);
+		var dummy = $('.dummymodel');
+		var dummyClone = $(dummy).clone();
+		$(dummyClone).show();
+		$(dummyClone).attr("id", "model_" + model.referenceCode);
 
-		  if(model.modelType == "CF_I2I" || model.modelType == "CF_I2I_MIX") {
-			  nest = $('#collaborative_list');
-		  } else if(model.modelType === "POPULARITY_SHORT" || model.modelType === "POPULARITY_LONG") {
-			  nest = $('#popularity_list');
-		  } else {
-			  wasOtherli = true;
-			  nest = $('#other_list');
-		  }
+		if(model.modelType == "CF_I2I" || model.modelType == "CF_I2I_MIX") {
+			nest = $('#collaborative_list');
+		} else if(model.modelType === "POPULARITY_SHORT" || model.modelType === "POPULARITY_LONG") {
+			nest = $('#popularity_list');
+		} else {
+			wasOtherli = true;
+			nest = $('#other_list');
+		}
 		  
-		  $(dummyClone).appendTo(nest).removeClass("dummymodel");
+		$(dummyClone).appendTo(nest).removeClass("dummymodel");
 		  
-		  renderModel(model);
-	  }
+		renderModel(model);
+	}
 
-	  if(!wasOtherli){
-		  $('#other_list_li').hide();
-	  }
+	if(!wasOtherli){
+		$('#other_list_li').hide();
+	}
 	  
-	  loadRightSection();
+	loadRightSection();
 
-	  $('body').on('mouseover', '.model', function() {
-		  setLiveDragDrop($(this));
-	  });
+	$('body').on('mouseover', '.model', function() {
+		setLiveDragDrop($(this));
+	});
 
-	  localizer();
+	localizer();
 
-	  if(saved == "true") {
-		  setMessagePopUp("positive", "message_data_saved_successfully");
-	  }
+	if(saved == "true") {
+		setMessagePopUp("positive", "message_data_saved_successfully");
+	}
 
-	  $("#button_save").click(saveScenario);
+	$("#button_save").click(saveScenario);
 
-	  $('body').on("change", '.placed_model input, .placed_model select', function() {
-				  var model = $(this).parents('.placed_model').attr('id');
-				  console.log(model);
-				  updateJsonValueForModel(model);
-			  });
-	  initHelpBtn();
-  };
+	$('body').on("change", '.placed_model input, .placed_model select', function() {
+		var model = $(this).parents('.placed_model').attr('id');
+        console.log(model);
+		updateJsonValueForModel(model);
+    });
+	
+	initHelpBtn();
+};
   
   
 function renderModel(model) {
@@ -569,60 +570,50 @@ function saveScenario() {
   }
   
   
-
-  
-  
   function renderAttributes() {
+	  var list = current_attributes;
 	  
-	  var subModels = current_submodels;
-	  var attributes = current_attributes;
-
-	  var list, options, i, l;
-	  l = subModels.length;
-
-	  if(attributes.length > 0) {
-		  list = attributes;
-		  options = '<option value="" data-translate="configurator_submodel_select_attribute" disabled="disabled" selected="selected">- Select an attribute -</option>';
-		  for(i = 0; i < list.length; i ++) {
-			  l = current_submodels.length;
-			  while(l --) {
-				  if(subModels[l].attributeKey === list[i].key &&
-						  subModels[l].submodelType === list[i].type) {
-					  break;
-				  }
-			  }
-			  subModels[list[i].type + list[i].key] = l !== - 1 ? subModels[l] : null;
+	  if(list.length > 0) {
+		  
+		  var options = '<option value="" data-translate="configurator_submodel_select_attribute" disabled="disabled" selected="selected">- Select an attribute -</option>';
+		  for(var i = 0; i < list.length; i ++) {
+			  
+			  var sbm = getSubmodel(list[i].key, list[i].type);
 
 			  options = options +
 					  '<option data-type="' + list[i].type + '"value="' + list[i].key + '">'
 					  + (list[i].type === 'NUMERIC' ? '[123] ' : '')
 					  + (list[i].type === 'NOMINAL' ? '[ABC] ' : '')
 					  + list[i].key + ' ';
-			  if(list[i].type === 'NUMERIC' && l !== - 1) {
-				  if('intervals' in subModels[l]){
-					  options = options + '(' + subModels[l].intervals.length + ' intervals)';
-				  }
-			  } else if(list[i].type === 'NOMINAL' && l !== - 1) {
-				  var count = 0,
-						  keys = {},
-						  j = subModels[l].attributeValues.length,
-						  group;
-				  while(j --) {
-					  group = subModels[l].attributeValues[j].group;
-					  if(keys[group]) {
-						  continue;
-					  } else {
-						  keys[group] = true;
-						  count ++;
+			  
+			  if (sbm) {
+				  if (list[i].type === 'NUMERIC') {
+					  if('intervals' in sbm){
+						  options = options + '(' + sbm.intervals.length + ' intervals)';
 					  }
+				  } else if (list[i].type === 'NOMINAL') {
+					  var count = 0;
+					  var keys = {};
+					  var j = sbm.attributeValues.length;
+					  
+					  while(j --) {
+						  var group = sbm.attributeValues[j].group;
+						  if(keys[group]) {
+							  continue;
+						  } else {
+							  keys[group] = true;
+							  count ++;
+						  }
+					  }
+					  options = options + '(' + count + ' groups)';
 				  }
-				  options = options + '(' + count + ' groups)';
-			  }
+		  	  }
 			  options = options + '</option>';
 		  }
 		  $('#submodels_attributes').html(options);
 	  }
   }
+  
 
   function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
 	  if(jqXHR != null && jqXHR.status == 403) {
@@ -728,44 +719,34 @@ function saveScenario() {
 	  modelDao.loadSubmodelsAndAttributes(model_reference_code, function(submodel, attributes) {
 		  
 		  current_attributes = attributes; // setting global variables
-		  current_submodels = submodel;   
+		  current_submodels = submodel;
+		  
+		  renderAttributes();
 		  
 		  if (current_submodels.length) {
-			  current_submodel = current_submodels[0];
-		  }
 			  
-		  renderAttributes();
-
-		  $('#submodels_attributes').off('change').on('change', function(event) {
-			  var $this = $(this),
-			  type = $this.find('option:selected').data('type');
-			  fillSubModelsChange($this.val(), type, modelID);
-		  });
-		  
-		  if(current_submodel) {
+			  var sm = current_submodels[0];
+			  
 			  $('#submodels_attributes option').removeAttr('selected').filter(function() {
-				  return ($(this).data('type') === current_submodel.submodelType && $(this).val() === current_submodel.attributeKey);
+				  return ($(this).data('type') === sm.submodelType && $(this).val() === sm.attributeKey);
 			  }).attr('selected', 'selected');
-			  $('#submodels_attributes').trigger('change');
+			  
+			  fillSubModelsChange(sm.attributeKey, sm.submodelType);
+			  
 		  } else {
-			  $('.filters_group > div').hide();
-			  $('#relevant_period').off('change').on('change', function() {
-				  var val = checkRelevantPeriod();
-				  if(! val) {
-					  disableSubmodelActions();
-				  } else {
-					  enableSubmodelActions();
-				  }
-			  });
+			  fillSubModelsChange(null, null);
 		  }
-		  enableSubmodelActions();
-		  unsetLoadingDiv($('.filters_group'));
 		  
+		  enableSubmodelActions();
+
 	  }, configuratorErrorHandler);
   }
   
 
-  function updateSubModel(model) {
+  function updateSubModel() {
+	  
+	  var model = current_submodel;
+	  
 	  if(model.submodelType === 'NUMERIC') {
 		  model.intervals = checkNumericSubModel();
 	  } else if(model.submodelType === 'NOMINAL') {
@@ -774,24 +755,22 @@ function saveScenario() {
   }
 
   
-  function fillSubModelsChange(attributeKey, type, modelID) {
+  function fillSubModelsChange(attributeKey, type) {
 	  if(! attributeKey) {
 		  return;
 	  }
 
 	  if(current_submodel) {
-		  updateSubModel(current_submodel);
+		  updateSubModel(); // parsing changes and altering the JSON object ()
 	  }
 
 	  current_submodel = getSubmodel(attributeKey, type);
 
-	  if (current_submodel) {
-		  // we have already an instance
-		  if(type === "NUMERIC") {
-			  fillNumericSubmodelValues(current_submodel);
-		  } else if(type === "NOMINAL") {
-			  fillSubmodelValues(current_submodel);
-		  }
+	  // we have already an instance
+	  if(type === "NUMERIC") {
+		  fillNumericSubmodelValues(current_submodel);
+	  } else if(type === "NOMINAL") {
+		  fillSubmodelValues(current_submodel);
 	  }
   }
 
@@ -799,89 +778,74 @@ function saveScenario() {
   function fillSubmodelValues(subModel) {
 
 	  $('.grouping_attributes').children('li').remove();
-	  $('.groups_base').children('li').first().find(
-			  "ul.user_created_group").children().remove();
-	  $('.groups_base').children('li').slice(1,
-					  ($('.groups_base').children('li').length - 1))
-			  .remove();
-
-	  $('#relevant_period')
-			  .off('change')
-			  .on('change', function() {
-				  var val = checkRelevantPeriod();
-				  if(! val) {
-					  disableSubmodelActions();
-				  } else {
-					  enableSubmodelActions();
-				  }
-			  });
+	  $('.groups_base').children('li').first().find("ul.user_created_group").children().remove();
+	  $('.groups_base').children('li').slice(1, ($('.groups_base').children('li').length - 1)).remove();
 
 	  $('#nominalSubmodelValues').show().siblings('div').hide();
 	  $('.grouping_attributes').html("");
-	  getAttributeValues(subModel.attributeKey, subModel.submodelType)
-			  .then(function(json) {
-				  //console.log(json);
-				  var original;
-				  //write all the groups and the according attribute values
-				  for(var i = 0; i < subModel.attributeValues.length; i ++) {
-					  var attributeValue = subModel.attributeValues[i];
-					  if(attributeValue.group === null) {// is handled below
-						  $('.grouping_attributes').append(
-								  '<li data-value="' + attributeValue.attributeValue + '">' + attributeValue.attributeValue + '</li>');
+	  
+	  if (! subModel) {
+		  return;
+	  }
+	  
+	  getAttributeValues(subModel.attributeKey, subModel.submodelType).then(function(json) {
+		  //console.log(json);
+		  var original;
+		  //write all the groups and the according attribute values
+		  for(var i = 0; i < subModel.attributeValues.length; i ++) {
+			  var attributeValue = subModel.attributeValues[i];
+			  if(attributeValue.group === null) {// is handled below
+				  $('.grouping_attributes').append(
+						  '<li data-value="' + attributeValue.attributeValue + '">' + attributeValue.attributeValue + '</li>');
+			  } else {
+				  var listStr = '<li data-value="' + attributeValue.attributeValue + '" class="attribute_value">' + attributeValue.attributeValue + ' <a class="remove_attribute_value">x</a></li>';
+				  if(attributeValue.group == 1) {
+					  original = $('.groups_base').children('li').children('ul').first();
+					  original.append(listStr);
+				  } else {
+					  var countGroups = $('.groups_base').children('li').length;
+					  if(attributeValue.group <= countGroups - 1) {
+						  var groupAvailable = $('.groups_base').children(
+										  'li').slice(attributeValue.group - 1,
+										  attributeValue.group);
+						  groupAvailable.children('ul').append(listStr);
 					  } else {
-						  var listStr = '<li data-value="' + attributeValue.attributeValue + '" class="attribute_value">' + attributeValue.attributeValue + ' <a class="remove_attribute_value">x</a></li>';
-						  if(attributeValue.group == 1) {
-							  original = $('.groups_base').children('li')
-									  .children('ul').first();
-							  original.append(listStr);
-						  } else {
-							  var countGroups = $('.groups_base').children('li').length;
-							  if(attributeValue.group <= countGroups - 1) {
-								  var groupAvailable = $('.groups_base').children(
-												  'li').slice(attributeValue.group - 1,
-												  attributeValue.group);
-								  groupAvailable.children('ul').append(listStr);
-							  } else {
-								  original = $('.groups_base').children('li')
-										  .first();
-								  var inlineNumber = parseInt(original.find("h5 > span").text())
-										  + (countGroups - 1);
-								  $(original).clone().insertBefore(
-										  $('.groups_base').children('li').last());
-								  $('.groups_base').children('li').last().prev()
-										  .find("h5 > span").text(inlineNumber);
-								  $('.groups_base').children('li').last().prev()
-										  .find("ul.user_created_group > li")
-										  .remove();
-								  setSortable();
-								  $('.groups_base')
-										  .children('li')
-										  .last()
-										  .prev()
-										  .children('ul')
-										  .append(listStr);
-							  }
-						  }
+						  original = $('.groups_base').children('li').first();
+						  
+						  var inlineNumber = parseInt(original.find("h5 > span").text()) + (countGroups - 1);
+						  
+						  $(original).clone().insertBefore(
+								  $('.groups_base').children('li').last());
+						  $('.groups_base').children('li').last().prev()
+								  .find("h5 > span").text(inlineNumber);
+						  $('.groups_base').children('li').last().prev()
+								  .find("ul.user_created_group > li")
+								  .remove();
+						  setSubmodelGroupsSortable();
+						  
+						  $('.groups_base').children('li').last().prev().children('ul').append(listStr);
 					  }
 				  }
-				  //fill the available attribute values, which are not yet in groups
-				  var $container = $('.grouping_attributes');
-				  console.log(json.attribute.values);
-				  var flag;
-				  for(i = 0; i < json.attribute.values.length; i ++) {
-					  flag = true;
-					  for(var l = 0; l < subModel.attributeValues.length; l ++) {
-						  //console.log(json.attribute.values[i] + ' =? ' + subModel.attributeValues[l].attributeValue);
-						  if(json.attribute.values[i] === subModel.attributeValues[l].attributeValue /*|| subModel.attributeValues[l].group === null*/) {
-							  flag = false;
-						  }
-					  }
-					  if(flag) {
-						  console.log(json.attribute.values[i]);
-						  $container.append('<li data-value="' + json.attribute.values[i] + '">' + json.attribute.values[i] + '</li>');
-					  }
+			  }
+		  }
+		  //fill the available attribute values, which are not yet in groups
+		  var $container = $('.grouping_attributes');
+	
+		  var flag;
+		  for(i = 0; i < json.attribute.values.length; i ++) {
+			  flag = true;
+			  for(var l = 0; l < subModel.attributeValues.length; l ++) {
+				  //console.log(json.attribute.values[i] + ' =? ' + subModel.attributeValues[l].attributeValue);
+				  if(json.attribute.values[i] === subModel.attributeValues[l].attributeValue /*|| subModel.attributeValues[l].group === null*/) {
+					  flag = false;
 				  }
-			  });
+			  }
+			  if(flag) {
+				  //console.log(json.attribute.values[i]);
+				  $container.append('<li data-value="' + json.attribute.values[i] + '">' + json.attribute.values[i] + '</li>');
+			  }
+		  }
+	  });
   }
 
   function getAttributeValues(attributeKey, type) {
@@ -909,57 +873,56 @@ function saveScenario() {
   }
 
 
-  function createAttributeValueList() {
-	  var attributeValueList = [];
-	  var relevantPeriod = checkRelevantPeriod();
+function createAttributeValueList() {
+	var attributeValueList = [];
+	var relevantPeriod = checkRelevantPeriod();
 
-	  if(! relevantPeriod) {
-		  setMessagePopUp("problem",
-				  "configurator_message_invalid_relevant_period");
-		  return false;
-	  }
+	if(! relevantPeriod) {
+		setMessagePopUp("problem", "configurator_message_invalid_relevant_period");
+		return false;
+	}
 
-	  $('.grouping_attributes').children('li').each(function(index) {
-		  var attributeValueObject = new Object();
-		  attributeValueObject.group = null;
-		  attributeValueObject.attributeValue = $(this).data('value').toString();
-		  attributeValueList.push(attributeValueObject);
-	  });
+	$('.grouping_attributes').children('li').each(function(index) {
+		var attributeValueObject = new Object();
+		attributeValueObject.group = null;
+		attributeValueObject.attributeValue = $(this).data('value').toString();
+		attributeValueList.push(attributeValueObject);
+	});
 
-	  $('.user_created_group').each(function(index) {
-		  var group = parseInt(index + 1);
-		  $(this).children('li').each(function(index2) {
-			  var attributeValueObject = new Object();
-			  attributeValueObject.group = group;
-			  attributeValueObject.attributeValue = $(this).data('value').toString();
-			  attributeValueList.push(attributeValueObject);
-		  });
-	  });
-	  return attributeValueList;
-  }
+	$('.user_created_group').each(function(index) {
+		var group = parseInt(index + 1);
+		$(this).children('li').each(function(index2) {
+			var attributeValueObject = new Object();
+			attributeValueObject.group = group;
+			attributeValueObject.attributeValue = $(this).data('value').toString();
+			attributeValueList.push(attributeValueObject);
+		});
+	});
+	return attributeValueList;
+}
   
 
-  function checkRelevantPeriod() {
-	  var val = $('#relevant_period').val();
-	  if(val.length) {
-		  val = parseInt(val, 10);
-	  } else {
-		  $('.overlay .hintSpace').attr('data-translate', 'configurator_message_invalid_relevant_period');
-		  return false;
-	  }
-	  if(isNaN(val) || val < 1) {
-		  $('.overlay .hintSpace').attr('data-translate', 'configurator_message_invalid_relevant_period');
-		  return false;
-	  }
+function checkRelevantPeriod() {
+	var val = $('#relevant_period').val();
+	if(val.length) {
+		val = parseInt(val, 10);
+	} else {
+		$('.overlay .hintSpace').attr('data-translate', 'configurator_message_invalid_relevant_period');
+		return false;
+	}
+	if(isNaN(val) || val < 1) {
+		$('.overlay .hintSpace').attr('data-translate', 'configurator_message_invalid_relevant_period');
+		return false;
+	}
 	  
-	  var model = modelDao.getModel(model_reference_code);
+	var model = modelDao.getModel(model_reference_code);
 	  
-	  var duration = parseDuration(); // creating empty duration
-	  duration[$('#relevant_period_unit').val()] = val;
-	  model.maximumRatingAge = duration.getXSDuration();	  
+	var duration = parseDuration(); // creating empty duration
+	duration[$('#relevant_period_unit').val()] = val;
+	model.maximumRatingAge = duration.getXSDuration();	  
 	  
-	  return val;
-  }
+	return val;
+}
   
 
 /** This method must be called once during the initialisation. */
@@ -976,7 +939,10 @@ function initSubmodelDialog() {
   	
   	$('#model_configuration_classic .form_submit_button').on('click', function (e) { // Save button
   		e.preventDefault();
-  		saveModel();
+  		if (current_submodel) {
+  			updateSubModel(); // parse changes and update JSON
+  		}
+  		saveModel(); // save all the submodels, not only the current one.
   	});
 
   	$(document).on('keydown', function (e) {
@@ -989,7 +955,29 @@ function initSubmodelDialog() {
 	$('#relevant_period').on('change', function() {
 		checkRelevantPeriod();
     });
-	
+
+    $('#submodels_attributes').on('change', function(event) {
+    	var $this = $(this),
+		type = $this.find('option:selected').data('type');
+		fillSubModelsChange($this.val(), type);
+    });
+
+    $('#relevant_period').on('change', function() {
+    	var val = checkRelevantPeriod();
+	});
+    
+	$(".create_one_more_group").on("click", function (event) {
+
+		var original = $(this).parent().prev();
+		var inlineNumber = parseInt(original.find("h5 > span").text()) + 1;
+		// alert(inlineNumber);
+
+		$(original).clone().insertBefore($(this).parent());
+		$(this).parent().prev().find("h5 > span").text(inlineNumber);
+		$(this).parent().prev().find("ul.user_created_group > li").remove();
+		setEquals();
+		setSubmodelGroupsSortable();
+	});
 }
 
 
@@ -1031,15 +1019,13 @@ function activateSubmodelDialog(modelID) {
   	} 
   	
   	if (extendedSolution) {
-  		setSortable();
-  		setFilterGroups();
+  		setSubmodelGroupsSortable();
   		fillSubModels(modelID);
   	}
 
   	overlay.show();
 }
 
-  
   
 /** Saves the currently selected model
   */
@@ -1049,7 +1035,7 @@ function saveModel() {
 	  
 	setLoadingDiv($('body'));
 	  
-	modelDao.updateModelWithSubmodels(model, submodels,
+	modelDao.updateModelWithSubmodels(model, current_submodels,
 		function (model) {
 			unsetLoadingDiv($('body'));
 			
@@ -1064,37 +1050,41 @@ function saveModel() {
 }
   
 
-  function fillNumericSubmodelValues(sm) {
-	  var $content = $('#numericSubmodelValues'),
-			  $ghost = $content.find('.ghost'),
-			  $groups = $('#modelGroups'),
-			  length,
-			  $clone,
-			  interval;
+function fillNumericSubmodelValues(sm) {
+	var $content = $('#numericSubmodelValues');
+	var $ghost = $content.find('.ghost');
+	var	$groups = $('#modelGroups');
+	
+	if (! sm) {
+		$content.hide();
+		return;
+	}
+	
+	function modelCheck() {
+		var sub = checkNumericSubModel($content);
+		var val = checkRelevantPeriod();
+		
+		if(! val || ! sub) {
+			disableSubmodelActions();
+		} else {
+		    enableSubmodelActions();
+		}
+	}
 
-	  function modelCheck() {
-		  var sub = checkNumericSubModel($content),
-				  val = checkRelevantPeriod();
-		  if(! val || ! sub) {
-			  disableSubmodelActions();
-		  } else {
-			  enableSubmodelActions();
-		  }
-	  }
-
-	  $content
-			  .off('change')
-			  .on('change', '.from, .to', modelCheck)
-			  .show()
-			  .siblings('div')
-			  .hide();
-	  $('#relevant_period')
-			  .off('change')
-			  .on('change', modelCheck);
-	  $groups.find('.interval').remove();
-	  if(sm && sm.intervals) {
-		  //reverse sort the groups
-		  sm.intervals
+	$content.off('change')
+			.on('change', '.from, .to', modelCheck)
+			.show()
+			.siblings('div')
+			.hide();
+	
+	$('#relevant_period')
+			.off('change')
+			.on('change', modelCheck);
+    $groups.find('.interval').remove();
+    
+	if(sm && sm.intervals) {
+		//reverse sort the groups
+		sm.intervals
 				  .sort(function(a, b) {
 					  var aLeft = a.leftValue === null ? Number.NEGATIVE_INFINITY : parseFloat(a.leftValue),
 							  aRight = a.rightValue === null ? Number.POSITIVE_INFINITY : parseFloat(a.rightValue),
@@ -1111,10 +1101,10 @@ function saveModel() {
 					  return - 1;
 				  });
 		  //go through all the intervals and add them to the modelView
-		  length = sm.intervals.length;
+		  var length = sm.intervals.length;
 		  while(length --) {
-			  interval = sm.intervals[length];
-			  $clone = $ghost.clone().removeClass('ghost').addClass(
+			  var interval = sm.intervals[length];
+			  var $clone = $ghost.clone().removeClass('ghost').addClass(
 					  'interval');
 			  $clone.find('input.from').val(interval.leftValue);
 			  $clone.find('input.to').val(interval.rightValue);
@@ -1337,6 +1327,30 @@ var createPlacedModel = function (placed_model, model) {
   	});
   };
 
+  
+  var setSubmodelGroupsSortable = function () {
+		var sortable = $(".user_created_group, .grouping_attributes");
+
+		if (sortable.length) {
+			sortable.sortable({
+				//appendTo: document.body,
+				connectWith:     "ul",
+				forceHelperSize: true,
+				change:          function () {
+					setEquals();
+				},
+				receive: function(event, ui){
+					if($(this).hasClass('grouping_attributes')){
+						ui.item.find('a').remove();
+					}
+					else if(!ui.item.find('a').length){
+						ui.item.append(' <a class="remove_attribute_value">x</a>');
+					}
+				}
+			});
+
+		}
+	};
   
 
   /**

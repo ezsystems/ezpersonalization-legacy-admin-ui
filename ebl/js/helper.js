@@ -34,7 +34,6 @@ var cachedScript = function(url) {
 };
 
 
-
 /** Parses the query string and returns name/value pairs as map.
  */
 function getUrlVars() {
@@ -47,7 +46,6 @@ function getUrlVars() {
     }
     return vars;
 }
-		
 		
 
 //function gup copied from http://www.netlobo.com/url_query_string_javascript.html
