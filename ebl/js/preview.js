@@ -22,47 +22,63 @@
 	
  var initialize = function() {
 
-	  var outputArray = scenarioDao.scenario.outputItemTypes;
-	  
-	  
-	  $('#output_type').children('option').each(function(index){
-		  if(index != 0){
-				if( $.inArray(parseInt($(this).val()), outputArray) == -1){
-					$(this).hide();
-				}
-		  }
-		});
+	var outputArray = scenarioDao.scenario.outputItemTypes;
+	
+	$("#output_type").html(""); // removing all options
 
-	  $("#button_save").click(function() {
-		  call_recs();
-	  });
+	for (var i in mandatorInfo.itemTypeConfiguration.types) {
+		var t = mandatorInfo.itemTypeConfiguration.types[i];
+		var d = t.description + ' (' + t.id + ')';
+		
+		if( $.inArray(t.id, outputArray) == -1) {
+			continue;
+		}
+		
+		var option = $('<option value="' + t.id + '"></option>');
+		
+		if ($("#output_type option").length == 0) {
+			option.prop("selected", "selected");
+		}
+		
+		option.appendTo($("#output_type")).text(d);
+	}
 	  
-	  $('#addItem').click(function() {
-		  addItem();
-		  getCallId();
-	  });
-	  $('#clearText').click(function() {
-		  var items = $('#context_items');
-		  items.text('');
-		  getCallId();
-	  });
-	  $('#user_id').val('someuser');
-	  getCallId($('#user_id').val());
-	  $('#user_id').change(function(){
-		  getCallId();
-	  });
-	  $('#output_type').change(function(){
-		  getCallId();
-	  });
-	  $('#top_n').change(function(){
-		  if(changeTop()){
-			  getCallId();
-		  }
-	  });
-	  initHelpBtn();
+	$('#output_type').children('option').each(function(index){
+		if(index != 0){
+
+		}
+	});
+
+	$("#button_save").click(function() {
+		call_recs();
+	});
 	  
-	  $("#scenario_title").attr('value', scenarioDao.scenario.title ? scenarioDao.scenario.title : reference_code);
-  };
+	$('#addItem').click(function() {
+		addItem();
+		getCallId();
+	});
+	$('#clearText').click(function() {
+		var items = $('#context_items');
+		items.text('');
+		getCallId();
+	});
+	$('#user_id').val('someuser');
+	getCallId($('#user_id').val());
+	$('#user_id').change(function(){
+		getCallId();
+	});
+	$('#output_type').change(function(){
+		getCallId();
+	});
+	$('#top_n').change(function(){
+		if(changeTop()){
+			getCallId();
+		}
+	});
+	initHelpBtn();
+	  
+	$("#scenario_title").attr('value', scenarioDao.scenario.title ? scenarioDao.scenario.title : reference_code);
+};
   
   
   /**
