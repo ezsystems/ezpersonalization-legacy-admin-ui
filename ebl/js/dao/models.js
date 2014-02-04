@@ -162,8 +162,8 @@ modelDao.loadSubmodelsAndAttributes = function(modelRefcode, callBack, callBackE
 	  		  }, callBackError)
 	).then(function() {
 
-	  for (var j = 0; j < current_submodels.length; j++) { // append attributes, if they exist only in submodel configuration
-		  var smodel = current_submodels[j];
+	  for (var j = 0; j < submodels.length; j++) { // append attributes, if they exist only in submodel configuration
+		  var smodel = submodels[j];
 		  
 		  if ( ! modelDao.getAttribute(smodel.attributeKey, smodel.submodelType, attributes)) {
 			  attributes.push({ 'key': smodel.attributeKey, 'type': smodel.submodelType });
@@ -186,7 +186,7 @@ modelDao.updateModelWithSubmodels = function(model, submodels, callback, errorCa
 	var tasks = [];
 	
 	for (var i in submodels) { // we trigger the save for all submodels
-		arr.push($.ajax({
+		tasks.push($.ajax({
 			  type: "POST",
 			  mimeType: "application/json",
 			  contentType: "application/json;charset=UTF-8",

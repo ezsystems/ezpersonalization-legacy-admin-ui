@@ -1,10 +1,8 @@
+
 var customerID = $.cookie('customerID');
-
-
 
 	
 $(document).ready(function () {
-	
 	
 	showEmptyCharts();
 	showEmptyEventChart();
@@ -497,9 +495,19 @@ $(document).ready(function () {
 		});
 	});
 
-
 });
 
+
+//function parseAnchorAction() {
+//	var url = window.location.href;
+//	var hashes = url.slice(url.indexOf('#') + 1).split(':');
+//	
+//	var result = {
+//		'action' : hashes[0],
+//		'code'   : 
+//	};
+//	
+//}
 
 
 function updateDatae() {
