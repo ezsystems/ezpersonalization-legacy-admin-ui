@@ -116,7 +116,7 @@ function realLogin(email,password) {
 			$.cookie('email', email);
 			window.location = "index.html";
 		},
-		error: function() {
+		error: function(jqXHR, textStatus, errorThrown) {
 			
 			unsetLoadingDiv($('#login_dialog fieldset'));
 			
