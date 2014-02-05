@@ -486,7 +486,7 @@
 			result = false;
 		}
 		
-		json.scenario.description = $('#sc_description').val();
+		json.scenario.description = $('#sc_description').val().replace(/\n/g,"");
 
 		var solution = mandatorInfo.baseInformation.version;
 		
