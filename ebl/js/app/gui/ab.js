@@ -418,6 +418,7 @@ define([
 			}
 
 			$warning.attr('data-translate', warningStr);
+			i18n($warning);
 		}
 
 //		if(results.significance.differenceTest.result === 'PASSED'){
