@@ -20,11 +20,7 @@ $(document).ready(function() {
 	showEmptyEventChart();
 	
 	setLoadingDiv($('section.mandant > header'));
-	setLoadingDiv($('.available_scenarios'));
 	
-	
-	setLoadingDiv($('#collected_events'));
-	setLoadingDiv($('#delivered_recommendations'));
 	
 	$.when(
 		  include(["/js/dao/mandator.js"]).then(function() {
@@ -43,6 +39,7 @@ $(document).ready(function() {
 var ajaxScenarioList = function(new_period, callback) {
 	
 	setLoadingDiv($('#statistic_charts'));
+	setLoadingDiv($('.available_scenarios'));
 	
 	period = new_period;
 	
@@ -109,7 +106,8 @@ var ajaxScenarioList = function(new_period, callback) {
     		callback(json);
     	}
 	}).always(function() {
-		setLoadingDiv($('#statistic_charts'));
+		unsetLoadingDiv($('#statistic_charts'));
+		unsetLoadingDiv($('.available_scenarios'));
 	});
 };
 
@@ -600,6 +598,7 @@ function renderConversionRate() {
 		showEmptyEventChart();
 		console.log("no items available");
 	} else {
+		var conversionRateObject = {}
 		conversionRateObject.relative = [];
 		conversionRateObject.absolute = [];
 		for(var i = 0; i < statistic.length; i++){
@@ -607,8 +606,7 @@ function renderConversionRate() {
 			conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
 			conversionRateObject.absolute.push(statistic[i].clickedRecommended);
 		}
-		renderCollectedEvents();
-	    updateCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);
+	    updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);
 	}
 }
 
@@ -1078,7 +1076,7 @@ function showEmptyRecommendationChart() {
     middlebar.Draw();
 }
 
-function updateCharts(labels, conversionValues, formatter) {
+function updateRightCharts(labels, conversionValues, formatter) {
 //	console.log('updating convRate chart');
 //	console.log(conversionValues);
     RGraph.Clear(document.getElementById("conversion_rate"));
