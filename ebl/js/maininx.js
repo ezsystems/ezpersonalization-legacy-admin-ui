@@ -1,513 +1,242 @@
 
 var customerID = $.cookie('customerID');
 
-	
-$(document).ready(function () {
-	
+
+var scenarioInfoList; // loaded by ajaxScenarioList()
+
+var statistic;
+
+var period;
+
+
+$(document).ready(function() {
+
+    //set drop down field to default values: click, purchase, consume
+    $('#events_select_for_chart_bar_1').val('click');
+    $('#events_select_for_chart_bar_2').val('purchase');
+    $('#events_select_for_chart_bar_3').val('recommended');
+
 	showEmptyCharts();
 	showEmptyEventChart();
 	
 	setLoadingDiv($('section.mandant > header'));
-	setLoadingDiv($('.available_scenarios'));
-	
-	setLoadingDiv($('#conversion_rate'));
-	setLoadingDiv($('#collected_events'));
-	setLoadingDiv($('#delivered_recommendations'));
 	
 	
-	include(["/js/switch_mandator.js", "/js/user.js"], function() {
-		
-		getCurrentUser(function(loginInfo) {
-			
-			var name = "";
-			if (loginInfo.firstName) name += loginInfo.firstName;
-			if (loginInfo.lastName && name) name += " ";
-			if (loginInfo.lastName) name += loginInfo.lastName;
-			
-			if ( ! name) {
-				name += loginInfo.id;
-			}
-			
-			$('.account_data').children('li').first().find('strong').text(name);
-			
-		    if (loginInfo.provider == "ibs") {
-		    	$('#edit_contact_datal').attr('href', "api/v4/registration/selfcare");
-		    } else {
-		    	$('#edit_contact_datal').off('click').click(function() {
-		    		$('#editDataOverlay').show();
-		    	});
-		    }
-		});
-		
-		getAccesibleMandators(function(mandatorList) {
-			
-			var currentMandator = null;
-			
-			if (mandatorList.length > 1) {
-				$('.switch').show();
-				for (var i = 0; i < mandatorList.length; i++) {
-					var mandatorInfo = mandatorList[i];
-					$('#choose_mandant').append('<option value="' + mandatorInfo.name + '">' + mandatorInfo.name + ': ' + mandatorInfo.website + '</option>');
-					if ($.cookie('customerID') != null) {
-						if ($.cookie('customerID') == mandatorInfo.name) {
-							currentMandator = mandatorInfo;
-						}
-					}
-				}
-			} else if (mandatorList.length == 1) {
-				$('.switch').hide();
-				currentMandator = mandatorList[0];
-				$('#choose_mandant').append('<option value="' + currentMandator.name + '">' + currentMandator.name + ': ' + currentMandator.website + '</option>');
-			}
-			if(currentMandator !=null ){
-			
-			}
-	
-			if (currentMandator == null) {
-				if(mandatorList.length == 0) {
-					showNoAvailableMandatorPopup();
-				} else {
-					showSwitchMandatorPopup(false);
-				}
-			} else {
-				$.cookie('customerID', currentMandator.name, { expires: 365 });
-				initialLoadData();
-				setMandantData(currentMandator);
-			}
-			unsetLoadingDiv($('section.mandant > header'));
-		});
-	
-		
-		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
-		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
-		$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
-		
-		
-		$('#copyrightsLink').off('click').click(function() {
-	    	console.log("should close corporate1");
-	    	$('#messageCorporate').hide();
-	    	console.log("should close corporate2");
-	    	$('#messageCopyrights').show();
-	    });
-		
-	    //set drop down field to default values: click, purchase, consume
-	    $('#events_select_for_chart_bar_1').val('click');
-	    $('#events_select_for_chart_bar_2').val('purchase');
-	    $('#events_select_for_chart_bar_3').val('consume');
-	
-	
-	
-	    //Change the value in selectbox 1 in collected events
-	    $('select[id^="events_select_for_chart_bar"]').change(function () {
-	
-	        var json = $('.collected_events_chart').data('currentJSON');
-	
-	        if ($('li.current').hasClass('view_option_day')) {
-	            renderCollectedEvents(json, "day");
-	        } else if ($('li.current').hasClass('view_option_week')) {
-	            renderCollectedEvents(json, "week");
-	        } else if ($('li.current').hasClass('view_option_month')) {
-	            renderCollectedEvents(json, "month");
-	        }
-	    });
-	
-	
-	
-	    $('select[id^="select_for_delivered_recommendations_chart_bar"]').change(function () {
-	
-	        var json = $('.delivered_recommendation_chart').data('currentJSON');
-	
-	        if ($('li.current').hasClass('view_option_day')) {
-	            renderRecommendationChart(json, "day");
-	        } else if ($('li.current').hasClass('view_option_week')) {
-	            renderRecommendationChart(json, "week");
-	        } else if ($('li.current').hasClass('view_option_month')) {
-	            renderRecommendationChart(json, "month");
-	        }
-	    });
-	
-	    //Last day click event
-	    $('#view_option_day').click(function () {
-		
-			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
-			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
-			$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
-			localizer();
-			
-			showEmptyCharts();
-			showEmptyEventChart();
-			
-	        setLoadingDiv($('#conversion_rate'));
-	        setLoadingDiv($('#collected_events'));
-	        setLoadingDiv($('#delivered_recommendations'));
-	        
-	        fillConversionRateDay();
-	        fillRecommendationDay();
-	    });
-	
-	    $('#view_option_week').click(function () {
-	
-			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
-			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_week');
-			$('#index_collected_events').attr('data-translate', 'index_collected_events_week');
-			localizer();
-		
-	        //calculate the from_date_time and to_date_time
-	        var currentDate = getCurrentDateMinusDays(7);
-	        var from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-	        currentDate = getCurrentDateMinusDays(0);
-	        var to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-	        var granularity = "PT12H";
-			
-			showEmptyCharts();
-			showEmptyEventChart();
-			
-	        setLoadingDiv($('#collected_events'));
-	        setLoadingDiv($('#conversion_rate'));
-	
-	        customerID = $.cookie('customerID');
-			$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
-	        $.ajax({
-	            dataType: "json",
-				beforeSend: function (req) {
-	            req.setRequestHeader('no-realm', 'realm1');
-				},
-				 statusCode: {
-	                    401: function (jqXHR, textStatus, errorThrown) {
-							$.cookie('password', null);
-							$.cookie('email', null);
-							window.location = "login.html";
-	                    }
-	            },
-	            url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-				success: function (data) {
-					var json = {
-								'revenueResponse': {
-									'items' : data
-								}
-							},
-							conversionRateObject = {
-								'relative' : [0],
-								'absolute' : [0]
-							},
-							l, i, convRate;
-					if (json.revenueResponse.items.length < 1) {
-	
-						//To prevent old data in the graphs the use the "zero" object
-						showEmptyCharts();
-						showEmptyEventChart();
-						console.log("no items available");
-					} else {
-						conversionRateObject.relative = [];
-						conversionRateObject.absolute = [];
-						l = json.revenueResponse.items.length;
-						for(i = 0; i < l; i++){
-							convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/parseFloat(json.revenueResponse.items[i].clickEvents);
-							conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
-							conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
-						}
-						renderCollectedEvents(json, "week");
-						$('.collected_events_chart').data('currentJSON', json);
-	                    updateCharts(getGraphDescriptionOfLastWeek(), conversionRateObject.relative, percentFormatter);
-	                }
-					$('body').data('conversionRateObject', conversionRateObject);
-	                unsetLoadingDiv($('#collected_events'));
-	                unsetLoadingDiv($('#conversion_rate'));
-	            },
-	            error: function (jqXHR, textStatus, errorThrown) {
-	                if(jqXHR.status != null && jqXHR.status == 403)
-						{
-							setMessagePopUp("problem", "error_server_error_403");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 401)
-						{
-							setMessagePopUp("problem", "error_server_error_401");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 400)
-						{
-							setMessagePopUp("problem", "error_server_error_400");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 404)
-						{
-							setMessagePopUp("problem", "error_server_error_404");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 409)
-						{
-							setMessagePopUp("problem", "error_server_error_409");
-						}
-						else
-						{
-							setMessagePopUp("problem", "error_server_error");
-						}
-	            }
-	        });
-			
-			
-			
-	        granularity = "P1D";
-	        setLoadingDiv($('#delivered_recommendations'));
-	
-	        $.ajax({
-	            dataType: "json",
-				beforeSend: function (req) {
-	            req.setRequestHeader('no-realm', 'realm1');
-				},
-				 statusCode: {
-	                    401: function (jqXHR, textStatus, errorThrown) {
-							$.cookie('password', null);
-							$.cookie('email', null);
-							window.location = "login.html";
-	                    }
-	            },
-				beforeSend: function (req) {
-	            req.setRequestHeader('no-realm', 'realm1');
-				},
-	            url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-	            success: function (json) {
-	
-	                if (json.scenarioInfoList.length < 1) {
-	                    showEmptyRecommendationChart();
-	                    console.log("no scenarios");
-	                } else {
-	                    $('.delivered_recommendation_chart').data('currentJSON', json);
-	                    renderRecommendationChart(json, "week");
-	                }
-	                unsetLoadingDiv($('#delivered_recommendations'));
-	            },
-	            error: function (jqXHR, textStatus, errorThrown) {
-	                if(jqXHR.status != null && jqXHR.status == 403)
-						{
-							setMessagePopUp("problem", "error_server_error_403");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 401)
-						{
-							setMessagePopUp("problem", "error_server_error_401");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 400)
-						{
-							setMessagePopUp("problem", "error_server_error_400");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 404)
-						{
-							setMessagePopUp("problem", "error_server_error_404");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 409)
-						{
-							setMessagePopUp("problem", "error_server_error_409");
-						}
-						else
-						{
-							setMessagePopUp("problem", "error_server_error");
-						}
-	            }
-	        });
-	
-	
-	    });
-	
-	    $('#view_option_month').click(function () {
-	
-			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
-			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
-			$('#index_collected_events').attr('data-translate', 'index_collected_events_month');
-			localizer();
-	
-	        //calculate the from_date_time and to_date_time
-	        var currentDate = getCurrentDateMinusDays(30);
-	        var from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-	        currentDate = getCurrentDateMinusDays(0);
-	        var to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-	        var granularity = "P1D";
-	        
-			showEmptyCharts();
-			showEmptyEventChart();
-	
-	        setLoadingDiv($('#conversion_rate'));
-	        setLoadingDiv($('#collected_events'));
-	
-	        customerID = $.cookie('customerID');
-			$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
-	        $.ajax({
-	            dataType: "json",
-				beforeSend: function (req) {
-	            req.setRequestHeader('no-realm', 'realm1');
-				},
-				 statusCode: {
-	                    401: function (jqXHR, textStatus, errorThrown) {
-							$.cookie('password', null);
-							$.cookie('email', null);
-							window.location = "login.html";
-	                    }
-	            },
-	            url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-	            success: function (data) {
-	
-					var json = {
-							'revenueResponse': {
-								'items' : data
-							}
-						},
-						conversionRateObject = {
-							'relative' : [0],
-							'absolute' : [0]
-						},
-						l, i, convRate;
-	
-	                if (json.revenueResponse.items.length < 1) {
-						//To prevent old data in the graphs the objects have to be deleted
-	                    showEmptyCharts();
-	                    console.log("no items available");
-	                } else {
-						conversionRateObject.relative = [];
-						conversionRateObject.absolute = [];
-						l = json.revenueResponse.items.length;
-						for(i = 0; i < l; i++){
-							convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/parseFloat(json.revenueResponse.items[i].clickEvents);
-							conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
-							conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
-						}
-	                    renderCollectedEvents(json, "month");
-	                    $('.collected_events_chart').data('currentJSON', json);
-	                    updateCharts(getGraphDescriptionOfLastMonth(), conversionRateObject.relative, percentFormatter);
-	                }
-	
-					$('body').data('conversionRateObject', conversionRateObject);
-	                unsetLoadingDiv($('#conversion_rate'));
-	                unsetLoadingDiv($('#collected_events'));
-	            },
-	            error: function (jqXHR, textStatus, errorThrown) {
-	                if(jqXHR.status != null && jqXHR.status == 403)
-						{
-							setMessagePopUp("problem", "error_server_error_403");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 401)
-						{
-							setMessagePopUp("problem", "error_server_error_401");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 400)
-						{
-							setMessagePopUp("problem", "error_server_error_400");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 404)
-						{
-							setMessagePopUp("problem", "error_server_error_404");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 409)
-						{
-							setMessagePopUp("problem", "error_server_error_409");
-						}
-						else
-						{
-							setMessagePopUp("problem", "error_server_error");
-						}
-	            }
-	        });
-	
-	        setLoadingDiv($('#delivered_recommendations'));
-	
-	        $.ajax({
-	            dataType: "json",
-				beforeSend: function (req) {
-	            req.setRequestHeader('no-realm', 'realm1');
-				},
-				 statusCode: {
-	                    401: function (jqXHR, textStatus, errorThrown) {
-							$.cookie('password', null);
-							$.cookie('email', null);
-							window.location = "login.html";
-	                    }
-	            },
-	            url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-	            success: function (json) {
-	
-	                if (json.scenarioInfoList.length < 1) {
-	                    showEmptyRecommendationChart();
-	                    console.log("no scenarios");
-	                } else {
-	                    $('.delivered_recommendation_chart').data('currentJSON', json);
-	                    renderRecommendationChart(json, "month");
-	                }
-	                unsetLoadingDiv($('#delivered_recommendations'));
-	            },
-	            error: function (jqXHR, textStatus, errorThrown) {
-	                if(jqXHR.status != null && jqXHR.status == 403)
-						{
-							setMessagePopUp("problem", "error_server_error_403");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 401)
-						{
-							setMessagePopUp("problem", "error_server_error_401");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 400)
-						{
-							setMessagePopUp("problem", "error_server_error_400");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 404)
-						{
-							setMessagePopUp("problem", "error_server_error_404");
-						}
-						else if(jqXHR.status != null && jqXHR.status == 409)
-						{
-							setMessagePopUp("problem", "error_server_error_409");
-						}
-						else
-						{
-							setMessagePopUp("problem", "error_server_error");
-						}
-	            }
-	        });
-	
-	    });
-	
-	    
-	    
-	    // is called if right converison unit is changed from relative -> absolute and vice versa
-		$('#conversion_units').change(function () {
-			var conversionRateObject = $('body').data('conversionRateObject');
-			
-			var statusObject,
-				formatter;
-			if($(this).val() == 'relative')
-			{
-				statusObject = conversionRateObject.relative;
-				//console.log(statusObject);
-				formatter = percentFormatter;
-			}
-			else
-			{
-				statusObject = conversionRateObject.absolute;
-				formatter = myFormatter;
-			}
-			console.log(statusObject);
-			if($('li.current').hasClass('view_option_day'))
-			{
-				updateCharts(getGraphDescriptionOf24h(), statusObject, formatter);
-			}
-			else if($('li.current').hasClass('view_option_week'))
-			{
-				updateCharts(getGraphDescriptionOfLastWeek(), statusObject, formatter);
-			}
-			else if($('li.current').hasClass('view_option_month'))
-			{
-				updateCharts(getGraphDescriptionOfLastMonth(), statusObject, formatter);
-			}
-			
-		});
-	});
-
+	$.when(
+		  include(["/js/dao/mandator.js"]).then(function() {
+			  return mandatorDao.init(customerID);
+		  }),
+		  include(["/js/switch_mandator.js", "/js/user.js"]),
+		  ajaxScenarioList('24H')
+    ).done(function() {
+		  initialize();
+    });
 });
 
 
-//function parseAnchorAction() {
-//	var url = window.location.href;
-//	var hashes = url.slice(url.indexOf('#') + 1).split(':');
-//	
-//	var result = {
-//		'action' : hashes[0],
-//		'code'   : 
-//	};
-//	
-//}
+
+
+var ajaxScenarioList = function(new_period, callback) {
+	
+	setLoadingDiv($('#statistic_charts'));
+	setLoadingDiv($('.available_scenarios'));
+	
+	period = new_period;
+	
+	var from_date_time, to_date_time, granularity;
+	
+	if (period == 'WEEK') {
+	    //calculate the from_date_time and to_date_time
+	    var currentDate = getCurrentDateMinusDays(7);
+	    from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+	    currentDate = getCurrentDateMinusDays(0);
+	    to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+	    granularity = "PT12H";
+	    
+	} else if (period == 'MONTH') {
+        var currentDate = getCurrentDateMinusDays(30);
+        from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+        currentDate = getCurrentDateMinusDays(0);
+        to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+        granularity = "P1D";
+        
+	} else if (period == 'DAY') {
+	    var yesterday = getCurrentDateMinusDays(1);
+	    from_date_time = getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
+	    var currentDate = getCurrentDateMinusDays(0);
+	    to_date_time = getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
+	    granularity = "PT1H";
+	    
+	} else { // 24H
+	    var yesterday = new Date(Date.now() - 24*3600000);
+	    from_date_time = getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
+	    var currentDate = new Date();
+	    to_date_time = getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
+	    granularity = "PT1H";
+	}
+	
+	var result1 = $.ajax({
+        dataType: "json",
+        url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
+		success: function (data) {
+			statistic = data;
+        },
+        error: mainErrorHandler
+    });
+	
+	var result2 = 
+		$.ajax({
+		    dataType: "json",
+		    url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
+		    success: function (json) {
+		    	scenarioInfoList = json.scenarioInfoList;
+		    },
+		    error: mainErrorHandler
+		});
+	
+	return $.when(result1, result2).done(function() {
+		
+		$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
+		
+		renderRecommendationChart();
+		renderCollectedEvents();
+		renderConversionRate();
+		
+    	if (callback) {
+    		callback(json);
+    	}
+	}).always(function() {
+		unsetLoadingDiv($('#statistic_charts'));
+		unsetLoadingDiv($('.available_scenarios'));
+	});
+};
+
+	
+var initialize = function () {
+
+	getCurrentUser(function(loginInfo) {
+		
+		var name = "";
+		if (loginInfo.firstName) name += loginInfo.firstName;
+		if (loginInfo.lastName && name) name += " ";
+		if (loginInfo.lastName) name += loginInfo.lastName;
+		
+		if ( ! name) {
+			name += loginInfo.id;
+		}
+		
+		$('.account_data').children('li').first().find('strong').text(name);
+		
+	    if (loginInfo.provider == "ibs") {
+	    	$('#edit_contact_datal').attr('href', "api/v4/registration/selfcare");
+	    } else {
+	    	$('#edit_contact_datal').off('click').click(function() {
+	    		$('#editDataOverlay').show();
+	    	});
+	    }
+	});
+	
+	getAccesibleMandators(function(mandatorList) {
+		
+		var currentMandator = null;
+		
+		if (mandatorList.length > 1) {
+			$('.switch').show();
+			for (var i = 0; i < mandatorList.length; i++) {
+				var mandatorInfo = mandatorList[i];
+				$('#choose_mandant').append('<option value="' + mandatorInfo.name + '">' + mandatorInfo.name + ': ' + mandatorInfo.website + '</option>');
+				if ($.cookie('customerID') != null) {
+					if ($.cookie('customerID') == mandatorInfo.name) {
+						currentMandator = mandatorInfo;
+					}
+				}
+			}
+		} else if (mandatorList.length == 1) {
+			$('.switch').hide();
+			currentMandator = mandatorList[0];
+			$('#choose_mandant').append('<option value="' + currentMandator.name + '">' + currentMandator.name + ': ' + currentMandator.website + '</option>');
+		}
+		if(currentMandator !=null ){
+		
+		}
+
+		if (currentMandator == null) {
+			if(mandatorList.length == 0) {
+				showNoAvailableMandatorPopup();
+			} else {
+				showSwitchMandatorPopup(false);
+			}
+		} else {
+			$.cookie('customerID', currentMandator.name, { expires: 365 });
+			initialLoadData();
+			setMandantData(currentMandator);
+		}
+		unsetLoadingDiv($('section.mandant > header'));
+	});
+
+	
+	$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
+	$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
+	$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
+	
+	
+	$('#copyrightsLink').off('click').click(function() {
+    	console.log("should close corporate1");
+    	$('#messageCorporate').hide();
+    	console.log("should close corporate2");
+    	$('#messageCopyrights').show();
+    });
+
+
+    //Change the value in selectbox 1 in collected events
+    $('select[id^="events_select_for_chart_bar"]').change(function () {
+        renderCollectedEvents();
+    });
+
+
+    $('select[id^="select_for_delivered_recommendations_chart_bar"]').change(function () {
+        renderRecommendationChart();
+    });
+
+    //Last day click event
+    $('#view_option_day').click(function () {
+	
+		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
+		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
+		$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
+		localizer();
+       
+        ajaxScenarioList("24H");
+    });
+
+    $('#view_option_week').click(function () {
+
+		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
+		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_week');
+		$('#index_collected_events').attr('data-translate', 'index_collected_events_week');
+		localizer();
+		
+		ajaxScenarioList("WEEK");
+    });
+
+    $('#view_option_month').click(function () {
+
+		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
+		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
+		$('#index_collected_events').attr('data-translate', 'index_collected_events_month');
+		localizer();
+		
+        ajaxScenarioList('MONTH');
+    });
+};
+
+
+var ifExtended = function() {
+	  var solution = mandatorDao.mandator.baseInformation.version;
+	  var extendedSolution = (solution == 'EXTENDED');
+	  
+	  return extendedSolution;
+};
 
 
 function updateDatae() {
@@ -602,26 +331,7 @@ function saveForme() {
 				//on success
 				setMessagePopUp("positive", "message_data_saved_successfully");
 			},
-			error: function (jqXHR, textStatus, errorThrown) {
-				if(jqXHR.status != null && jqXHR.status == 403) {
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401) {
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400) {
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404) {
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409) {
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else {
-						setMessagePopUp("problem", "error_server_error");
-					}
-			}
+			error: mainErrorHandler
 		});
 	}
 }
@@ -680,32 +390,24 @@ function setMandantData(mandatorInfo) {
             $('#statistic_recommendations').text(mandatorStatistic.recommendationsCalenderMonth);
 
         },
-        error: function (jqXHR, textStatus, errorThrown) {
-
-            if(jqXHR.status != null && jqXHR.status == 403) {
-				setMessagePopUp("problem", "error_server_error_403");
-				
-			} else if(jqXHR.status != null && jqXHR.status == 401) {
-				setMessagePopUp("problem", "error_server_error_401");
-				
-			} else if(jqXHR.status != null && jqXHR.status == 400) {
-				setMessagePopUp("problem", "error_server_error_400");
-				
-			} else if(jqXHR.status != null && jqXHR.status == 404) {
-				setMessagePopUp("problem", "error_server_error_404");
-						
-			} else if(jqXHR.status != null && jqXHR.status == 409) {
-				setMessagePopUp("problem", "error_server_error_409");
-				
-			} else {
-				setMessagePopUp("problem", "error_server_error");
-			}
-        }
+        error: mainErrorHandler
     });
 }
+
 var mandatorVersionType='BASIC';
 
 function initialLoadData() {
+	
+	if ( ! ifExtended()) {
+		$(".available_charts select option[value='rate']").hide();
+		$(".available_charts select option[value='blacklist']").hide();
+		$(".available_charts select option[value='owns']").hide();
+	} else {
+		$(".available_charts select option[value='rate']").show();
+		$(".available_charts select option[value='blacklist']").show();
+		$(".available_charts select option[value='owns']").show();		
+	}
+	
     $('.available_scenarios').children('li').each(function (index) {
         if (index > 0) {
             $(this).remove();
@@ -735,86 +437,17 @@ function initialLoadData() {
     	console.log("should close corporate2");
     	$('#messageCopyrights').show();
     });
-    
 
-	var yesterday = new Date(Date.now() - 24*3600000);
-	var from_date_time = getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
-	var currentDate = new Date();
-	var to_date_time = getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
-	var granularity = "PT1H";
-
-
-	$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
-	
-    $.ajax({
-        dataType: "json",
-		beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-        url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-        success: function (data) {
-			var json = {
-				'revenueResponse': {
-					'items' : data
-				}
-			};
-            if (json.revenueResponse.items.length < 1) {
-                showEmptyEventChart();
-                console.log("no items available");
-            } else {
-                $('.collected_events_chart').data('currentJSON', json);
-                renderCollectedEvents(json, "day", yesterday);
-            }
-            unsetLoadingDiv($('#collected_events'));
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-			if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-        }
-    });
+    if (statistic.length < 1) {
+        showEmptyEventChart();
+        console.log("no items available");
+    } else {
+        renderCollectedEvents();
+    }
 
     $.ajax({
         dataType: "json",
-		beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-        url: "ebl/v3/profile/get_profile_pack/" + customerID,
+        url: "ebl/v3/profile/get_profile_pack/" + customerID + "?no-realm",
         success: function (json) {
 
             var mandator = json.profilePack.mandator;
@@ -836,354 +469,147 @@ function initialLoadData() {
             //$('#licence_key').children('strong').text(mandator.licenseKey);
 
         },
-        error: function (jqXHR, textStatus, errorThrown) {
-			if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-        }
+        error: mainErrorHandler
     });
-    fillConversionRateDay();
-    fillRecommendationDay();
-    loadScenarios();
+
+//    loadScenarios();
+    
+    var json = {"scenarioInfoList" : scenarioInfoList};
+    
+    if (json.scenarioInfoList.length < 1) {
+
+        console.log("no scenarios");
+		unsetLoadingDiv($('.available_scenarios'));
+    } else {
+
+        var options = "";
+
+        for (var j = 0; j < json.scenarioInfoList.length; j++) {
+            //set the options in the select boxes
+            var scenario = json.scenarioInfoList[j];
+
+            //the dummy is a emtpy scenario that will be copied and added for all given scenarios from the server
+            //it will be filled with the data from the server
+            var dummy = $('.available_scenarios').children('li').first();
+            var dummyClone = $(dummy).clone();
+            $(dummyClone).show();
+			var escapedRefCode = escape(scenario.referenceCode);
+            $(dummyClone).children("div").attr("id", "scenario_" + j);
+
+            if (scenario.title == null || $.trim(scenario.title) == "") {
+                scenario.title = scenario.referenceCode;
+            }
+            if (scenario.description == null) {
+                scenario.description = "Some brief description of the scenario, that can be edited together with other parameters";
+            }
+			options = options + "<option value='" + scenario.referenceCode + "'>" + scenario.title + "</option>";
+            $(dummyClone).children("div#scenario_" + j).children("h4").children("span").text(scenario.title);
+            
+            $(dummyClone).children("div#scenario_" + j).children("p.description").text(scenario.description);
+
+            var additionalParameter = "?reference_code=" + escapedRefCode + "&customer_id=" + customerID;
+            //The links at the end of the page must have a referenceCode and customerID at request get parameter
+           $(dummyClone).children("div#scenario_" + j).find("h4").children("font.settings").html('<a  onclick="$(\'#settingsF\').attr(\'src\',\'settingspop.html' + additionalParameter + '\'); $(\'#settingsP\').show();"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></a>');
+
+            $(dummyClone).children("div").children("p.data").removeClass("unavailable").removeClass("ascending").removeClass("descending");
+            if (scenario.statisticItems.length < 1 || scenario.statisticItems.length > 2) {
+                //if the response have not correct data, the arrow gets an unavailable icon
+                console.log("No correct number of items to show delivered recommendations");
+                $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
+                if (scenario.statisticItems.length == 0) {
+                    $(dummyClone).children("div").children("p.data").children("span").children("strong").text("0");
+                } else {
+                    $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[1].deliveredRecommendations);
+                }
+            } else if (scenario.statisticItems.length == 1) {
+                //if there is not enough data to calculate the arrow, the arrow gets an unavailable icon and the one data will be shown in the delivered recommendation text
+                $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[0].deliveredRecommendations);
+                $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
+            } else {
+                //the arrow will be calculated with the cummulated data of the last two weeks.
+                //if the difference of this two values is greater or smaller as 5% an arrow will be shown.
+                //if the value from the newest data is greater, the arrow shows up, else it shows down
+                var difference = scenario.statisticItems[1].deliveredRecommendations - scenario.statisticItems[0].deliveredRecommendations;
+                if (difference > 0) {
+                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("ascending");
+                } else if (difference < 0) {
+                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("descending");
+                } else {
+                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
+                }
+
+                $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[1].deliveredRecommendations);
+
+            }
+            //set the radio buttons initialy
+            $(dummyClone).children("div#scenario_" + j).removeClass("problem").removeClass("ready_to_use").removeClass("partly_available");
+
+            if (scenario.avaliable === "NOT_AVAILABLE") {
+                $(dummyClone).children("div#scenario_" + j).addClass("problem");
+            } else if (scenario.avaliable === "AVAILABLE") {
+                $(dummyClone).children("div#scenario_" + j).addClass("ready_to_use");
+            } else if (scenario.avaliable === "PARTLY_AVAILABLE") {
+                $(dummyClone).children("div#scenario_" + j).addClass("partly_available");
+            }
+            if(j == 0){
+//            	console.log( $('.available_scenarios').children('li').length);
+            	$('.available_scenarios').empty();
+            	$('.available_scenarios').append(dummy);
+//            	console.log( $('.available_scenarios').children('li').length);
+            }
+          
+            $('.available_scenarios').append(dummyClone);
+            
+        }
+		//removes all elements from the select except the first one
+		function removeOptions(index){
+			if (index>1){
+				$(this).remove();
+			}
+		}
+        //Fill the select boxes at the bottom of the middle chart
+        $('#select_for_delivered_recommendations_chart_bar_1').find('option').each(removeOptions).end().append(options)
+				.find('option[value="total"]')
+					.siblings()
+						.removeAttr('selected')
+				.end()
+					.attr('selected', 'selected');//select the total scenario
+        $('#select_for_delivered_recommendations_chart_bar_2').find('option').each(removeOptions).end().append(options);
+        $('#select_for_delivered_recommendations_chart_bar_3').find('option').each(removeOptions).end().append(options);
+        unsetLoadingDiv($('.available_scenarios'));
+
+        $(".available_scenarios")
+				.siblings('.loading').remove().end()
+		.equalize({
+            eqItems: "> li:visible",
+            segmentSize: 5,
+            applicantSelector: "> *"
+        });
+    }
     
 }
 
 
-function loadScenarios(){
-	var customerID = $.cookie('customerID');
-	//initial load of the scenarios to set the select boxes and add the scenarios at the bottom of the screen
-    //the arrows at every scenario will be calculated through the recommendations of the last two weeks
-    var currentDate = getCurrentDateMinusDays(14);
-    var from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-    currentDate = getCurrentDateMinusDays(0);
-    var to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-    var granularity = "P7D";
-
-    $.ajax({
-        dataType: "json",
-		beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-        url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-        success: function (json) {
-
-            if (json.scenarioInfoList.length < 1) {
-
-                console.log("no scenarios");
-				unsetLoadingDiv($('.available_scenarios'));
-            } else {
-
-                var options = "";
-				$('body').data('scenariolist', json);
-                for (var j = 0; j < json.scenarioInfoList.length; j++) {
-                    //set the options in the select boxes
-                    var scenario = json.scenarioInfoList[j];
-
-                    //the dummy is a emtpy scenario that will be copied and added for all given scenarios from the server
-                    //it will be filled with the data from the server
-                    var dummy = $('.available_scenarios').children('li').first();
-                    var dummyClone = $(dummy).clone();
-                    $(dummyClone).show();
-					var escapedRefCode = escape(scenario.referenceCode);
-                    $(dummyClone).children("div").attr("id", "scenario_" + j);
-
-                    if (scenario.title == null || $.trim(scenario.title) == "") {
-                        scenario.title = scenario.referenceCode;
-                    }
-                    if (scenario.description == null) {
-                        scenario.description = "Some brief description of the scenario, that can be edited together with other parameters";
-                    }
-					options = options + "<option value='" + scenario.referenceCode + "'>" + scenario.title + "</option>";
-                    $(dummyClone).children("div#scenario_" + j).children("h4").children("span").text(scenario.title);
-                    
-                    $(dummyClone).children("div#scenario_" + j).children("p.description").text(scenario.description);
-
-                    var additionalParameter = "?reference_code=" + escapedRefCode + "&customer_id=" + customerID;
-                    //The links at the end of the page must have a referenceCode and customerID at request get parameter
-                   $(dummyClone).children("div#scenario_" + j).find("h4").children("font.settings").html('<a  onclick="$(\'#settingsF\').attr(\'src\',\'settingspop.html' + additionalParameter + '\'); $(\'#settingsP\').show();"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></a>');
-
-                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").removeClass("ascending").removeClass("descending");
-                    if (scenario.statisticItems.length < 1 || scenario.statisticItems.length > 2) {
-                        //if the response have not correct data, the arrow gets an unavailable icon
-                        console.log("No correct number of items to show delivered recommendations");
-                        $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
-                        if (scenario.statisticItems.length == 0) {
-                            $(dummyClone).children("div").children("p.data").children("span").children("strong").text("0");
-                        } else {
-                            $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[1].deliveredRecommendations);
-                        }
-                    } else if (scenario.statisticItems.length == 1) {
-                        //if there is not enough data to calculate the arrow, the arrow gets an unavailable icon and the one data will be shown in the delivered recommendation text
-                        $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[0].deliveredRecommendations);
-                        $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
-                    } else {
-                        //the arrow will be calculated with the cummulated data of the last two weeks.
-                        //if the difference of this two values is greater or smaller as 5% an arrow will be shown.
-                        //if the value from the newest data is greater, the arrow shows up, else it shows down
-                        var difference = scenario.statisticItems[1].deliveredRecommendations - scenario.statisticItems[0].deliveredRecommendations;
-                        if (difference > 0) {
-                            $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("ascending");
-                        } else if (difference < 0) {
-                            $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("descending");
-                        } else {
-                            $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
-                        }
-
-                        $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[1].deliveredRecommendations);
-
-                    }
-                    //set the radio buttons initialy
-                    $(dummyClone).children("div#scenario_" + j).removeClass("problem").removeClass("ready_to_use").removeClass("partly_available");
-
-                    if (scenario.avaliable === "NOT_AVAILABLE") {
-                        $(dummyClone).children("div#scenario_" + j).addClass("problem");
-                    } else if (scenario.avaliable === "AVAILABLE") {
-                        $(dummyClone).children("div#scenario_" + j).addClass("ready_to_use");
-                    } else if (scenario.avaliable === "PARTLY_AVAILABLE") {
-                        $(dummyClone).children("div#scenario_" + j).addClass("partly_available");
-                    }
-                    if(j == 0){
-//                    	console.log( $('.available_scenarios').children('li').length);
-                    	$('.available_scenarios').empty();
-                    	$('.available_scenarios').append(dummy);
-//                    	console.log( $('.available_scenarios').children('li').length);
-                    }
-                  
-                    $('.available_scenarios').append(dummyClone);
-                    
-                }
-				//removes all elements from the select except the first one
-				function removeOptions(index){
-					if (index>1){
-						$(this).remove();
-					}
-				}
-                //Fill the select boxes at the bottom of the middle chart
-                $('#select_for_delivered_recommendations_chart_bar_1').find('option').each(removeOptions).end().append(options)
-						.find('option[value="total"]')
-							.siblings()
-								.removeAttr('selected')
-						.end()
-							.attr('selected', 'selected');//select the total scenario
-                $('#select_for_delivered_recommendations_chart_bar_2').find('option').each(removeOptions).end().append(options);
-                $('#select_for_delivered_recommendations_chart_bar_3').find('option').each(removeOptions).end().append(options);
-                unsetLoadingDiv($('.available_scenarios'));
-
-                $(".available_scenarios")
-						.siblings('.loading').remove().end()
-				.equalize({
-                    eqItems: "> li:visible",
-                    segmentSize: 5,
-                    applicantSelector: "> *"
-                });
-            }
-
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-			if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-        }
-    });
+function renderConversionRate() {
+	 
+	if (statistic.length < 1) {
+		//To prevent old data in the graphs the use the "zero" object
+		showEmptyCharts();
+		showEmptyEventChart();
+		console.log("no items available");
+	} else {
+		var conversionRateObject = {}
+		conversionRateObject.relative = [];
+		conversionRateObject.absolute = [];
+		for(var i = 0; i < statistic.length; i++){
+			convRate = parseFloat(statistic[i].clickedRecommended) / parseFloat(statistic[i].clickEvents);
+			conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
+			conversionRateObject.absolute.push(statistic[i].clickedRecommended);
+		}
+	    updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);
+	}
 }
 
-function fillRecommendationDay() {
-    //initial load of the scenarios for the middle chart
-    var customerID = $.cookie('customerID');
-	var yesterday = new Date(Date.now() - 24*3600000);
-	var from_date_time = getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
-	var currentDate = new Date();
-	var to_date_time = getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
-	var granularity = "PT1H";
-
-	$.ajax({
-        dataType: "json",
-		beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-        url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-        success: function (json) {
-
-            if (json.scenarioInfoList.length < 1) {
-                showEmptyRecommendationChart();
-                console.log("no scenarios");
-            } else {
-                $('.delivered_recommendation_chart').data('currentJSON', json);
-                renderRecommendationChart(json, "day", yesterday);
-            }
-            unsetLoadingDiv($('#delivered_recommendations'));
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-        }
-    });
-
-}
-
-function fillConversionRateDay() {
-    var customerID = $.cookie('customerID');
-    var yesterday = new Date(Date.now() - 24*3600000);
-    var from_date_time = getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
-    currentDate = new Date();
-    var to_date_time = getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
-    var granularity = "PT1H";
-	$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
-    $.ajax({
-        dataType: "json",
-		beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-			},
-			 statusCode: {
-                    401: function (jqXHR, textStatus, errorThrown) {
-						$.cookie('password', null);
-						$.cookie('email', null);
-						window.location = "login.html";
-                    }
-            },
-        url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
-        success: function (data) {
-			var json = {
-					'revenueResponse': {
-						'items' : data
-					}
-				},
-			conversionRateObject = {
-				'relative' : [0],
-				'absolute' : [0]
-			},
-					l, i, convRate;
-            if (json.revenueResponse.items.length < 1) {
-			
-				//To prevent old data in the graphs the use the "zero" object
-                showEmptyCharts();
-                showEmptyEventChart();
-                console.log("no items available");
-            } else {
-				conversionRateObject.relative = [];
-				conversionRateObject.absolute = [];
-				l = json.revenueResponse.items.length;
-				for(i = 0; i < l; i++){
-					convRate = parseFloat(json.revenueResponse.items[i].clickedRecommended)/parseFloat(json.revenueResponse.items[i].clickEvents);
-					conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
-					conversionRateObject.absolute.push(json.revenueResponse.items[i].clickedRecommended);
-				}
-                renderCollectedEvents(json, "day");
-                $('.collected_events_chart').data('currentJSON', json);
-                updateCharts(getGraphDescriptionOf24h(yesterday), conversionRateObject.relative, percentFormatter);
-            }
-
-			$('body').data('conversionRateObject', conversionRateObject);
-            //currentOption.parent.parent.addClass("current");
-            unsetLoadingDiv($('#conversion_rate'));
-            unsetLoadingDiv($('#collected_events'));
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            if(jqXHR.status != null && jqXHR.status == 403)
-					{
-						setMessagePopUp("problem", "error_server_error_403");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 401)
-					{
-						setMessagePopUp("problem", "error_server_error_401");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 400)
-					{
-						setMessagePopUp("problem", "error_server_error_400");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 404)
-					{
-						setMessagePopUp("problem", "error_server_error_404");
-					}
-					else if(jqXHR.status != null && jqXHR.status == 409)
-					{
-						setMessagePopUp("problem", "error_server_error_409");
-					}
-					else
-					{
-						setMessagePopUp("problem", "error_server_error");
-					}
-        }
-    });
-}
 
 function getInnerArrayForRenderCollectedEventsWeek(item1,item2) {
 	/*
@@ -1310,14 +736,17 @@ function getInnerArrayForRenderCollectedEvents(item, daterange) {
 }
 
 
-function renderRecommendationChart(json, daterange, yesterday) {
+function renderRecommendationChart() {
+	
+	var daterange = period;
 
     //There must be a two dimension array to show the data in the bar graphic
     //e.g.: [[x,y,z],[x1,y1,z1]]
     //There will be created an inner and outer array and pushed the data inside.
     var outerArray = new Array();
-    if (daterange == "day") {
-		var tmpDate = yesterday ? new Date(yesterday.getTime()) : new Date(Date.now()-24*3600*1000);
+    
+    if (daterange == "DAY" || daterange == "24H") {
+		var tmpDate = daterange == "DAY" ? getCurrentDateMinusDays(1) : new Date(Date.now()-24*3600*1000);
 		var testDate;
         for (var i = 0; i < 24; i++) {
 			testDate = getDateTimeValue(tmpDate.getFullYear(), tmpDate.getMonth() +1, tmpDate.getDate(), tmpDate.getHours(), 0, 0, false);
@@ -1327,9 +756,9 @@ function renderRecommendationChart(json, daterange, yesterday) {
 				var value = $(this).val();
                 var totalDeliveredRecommendations = 0;
 
-                for (var j = 0; j < json.scenarioInfoList.length; j++) {
+                for (var j = 0; j < scenarioInfoList.length; j++) {
 
-                    var scenario = json.scenarioInfoList[j];
+                    var scenario = scenarioInfoList[j];
                     if (scenario.referenceCode == value || value == "total") {
                         //the selected scenario was found in the json object
                         for (var k = 0; k < scenario.statisticItems.length; k++) {
@@ -1358,8 +787,8 @@ function renderRecommendationChart(json, daterange, yesterday) {
             outerArray.push(innerArray);
 			tmpDate.setHours(tmpDate.getHours()+1);
 		}
-        updateMiddleChart(getGraphDescriptionOf24h(yesterday), outerArray);
-    } else if (daterange == "week") {
+        
+    } else if (daterange == "WEEK") {
         for (var i = 7; i > 0; i--) {
             var date = getCurrentDateMinusDays(i);
             var testDate = "";
@@ -1373,9 +802,9 @@ function renderRecommendationChart(json, daterange, yesterday) {
                 var value = $(this).val();
                 var totalDeliveredRecommendations = 0;
 
-                for (var j = 0; j < json.scenarioInfoList.length; j++) {
+                for (var j = 0; j < scenarioInfoList.length; j++) {
 
-                    var scenario = json.scenarioInfoList[j];
+                    var scenario = scenarioInfoList[j];
                     if (scenario.referenceCode == value || value == "total") {
                         //the selected scenario was found in the json object
                         for (var k = 0; k < scenario.statisticItems.length; k++) {
@@ -1403,8 +832,8 @@ function renderRecommendationChart(json, daterange, yesterday) {
 
             outerArray.push(innerArray);
         }
-        updateMiddleChart(getGraphDescriptionOfLastWeek(), outerArray);
-    } else if (daterange == "month") {
+
+    } else if (daterange == "MONTH") {
         for (var i = 30; i > 0; i--) {
             var date = getCurrentDateMinusDays(i);
             var testDate = getDateTimeValue(date.year, date.month, date.day, 0, 0, 0, false);
@@ -1414,9 +843,9 @@ function renderRecommendationChart(json, daterange, yesterday) {
                 var value = $(this).val();
                 var totalDeliveredRecommendations = 0;
 
-                for (var j = 0; j < json.scenarioInfoList.length; j++) {
+                for (var j = 0; j < scenarioInfoList.length; j++) {
 
-                    var scenario = json.scenarioInfoList[j];
+                    var scenario = scenarioInfoList[j];
                     if (scenario.referenceCode == value || value == "total") {
                         //the selected scenario was found in the json object
                         for (var k = 0; k < scenario.statisticItems.length; k++) {
@@ -1444,48 +873,90 @@ function renderRecommendationChart(json, daterange, yesterday) {
 
             outerArray.push(innerArray);
         }
-        updateMiddleChart(getGraphDescriptionOfLastMonth(), outerArray);
-
     }
+    
+    updateMiddleChart(getGraphDescription(), outerArray);
 }
 
-function renderCollectedEvents(json, daterange, yesterday) {
+
+function renderCollectedEvents() {
 
     //There must be a two dimension array to show the data in the bar graphic
     //e.g.: [[x,y,z],[x1,y1,z1]]
     //There will be created an inner and outer array and pushed the data inside.
-    var outerArray = [],
-		i,
-		j;
+   var outerArray = [];
 
-    if (daterange == "day") {
-		yesterday = yesterday ? yesterday : new Date(Date.now()-24*3600*1000); // default value for yesteday
-
-		var l = json.revenueResponse.items.length;
-		for(i=0; i<l; i++){
-			outerArray.push(getInnerArrayForRenderCollectedEvents(json.revenueResponse.items[i], "day"));
+   if (period == "WEEK") {
+			
+		for(var i = 0; i < statistic.length;){
+			outerArray.push(getInnerArrayForRenderCollectedEventsWeek(statistic[i++], statistic[i++]));
 		}
-        updateLeftChart(getGraphDescriptionOf24h(yesterday), outerArray);
+        updateLeftChart(getGraphDescription(), outerArray);
 
-    } else if (daterange == "week") {
-			l = json.revenueResponse.items.length;
-			for(i = 0; i<l;){
-				outerArray.push(getInnerArrayForRenderCollectedEventsWeek(json.revenueResponse.items[i++], json.revenueResponse.items[i++]));
-			}
-        updateLeftChart(getGraphDescriptionOfLastWeek(), outerArray);
+    } else {
 
-    } else if (daterange == "month") {
-
-			l = json.revenueResponse.items.length;
-			for(j=0; j<l; j++){
-				outerArray.push(getInnerArrayForRenderCollectedEvents(json.revenueResponse.items[j], "month"));
-			}
-        updateLeftChart(getGraphDescriptionOfLastMonth(), outerArray);
+		for(var j = 0; j < statistic.length; j++){
+			outerArray.push(getInnerArrayForRenderCollectedEvents(statistic[j], period));
+		}
+        updateLeftChart(getGraphDescription(), outerArray);
     }
 }
 
-function myFormatter(obj, num)
-{
+
+//Helper method that generates the X-Chart description for a month call
+function getGraphDescription() {
+	
+	var resultDates = [];
+	
+	if (period == 'MONTH') {
+	
+	    for (var i = 30; i > 0; i = i - 1) {
+	        if (i % 5 === 0) {
+	            var date = getCurrentDateMinusDays(i);
+	            resultDates.push(date.day + "." + date.month + ".");
+	        } else {
+	            resultDates.push("");
+	        }
+	    }
+	    return resultDates;
+	
+	} else if (period == 'WEEK') {
+	
+	    for (var i = 7; i > 0; i = i - 1) {
+	        var date = getCurrentDateMinusDays(i);
+	        resultDates.push(date.day + "." + date.month + ".");
+	    }
+	    return resultDates;
+	
+	} else if (period == 'DAY') {
+	
+	    for (var i = 0; i < 25; i++) {
+	        if (i % 4 !== 0) {
+	           resultDates.push("");
+	        } else {
+				 if (i < 9) {
+	                resultDates.push("0" + i + ":00");
+	            } else {
+	                resultDates.push(i + ":00");
+	            }
+	        }
+	    }
+	    return resultDates;
+	} else { // 24H
+
+		var tempDate = new Date(Date.now() - 24 * 3600 * 1000),
+			legend = [tempDate.getHours() + ':00'],
+			i = 1;
+		for (; i < 25; i++) {
+			tempDate.setHours(tempDate.getHours()+1);
+			legend[i]= !(i%4) ? (tempDate.getHours() < 10 ? '0': '') + tempDate.getHours() + ':00' : '';
+		}
+		return legend;
+	}
+}
+	
+
+function myFormatter(obj, num) {
   if (num > 1000){
     num = (num/1000) + 'K';
   }
@@ -1605,7 +1076,7 @@ function showEmptyRecommendationChart() {
     middlebar.Draw();
 }
 
-function updateCharts(labels, conversionValues, formatter) {
+function updateRightCharts(labels, conversionValues, formatter) {
 //	console.log('updating convRate chart');
 //	console.log(conversionValues);
     RGraph.Clear(document.getElementById("conversion_rate"));
@@ -1670,4 +1141,20 @@ function updateLeftChart(labels, dataArray) {
 
 }
 
+
+function mainErrorHandler(jqXHR, textStatus, errorThrown) {
+    if(jqXHR.status != null && jqXHR.status == 403) {
+		setMessagePopUp("problem", "error_server_error_403");
+	} else if(jqXHR.status != null && jqXHR.status == 401) {
+		setMessagePopUp("problem", "error_server_error_401");
+	} else if(jqXHR.status != null && jqXHR.status == 400) {
+		setMessagePopUp("problem", "error_server_error_400");
+	} else if(jqXHR.status != null && jqXHR.status == 404) {
+		setMessagePopUp("problem", "error_server_error_404");
+	} else if(jqXHR.status != null && jqXHR.status == 409) {
+		setMessagePopUp("problem", "error_server_error_409");
+	} else {
+		setMessagePopUp("problem", "error_server_error");
+	}
+}
 
