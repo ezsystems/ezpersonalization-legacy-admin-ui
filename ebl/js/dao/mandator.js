@@ -13,6 +13,10 @@ var mandatorDao = {
 
 mandatorDao.init = function(mandatorId, callback) {
 	
+	if (!mandatorId) {
+		return;
+	}
+	
 	var result = $.ajax({
 		dataType: "json",
 		url: "/api/v4/base/get_mandator/" + encodeURIComponent(mandatorId) + "?advancedOptions&itemTypeConfiguration&no-realm",
