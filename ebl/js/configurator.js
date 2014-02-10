@@ -299,7 +299,7 @@ function saveScenario() {
 	  var referenceCodeServer = json.scenario.referenceCode, 
 	  $scenarioSettings = $(".scenario_settings");
 
-	  $("#scenario_title").attr('value', json.scenario.title.title ? json.scenario.title : referenceCodeServer);
+	  $("#scenario_title").attr('value', json.scenario.title ? json.scenario.title : referenceCodeServer);
 
 	  $('#primary_category_path').val(json.scenario.useCategoryPath);
 
