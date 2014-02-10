@@ -227,26 +227,25 @@ modelDao.updateModelWithSubmodels = function(model, submodels, callback, errorCa
 modelDao.loadModels = function(customerID) {
 
 	var result =  $.ajax({
-		  dataType: "json",
-		  statusCode: {
-			  401: function(jqXHR, textStatus, errorThrown) {
-				  $.cookie('password', null);
-				  $.cookie('email', null);
-				  window.parent.location = "login.html";
-			  }
-		  },
-		  url: "ebl/v3/" + encodeURIComponent(modelDao.customerID) + "/structure/get_model_list?no-realm",
-		  success: function(json) {
-			  modelDao.models = json.modelList;
-			  console.debug("Model list sucessfully loaded.");
-		  },
-		  
-		  error: function(jqXHR, textStatus, errorThrown) {
-			  modelDao.error = {
-				  message: "Error loading model list.",
-				  status:  jqXHR.status
-			  };
-		  }
+		dataType: "json",
+		statusCode: {
+			401: function(jqXHR, textStatus, errorThrown) {
+				$.cookie('password', null);
+				$.cookie('email', null);
+				window.parent.location = "login.html";
+			}
+		},
+		url: "ebl/v3/" + encodeURIComponent(modelDao.customerID) + "/structure/get_model_list?no-realm",
+		success: function(json) {
+			modelDao.models = json.modelList;
+			console.debug("Model list for mandator [" + customerID + "] sucessfully loaded.");
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			modelDao.error = {
+			    message: "Error loading model list.",
+				status:  jqXHR.status
+			};
+		}
 	});
 	
 	return result;

@@ -164,7 +164,7 @@
           </ul>
 		  <a class="export excel" data-translate="index_download_statistics">Download statistics</a>
         </fieldset>      
-        <div class="clearfix">
+        <div id="statistic_charts" class="clearfix">
           <div class="collected_events_chart s1_3">
             <h3 id="index_collected_events" data-translate="index_collected_events">Collected events</h3>
             <canvas id="collected_events" width="400" height="250">[No canvas support]</canvas>
@@ -256,18 +256,18 @@
           <div class="conversion_rate_chart s1_3">
             <h3 id="index_conversion_rate_average" data-translate="index_conversion_rate_average">Conversion rate (average)</h3>
            	<canvas id="conversion_rate" width="400" height="250">[No canvas support]</canvas>
-            <fieldset>
-              <ul class="available_charts clearfix">
-                <li>
-                  <label for="conversion_units">
-                    <select id="conversion_units" name="conversion_units">
-                      <option value="relative" selected="selected">Relative</option>
-                      <option value="absolute">Absolute</option>
-                    </select>
-                  </label>
-                </li>
-              </ul>
-            </fieldset>
+<!--             <fieldset> -->
+<!--               <ul class="available_charts clearfix"> -->
+<!--                 <li> -->
+<!--                   <label for="conversion_units"> -->
+<!--                     <select id="conversion_units" name="conversion_units"> -->
+<!--                       <option value="relative" selected="selected">Relative</option> -->
+<!--                       <option value="absolute">Absolute</option> -->
+<!--                     </select> -->
+<!--                   </label> -->
+<!--                 </li> -->
+<!--               </ul> -->
+<!--             </fieldset> -->
           </div>
         </div>
       </form>
@@ -681,48 +681,44 @@
 	</div>
 
 	<div id="ABHelp" class="ABOverlay" style="display: none;">
-		<div class="content" style="width: 700px;">
-			<div class="contentWrapper">
+		<div class="content" style="width: 700px; min-height: 80%; position: relative;">
+			<div class="contentWrapper" style="position: absolute; top:0; bottom:0; left:0; right:0">
 				<a class="closeOverlay">X</a>
 				<h2 data-translate="index_help_about_ab_testing">About A/B Testing</h2>
-				<div class="explanations">
-					<div class="accordion">
-						<h4 data-translate="ab_test_faq_q_1"></h4>
-						<div data-translate="ab_test_faq_a_1"></div>
-						<h4 data-translate="ab_test_faq_q_2"></h4>
-						<div data-translate="ab_test_faq_a_2"></div>
-						<h4 data-translate="ab_test_faq_q_3"></h4>
-						<div data-translate="ab_test_faq_a_3"></div>
-						<h4 data-translate="ab_test_faq_q_4"></h4>
-						<div data-translate="ab_test_faq_a_4"></div>
-						<h4 data-translate="ab_test_faq_q_5"></h4>
-						<div data-translate="ab_test_faq_a_5"></div>
-						<h4 data-translate="ab_test_faq_q_6"></h4>
-						<div data-translate="ab_test_faq_a_6"></div>
-					</div>
+				<div class="accordion">
+					<h4 data-translate="ab_test_faq_q_1"></h4>
+					<div data-translate="ab_test_faq_a_1"></div>
+					<h4 data-translate="ab_test_faq_q_2"></h4>
+					<div data-translate="ab_test_faq_a_2"></div>
+					<h4 data-translate="ab_test_faq_q_3"></h4>
+					<div data-translate="ab_test_faq_a_3"></div>
+					<h4 data-translate="ab_test_faq_q_4"></h4>
+					<div data-translate="ab_test_faq_a_4"></div>
+					<h4 data-translate="ab_test_faq_q_5"></h4>
+					<div data-translate="ab_test_faq_a_5"></div>
+					<h4 data-translate="ab_test_faq_q_6"></h4>
+					<div data-translate="ab_test_faq_a_6"></div>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<div id="scenarioHelp" class="ABOverlay" style="display: none;">
-		<div class="content" style="width: 700px;">
-			<div class="contentWrapper">
+		<div class="content" style="width: 700px; min-height: 80%; position: relative;">
+			<div class="contentWrapper" style="position: absolute; top:0; bottom:0; left:0; right:0">
 				<a class="closeOverlay">X</a>
 				<h2 data-translate="index_help_about_scenarios">About Scenarios</h2>
-				<div class="explanations">
-					<div class="accordion">
-						<h4 data-translate="scenario_faq_q_1"></h4>
-						<div data-translate="scenario_faq_a_1"></div>
-						<h4 data-translate="scenario_faq_q_2"></h4>
-						<div data-translate="scenario_faq_a_2"></div>
-						<h4 data-translate="scenario_faq_q_3"></h4>
-						<div data-translate="scenario_faq_a_3"></div>
-						<h4 data-translate="scenario_faq_q_4"></h4>
-						<div data-translate="scenario_faq_a_4"></div>
-						<h4 data-translate="scenario_faq_q_5"></h4>
-						<div data-translate="scenario_faq_a_5"></div>
-					</div>
+				<div class="accordion">
+					<h4 data-translate="scenario_faq_q_1"></h4>
+					<div data-translate="scenario_faq_a_1"></div>
+					<h4 data-translate="scenario_faq_q_2"></h4>
+					<div data-translate="scenario_faq_a_2"></div>
+					<h4 data-translate="scenario_faq_q_3"></h4>
+					<div data-translate="scenario_faq_a_3"></div>
+					<h4 data-translate="scenario_faq_q_4"></h4>
+					<div data-translate="scenario_faq_a_4"></div>
+					<h4 data-translate="scenario_faq_q_5"></h4>
+					<div data-translate="scenario_faq_a_5"></div>
 				</div>
 			</div>
 		</div>

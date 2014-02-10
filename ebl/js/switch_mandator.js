@@ -53,22 +53,28 @@ var initSwitchMandator = function() {
 	$("#saveMandatorChange").on("click", function (event) {
 		if($('#choose_mandant').val() != "") {
 			
-			var customerID = $('#choose_mandant').val();
+			customerID = $('#choose_mandant').val(); // setting global variable.
 			
 			$.cookie('customerID', customerID, { expires: 365 });
 			
-			var mandatorInfo = getAccesibleMandator(customerID);
-		
-			initialLoadData();
-			setMandantData(mandatorInfo);
-			
-			$('.available_view_options').children('li').removeClass('current');
-			$('.available_view_options').children('li').first().addClass('current');
-			
-			var event = new Event('mandatorChanged');
-			document.dispatchEvent(event);
-			
-			$('#switch_mandator_popup').hide();
+			$.when(
+				mandatorDao.init(customerID),
+				ajaxScenarioList()
+		    ).done(function() {
+				var mandatorInfo = getAccesibleMandator(customerID);
+				
+				initialLoadData();
+				setMandantData(mandatorInfo);
+				
+				$('.available_view_options').children('li').removeClass('current');
+				$('.available_view_options').children('li').first().addClass('current');
+				
+				var event = new Event('mandatorChanged');
+				document.dispatchEvent(event);
+				
+				$('#switch_mandator_popup').hide();
+		    });
+
 		} else {
 			setMessagePopUp("problem", "error_no_customer_select");
 		}
