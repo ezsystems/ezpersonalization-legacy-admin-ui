@@ -114,7 +114,7 @@ var getAccesibleMandators = function(callback) {
 	var result = $.ajax({
 		async: (callback == true),
 		type: "GET",
-		url: "/api/v3/registration/get_accesible_mandator_list",
+		url: "/api/v3/registration/get_accesible_mandator_list?no-realm",
 		dataType: "json",
 		beforeSend: function (req) {
 	    	req.setRequestHeader('no-realm', '1');

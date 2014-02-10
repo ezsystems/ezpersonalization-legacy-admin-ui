@@ -1,12 +1,13 @@
 
-var customerID = $.cookie('customerID');
-
+var customerID = null;
 
 var scenarioInfoList; // loaded by ajaxScenarioList()
 
 var statistic;
 
 var period;
+
+var mandatorList;
 
 
 $(document).ready(function() {
@@ -21,22 +22,48 @@ $(document).ready(function() {
 	
 	setLoadingDiv($('section.mandant > header'));
 	
-	
-	$.when(
-		  include(["/js/dao/mandator.js"]).then(function() {
-			  return mandatorDao.init(customerID);
-		  }),
-		  include(["/js/switch_mandator.js", "/js/user.js"]),
-		  ajaxScenarioList('24H')
-    ).done(function() {
-		  initialize();
-    });
+	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js"], function() {
+		getAccesibleMandators(function(value) {
+			
+			mandatorList = value;
+			
+			if (mandatorList.length > 0) {
+				
+				var cooMandator = $.cookie('customerID');
+				
+				for (var i = 0; i < mandatorList.length; i++) {
+					if (cooMandator == mandatorList[i].name) {
+						customerID = cooMandator;
+					}
+				}
+				if ( ! customerID) {
+					customerID = mandatorList[0].name;
+					$.cookie('customerID', customerID, { expires: 365 });
+				}
+			} else {
+				showNoAvailableMandatorPopup();
+				return;
+			}
+			
+			$.when(
+				  mandatorDao.init(customerID),
+				  ajaxScenarioList('24H')
+		    ).always(function() {
+		    	unsetLoadingDiv($('section.mandant > header'));
+		    	initialize();
+		    });
+	    });		
+	});
 });
 
 
 
 
 var ajaxScenarioList = function(new_period, callback) {
+	
+	if (!customerID) {
+		return;
+	}
 	
 	setLoadingDiv($('#statistic_charts'));
 	setLoadingDiv($('.available_scenarios'));
@@ -136,45 +163,25 @@ var initialize = function () {
 	    }
 	});
 	
-	getAccesibleMandators(function(mandatorList) {
-		
-		var currentMandator = null;
-		
-		if (mandatorList.length > 1) {
-			$('.switch').show();
-			for (var i = 0; i < mandatorList.length; i++) {
-				var mandatorInfo = mandatorList[i];
-				$('#choose_mandant').append('<option value="' + mandatorInfo.name + '">' + mandatorInfo.name + ': ' + mandatorInfo.website + '</option>');
-				if ($.cookie('customerID') != null) {
-					if ($.cookie('customerID') == mandatorInfo.name) {
-						currentMandator = mandatorInfo;
-					}
-				}
-			}
-		} else if (mandatorList.length == 1) {
-			$('.switch').hide();
-			currentMandator = mandatorList[0];
-			$('#choose_mandant').append('<option value="' + currentMandator.name + '">' + currentMandator.name + ': ' + currentMandator.website + '</option>');
-		}
-		if(currentMandator !=null ){
-		
-		}
-
-		if (currentMandator == null) {
-			if(mandatorList.length == 0) {
-				showNoAvailableMandatorPopup();
-			} else {
-				showSwitchMandatorPopup(false);
-			}
-		} else {
-			$.cookie('customerID', currentMandator.name, { expires: 365 });
-			initialLoadData();
-			setMandantData(currentMandator);
-		}
-		unsetLoadingDiv($('section.mandant > header'));
-	});
-
+	if (mandatorList.length > 1) {
+		$('.switch').show();
+	} else {
+		$('.switch').hide();
+	}
 	
+	var currentMandatorInfo = null;
+	
+	for (var i = 0; i < mandatorList.length; i++) {
+		var mandatorInfo = mandatorList[i];
+		$('#choose_mandant').append('<option value="' + mandatorInfo.name + '">' + mandatorInfo.name + ': ' + mandatorInfo.website + '</option>');
+		if (mandatorInfo.name == mandatorDao.mandator.baseInformation.id) {
+			currentMandatorInfo = mandatorInfo;
+		}
+	}
+
+	initialLoadData();
+	setMandantData(currentMandatorInfo);
+
 	$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
 	$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
 	$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
@@ -320,13 +327,12 @@ function saveForme() {
 				if (x && x.overrideMimeType) {
 					x.overrideMimeType("application/json;charset=UTF-8");
 				}
-				x.setRequestHeader('no-realm', 'realm1');
 			},
 			mimeType: "application/json",
 			contentType: "application/json",
 			dataType: "json",
 			data: JSON.stringify(customer),
-			url: "ebl/v3/profile/update_customer",
+			url: "ebl/v3/profile/update_customer?no-realm",
 			success: function (json) {
 				//on success
 				setMessagePopUp("positive", "message_data_saved_successfully");
@@ -375,10 +381,7 @@ function setMandantData(mandatorInfo) {
 
     $.ajax({
         dataType: "json",
-		beforeSend: function (req) {
-            req.setRequestHeader('no-realm', 'realm1');
-		},
-        url: "/ebl/v3/profile/get_mandator_statistic/" + mandatorInfo.name,
+        url: "/ebl/v3/profile/get_mandator_statistic/" + mandatorInfo.name +"?no-realm",
         success: function (json) {
 
             var mandatorStatistic = json.mandatorStatistic;
@@ -396,6 +399,10 @@ function setMandantData(mandatorInfo) {
 
 var mandatorVersionType='BASIC';
 
+
+
+/** This function is called, after the mandator is loaded sucessfully */ 
+ 
 function initialLoadData() {
 	
 	if ( ! ifExtended()) {
@@ -413,8 +420,6 @@ function initialLoadData() {
             $(this).remove();
         }
     });
-
-    var customerID = $.cookie('customerID');
    	
     $('#createNewScenario').off('click').click(function() {
     	$('#settingsF').attr('src',"settingspop.html?customer_id=" + encodeURIComponent(customerID) + "&from_template=3");
@@ -477,9 +482,7 @@ function initialLoadData() {
     var json = {"scenarioInfoList" : scenarioInfoList};
     
     if (json.scenarioInfoList.length < 1) {
-
         console.log("no scenarios");
-		unsetLoadingDiv($('.available_scenarios'));
     } else {
 
         var options = "";
@@ -576,7 +579,6 @@ function initialLoadData() {
 					.attr('selected', 'selected');//select the total scenario
         $('#select_for_delivered_recommendations_chart_bar_2').find('option').each(removeOptions).end().append(options);
         $('#select_for_delivered_recommendations_chart_bar_3').find('option').each(removeOptions).end().append(options);
-        unsetLoadingDiv($('.available_scenarios'));
 
         $(".available_scenarios")
 				.siblings('.loading').remove().end()
@@ -598,7 +600,7 @@ function renderConversionRate() {
 		showEmptyEventChart();
 		console.log("no items available");
 	} else {
-		var conversionRateObject = {}
+		var conversionRateObject = {};
 		conversionRateObject.relative = [];
 		conversionRateObject.absolute = [];
 		for(var i = 0; i < statistic.length; i++){
@@ -1146,7 +1148,9 @@ function mainErrorHandler(jqXHR, textStatus, errorThrown) {
     if(jqXHR.status != null && jqXHR.status == 403) {
 		setMessagePopUp("problem", "error_server_error_403");
 	} else if(jqXHR.status != null && jqXHR.status == 401) {
-		setMessagePopUp("problem", "error_server_error_401");
+		$.cookie('password', null);
+		$.cookie('email', null);
+		window.location = "/login.html";
 	} else if(jqXHR.status != null && jqXHR.status == 400) {
 		setMessagePopUp("problem", "error_server_error_400");
 	} else if(jqXHR.status != null && jqXHR.status == 404) {
