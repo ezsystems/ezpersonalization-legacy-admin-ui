@@ -254,20 +254,20 @@
             </fieldset>
           </div>
           <div class="conversion_rate_chart s1_3">
-            <h3 id="index_conversion_rate_average" data-translate="index_conversion_rate_average">Conversion rate (average)</h3>
+            <h3 id="index_conversion_rate_average" data-translate="index_conversion_rate_average">Conversion rate<span data-param="0"></span></h3>
            	<canvas id="conversion_rate" width="400" height="250">[No canvas support]</canvas>
-<!--             <fieldset> -->
-<!--               <ul class="available_charts clearfix"> -->
-<!--                 <li> -->
-<!--                   <label for="conversion_units"> -->
-<!--                     <select id="conversion_units" name="conversion_units"> -->
-<!--                       <option value="relative" selected="selected">Relative</option> -->
-<!--                       <option value="absolute">Absolute</option> -->
-<!--                     </select> -->
-<!--                   </label> -->
-<!--                 </li> -->
-<!--               </ul> -->
-<!--             </fieldset> -->
+            <fieldset>
+              <ul class="available_charts clearfix">
+                <li style="width: auto">
+                  <label for="conversion_units">
+                    <select id="conversion_units" name="conversion_units">
+                      <option value="relative" data-translate="charts_option_conversion_rate" selected="selected">Conversion rate</option>
+                      <option value="revenue"  data-translate="charts_option_revenue">Revenue</option>
+                    </select>
+                  </label>
+                </li>
+              </ul>
+            </fieldset>
           </div>
         </div>
       </form>
