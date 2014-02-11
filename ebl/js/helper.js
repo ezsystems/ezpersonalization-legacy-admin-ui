@@ -200,67 +200,6 @@ function getCurrentDateTimeMinusDays(days,hour) {
     return result;
 }
 
-//Helper method that generates the X-Chart description for a month call
-function getGraphDescriptionOfLastMonth() {
-    var resultDates = [],
-		i;
-
-    for (i = 30; i > 0; i = i - 1) {
-        if (i % 5 === 0) {
-            var date = getCurrentDateMinusDays(i);
-            resultDates.push(date.day + "." + date.month + ".");
-        } else {
-            resultDates.push("");
-        }
-    }
-    return resultDates;
-
-}
-
-//Helper method that generates the X-Chart description for a week call
-function getGraphDescriptionOfLastWeek() {
-
-    var resultDates = [];
-
-    for (var i = 7; i > 0; i = i - 1) {
-        var date = getCurrentDateMinusDays(i);
-        resultDates.push(date.day + "." + date.month + ".");
-    }
-    return resultDates;
-
-}
-
-//Helper method that generates the X-Chart description for a day call
-function getGraphDescriptionOfLastDay() {
-
-    var resultDates = [];
-
-    for (var i = 0; i < 25; i++) {
-        if (i % 4 !== 0) {
-           resultDates.push("");
-        } else {
-			 if (i < 9) {
-                resultDates.push("0" + i + ":00");
-            } else {
-                resultDates.push(i + ":00");
-            }
-        }
-    }
-    return resultDates;
-
-}
-
-//Helper method that generates the X-Chart description for a day call
-function getGraphDescriptionOf24h(startDate) {
-	var tempDate = startDate instanceof  Date ? new Date(startDate.getTime()): new Date(Date.now() - 24 * 3600 * 1000),
-		legend = [tempDate.getHours() + ':00'],
-		i = 1;
-	for (; i < 25; i++) {
-		tempDate.setHours(tempDate.getHours()+1);
-		legend[i]= !(i%4) ? (tempDate.getHours() < 10 ? '0': '') + tempDate.getHours() + ':00' : '';
-	}
-	return legend;
-}
 
 function setLoadingDiv(element) {
     var width  = $(element).outerWidth();

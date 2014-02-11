@@ -39,6 +39,7 @@ define([
 	gui.showHelp = function(){
 		var $overlay = $('#abHelp');
 		$overlay.find('accordion').accordion({'header': 'h3'});
+		
 	};
 	var startDate =  Date.now() + (24*3600*1000);
 	var endDate =  Date.now() + (7*24*3600*1000);
@@ -873,8 +874,11 @@ define([
 
 	gui.initHelp = function(){
 		$('.helpLink').on('click', function(){
-			var $overlay = $(this).data('target');
-			gui.showOverlay($overlay);
+			var $overlay = $($(this).data('target'));
+			$overlay.show();
+			$overlay.find('.accordion').accordion({
+			      heightStyle: "fill"
+		    });
 		});
 	};
 

@@ -47,20 +47,20 @@ var setEquals = function () {
 };
 
 
-var setAccordions = function () {
-
-	var accordion = $(".accordion");
-
-	if (accordion.length) {
-		accordion.accordion({
-			autoHeight: false,
-			change:     function () {
-				setEquals();
-			}
-		});
-	}
-
-};
+//var setAccordions = function () {
+//
+//	var accordion = $(".accordion");
+//
+//	if (accordion.length) {
+//		accordion.accordion({
+//			autoHeight: false,
+//			change:     function () {
+//				setEquals();
+//			}
+//		});
+//	}
+//
+//};
 
 
 //var setDragDrop = function () {
@@ -584,7 +584,7 @@ $(document).ready(function () {
 	setChartsDimensions();
 	setTimeRanges();
 	setEquals();
-	setAccordions();
+//	setAccordions();
 //	setSortable();
 	setMessages();
 	setOptionsBar();

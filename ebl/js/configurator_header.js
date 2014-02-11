@@ -53,11 +53,8 @@ function initialize_configurator_header(callback, i18n_save_button) {
 function loadMandatorInfo(callback) {
 	
 	var result = $.ajax({
-			dataType: "json",
-			beforeSend: function (req) {
-			req.setRequestHeader('no-realm', 'realm1');
-		},
-		url: "/api/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration",
+		dataType: "json",
+		url: "/api/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration&no-realm",
 		success: callback,
 		error : function(jqXHR, textStatus, errorThrown) {
 			configuratorErrorHandler(jqXHR, textStatus, errorThrown);
@@ -149,7 +146,7 @@ function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
 	} else if(jqXHR.status != null && jqXHR.status == 401) {
 		$.cookie('password', null);
 		$.cookie('email', null);
-		window.parent.location = "login.html";
+		window.parent.location = "/login.html";
 		
 	} else if(jqXHR.status != null && jqXHR.status == 400) {
 		setMessagePopUp("problem", "error_server_error_400");
