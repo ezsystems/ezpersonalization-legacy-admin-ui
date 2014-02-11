@@ -69,8 +69,9 @@ var initSwitchMandator = function() {
 				$('.available_view_options').children('li').removeClass('current');
 				$('.available_view_options').children('li').first().addClass('current');
 				
-				var event = new Event('mandatorChanged');
-				document.dispatchEvent(event);
+				$(document).trigger('mandatorChanged');
+//				var event = new $.Event('mandatorChanged');
+//				document.dispatchEvent(event);
 				
 				$('#switch_mandator_popup').hide();
 		    });

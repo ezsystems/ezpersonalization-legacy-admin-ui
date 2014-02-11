@@ -104,26 +104,43 @@ var ajaxScenarioList = function(new_period, callback) {
 	
 	var result1 = $.ajax({
         dataType: "json",
-        url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
+        url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
 		success: function (data) {
 			statistic = data;
         },
         error: mainErrorHandler
     });
 	
-	var result2 = 
-		$.ajax({
-		    dataType: "json",
-		    url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
-		    success: function (json) {
-		    	scenarioInfoList = json.scenarioInfoList;
-		    },
-		    error: mainErrorHandler
-		});
+	var result2 = $.ajax({
+	    dataType: "json",
+	    url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
+	    success: function (json) {
+	    	scenarioInfoList = json.scenarioInfoList;
+	    },
+	    error: mainErrorHandler
+	});
 	
 	return $.when(result1, result2).done(function() {
 		
-		$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
+		$('.export').attr('href', "/api/v3/" + encodeURIComponent(customerID) + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm");
+		
+		if (period == 'WEEK') {
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_week');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_week');
+		    
+		} else if (period == 'MONTH') {
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_month');
+	        
+		} else if (period == 'DAY' || period == '24H') {
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
+		} 		
+		
+		localizer();
 		
 		renderRecommendationChart();
 		renderCollectedEvents();
@@ -207,34 +224,21 @@ var initialize = function () {
 
     //Last day click event
     $('#view_option_day').click(function () {
-	
-		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
-		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
-		$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
-		localizer();
-       
         ajaxScenarioList("24H");
     });
 
     $('#view_option_week').click(function () {
-
-		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
-		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_week');
-		$('#index_collected_events').attr('data-translate', 'index_collected_events_week');
-		localizer();
-		
 		ajaxScenarioList("WEEK");
     });
 
     $('#view_option_month').click(function () {
-
-		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
-		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
-		$('#index_collected_events').attr('data-translate', 'index_collected_events_month');
-		localizer();
-		
         ajaxScenarioList('MONTH');
     });
+    
+    // is called if right converison unit is changed from relative -> absolute and vice versa
+	$('#conversion_units').change(function () {
+		renderConversionRate();
+	});
 };
 
 
@@ -602,13 +606,29 @@ function renderConversionRate() {
 	} else {
 		var conversionRateObject = {};
 		conversionRateObject.relative = [];
-		conversionRateObject.absolute = [];
+		conversionRateObject.revenue = [];
 		for(var i = 0; i < statistic.length; i++){
 			convRate = parseFloat(statistic[i].clickedRecommended) / parseFloat(statistic[i].clickEvents);
 			conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
-			conversionRateObject.absolute.push(statistic[i].clickedRecommended);
+			conversionRateObject.revenue.push(statistic[i].revenue);
 		}
-	    updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);
+		if ($("#conversion_units").val() == 'relative') {
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);	
+		} else {
+			var currencyCode = mandatorDao.mandator.advancedOptions.currency;
+			var param = $(".conversion_rate_chart span[data-param='0']");
+			param.attr('data-translate', "currency_" + currencyCode);
+			param.text(currencyCode);
+			i18n(param);
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_revenue");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.revenue, currencyFormatter);
+		}
+		i18n($(".conversion_rate_chart"));
 	}
 }
 
@@ -976,9 +996,17 @@ function myFormatter2(obj, num)
     return String(num);
 }
 
+
 function percentFormatter(obj, num){
 	return num + '%';
 }
+
+
+function currencyFormatter(obj, num){
+	return num;
+}
+
+
 function convertDataArray(dataArray){
     var conArray = [],
 		i,
