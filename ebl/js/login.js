@@ -27,6 +27,13 @@ $(document).ready(function () {
         login();
     });
     
+    $('#login_dialog .go_ibs').click(function () {
+    	setLoadingDiv($('#login_dialog fieldset'));
+    	window.setTimeout(function() {
+    		unsetLoadingDiv($('#login_dialog fieldset'));
+    	}, 5000);
+    });
+    
     
     $('#login_dialog input').keypress(function(e) {
         if(e.which == 13) {
@@ -110,16 +117,10 @@ function realLogin(email,password) {
 			password :password
         },
 		success: function (json) {
-			
-			setLoadingDiv($('#login_dialog fieldset'));
-			
 			$.cookie('email', email);
 			window.location = "index.html";
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
-			
-			unsetLoadingDiv($('#login_dialog fieldset'));
-			
 			if(jqXHR.status != null && jqXHR.status == 403){
 				setMessagePopUp("problem", "error_server_error_403");
 			} else if(jqXHR.status != null && jqXHR.status == 401) {
@@ -132,6 +133,8 @@ function realLogin(email,password) {
 				setMessagePopUp("problem", "error_server_error");
 			}
 		}
+	}).always(function() {
+		unsetLoadingDiv($('#login_dialog fieldset'));
 	});
 }
 	 
