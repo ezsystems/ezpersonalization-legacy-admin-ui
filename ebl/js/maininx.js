@@ -239,6 +239,12 @@ var initialize = function () {
 	$('#conversion_units').change(function () {
 		renderConversionRate();
 	});
+	
+	$('section  div.index_mandator').hover(function() {
+		$(this).find('.index_hover').css('display', 'table-row');
+	}, function() {
+		$(this).find('.index_hover').css('display', 'none');
+	});
 };
 
 
@@ -389,17 +395,30 @@ function setMandantData(mandatorInfo) {
         success: function (json) {
 
             var mandatorStatistic = json.mandatorStatistic;
-            $('#statistic_events').text(mandatorStatistic.eventsCalenderMonth);
-            //$('#statistic_outdated_objects').text(mandatorStatistic.modelsBuilt);
-            //$('#statistic_outdated_profiles').text(mandatorStatistic.profilesTracked);
-            $('#statistic_active_profiles').text(mandatorStatistic.profilesTracked);
-            $('#statistic_active_objects').text(mandatorStatistic.objectsTracked);
-            $('#statistic_recommendations').text(mandatorStatistic.recommendationsCalenderMonth);
-
+            $('#statistic_events').text(formatInteger(mandatorStatistic.eventsCalenderMonth));
+            $('#statistic_recocalls').text(formatInteger(mandatorStatistic.recommendationCallsCalenderMonth));
+            $('#statistic_active_profiles').text(formatInteger(mandatorStatistic.profilesTracked));
+            $('#statistic_active_objects').text(formatInteger(mandatorStatistic.objectsTracked));
+            $('#statistic_recommendations').text(formatInteger(mandatorStatistic.recommendationsCalenderMonth));
+            $('#statistic_models').text(formatInteger(mandatorStatistic.models));
         },
         error: mainErrorHandler
     });
 }
+
+
+function formatInteger(v) {
+	var result = '';
+	v = v + '';
+	for (var i = 0; i < v.length; i++) {
+		result = v[v.length - 1 - i] + result;
+		if ((i+1) % 3 == 0) {
+			result = '.' + result;
+		}
+	}
+	return result;
+}
+
 
 var mandatorVersionType='BASIC';
 

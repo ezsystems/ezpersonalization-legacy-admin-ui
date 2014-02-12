@@ -25,53 +25,58 @@
     <script src="js/i18n.js" data-i18n-files="registration,common"></script>
     
 	<script>
+	
+	$(document).ready(function () {
 
-		var queryString = getUrlVars();
-		
-		var step = queryString["step"];
-		if (! step) step = 1;
-		
-		var faultCode = queryString["faultCode"];
-		
-		if (! faultCode) {
-			if (queryString["bookingState"] == "CANCELLED" && ! faultCode) {
-				faultCode = "CANCELLED";
-			} else if (queryString["bookingState"] == "ERROR") {
-				faultCode = "UNKNOWN";
+			var queryString = getUrlVars();
+			
+			var step = queryString["step"];
+			if (! step) step = 1;
+			
+			var faultCode = queryString["faultCode"];
+			
+			if (! faultCode) {
+				if (queryString["bookingState"] == "CANCELLED" && ! faultCode) {
+					faultCode = "CANCELLED";
+				} else if (queryString["bookingState"] == "ERROR") {
+					faultCode = "UNKNOWN";
+				}
 			}
-		}
-		
-		var product  = queryString["product"];
-		if (!product) {
-			product  = queryString["template"]; // backward compatibility
-		}
-		var mandator = queryString["mandator"];
-		var currency = queryString["currency"];
-		
-		if (step == 1 || step == 2) {
-			if (! product) {
-				errorCode="product_not_set";
+			
+			var product  = queryString["product"];
+			if (!product) {
+				product  = queryString["template"]; // backward compatibility
 			}
-		}
+			var mandator = queryString["mandator"];
+			var currency = queryString["currency"];
+			
+			if (step == 1 || step == 2) {
+				if (! product) {
+					errorCode="product_not_set";
+				}
+			}
+			
+			var step1url = "/registration.html?product=" + encodeURIComponent(product);
+			var step2url = "/registration.html?step=2&product=" + encodeURIComponent(product);
+			var step3url = "/registration.html?step=3"; // product and currency will
+			
+			if (currency) {
+				step1url += "&currency=" + encodeURIComponent(currency);
+				step2url += "&currency=" + encodeURIComponent(currency);
+			}
+			
+			var loginLink = "/api/v4/registration/login?returnUrl=" + encodeURIComponent(step2url);
+	
+			var productLink = "/api/v4/registration/buy/" + encodeURIComponent(product);
+			if (currency) {
+				productLink += "/" + encodeURIComponent(currency);
+			}
+			productLink += "?returnUrl=" + encodeURIComponent(step3url);
 		
-		var step1url = "/registration.html?product=" + encodeURIComponent(product);
-		var step2url = "/registration.html?step=2&product=" + encodeURIComponent(product);
-		var step3url = "/registration.html?step=3"; // product and currency will
-		
-		if (currency) {
-			step1url += "&currency=" + encodeURIComponent(currency);
-			step2url += "&currency=" + encodeURIComponent(currency);
-		}
-		
-		var loginLink = "/api/v4/registration/login?returnUrl=" + encodeURIComponent(step2url);
-
-		var productLink = "/api/v4/registration/buy/" + encodeURIComponent(product);
-		if (currency) {
-			productLink += "/" + encodeURIComponent(currency);
-		}
-		productLink += "?returnUrl=" + encodeURIComponent(step3url);
-		
-		$(document).ready(function () {
+			if (step == 1) $("#form-step-1").show();
+			if (step == 2) $("#form-step-2").show();
+			if (step == 3) $("#form-step-3").show();
+			
 			if (faultCode) {
 				var key;
 				
@@ -234,12 +239,9 @@
     
     <section class="dialog normal_form">
     
-      <div id="form-step-1" class="migration">
+      <div id="form-step-1" class="migration" style="display:none;">
           <h3 data-translate="registration.step_1.header">Login or create a user</h3>
-          <div data-translate="registration.step_1.description">
-          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+          <div data-translate="registration.step_1.description" style="min-height: 6ex;">
        	  </div> 
           <div class="actions">
             <a id="step-1-forward" 
@@ -248,16 +250,10 @@
                href="#to_step_2">Continue</a>
           </div>
       </div>
-      <script type="text/javascript">
-		  if (step != 1) $("#form-step-1").hide();
-      </script>
       
-      <div id="form-step-2" class="migration">
+      <div id="form-step-2" class="migration" style="display:none;">
           <h3 data-translate="registration.step_2.header">Book a product</h3>
-          <div data-translate="registration.step_2.description">
-          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+          <div data-translate="registration.step_2.description" style="min-height: 6ex;">
        	  </div> 
           <div class="actions">
             <a id="step-2-forward" 
@@ -267,16 +263,10 @@
               	
           </div>
       </div>
-      <script type="text/javascript">
-	      if (step != 2) $("#form-step-2").hide();
-      </script>
       
-      <div id="form-step-3" class="migration">
+      <div id="form-step-3" class="migration" style="display:none;">
           <h3 data-translate="registration.step_3.header">Congratulation</h3>
-          <div data-translate="registration.step_3.description">
-          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-          	xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+          <div data-translate="registration.step_3.description" style="min-height: 6ex;">
        	  </div> 
           <div class="actions">
             <a id="step-3-forward" 
@@ -285,9 +275,6 @@
                href="/index.html">Go to Dashboard</a>
           </div>
       </div>   
-      <script type="text/javascript">
-	      if (step != 3) $("#form-step-3").hide();
-      </script>         
       
     </section>
 
