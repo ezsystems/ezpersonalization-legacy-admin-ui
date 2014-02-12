@@ -332,7 +332,7 @@ function saveScenario() {
 				  inputId = $this.data('inputid'),
 				  $inputs = $('input[name="category_filter"]');
 		  value = value === 'null' ? null : value;
-// 							console.log(value);
+
 		  function change(event, ui) {
 			  $(ui.handle).parent().siblings('.levelView').html(ui.value);
 		  }
@@ -342,18 +342,13 @@ function saveScenario() {
 			  'min': 1,
 			  'max': 5,
 			  'slide': change,
-			  'change': change
-// 							'disabled': true
-		  })
-				  .slider('value', 1);
+			  'change': change}).slider('value', 1);
+		  
 		  $('#levelsUp').slider({
 			  'min': 1,
 			  'max': 5,
 			  'slide': change,
-			  'change': change
-// 							'disabled': true
-		  })
-				  .slider('value', 1);
+			  'change': change}).slider('value', 1);
 
 		  function click() {
 			  var $this = $(this);
@@ -918,7 +913,14 @@ function checkRelevantPeriod() {
 	var model = modelDao.getModel(model_reference_code);
 	  
 	var duration = parseDuration(); // creating empty duration
-	duration[$('#relevant_period_unit').val()] = val;
+	
+	var key = $('#relevant_period_unit').val();
+	if (key == 'H') {
+		duration.setHours(val);
+	} else if (key == 'D') {
+		duration.setDays(val);
+	}
+		
 	model.maximumRatingAge = duration.getXSDuration();	  
 	  
 	return val;
@@ -952,7 +954,7 @@ function initSubmodelDialog() {
   		}
   	});	
   	
-	$('#relevant_period').on('change', function() {
+	$('#relevant_period, #relevant_period_unit').on('change', function() {
 		checkRelevantPeriod();
     });
 
@@ -961,10 +963,6 @@ function initSubmodelDialog() {
 		type = $this.find('option:selected').data('type');
 		fillSubModelsChange($this.val(), type);
     });
-
-    $('#relevant_period').on('change', function() {
-    	var val = checkRelevantPeriod();
-	});
     
 	$(".create_one_more_group").on("click", function (event) {
 
@@ -1205,7 +1203,7 @@ function fillNumericSubmodelValues(sm) {
 	  
 	  result = (duration.getHours() < 48) 
 			? duration.getHours() + ' ' + (duration.getHours() > 1 ? hh : h)
-			: duration.getDays()  + ' ' + (duration.getHours() > 1 ? hh : h);
+			: duration.getDays()  + ' ' + (duration.getDays() > 1 ? dd : d);
 		
 	  return result;
   }
