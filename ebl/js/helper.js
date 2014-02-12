@@ -72,6 +72,24 @@ var parseDuration = function(str) {
 	var getHours = function() {
 		return (((((this.Y * 12) + this.M) * 30) + this.D) * 24) + this.H + (this.m > 30 ? 1 : 0);
 	};
+	
+	var setHours = function(value) {
+		
+		var a = value % 24;
+
+		this.D = Math.round((value - a) / 24);
+		this.H = Math.floor(a);
+		this.M = Math.round((a - this.H) * 60);
+		
+		this.Y = 0;
+		this.m = 0;
+		this.S = 0;
+	};
+	
+	
+	var setDays = function(value) {
+		this.setHours(value * 24);
+	};
 
 	var getDays = function() {
 		return (((this.Y * 12) + this.M) * 30) + this.D + (this.H > 12 ? 1 : 0);
@@ -102,7 +120,9 @@ var parseDuration = function(str) {
 		res = {
 			'getHours':      getHours,
 			'getDays':       getDays,
-			'getXSDuration': getXSDuration
+			'getXSDuration': getXSDuration,
+			'setHours':      setHours,
+			'setDays':       setDays
 		};
 	if (typeof str === 'string') {
 		match = str.match(RegEx);

@@ -42,6 +42,9 @@
 		}
 		
 		var product  = queryString["product"];
+		if (!product) {
+			product  = queryString["template"]; // backward compatibility
+		}
 		var mandator = queryString["mandator"];
 		var currency = queryString["currency"];
 		
