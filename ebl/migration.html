@@ -25,39 +25,42 @@
     <script src="js/i18n.js" data-i18n-files="migration,common"></script>
     
 	<script>
-
-		var queryString = getUrlVars();
-		
-		var step = queryString["step"];
-		if (! step) step = 1;
-		
-		var errorCode = queryString["errorCode"];
-		
-		if (queryString["bookingState"] == "CANCELLED") {
-			errorCode = "CANCELLED";
-		} else if (queryString["bookingState"] == "ERROR") {
-			errorCode = "UNKNOWN";
-		}
-		
-		var product  = queryString["product"];
-		var mandator = queryString["mandator"];
-		var code     = queryString["code"];
-		
-		if (step == 1 || step == 2) {
-			if (! product) {
-				errorCode="product_not_set";
+	
+	$(document).ready(function () {
+			var queryString = getUrlVars();
+			
+			var step = queryString["step"];
+			if (! step) step = 1;
+			
+			var errorCode = queryString["errorCode"];
+			
+			if (queryString["bookingState"] == "CANCELLED") {
+				errorCode = "CANCELLED";
+			} else if (queryString["bookingState"] == "ERROR") {
+				errorCode = "UNKNOWN";
 			}
-			if (! code) {
-				errorCode="code_not_set";
+			
+			var product  = queryString["product"];
+			var mandator = queryString["mandator"];
+			var code     = queryString["code"];
+			
+			if (step == 1 || step == 2) {
+				if (! product) {
+					errorCode="product_not_set";
+				}
+				if (! code) {
+					errorCode="code_not_set";
+				}
 			}
-		}
-		
-		var step1url = "/migration.html?product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
-		var step2url = "/migration.html?step=2&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
-		var step3url = "/migration.html?step=3&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+			
+			var step1url = "/migration.html?product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+			var step2url = "/migration.html?step=2&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+			var step3url = "/migration.html?step=3&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
 
-		
-		$(document).ready(function () {
+			
+			if (step == 1) $("#form-step-1").show();
+			if (step == 2) $("#form-step-2").show();
+			if (step == 3) $("#form-step-3").show();
 			
 			if (errorCode) {
 				var key = "message_error_" + errorCode;
@@ -231,7 +234,7 @@
     
     <section class="dialog normal_form">
     
-      <div id="form-step-1" class="migration">
+      <div id="form-step-1" class="migration" style="display:none;">
           <h3 data-translate="migration.step_1.header">Migrate user account</h3>
           <div data-translate="migration.step_1.description">
           	A user is an agent, either a human agent (end-user) or software agent, who uses a computer or network service. A user often has a user account and is identified by a username (also user name).
@@ -243,11 +246,8 @@
                href="#to_step_2">Continue</a>
           </div>
       </div>
-      <script type="text/javascript">
-		  if (step != 1) $("#form-step-1").hide();
-      </script>
       
-      <div id="form-step-2" class="migration">
+      <div id="form-step-2" class="migration" style="display:none;">
           <h3 data-translate="migration.step_2.header">Migrate contract</h3>
           <div data-translate="migration.step_2.description">
           	Some text with words <span data-param="0">product</span> and <span data-param="1"><b>market</b></span>.
@@ -260,11 +260,8 @@
               	
           </div>
       </div>
-      <script type="text/javascript">
-	      if (step != 2) $("#form-step-2").hide();
-      </script>
       
-      <div id="form-step-3" class="migration">
+      <div id="form-step-3" class="migration" style="display:none;">
           <h3 data-translate="migration.step_3.header">Migrationg finished</h3>
           <div data-translate="migration.step_3.description">
           	A user is an agent, either a human agent (end-user) or software agent, who uses a computer or network service. A user often has a user account and is identified by a username (also user name).
@@ -276,9 +273,6 @@
                href="/index.html">Continue</a>
           </div>
       </div>   
-      <script type="text/javascript">
-	      if (step != 3) $("#form-step-3").hide();
-      </script>         
       
     </section>
     
