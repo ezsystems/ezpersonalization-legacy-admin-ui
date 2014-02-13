@@ -100,28 +100,39 @@
             <label for="autorefresh_off"><input type="radio" name="autorefresh" id="autorefresh_off" value="off" checked="checked"><span data-translate="index_off">Off</span></label>
           </form>
         </div>
-        <div class="s1_5">
-          <p><span data-translate="index_events">Events: </span><strong id="statistic_events"></strong></p>
-          <p><span data-translate="index_recommendations">Recommendations: </span><strong id="statistic_recommendations"></strong></p>
+        
+        <div class="index_mandator">
+        	<table>
+        		<tr>
+	        		<td><span data-translate="index_events">Events:</span></td>
+	        		<td style="text-align: right; padding-left: 10px;"><strong id="statistic_events">0</strong></td>
+        		</tr>
+        		<tr>
+        			<td><span data-translate="index_recocalls">Recommendation Calls:</span></td>
+        			<td style="text-align: right; padding-left: 10px;"><strong id="statistic_recocalls">0</strong></td>
+        		</tr>        		
+        		<tr class="index_hover">
+        			<td><span data-translate="index_recommendations">Recommendations:</span></td>
+        			<td style="text-align: right;"><strong id="statistic_recommendations">0</strong></td>
+        		</tr>
+        		<tr class="index_hover">
+        			<td><span data-translate="index_objects">Objects: </span></td>
+		            <td style="text-align: right;"><strong class="active" title="active" id="statistic_active_objects">0</strong>
+		            <span class="tooltip" data-translate="index_objects_tooltip"></span></td>
+        		</tr>
+        		<tr class="index_hover">
+		            <td><span data-translate="index_profiles">Profiles: </span></td>
+		            <td style="text-align: right;"><strong class="active" title="active" id="statistic_active_profiles">0</strong>
+		            <span class="tooltip" data-translate="index_profiles_tooltip"></span></td>
+        		</tr>
+        		<tr class="index_hover">
+		            <td><span data-translate="index_models">Recommendation models: </span></td>
+		            <td style="text-align: right;"><strong class="active" title="active" id="statistic_models">0</strong>
+		            <span class="tooltip" data-translate="index_profiles_tooltip"></span></td>
+        		</tr>        		
+        	</table> 
         </div>
-        <div class="s1_5">
-          <p class="tooltip_trigger">
-            <span data-translate="index_objects">Objects: </span>
-            <strong class="active" title="active" id="statistic_active_objects"></strong>
-            <strong class="outdated" title="outdated" id="statistic_outdated_objects" style="display:none;"></strong>
-            <span class="tooltip">
-              <span data-translate="index_objects_tooltip">Some content.</span>
-            </span>
-          </p>
-          <p class="tooltip_trigger">
-            <span data-translate="index_profiles">Profiles: </span>
-            <strong class="active" title="active" id="statistic_active_profiles"></strong>
-            <strong class="outdated" title="outdated" id="statistic_outdated_profiles" style="display:none;"></strong>
-            <span class="tooltip">
-              <span data-translate="index_profiles_tooltip">Some content.</span>
-            </span>
-          </p>
-        </div>
+        
       </header>
       <form class="clearfix" method="get" action="#">
         <fieldset class="time_settings">
@@ -290,7 +301,7 @@
 		</div>
       </header>
       <ul id="available_scenarios" class="available_scenarios clearfix tabContent" style="min-height: 150px;">
-        <li class="dummy_scenario" style="display:none;">
+        <li class="dummy_scenario" style="display:none; heigth: 100ex;">
           <div class="scenario activated" style="minHeight:250px;">
            <div style="line-height: 0.7em;">&nbsp;</div>
             <h4>
@@ -299,7 +310,7 @@
             	</font>
              	<span>Dummy</span> 
             </h4>
-            <p class="data unavailable"><span class="delivered_recommendations"><strong>25675</strong> <span data-translate="index_delivered_recommendations_scenario">Delivered recommendations</span></span></p>
+            <p class="data unavailable" style="padding-right: 5px;"><span class="delivered_recommendations"><strong>0</strong> <span data-translate="index_delivered_recommendations_scenario">Delivered recommendations</span></span></p>
             <p class="description">Some brief description of the scenario, that can be edited together with other parameters</p>
             
           </div>
