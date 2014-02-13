@@ -294,12 +294,14 @@ section > header {
 }
 
 section  div.index_mandator {
-	position: absolute;
+	position: relative;
 	z-index: 2;
-	top: 0; right: 0;
+/* 	top: 0; right: 0; */
 	background: rgba(63, 63, 63, 1);
 	border-radius: 5px;
 	padding: 14px 25px;
+	margin-top: -13px;
+	margin-bottom: -100px;
 }
 
 section  div.index_mandator td {
@@ -343,12 +345,17 @@ section > header > .controls{
     top: 0;
 }
 
+
 section > header a:not(.button),
-section > header a:not(.button):visited,
-a.inverted,
-a.inverted:visited {
-  color: rgba(171, 220, 245, 1);
+section > header a:not(.button):visited {
+  color: rgb(216, 216, 216);
 }
+
+
+section > header a:not(.button):hover {
+  color: rgb(255, 255, 255);
+}
+
 
 /* section > header a:not(.button):hover, */
 /* section > header a:not(.button):focus, */
