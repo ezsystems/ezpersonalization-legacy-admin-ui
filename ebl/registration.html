@@ -47,6 +47,9 @@
 			if (!product) {
 				product  = queryString["template"]; // backward compatibility
 			}
+			if (!product) {
+				product  = queryString["role"]; // backward compatibility
+			}			
 			var mandator = queryString["mandator"];
 			var currency = queryString["currency"];
 			
