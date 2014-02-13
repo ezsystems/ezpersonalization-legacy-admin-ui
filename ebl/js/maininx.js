@@ -142,6 +142,7 @@ var ajaxScenarioList = function(new_period, callback) {
 		
 		localizer();
 		
+		renderScenarioList();
 		renderRecommendationChart();
 		renderCollectedEvents();
 		renderConversionRate();
@@ -172,11 +173,15 @@ var initialize = function () {
 		$('.account_data').children('li').first().find('strong').text(name);
 		
 	    if (loginInfo.provider == "ibs") {
-	    	$('#edit_contact_datal').attr('href', "api/v4/registration/selfcare");
+	    	$('#edit_contact_datal').attr('href', "/api/v4/registration/selfcare");
+	    	
+	    	$('.ibs_item').show();
 	    } else {
 	    	$('#edit_contact_datal').off('click').click(function() {
 	    		$('#editDataOverlay').show();
 	    	});
+	    	
+	    	$('.ibs_item').hide();
 	    }
 	});
 	
@@ -216,7 +221,6 @@ var initialize = function () {
     $('select[id^="events_select_for_chart_bar"]').change(function () {
         renderCollectedEvents();
     });
-
 
     $('select[id^="select_for_delivered_recommendations_chart_bar"]').change(function () {
         renderRecommendationChart();
@@ -412,7 +416,7 @@ function formatInteger(v) {
 	v = v + '';
 	for (var i = 0; i < v.length; i++) {
 		result = v[v.length - 1 - i] + result;
-		if ((i+1) % 3 == 0) {
+		if ((i+1) % 3 == 0 && i != v.length - 1) {
 			result = '.' + result;
 		}
 	}
@@ -437,12 +441,6 @@ function initialLoadData() {
 		$(".available_charts select option[value='blacklist']").show();
 		$(".available_charts select option[value='owns']").show();		
 	}
-	
-    $('.available_scenarios').children('li').each(function (index) {
-        if (index > 0) {
-            $(this).remove();
-        }
-    });
    	
     $('#createNewScenario').off('click').click(function() {
     	$('#settingsF').attr('src',"settingspop.html?customer_id=" + encodeURIComponent(customerID) + "&from_template=3");
@@ -465,13 +463,6 @@ function initialLoadData() {
     	console.log("should close corporate2");
     	$('#messageCopyrights').show();
     });
-
-    if (statistic.length < 1) {
-        showEmptyEventChart();
-        console.log("no items available");
-    } else {
-        renderCollectedEvents();
-    }
 
     $.ajax({
         dataType: "json",
@@ -500,7 +491,10 @@ function initialLoadData() {
         error: mainErrorHandler
     });
 
-//    loadScenarios();
+}
+
+
+function renderScenarioList() {
     
     var json = {"scenarioInfoList" : scenarioInfoList};
     
@@ -536,37 +530,11 @@ function initialLoadData() {
             var additionalParameter = "?reference_code=" + escapedRefCode + "&customer_id=" + customerID;
             //The links at the end of the page must have a referenceCode and customerID at request get parameter
            $(dummyClone).children("div#scenario_" + j).find("h4").children("font.settings").html('<a  onclick="$(\'#settingsF\').attr(\'src\',\'settingspop.html' + additionalParameter + '\'); $(\'#settingsP\').show();"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></a>');
+                
+            var derecos = sumDeliveredRecommendations(scenario);
 
-            $(dummyClone).children("div").children("p.data").removeClass("unavailable").removeClass("ascending").removeClass("descending");
-            if (scenario.statisticItems.length < 1 || scenario.statisticItems.length > 2) {
-                //if the response have not correct data, the arrow gets an unavailable icon
-                console.log("No correct number of items to show delivered recommendations");
-                $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
-                if (scenario.statisticItems.length == 0) {
-                    $(dummyClone).children("div").children("p.data").children("span").children("strong").text("0");
-                } else {
-                    $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[1].deliveredRecommendations);
-                }
-            } else if (scenario.statisticItems.length == 1) {
-                //if there is not enough data to calculate the arrow, the arrow gets an unavailable icon and the one data will be shown in the delivered recommendation text
-                $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[0].deliveredRecommendations);
-                $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
-            } else {
-                //the arrow will be calculated with the cummulated data of the last two weeks.
-                //if the difference of this two values is greater or smaller as 5% an arrow will be shown.
-                //if the value from the newest data is greater, the arrow shows up, else it shows down
-                var difference = scenario.statisticItems[1].deliveredRecommendations - scenario.statisticItems[0].deliveredRecommendations;
-                if (difference > 0) {
-                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("ascending");
-                } else if (difference < 0) {
-                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("descending");
-                } else {
-                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
-                }
+            $(dummyClone).children("div").children("p.data").children("span").children("strong").text(formatInteger(derecos));
 
-                $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[1].deliveredRecommendations);
-
-            }
             //set the radio buttons initialy
             $(dummyClone).children("div#scenario_" + j).removeClass("problem").removeClass("ready_to_use").removeClass("partly_available");
 
@@ -578,10 +546,8 @@ function initialLoadData() {
                 $(dummyClone).children("div#scenario_" + j).addClass("partly_available");
             }
             if(j == 0){
-//            	console.log( $('.available_scenarios').children('li').length);
             	$('.available_scenarios').empty();
             	$('.available_scenarios').append(dummy);
-//            	console.log( $('.available_scenarios').children('li').length);
             }
           
             $('.available_scenarios').append(dummyClone);
@@ -595,11 +561,9 @@ function initialLoadData() {
 		}
         //Fill the select boxes at the bottom of the middle chart
         $('#select_for_delivered_recommendations_chart_bar_1').find('option').each(removeOptions).end().append(options)
-				.find('option[value="total"]')
-					.siblings()
-						.removeAttr('selected')
-				.end()
-					.attr('selected', 'selected');//select the total scenario
+				.find('option[value="total"]').siblings().removeAttr('selected')
+				.end().attr('selected', 'selected'); //select the total scenario
+        
         $('#select_for_delivered_recommendations_chart_bar_2').find('option').each(removeOptions).end().append(options);
         $('#select_for_delivered_recommendations_chart_bar_3').find('option').each(removeOptions).end().append(options);
 
@@ -611,7 +575,15 @@ function initialLoadData() {
             applicantSelector: "> *"
         });
     }
-    
+}
+
+
+function sumDeliveredRecommendations(scenario) {
+	var result = 0;
+	for (var i in scenario.statisticItems) {
+		result += scenario.statisticItems[i].deliveredRecommendations;
+	}
+	return result;
 }
 
 
