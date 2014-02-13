@@ -67,7 +67,7 @@
           <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
           <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
         </ul>
-        <a href="logout.html" data-translate="index_logout" class="logout">logout</a>
+        <a href="/api/v4/registration/logout" data-translate="index_logout" class="logout">logout</a>
       </div>
       <nav class="s2_5">
         <ul class="main_navi clearfix">
@@ -81,57 +81,69 @@
     </header>
     <section class="mandant" style="margin: 0 20px;">
       <header class="clearfix">
-        <div class="s1_5">
-          <p class="switch">
-            <a href="#" data-translate="index_switch_mandant">Switch mandant</a>
-          </p>
-          &nbsp;
-        </div>
-        <div class="s2_5">
-          <h2 class="info">
-            <strong class="project_title">usearc.de</strong>, <p>online-shop style</p><br>
-            <span class="code"><span data-translate="webpage_code">Webpage Code:</span><span class="codeid">270</span></span>
-          </h2>
-        </div>
-        <div class="s1_5 autorefresh" style="display:none">
-          <span data-translate="index_auto_refresh">Autorefresh</span>
-          <form class="clearfix" method="get" action="#">
-            <label for="autorefresh_on"><input type="radio" name="autorefresh" id="autorefresh_on" value="on"><span data-translate="index_on">On</span></label>
-            <label for="autorefresh_off"><input type="radio" name="autorefresh" id="autorefresh_off" value="off" checked="checked"><span data-translate="index_off">Off</span></label>
-          </form>
+      
+        <div style="float: left; font-size: 26px; margin: 11px 10px 0 15px;">
+          <h2 class="info">Dashboard</h2>
         </div>
         
-        <div class="index_mandator">
-        	<table>
-        		<tr>
-	        		<td><span data-translate="index_events">Events:</span></td>
-	        		<td style="text-align: right; padding-left: 10px;"><strong id="statistic_events">0</strong></td>
-        		</tr>
-        		<tr>
-        			<td><span data-translate="index_recocalls">Recommendation Calls:</span></td>
-        			<td style="text-align: right; padding-left: 10px;"><strong id="statistic_recocalls">0</strong></td>
-        		</tr>        		
-        		<tr class="index_hover">
-        			<td><span data-translate="index_recommendations">Recommendations:</span></td>
-        			<td style="text-align: right;"><strong id="statistic_recommendations">0</strong></td>
-        		</tr>
-        		<tr class="index_hover">
-        			<td><span data-translate="index_objects">Objects: </span></td>
-		            <td style="text-align: right;"><strong class="active" title="active" id="statistic_active_objects">0</strong>
-		            <span class="tooltip" data-translate="index_objects_tooltip"></span></td>
-        		</tr>
-        		<tr class="index_hover">
-		            <td><span data-translate="index_profiles">Profiles: </span></td>
-		            <td style="text-align: right;"><strong class="active" title="active" id="statistic_active_profiles">0</strong>
-		            <span class="tooltip" data-translate="index_profiles_tooltip"></span></td>
-        		</tr>
-        		<tr class="index_hover">
-		            <td><span data-translate="index_models">Recommendation models: </span></td>
-		            <td style="text-align: right;"><strong class="active" title="active" id="statistic_models">0</strong>
-		            <span class="tooltip" data-translate="index_profiles_tooltip"></span></td>
-        		</tr>        		
-        	</table> 
+        <div style="float: left; margin-left: 25px">
+          <h2 class="info">
+            <strong class="project_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong><br>
+            <span class="code"><span data-translate="webpage_code">Customer ID:</span><span class="codeid">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+          </h2>
         </div>
+        
+        <div style="float: left; margin: 10px 10px 0 25px;">
+          <p class="switch">
+            <a href="#" data-translate="index_switch_mandant">Switch</a>
+          </p>
+        </div>
+        
+        <div style="float: right; height: 30px;">
+	        <div class="index_mandator" >
+	        	<table>
+	        		<tr>
+		        		<td><span data-translate="index_events">Events:</span></td>
+		        		<td style="text-align: right; padding-left: 10px;"><strong id="statistic_events">0</strong></td>
+	        		</tr>
+	        		<tr>
+	        			<td><span data-translate="index_recocalls">Recommendation Calls:</span></td>
+	        			<td style="text-align: right; padding-left: 10px;"><strong id="statistic_recocalls">0</strong></td>
+	        		</tr>        		
+	        		<tr class="index_hover">
+	        			<td><span data-translate="index_recommendations">Recommendations:</span></td>
+	        			<td style="text-align: right;"><strong id="statistic_recommendations">0</strong></td>
+	        		</tr>
+	        		<tr class="index_hover">
+	        			<td><span data-translate="index_objects">Objects: </span></td>
+			            <td style="text-align: right;"><strong class="active" title="active" id="statistic_active_objects">0</strong>
+			            <span class="tooltip" data-translate="index_objects_tooltip"></span></td>
+	        		</tr>
+	        		<tr class="index_hover">
+			            <td><span data-translate="index_profiles">Profiles: </span></td>
+			            <td style="text-align: right;"><strong class="active" title="active" id="statistic_active_profiles">0</strong>
+			            <span class="tooltip" data-translate="index_profiles_tooltip"></span></td>
+	        		</tr>
+	        		<tr class="index_hover">
+			            <td><span data-translate="index_models">Recommendation models: </span></td>
+			            <td style="text-align: right;"><strong class="active" title="active" id="statistic_models">0</strong>
+			            <span class="tooltip" data-translate="index_profiles_tooltip"></span></td>
+	        		</tr>        		
+	        	</table> 
+	        </div>
+        </div>
+        
+        <div class="ibs_item" style="float: right; margin: 10px 10px 0 25px;">
+          <p>
+          	<a href="/api/v4/registration/selfcare/payments" data-translate="index_menu_payments">Payments</a>
+          </p>
+        </div>
+        
+        <div class="ibs_item" style="float: right; margin: 10px 10px 0 25px;">
+          <p>
+          	<a href="/api/v4/registration/selfcare/customer" data-translate="index_menu_customer">Customer</a>
+          </p>
+        </div>        
         
       </header>
       <form class="clearfix" method="get" action="#">
@@ -310,7 +322,7 @@
             	</font>
              	<span>Dummy</span> 
             </h4>
-            <p class="data unavailable" style="padding-right: 5px;"><span class="delivered_recommendations"><strong>0</strong> <span data-translate="index_delivered_recommendations_scenario">Delivered recommendations</span></span></p>
+            <p class="data" style="padding-right: 5px;"><span class="delivered_recommendations"><strong>0</strong> <span data-translate="index_delivered_recommendations_scenario">Delivered recommendations</span></span></p>
             <p class="description">Some brief description of the scenario, that can be edited together with other parameters</p>
             
           </div>
@@ -355,7 +367,7 @@
     <div id="switch_mandator_popup" class="overlay">
       <div class="dialog_body change_mandant">
         <a class="destroy_dialog">X</a>
-        <h2 data-translate="index_switch_mandant">Switch mandant</h2>
+        <h2 data-translate="switch_mandant_header">Switch mandant</h2>
         <div class="clearfix">
             <label>
               <select id="choose_mandant" name="choose_mandant">
@@ -377,7 +389,7 @@
         	No clients linked to this user account. Please use another account or book a new contract.
         </div>
         <div class="actions clearfix">
-          <a class="logout" data-translate="no_mandator_available_logout" href="/login.html">Logout</a>
+          <a class="logout" data-translate="no_mandator_available_logout" href="/api/v4/registration/logout">Logout</a>
         </div>
         <div class="actions clearfix">
           <a class="book" data-translate="no_mandator_available_book" href="http://www.yoochoose.com/pricing_table.html">Book new contract</a>
@@ -400,7 +412,6 @@
 			<div style="clear: both;"></div>
 		</div>
     </div>
-
 
 
 	<div id="abTestEditor" class="ABOverlay" style="display: none;">
