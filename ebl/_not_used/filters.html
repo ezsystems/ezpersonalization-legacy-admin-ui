@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Configurator | Step 3</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="css/styles_new.css">
+    <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/jquery-ui.1.8.16.min.js"></script>
+    <script src="js/browser_detection.js"></script>
+    <script src="js/form_submit_trigger.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="ebl2/js/localizations/localizer.js"></script>
+	 
+	<script>
+	
+	var reference_code = gup( 'reference_code' );
+	var customerID = gup('customer_id');
+	
+	$(document).ready(function() {
+	
+		$('.configurator_tab').find('a').attr("href", "configurator.html?reference_code=" + reference_code + "&customer_id=" + customerID);
+		$('.settings_tab').find('a').attr('href', 'settings.html?reference_code='+reference_code+'&customer_id='+customerID);
+	
+		//ajax request for the right section
+		setLoadingDiv($('.scenario_settings'));
+		setLoadingDiv($('#filter_group_standard'));
+		setLoadingDiv($('#filter_group_item'));
+		
+		$.ajax({
+				dataType: "json",
+				beforeSend: function (req) {
+				req.setRequestHeader('no-realm', 'realm1');
+				},
+				 statusCode: {
+						401: function (jqXHR, textStatus, errorThrown) {
+							$.cookie('password', null);
+							$.cookie('email', null);
+							window.location = "login.html";
+						}
+				},
+				url: "ebl/v3/"+customerID+"/structure/get_scenario/"+reference_code,
+				success: function(json){
+					
+					$('body').data('scenario', json);
+					
+					var outputItemTypes = "";
+					if(json.scenario.outputItemTypes.length > 0)
+					{
+						
+						for(var i = 0; i < json.scenario.outputItemTypes.length; i++)
+						{
+							var outputType = json.scenario.outputItemTypes[i];
+							if(outputItemTypes == "")
+							{
+								switch (outputType) {
+								  case 1:
+									outputItemTypes = '<span data-translate="settings_product"></span>';
+									break;
+								  case 2:
+									outputItemTypes = '<span data-translate="settings_article"></span>';
+									break;
+								  case 3:
+									outputItemTypes = '<span data-translate="settings_image"></span>';
+									break;
+								  case 4:
+									outputItemTypes = '<span data-translate="settings_media"></span>';
+									break;
+								  case 5:
+									outputItemTypes = '<span data-translate="settings_user_generated_content"></span>';
+									break;
+								}
+							}
+							else
+							{
+								switch (outputType) {
+								  case 1:
+									outputItemTypes = outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_product"></span>';
+									break;
+								  case 2:
+									outputItemTypes = outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_article"></span>';
+									break;
+								  case 3:
+									outputItemTypes = outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_image"></span>';
+									break;
+								  case 4:
+									outputItemTypes = outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_media"></span>';
+									break;
+								  case 5:
+									outputItemTypes = outputItemTypes = outputItemTypes + ", " + '<span data-translate="settings_user_generated_content"></span>';
+									break;
+								}
+
+							}
+						}
+					}
+					
+					var referenceCodeServer = json.scenario.referenceCode;
+					
+					$(".scenario_settings").find(".output_types").html(outputItemTypes);
+					
+					if(json.scenario.title == null || json.scenario.title == "")
+					{
+						$(".scenario_settings").find(".name").text(referenceCodeServer);
+					}
+					else
+					{
+						$(".scenario_settings").find(".name").text(json.scenario.title);
+					}
+					$(".scenario_settings").find(".code").text("(ID: "+referenceCodeServer + ")");
+					
+					if(json.scenario.avaliable == "AVAILABLE")
+					{
+						$(".scenario_settings").children("div").find(".status").attr("data-translate" , "status_available");
+						$(".scenario_settings").children("div").find(".status").addClass("ready_to_use");
+						
+					}
+					else if(json.scenario.avaliable == "PARTLY_AVAILABLE")
+					{
+						$(".scenario_settings").children("div").find(".status").attr("data-translate" , "status_partly_available");
+						$(".scenario_settings").children("div").find(".status").addClass("partly_available");
+					}
+					else if(json.scenario.avaliable == "NOT_AVAILABLE")
+					{
+						$(".scenario_settings").children("div").find(".status").attr("data-translate" , "status_not_available");
+						$(".scenario_settings").children("div").find(".status").addClass("problem");
+					}
+					else
+					{
+						$(".scenario_settings").children("div").find(".status").attr("data-translate" , "status_undefined");
+						$(".scenario_settings").children("div").find(".status").addClass("problem");
+					}
+					unsetLoadingDiv($('.scenario_settings'));
+					localizer();
+				},
+				error : function(jqXHR, textStatus, errorThrown)
+				{
+					if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+				}
+		});
+	
+		$.ajax({
+				dataType: "json",
+				beforeSend: function (req) {
+				req.setRequestHeader('no-realm', 'realm1');
+				},
+				 statusCode: {
+						401: function (jqXHR, textStatus, errorThrown) {
+							$.cookie('password', null);
+							$.cookie('email', null);
+							window.location = "login.html";
+						}
+				},
+				url: "ebl/v3/"+customerID+"/structure/get_filter_set/standard/"+reference_code,
+				success: function(json){
+					$('body').data('filters_standard', json);
+					
+					
+					var excludeContextItems = json.standardFilterSet.excludeContextItems;
+					//var maximalItemAge = json.standardFilterSet.maximalItemAge;
+					var excludeCheaperItems = json.standardFilterSet.excludeCheaperItems;
+					//var sameCategoryFilter = json.standardFilterSet.sameCategoryFilter;
+					var excludeTopSellingResults = json.standardFilterSet.excludeTopSellingResults;
+					var excludeEditorBlacklistResults = json.standardFilterSet.excludeEditorBlacklistResults;
+//					var excludeOutdatedItems = json.standardFilterSet.excludeOutdatedItems;
+					
+					if(excludeCheaperItems == "YES")
+					{ 
+						$('#no_cheaper_products').attr("checked", "checked");
+					}
+					
+					if(excludeContextItems == true)
+					{ 
+						$('#currently_viewed').attr("checked", "checked");
+					}
+					
+//					if(excludeOutdatedItems == true)
+//					{
+//						$('#outdated_products').attr("checked", "checked");
+//					}
+					
+					if(excludeTopSellingResults == true)
+					{
+						$('#no_top_sellings').attr("checked", "checked");
+					}
+					
+					if(excludeEditorBlacklistResults == true)
+					{
+						$('#no_black_list_items_editor').attr("checked", "checked");
+					}
+					
+				unsetLoadingDiv($('#filter_group_standard'));
+				},
+				error : function(jqXHR, textStatus, errorThrown)
+				{
+					if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+                }
+		});
+		
+		$.ajax({
+				dataType: "json",
+				beforeSend: function (req) {
+				req.setRequestHeader('no-realm', 'realm1');
+				},
+				 statusCode: {
+						401: function (jqXHR, textStatus, errorThrown) {
+							$.cookie('password', null);
+							$.cookie('email', null);
+							window.location = "login.html";
+						}
+				},
+				url: "ebl/v3/"+customerID+"/structure/get_filter_set/profile/"+reference_code,
+				success: function(json){
+					$('body').data('filters_profile', json);
+				
+					var excludeAlreadyPurchased = json.profileFilterSet.excludeAlreadyPurchased;
+					var excludeRepeatedRecommendations = json.profileFilterSet.excludeRepeatedRecommendations;
+//					var excludeBlacklist = json.profileFilterSet.excludeBlacklist;
+					
+					if(excludeAlreadyPurchased == true)
+					{
+						$('#no_already_purchased').attr("checked", "checked");
+					}
+					
+//					if(excludeBlacklist == true)
+//					{
+//						$('#no_black_list_items_user').attr("checked", "checked");
+//					}
+					
+					if(excludeRepeatedRecommendations != null)
+					{
+						$('#enable_limit_max_recs_per_session').attr("checked", "checked");
+						$('#limit_max_recs_per_session').removeAttr("disabled");
+						$('#limit_max_recs_per_session').val(excludeRepeatedRecommendations);
+					}
+				unsetLoadingDiv($('#filter_group_item'));
+				},
+				error : function(jqXHR, textStatus, errorThrown)
+				{
+					if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+                }
+		});
+		
+		$("input, textarea, select").change(function() {
+			updateFilters();
+		});
+		
+		$('#button_save').click(function() {
+			saveForm();
+		});
+		
+	});
+	
+	
+	function saveForm()
+	{
+		setLoadingDiv($('.filters_group').children().first());
+		setLoadingDiv($('.filters_group').children().last());
+		//Save profile filters
+		var json = $('body').data('filters_profile');
+		$.ajax({
+			type:"POST",
+			beforeSend: function(x) {
+				if (x && x.overrideMimeType) {
+				  x.overrideMimeType("application/json;charset=UTF-8");
+				}
+			  },
+			mimeType: "application/json",
+			contentType: "application/json",
+			dataType: "json",
+			data: JSON.stringify(json.profileFilterSet),
+			url: "ebl/v3/" + encodeURIComponent(customerID) + "/structure/update_filter_set/profile/" + encodeURIComponent(reference_code),
+			success: function(json){
+				//on success
+				//unsetLoadingDiv($('.filters_group').children().first());
+				unsetLoadingDiv($('#filter_group_standard'));
+				if($.cookie('otherGroupSaved') == "true")
+				{
+					$.cookie('otherGroupSaved', 'false');
+					setMessagePopUp("positive", "message_data_saved_successfully");
+				}
+				else
+				{
+					$.cookie('otherGroupSaved', 'true');
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown)
+			{
+				if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+			}
+		});
+		
+		//Save standard filters
+		var json = $('body').data('filters_standard');
+		$.ajax({
+			type:"POST",
+			beforeSend: function(x) {
+				if (x && x.overrideMimeType) {
+				  x.overrideMimeType("application/json;charset=UTF-8");
+				}
+			  },
+			mimeType: "application/json",
+			contentType: "application/json",
+			dataType: "json",
+			data: JSON.stringify(json.standardFilterSet),
+			url: "ebl/v3/" + encodeURIComponent(customerID) + "/structure/update_filter_set/standard/" + encodeURIComponent(reference_code),
+			success: function(json){
+				//unsetLoadingDiv($('.filters_group').children().last());
+				unsetLoadingDiv($('#filter_group_item'));
+				if($.cookie('otherGroupSaved') == "true")
+				{
+					$.cookie('otherGroupSaved', 'false');
+					setMessagePopUp("positive", "message_data_saved_successfully");
+				}
+				else
+				{
+					$.cookie('otherGroupSaved', 'true');
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown)
+			{
+				if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+			}
+		});
+	}
+	
+	
+	function updateFilters() {
+		
+		var jsonStandard = $('body').data('filters_standard');
+		var jsonProfile = $('body').data('filters_profile');
+		
+		if($('#no_cheaper_products').attr("checked") == "checked")
+		{ 
+			jsonStandard.standardFilterSet.excludeCheaperItems = "YES";
+		}
+		else
+		{
+			jsonStandard.standardFilterSet.excludeCheaperItems = "NO";
+		}
+		
+		if($('#no_top_sellings').attr("checked") == "checked")
+		{
+			jsonStandard.standardFilterSet.excludeTopSellingResults = true;
+		}
+		else
+		{
+			jsonStandard.standardFilterSet.excludeTopSellingResults = false;
+		}
+		
+		if($('#currently_viewed').attr("checked") == "checked")
+		{
+			jsonStandard.standardFilterSet.excludeContextItems = true;
+		}
+		else
+		{
+			jsonStandard.standardFilterSet.excludeContextItems = false;
+		}
+
+//		if($('#outdated_products').attr("checked") == "checked")
+//		{
+//			jsonStandard.standardFilterSet.excludeOutdatedItems = true;
+//		}
+//		else
+//		{
+//			jsonStandard.standardFilterSet.excludeOutdatedItems = false;
+//		}
+
+		if($('#no_black_list_items_editor').attr("checked") == "checked")
+		{
+			jsonStandard.standardFilterSet.excludeEditorBlacklistResults = true;
+		}
+		else
+		{
+			jsonStandard.standardFilterSet.excludeEditorBlacklistResults = false;
+		}
+		
+		if($('#no_already_purchased').attr("checked") == "checked")
+		{
+			jsonProfile.profileFilterSet.excludeAlreadyPurchased = true;
+		}
+		else
+		{
+			jsonProfile.profileFilterSet.excludeAlreadyPurchased = false;
+		}
+		
+//		if($('#no_black_list_items_user').attr("checked") == "checked")
+//		{
+//			jsonProfile.profileFilterSet.excludeBlacklist = true;
+//		}
+//		else
+//		{
+//			jsonProfile.profileFilterSet.excludeBlacklist = false;
+//		}
+		
+		if($('#enable_limit_max_recs_per_session').attr("checked") == "checked")
+		{
+			jsonProfile.profileFilterSet.excludeRepeatedRecommendations = $('#limit_max_recs_per_session').val();
+			$('#limit_max_recs_per_session').removeAttr("disabled");
+		}
+		else
+		{
+			jsonProfile.profileFilterSet.excludeRepeatedRecommendations = null;
+			$('#limit_max_recs_per_session').attr("disabled", "disabled");
+		}
+					
+		$('body').data('filters_standard', jsonStandard);
+		$('body').data('filters_profile',jsonProfile);
+	}
+	
+	
+	</script>
+  </head>
+  <body id="filters" class="scenario_configuration_steps">
+    <header class="clearfix top_head">
+      <div class="logo_area s1_5">
+        <h1 title="YooChoose. We recommend."><a href="index.html" class="hide"><span>YooChoose. We recommend.</span></a></h1>
+      </div>
+      <div class="top_bar clearfix">
+        <ul class="language_selection clearfix">
+          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
+          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
+          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
+        </ul>
+        <a href="logout.html" data-translate="index_logout" class="logout">logout</a>
+      </div>
+      <nav class="wizard_navi_wrapper s4_5">
+		<h2 data-translate="scenario_configuration_area">Scenario configuration</h2>
+		<ul class="wizard_steps clearfix">
+			<li class="settings_tab">
+				<a href="settings.html">
+					<span data-translate="settings_scenario_configuration">Settings</span>
+				</a>
+			</li>
+			<li class="configurator_tab">
+				<a href="configurator.html">
+					<span data-translate="settings_placing_models">Step 2: Placing models</span>
+				</a>
+			</li>
+			<li class="filters_tab current">
+				<span>
+					<span data-translate="settings_filters">Step 3: Filters</span>
+				</span>
+			</li>
+		</ul>
+      </nav>
+    </header>
+    <section>
+      <header class="scenario_settings clearfix">
+		<div class="s1_5">
+			<div class="title header_title_basis">
+				<span class="status">Partly available</span>:<br/>
+				<span data-translate="configurator_header_title_output">Output:</span>
+			</div>
+		</div>
+		<div class="s2_5">
+			<div class="type header_title_values">
+				<strong class="name">Landing page</strong> <span class="code">(ID: land_page_13425)</span><br/>
+				<span class="output_types">article, image</span>
+			</div>
+		</div>
+		<a class="button with_icon save_state" id="button_save" data-translate="settings_save_and_go_next">Save</a>
+      </header>
+      <div class="clearfix">
+        <div class="filters_base">
+          <form class="filters_group clearfix" action="#" method="get" id="standard_filters_scenario_land_page_13425">
+            <div id="filter_group_standard">
+              <h4 data-translate="filters_filters_profile_options">Filters on user profile options</h4>
+              <ul class="filters">
+                <li class="checkbox_field">
+                  <input type="checkbox" id="no_already_purchased" name="no_already_purchased" />
+                  <label for="no_already_purchased" data-translate="filters_no_already_purchased">Do not recommend products the user already purchased</label>
+                </li>
+                <li class="checkbox_and_spinner_field">
+                  <input type="checkbox" id="enable_limit_max_recs_per_session" name="enable_limit_max_recs_per_session" />
+                  <input name="limit_max_recs_per_session" id="limit_max_recs_per_session" type="number" min="1" max="100" step="1" value="" disabled="disabled" />
+                  <label for="enable_limit_max_recs_per_session" data-translate="filters_enable_limit_max">is the limit of maximum shows of identical recommendations to a user in one session</label>
+                </li>
+                <!--<li class="checkbox_field">-->
+                  <!--<input type="checkbox" id="no_black_list_items_user" name="no_black_list_items_user" />-->
+                  <!--<label for="no_black_list_items_user" data-translate="filters_no_black_list_items_user">Exclude content blacklisted by the user</label>-->
+                <!--</li>-->
+              </ul>
+            </div>
+            <div id="filter_group_item">
+              <h4 data-translate="filters_filters_on_item">Filters on item attributes</h4>
+              <ul class="filters">
+                <!--<li class="checkbox_field">-->
+                  <!--<input type="checkbox" id="outdated_products" name="outdated_products" />-->
+                  <!--<label for="outdated_products" data-translate="filters_outdated_products">Do not recommend outdated products</label>-->
+                <!--</li>-->
+                <li class="checkbox_and_spinner_field">
+                  <input type="checkbox" id="currently_viewed" name="currently_viewed" />
+                  <label for="currently_viewed" data-translate="filters_currently_viewed">Do not recommend the product currently viewed</label>
+                </li>
+                <li class="checkbox_field">
+                  <input type="checkbox" id="no_cheaper_products" name="no_cheaper_products" />
+                  <label for="no_cheaper_products" data-translate="filters_no_cheaper_products">Product price must be equal or higher than the price of the product currently viewed</label>
+                </li>
+				<li class="checkbox_field">
+                  <input type="checkbox" id="no_top_sellings" name="no_top_sellings" />
+                  <label for="no_top_sellings" data-translate="filters_not_top_sellings">Do not recommend most 
+				  <script>
+				  var mandatorType = $.cookie('mandatorType');
+		
+					if(mandatorType == "SHOP")
+					{
+						document.write("top-selling");
+					}
+					else
+					{
+						document.write("popular")
+					}
+				  </script>
+				   content</label>
+                </li>
+				 <!--li class="checkbox_field">
+                  <input type="checkbox" id="no_black_list_items_editor" name="no_black_list_items_editor" />
+                  <label for="no_black_list_items_editor" data-translate="filters_no_black_list_items_editor">Exclude content blacklisted by the editor</label>
+                </li-->
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    
+    <div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text">Something neutral happened. That's it.</span>
+        <a class="close">OK</a>
+      </p>
+    </div>
+  </body>
+</html>
