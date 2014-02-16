@@ -59,7 +59,7 @@ var initSwitchMandator = function() {
 			
 			$.when(
 				mandatorDao.init(customerID),
-				ajaxScenarioList()
+				ajaxScenarioList('24H')
 		    ).done(function() {
 				var mandatorInfo = getAccesibleMandator(customerID);
 				
