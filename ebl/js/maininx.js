@@ -599,7 +599,7 @@ function renderConversionRate() {
 		conversionRateObject.relative = [];
 		conversionRateObject.revenue = [];
 		for(var i = 0; i < statistic.length; i++){
-			convRate = parseFloat(statistic[i].clickedRecommended) / parseFloat(statistic[i].clickEvents);
+			convRate = parseFloat(statistic[i].clickedRecommended) / parseFloat(statistic[i].recommendationCalls);
 			conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
 			conversionRateObject.revenue.push(statistic[i].revenue);
 		}
