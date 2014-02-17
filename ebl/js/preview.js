@@ -112,8 +112,8 @@
 						if(price !=null){
 							var amount = price.value;
 							if(amount != null){
-								var strAmount = amount+"";
-								if (strAmount.indexof(".") ==-1) {
+								var strAmount = String(amount+'');
+								if (strAmount.indexOf(".") ==-1) {
 									strAmount = strAmount+".00";
 								}
 								list[i].price = strAmount+" "+price.currency;
