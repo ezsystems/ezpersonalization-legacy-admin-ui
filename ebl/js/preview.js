@@ -112,7 +112,11 @@
 						if(price !=null){
 							var amount = price.value;
 							if(amount != null){
-								list[i].price = amount+" "+price.currency;
+								var strAmount = amount+"";
+								if (strAmount.indexof(".") ==-1) {
+									strAmount = strAmount+".00";
+								}
+								list[i].price = strAmount+" "+price.currency;
 							}
 						}
 						var catPaths = json[j].categoryPaths;
