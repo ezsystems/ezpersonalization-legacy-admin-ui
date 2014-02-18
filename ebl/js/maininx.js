@@ -598,12 +598,26 @@ function renderConversionRate() {
 		var conversionRateObject = {};
 		conversionRateObject.relative = [];
 		conversionRateObject.revenue = [];
+		conversionRateObject.relativeRecs = [];
+		conversionRateObject.relativeCb = [];
+		conversionRateObject.relativePr = [];
 		for(var i = 0; i < statistic.length; i++){
 			var convRate = 0.0;
+			var convRateRecs = 0.0;
+			var convRateCb = 0.0;
 			if(parseFloat(statistic[i].recommendationCalls) != 0){
 				convRate = parseFloat(statistic[i].clickedRecommended) / parseFloat(statistic[i].recommendationCalls);
 			}
+			if(parseFloat(statistic[i].clickedRecommended) != 0){
+				convRateRecs = parseFloat(statistic[i].purchasedRecommended) / parseFloat(statistic[i].clickedRecommended);
+			}
+			if(parseFloat(statistic[i].clickEvents) != 0){
+				convRateCb = parseFloat(statistic[i].purchaseEvents) / parseFloat(statistic[i].clickEvents);
+			}
 			conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
+			conversionRateObject.relativeRecs.push(isNaN(convRateRecs) ? 0.0 : convRateRecs * 100 );
+			conversionRateObject.relativeCb.push(isNaN(convRateCb) ? 0.0 : convRateCb * 100 );
+			conversionRateObject.relativePr.push(statistic[i].purchasedRecommended);
 			conversionRateObject.revenue.push(statistic[i].revenue);
 		}
 		if ($("#conversion_units").val() == 'relative') {
@@ -611,6 +625,21 @@ function renderConversionRate() {
 			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative");
 			
 			updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);	
+		} else if ($("#conversion_units").val() == 'relativerecs') {
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative_rate");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.relativeRecs, percentFormatter);	
+		} else if ($("#conversion_units").val() == 'relativecb') {
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative_cb");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.relativeCb, percentFormatter);	
+		} else if ($("#conversion_units").val() == 'relativepr') {
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative_pr");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.relativePr, currencyFormatter);	
 		} else {
 			var currencyCode = mandatorDao.mandator.advancedOptions.currency;
 			var param = $(".conversion_rate_chart span[data-param='0']");
