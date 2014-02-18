@@ -173,9 +173,7 @@ var initialize = function () {
 		$('.account_data').children('li').first().find('strong').text(name);
 		
 	    if (loginInfo.provider == "ibs") {
-	    	$('#edit_contact_datal').attr('href', "/api/v4/registration/selfcare");
-	    	
-	    	$('.ibs_item').show();
+	    	$('#edit_contact_datal').hide();
 	    } else {
 	    	$('#edit_contact_datal').off('click').click(function() {
 	    		$('#editDataOverlay').show();
@@ -435,11 +433,11 @@ function initialLoadData() {
 	if ( ! ifExtended()) {
 		$(".available_charts select option[value='rate']").hide();
 		$(".available_charts select option[value='blacklist']").hide();
-		$(".available_charts select option[value='owns']").hide();
+		$(".available_charts select option[value='basket']").hide();
 	} else {
 		$(".available_charts select option[value='rate']").show();
 		$(".available_charts select option[value='blacklist']").show();
-		$(".available_charts select option[value='owns']").show();		
+		$(".available_charts select option[value='basket']").show();		
 	}
    	
     $('#createNewScenario').off('click').click(function() {
@@ -609,16 +607,16 @@ function renderConversionRate() {
 				convRate = parseFloat(statistic[i].clickedRecommended) / parseFloat(statistic[i].recommendationCalls);
 			}
 			if(parseFloat(statistic[i].clickedRecommended) != 0){
-				convRateRecs = parseFloat(statistic[i].purchasedRecommended) / parseFloat(statistic[i].clickedRecommended);
+				convRateRecs = parseFloat(valueOrDefault(statistic[i].purchasedRecommended)) / parseFloat(statistic[i].clickedRecommended);
 			}
 			if(parseFloat(statistic[i].clickEvents) != 0){
-				convRateCb = parseFloat(statistic[i].purchaseEvents) / parseFloat(statistic[i].clickEvents);
+				convRateCb = parseFloat(valueOrDefault(statistic[i].purchaseEvents)) / parseFloat(statistic[i].clickEvents);
 			}
 			conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
 			conversionRateObject.relativeRecs.push(isNaN(convRateRecs) ? 0.0 : convRateRecs * 100 );
 			conversionRateObject.relativeCb.push(isNaN(convRateCb) ? 0.0 : convRateCb * 100 );
-			conversionRateObject.relativePr.push(statistic[i].purchasedRecommended);
-			conversionRateObject.revenue.push(statistic[i].revenue);
+			conversionRateObject.relativePr.push(valueOrDefault(statistic[i].purchasedRecommended));
+			conversionRateObject.revenue.push(valueOrDefault(statistic[i].revenue));
 		}
 		if ($("#conversion_units").val() == 'relative') {
 			
@@ -695,12 +693,12 @@ function getInnerArrayForRenderCollectedEventsWeek(item1,item2) {
 	        case "blacklist":
 	            innerArray.push((item1.blacklistEvents+item2.blacklistEvents));
 	            break;
-	        case "own":
-	            innerArray.push((item1.ownsEvents+item2.ownsEvents));
+	        case "basket":
+	            innerArray.push((item1.ownsEvents+item2.basketEvents));
 	            break;
 	        case "total":
-	            var sum = getTotalSum(item1.clickEvents,item1.consumeEvents,item1.purchaseEvents,item1.clickedRecommended,item1.rateEvents,item1.blacklistEvents,item1.ownsEvents)+
-	            getTotalSum(item2.clickEvents,item2.consumeEvents,item2.purchaseEvents,item2.clickedRecommended,item2.rateEvents,item2.blacklistEvents,item2.ownsEvents);
+	            var sum = getTotalSum(item1.clickEvents,item1.consumeEvents,item1.purchaseEvents,item1.clickedRecommended,item1.rateEvents,item1.blacklistEvents,item1.basketEvents)+
+	            getTotalSum(item2.clickEvents,item2.consumeEvents,item2.purchaseEvents,item2.clickedRecommended,item2.rateEvents,item2.blacklistEvents,item2.basketEvents);
 	             //render removed from the sum
 	            innerArray.push(sum);
 	            break;
@@ -717,9 +715,9 @@ function valueOrDefault(val) {
     return val == undefined ? 0 : val;
 }
 
-function getTotalSum(click1,consume1,purchase1,clickedRecommended1,rate1,blacklist1,owns1 ){
+function getTotalSum(click1,consume1,purchase1,clickedRecommended1,rate1,blacklist1,basket1 ){
 	var sum = valueOrDefault(click1)+valueOrDefault(consume1)+valueOrDefault(purchase1)+
-				valueOrDefault(clickedRecommended1)+valueOrDefault(rate1)+valueOrDefault(blacklist1)+valueOrDefault(owns1);
+				valueOrDefault(clickedRecommended1)+valueOrDefault(rate1)+valueOrDefault(blacklist1)+valueOrDefault(basket1);
 	return sum;
 }
 
@@ -764,11 +762,11 @@ function getInnerArrayForRenderCollectedEvents(item, daterange) {
         case "blacklist":
             innerArray.push(Math.round(item.blacklistEvents));
             break;
-        case "own":
-            innerArray.push(Math.round(item.ownsEvents));
+        case "basket":
+            innerArray.push(Math.round(item.basketEvents));
             break;
         case "total":
-        	var sum = getTotalSum(item.clickEvents,item.consumeEvents,item.purchaseEvents,item.clickedRecommended,item.rateEvents,item.blacklistEvents,item.ownsEvents);
+        	var sum = getTotalSum(item.clickEvents,item.consumeEvents,item.purchaseEvents,item.clickedRecommended,item.rateEvents,item.blacklistEvents,item.basketEvents);
             //var sum = item.clickEvents + item.consumeEvents + item.purchaseEvents + item.clickedRecommended + item.rateEvents + item.blacklistEvents + item.ownsEvents; //render removed from the sum
             innerArray.push(sum);
             break;
