@@ -103,10 +103,19 @@
 	        <div class="index_mandator" >
 	        	<table>
 	        		<tr>
-		        		<td><span data-translate="index_events">Events:</span></td>
+		        		<td><span data-translate="index_top_text">Activity report for </span>
+		        		<script>
+		        		var dateNow = new Date();
+		        		var monthNames = [ "month_01", "month_02", "month_03", "month_04", "month_05", "month_06",
+		        		                   "month_07", "month_08", "month_09", "month_10", "month_11", "month_12" ];
+		        		document.write('<span data-translate="'+ monthNames[dateNow.getMonth()])+'"> Jan </span> ');</script></td>
 		        		<td style="text-align: right; padding-left: 10px;"><strong id="statistic_events">0</strong></td>
 	        		</tr>
 	        		<tr>
+		        		<td><span data-translate="index_events">Events:</span></td>
+		        		<td style="text-align: right; padding-left: 10px;"><strong id="statistic_events">0</strong></td>
+	        		</tr>
+	        		<tr class="index_hover">
 	        			<td><span data-translate="index_recocalls">Recommendation Calls:</span></td>
 	        			<td style="text-align: right; padding-left: 10px;"><strong id="statistic_recocalls">0</strong></td>
 	        		</tr>        		
