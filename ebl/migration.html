@@ -26,113 +26,118 @@
     
 	<script>
 	
+	
+	var step1url, step2url, step3url;
+	var step, product, mandator, code, errorCode;
+	
 	$(document).ready(function () {
-			var queryString = getUrlVars();
-			
-			var step = queryString["step"];
-			if (! step) step = 1;
-			
-			var errorCode = queryString["errorCode"];
-			
-			if (queryString["bookingState"] == "CANCELLED") {
-				errorCode = "CANCELLED";
-			} else if (queryString["bookingState"] == "ERROR") {
-				errorCode = "UNKNOWN";
+		var queryString = getUrlVars();
+		
+		step = queryString["step"];
+		
+		if (! step) step = 1;
+		
+		errorCode = queryString["errorCode"];
+		
+		if (queryString["bookingState"] == "CANCELLED") {
+			errorCode = "CANCELLED";
+		} else if (queryString["bookingState"] == "ERROR") {
+			errorCode = "UNKNOWN";
+		}
+		
+		product  = queryString["product"];
+		mandator = queryString["mandator"];
+		code     = queryString["code"];
+		
+		if (step == 1 || step == 2) {
+			if (! product) {
+				errorCode="product_not_set";
 			}
-			
-			var product  = queryString["product"];
-			var mandator = queryString["mandator"];
-			var code     = queryString["code"];
-			
-			if (step == 1 || step == 2) {
-				if (! product) {
-					errorCode="product_not_set";
-				}
-				if (! code) {
-					errorCode="code_not_set";
-				}
+			if (! code) {
+				errorCode="code_not_set";
 			}
-			
-			var step1url = "/migration.html?product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
-			var step2url = "/migration.html?step=2&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
-			var step3url = "/migration.html?step=3&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+		}
+		
+		step1url = "/migration.html?product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+		step2url = "/migration.html?step=2&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+		step3url = "/migration.html?step=3&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
 
+		
+		if (step == 1) $("#form-step-1").show();
+		if (step == 2) $("#form-step-2").show();
+		if (step == 3) $("#form-step-3").show();
+		
+		if (errorCode) {
+			var key = "message_error_" + errorCode;
 			
-			if (step == 1) $("#form-step-1").show();
-			if (step == 2) $("#form-step-2").show();
-			if (step == 3) $("#form-step-3").show();
-			
-			if (errorCode) {
-				var key = "message_error_" + errorCode;
-				
-				if (! jQuery.i18n.map[key]) {
-					key = "message_unexpected_error";
-				}
-				
-				var backLink;
-				
-				if (step == 2) {
-					backLink = step1url;
-				} else if (step == 3) {
-					backLink = step2url;
-				}
-				
-				setMessagePopUpLink("problem", backLink, key, errorCode);
+			if (! jQuery.i18n.map[key]) {
+				key = "message_unexpected_error";
 			}
 			
-			if (step == 1) {
-				step1(product, mandator, code);
-			} else if (step == 2) {
-				step2(product, mandator, code);
+			var backLink;
+			
+			if (step == 2) {
+				backLink = step1url;
 			} else if (step == 3) {
-				step3(product, mandator, code);
+				backLink = step2url;
 			}
-		});
-		
-		
-		function step1(product, mandator, code) {
-
-			if (errorCode) {
-				$('#cross-1').show();
-				$('#step-1-forward').hide();
-			} else {
-				var userLink = "/api/v4/migration/user/" + encodeURIComponent(product) + 
-						       "/" + encodeURIComponent(code) + "?returnUrl=" + encodeURIComponent(step2url) + 
-				    		   "&cancelUrl=" + encodeURIComponent(step1url);
-				
-				$('#step-1-forward').attr("href", userLink);
-				$('#bird-1').show();
-			}
-		}
-		
-		
-		function step2(product, mandator, code) {
- 
-			$('#bird-1').show();
 			
-			if (errorCode) {
-				$('#cross-2').show();
-				$('#step-2-forward').hide();
-			} else {
-				var userLink = "/api/v4/migration/contract/" + encodeURIComponent(product) + 
-						       "/" + encodeURIComponent(code) + "?returnUrl=" + encodeURIComponent(step3url) +
-						       "&cancelUrl=" + encodeURIComponent(step2url);
-				
-				$('#step-2-forward').attr("href", userLink);				
-				$('#bird-2').show();
-			}
+			setMessagePopUpLink("problem", backLink, key, errorCode);
 		}
 		
+		if (step == 1) {
+			step1(product, mandator, code);
+		} else if (step == 2) {
+			step2(product, mandator, code);
+		} else if (step == 3) {
+			step3(product, mandator, code);
+		}
+	});
 		
-		function step3(product, mandator, code) {
+		
+	function step1(product, mandator, code) {
+
+		if (errorCode) {
+			$('#cross-1').show();
+			$('#step-1-forward').hide();
+		} else {
+			var userLink = "/api/v4/migration/user/" + encodeURIComponent(product) + 
+					       "/" + encodeURIComponent(code) + "?returnUrl=" + encodeURIComponent(step2url) + 
+			    		   "&cancelUrl=" + encodeURIComponent(step1url);
+			
+			$('#step-1-forward').attr("href", userLink);
 			$('#bird-1').show();
-			$('#bird-2').show();
-			if (errorCode) {
-				$('#cross-3').show();	
-			} else {
-				$('#bird-3').show();
-			}
 		}
+	}
+	
+	
+	function step2(product, mandator, code) {
+
+		$('#bird-1').show();
+		
+		if (errorCode) {
+			$('#cross-2').show();
+			$('#step-2-forward').hide();
+		} else {
+			var userLink = "/api/v4/migration/contract/" + encodeURIComponent(product) + 
+					       "/" + encodeURIComponent(code) + "?returnUrl=" + encodeURIComponent(step3url) +
+					       "&cancelUrl=" + encodeURIComponent(step2url);
+			
+			$('#step-2-forward').attr("href", userLink);				
+			$('#bird-2').show();
+		}
+	}
+	
+	
+	function step3(product, mandator, code) {
+		$('#bird-1').show();
+		$('#bird-2').show();
+		if (errorCode) {
+			$('#cross-3').show();	
+		} else {
+			$('#bird-3').show();
+		}
+	}
 
 
 	</script>
