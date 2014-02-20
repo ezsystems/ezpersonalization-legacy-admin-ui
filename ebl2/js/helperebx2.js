@@ -197,7 +197,7 @@ $(document).ready(function () {
 	
 	if(code != null && code!=''){
 		mandator = gup('mandator');
-		username = gup('username');
+		username = decodeURIComponent(gup('username'));
 		lang = gup('lang');
 		
 		$.cookie('language', lang);

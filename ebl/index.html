@@ -67,7 +67,7 @@
           <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
           <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
         </ul>
-        <a href="logout.html" data-translate="index_logout" class="logout">logout</a>
+        <a href="/api/v4/registration/logout" data-translate="index_logout" class="logout">logout</a>
       </div>
       <nav class="s2_5">
         <ul class="main_navi clearfix">
@@ -81,47 +81,79 @@
     </header>
     <section class="mandant" style="margin: 0 20px;">
       <header class="clearfix">
-        <div class="s1_5">
-          <p class="switch">
-            <a href="#" data-translate="index_switch_mandant">Switch mandant</a>
-          </p>
-          &nbsp;
+      
+        <div style="float: left; font-size: 26px; margin: 11px 10px 0 15px;">
+          <h2 class="info">Dashboard</h2>
         </div>
-        <div class="s2_5">
+        
+        <div style="float: left; margin-left: 25px">
           <h2 class="info">
-            <strong class="project_title">usearc.de</strong>, <p>online-shop style</p><br>
-            <span class="code"><span data-translate="webpage_code">Webpage Code:</span><span class="codeid">270</span></span>
+            <strong class="project_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong><br>
+            <span class="code"><span data-translate="webpage_code">Customer ID:</span><span class="codeid">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
           </h2>
         </div>
-        <div class="s1_5 autorefresh" style="display:none">
-          <span data-translate="index_auto_refresh">Autorefresh</span>
-          <form class="clearfix" method="get" action="#">
-            <label for="autorefresh_on"><input type="radio" name="autorefresh" id="autorefresh_on" value="on"><span data-translate="index_on">On</span></label>
-            <label for="autorefresh_off"><input type="radio" name="autorefresh" id="autorefresh_off" value="off" checked="checked"><span data-translate="index_off">Off</span></label>
-          </form>
-        </div>
-        <div class="s1_5">
-          <p><span data-translate="index_events">Events: </span><strong id="statistic_events"></strong></p>
-          <p><span data-translate="index_recommendations">Recommendations: </span><strong id="statistic_recommendations"></strong></p>
-        </div>
-        <div class="s1_5">
-          <p class="tooltip_trigger">
-            <span data-translate="index_objects">Objects: </span>
-            <strong class="active" title="active" id="statistic_active_objects"></strong>
-            <strong class="outdated" title="outdated" id="statistic_outdated_objects" style="display:none;"></strong>
-            <span class="tooltip">
-              <span data-translate="index_objects_tooltip">Some content.</span>
-            </span>
-          </p>
-          <p class="tooltip_trigger">
-            <span data-translate="index_profiles">Profiles: </span>
-            <strong class="active" title="active" id="statistic_active_profiles"></strong>
-            <strong class="outdated" title="outdated" id="statistic_outdated_profiles" style="display:none;"></strong>
-            <span class="tooltip">
-              <span data-translate="index_profiles_tooltip">Some content.</span>
-            </span>
+        
+        <div style="float: left; margin: 10px 10px 0 25px;">
+          <p class="switch">
+            <a href="#" data-translate="index_switch_mandant">Switch</a>
           </p>
         </div>
+        
+        <div style="float: right; height: 30px;">
+	        <div class="index_mandator" >
+	        	<table>
+	        		<tr>
+		        		<td><span data-translate="index_top_text">Activity report for </span>
+		        		<script>
+		        		var dateNow = new Date();
+		        		var monthNames = [ "month_01", "month_02", "month_03", "month_04", "month_05", "month_06",
+		        		                   "month_07", "month_08", "month_09", "month_10", "month_11", "month_12" ];
+		        		document.write('<span data-translate="'+ monthNames[dateNow.getMonth()])+'"> Jan </span> ');</script></td>
+		        		<td style="text-align: right; padding-left: 10px;"><strong id="statistic_events">0</strong></td>
+	        		</tr>
+	        		<tr>
+		        		<td><span data-translate="index_events">Events:</span></td>
+		        		<td style="text-align: right; padding-left: 10px;"><strong id="statistic_events">0</strong></td>
+	        		</tr>
+	        		<tr class="index_hover">
+	        			<td><span data-translate="index_recocalls">Recommendation Calls:</span></td>
+	        			<td style="text-align: right; padding-left: 10px;"><strong id="statistic_recocalls">0</strong></td>
+	        		</tr>        		
+	        		<tr class="index_hover">
+	        			<td><span data-translate="index_recommendations">Recommendations:</span></td>
+	        			<td style="text-align: right;"><strong id="statistic_recommendations">0</strong></td>
+	        		</tr>
+	        		<tr class="index_hover">
+	        			<td><span data-translate="index_objects">Objects: </span></td>
+			            <td style="text-align: right;"><strong class="active" title="active" id="statistic_active_objects">0</strong>
+			            <span class="tooltip" data-translate="index_objects_tooltip"></span></td>
+	        		</tr>
+	        		<tr class="index_hover">
+			            <td><span data-translate="index_profiles">Profiles: </span></td>
+			            <td style="text-align: right;"><strong class="active" title="active" id="statistic_active_profiles">0</strong>
+			            <span class="tooltip" data-translate="index_profiles_tooltip"></span></td>
+	        		</tr>
+	        		<tr class="index_hover">
+			            <td><span data-translate="index_models">Recommendation models: </span></td>
+			            <td style="text-align: right;"><strong class="active" title="active" id="statistic_models">0</strong>
+			            <span class="tooltip" data-translate="index_profiles_tooltip"></span></td>
+	        		</tr>        		
+	        	</table> 
+	        </div>
+        </div>
+        
+        <div class="ibs_item" style="float: right; margin: 10px 10px 0 25px;">
+          <p>
+          	<a href="/api/v4/registration/selfcare/customer" data-translate="index_menu_customer">Customer</a>
+          </p>
+        </div>
+        
+        <div class="ibs_item" style="float: right; margin: 10px 10px 0 25px;">
+          <p>
+          	<a href="/api/v4/registration/selfcare/" data-translate="index_menu_self_care">Self Care</a>
+          </p>
+        </div>        
+        
       </header>
       <form class="clearfix" method="get" action="#">
         <fieldset class="time_settings">
@@ -181,7 +213,7 @@
 					  <option value="rendered">Rendered</option>
 					  <option value="rate">Rate</option>
 					  <option value="blacklist">Blacklist</option>
-					  <option value="owns">Owns</option>
+					  <option value="basket">Basket</option>
 					  <option value="total">Total</option>
                     </select>
                   </label>
@@ -197,7 +229,7 @@
 					  <option value="rendered">Rendered</option>
 					  <option value="rate">Rate</option>
 					  <option value="blacklist">Blacklist</option>
-					  <option value="owns">Owns</option>
+					  <option value="basket">Basket</option>
 					  <option value="total">Total</option>
                     </select>
                   </label>
@@ -213,7 +245,7 @@
 					  <option value="rendered">Rendered</option>
 					  <option value="rate">Rate</option>
 					  <option value="blacklist">Blacklist</option>
-					  <option value="owns">Owns</option>
+					  <option value="basket">Basket</option>
 					  <option value="total">Total</option>
                     </select>
                   </label>
@@ -254,20 +286,23 @@
             </fieldset>
           </div>
           <div class="conversion_rate_chart s1_3">
-            <h3 id="index_conversion_rate_average" data-translate="index_conversion_rate_average">Conversion rate (average)</h3>
+            <h3 id="index_conversion_rate_average" data-translate="index_conversion_rate_average">Conversion rate<span data-param="0"></span></h3>
            	<canvas id="conversion_rate" width="400" height="250">[No canvas support]</canvas>
-<!--             <fieldset> -->
-<!--               <ul class="available_charts clearfix"> -->
-<!--                 <li> -->
-<!--                   <label for="conversion_units"> -->
-<!--                     <select id="conversion_units" name="conversion_units"> -->
-<!--                       <option value="relative" selected="selected">Relative</option> -->
-<!--                       <option value="absolute">Absolute</option> -->
-<!--                     </select> -->
-<!--                   </label> -->
-<!--                 </li> -->
-<!--               </ul> -->
-<!--             </fieldset> -->
+            <fieldset>
+              <ul class="available_charts clearfix">
+                <li style="width: auto">
+                  <label for="conversion_units">
+                    <select id="conversion_units" name="conversion_units">
+                      <option value="relative" data-translate="charts_option_conversion_rate" selected="selected">Conversion rate</option>
+                      <option value="relativerecs" data-translate="charts_option_conversion_rate_recs" >Conversion rate from recommendations</option>
+                      <option value="relativecb" data-translate="charts_option_conversion_rate_cb" >Conversion rate from clicks</option>
+                      <option value="relativepr" data-translate="charts_option_conversion_rate_pr" >Purchased recommendations</option>
+                      <option value="revenue"  data-translate="charts_option_revenue">Revenue</option>
+                    </select>
+                  </label>
+                </li>
+              </ul>
+            </fieldset>
           </div>
         </div>
       </form>
@@ -290,7 +325,7 @@
 		</div>
       </header>
       <ul id="available_scenarios" class="available_scenarios clearfix tabContent" style="min-height: 150px;">
-        <li class="dummy_scenario" style="display:none;">
+        <li class="dummy_scenario" style="display:none; heigth: 100ex;">
           <div class="scenario activated" style="minHeight:250px;">
            <div style="line-height: 0.7em;">&nbsp;</div>
             <h4>
@@ -299,7 +334,7 @@
             	</font>
              	<span>Dummy</span> 
             </h4>
-            <p class="data unavailable"><span class="delivered_recommendations"><strong>25675</strong> <span data-translate="index_delivered_recommendations_scenario">Delivered recommendations</span></span></p>
+            <p class="data" style="padding-right: 5px;"><span class="delivered_recommendations"><strong>0</strong> <span data-translate="index_delivered_recommendations_scenario">Delivered recommendations</span></span></p>
             <p class="description">Some brief description of the scenario, that can be edited together with other parameters</p>
             
           </div>
@@ -344,7 +379,7 @@
     <div id="switch_mandator_popup" class="overlay">
       <div class="dialog_body change_mandant">
         <a class="destroy_dialog">X</a>
-        <h2 data-translate="index_switch_mandant">Switch mandant</h2>
+        <h2 data-translate="switch_mandant_header">Switch mandant</h2>
         <div class="clearfix">
             <label>
               <select id="choose_mandant" name="choose_mandant">
@@ -366,10 +401,10 @@
         	No clients linked to this user account. Please use another account or book a new contract.
         </div>
         <div class="actions clearfix">
-          <a class="logout" data-translate="no_mandator_available_logout" href="/login.html">Logout</a>
+          <a class="logout" data-translate="no_mandator_available_logout" href="/api/v4/registration/logout">Logout</a>
         </div>
         <div class="actions clearfix">
-          <a class="book" data-translate="no_mandator_available_book" href="http://www.yoochoose.com/pricing_table.html">Book new contract</a>
+          <a class="book" data-translate="no_mandator_available_book" href="http://www.yoochoose.com/en/pricing/">Book new contract</a>
         </div>
       </div>
     </div>
@@ -389,7 +424,6 @@
 			<div style="clear: both;"></div>
 		</div>
     </div>
-
 
 
 	<div id="abTestEditor" class="ABOverlay" style="display: none;">

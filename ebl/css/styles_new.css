@@ -285,13 +285,33 @@ a.create_new:before {
 /*Globals Headers and their content */
 
 section > header {
-  display: block;
-  background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
-  color: rgba( 216, 216, 216, 1);
-  padding: 14px 0 15px 0;
-  position: relative;
-  border-radius: 5px;
+	display: block;
+	background: rgba(63, 63, 63, 1);
+	color: rgba( 216, 216, 216, 1);
+	padding: 14px 0 15px 0;
+	position: relative;
+	border-radius: 5px;
 }
+
+section  div.index_mandator {
+	position: relative;
+	z-index: 2;
+/* 	top: 0; right: 0; */
+	background: rgba(63, 63, 63, 1);
+	border-radius: 5px;
+	padding: 14px 25px;
+	margin-top: -13px;
+	margin-bottom: -100px;
+}
+
+section  div.index_mandator td {
+	min-width: 5em;
+}
+
+section  div.index_mandator tr.index_hover {
+	display: none;
+}
+
 
 section > header strong,
 section > header h3 {
@@ -325,12 +345,17 @@ section > header > .controls{
     top: 0;
 }
 
+
 section > header a:not(.button),
-section > header a:not(.button):visited,
-a.inverted,
-a.inverted:visited {
-  color: rgba(171, 220, 245, 1);
+section > header a:not(.button):visited {
+  color: rgb(216, 216, 216);
 }
+
+
+section > header a:not(.button):hover {
+  color: rgb(255, 255, 255);
+}
+
 
 /* section > header a:not(.button):hover, */
 /* section > header a:not(.button):focus, */

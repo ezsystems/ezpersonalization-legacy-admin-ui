@@ -67,6 +67,9 @@
 	$('#user_id').change(function(){
 		getCallId();
 	});
+	$('#cat_id').change(function(){
+		getCallId();
+	});
 	$('#output_type').change(function(){
 		getCallId();
 	});
@@ -109,8 +112,16 @@
 						if(price !=null){
 							var amount = price.value;
 							if(amount != null){
-								list[i].price = amount+" "+price.currency;
+								var strAmount = String(amount+'');
+								if (strAmount.indexOf(".") ==-1) {
+									strAmount = strAmount+".00";
+								}
+								list[i].price = strAmount+" "+price.currency;
 							}
+						}
+						var catPaths = json[j].categoryPaths;
+						if(catPaths != null){
+							list[i].categorypath = catPaths;
 						}
 					 }
 				}	
@@ -200,6 +211,7 @@
   
   function getCallSrc(){
 	  	var userId = $('#user_id').val();
+	  	var catId = $('#cat_id').val();
 	  	var outputtype = $('#output_type').val();
 	  	var topn = $('#top_n').val();
 		var customerID = $.cookie('customerID');
@@ -220,6 +232,9 @@
 		}
 		if(outputtype > 0){
 			scriptSrc += '&outputtype='+outputtype;
+		}
+		if(catId != null && catId.trim() !='' ){
+			scriptSrc += '&categorypath='+catId.trim();
 		}
 		return scriptSrc;
   }

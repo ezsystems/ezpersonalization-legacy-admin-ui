@@ -48,7 +48,7 @@
           <h3 data-translate="login_welcometo">Welcome to YOOCHOOSE</h3>
           
           <div class="actions">
-           	  <a class="login inline button" data-translate="login_new_login_button" href="/api/v4/registration/login">Login</a>
+           	  <a class="login inline button go_ibs" data-translate="login_new_login_button" href="/api/v4/registration/login">Login</a>
           </div>
             
           <h3 data-translate="login_old_login_header">For customers registered before 10.02.2014</h3>
@@ -71,7 +71,8 @@
           </div>
         </fieldset>
       </form>
-      <a href="registration_step_1.html" data-translate="login_dont_have_account">Don't have an account? Register here, it's fast and easy</a>
+      <a  data-translate="login_dont_have_account" 
+      onclick="(in_to_language != 'en')?window.location ='http://www.yoochoose.com/preise/':window.location ='http://www.yoochoose.com/en/pricing/';">Don't have an account? Register here, it's fast and easy</a>
     </section>
     
    	<script type="text/javascript">

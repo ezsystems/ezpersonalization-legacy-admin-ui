@@ -104,27 +104,45 @@ var ajaxScenarioList = function(new_period, callback) {
 	
 	var result1 = $.ajax({
         dataType: "json",
-        url: "ebl/v4/" + customerID + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
+        url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
 		success: function (data) {
 			statistic = data;
         },
         error: mainErrorHandler
     });
 	
-	var result2 = 
-		$.ajax({
-		    dataType: "json",
-		    url: "ebl/v3/" + customerID + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
-		    success: function (json) {
-		    	scenarioInfoList = json.scenarioInfoList;
-		    },
-		    error: mainErrorHandler
-		});
+	var result2 = $.ajax({
+	    dataType: "json",
+	    url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
+	    success: function (json) {
+	    	scenarioInfoList = json.scenarioInfoList;
+	    },
+	    error: mainErrorHandler
+	});
 	
 	return $.when(result1, result2).done(function() {
 		
-		$('.export').attr('href', "ebl/v3/" + customerID + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity);
+		$('.export').attr('href', "/api/v3/" + encodeURIComponent(customerID) + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm");
 		
+		if (period == 'WEEK') {
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_week');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_week');
+		    
+		} else if (period == 'MONTH') {
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_month');
+	        
+		} else if (period == 'DAY' || period == '24H') {
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
+		} 		
+		
+		localizer();
+		
+		renderScenarioList();
 		renderRecommendationChart();
 		renderCollectedEvents();
 		renderConversionRate();
@@ -155,11 +173,13 @@ var initialize = function () {
 		$('.account_data').children('li').first().find('strong').text(name);
 		
 	    if (loginInfo.provider == "ibs") {
-	    	$('#edit_contact_datal').attr('href', "api/v4/registration/selfcare");
+	    	$('#edit_contact_datal').hide();
 	    } else {
 	    	$('#edit_contact_datal').off('click').click(function() {
 	    		$('#editDataOverlay').show();
 	    	});
+	    	
+	    	$('.ibs_item').hide();
 	    }
 	});
 	
@@ -200,41 +220,33 @@ var initialize = function () {
         renderCollectedEvents();
     });
 
-
     $('select[id^="select_for_delivered_recommendations_chart_bar"]').change(function () {
         renderRecommendationChart();
     });
 
     //Last day click event
     $('#view_option_day').click(function () {
-	
-		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
-		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
-		$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
-		localizer();
-       
         ajaxScenarioList("24H");
     });
 
     $('#view_option_week').click(function () {
-
-		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
-		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_week');
-		$('#index_collected_events').attr('data-translate', 'index_collected_events_week');
-		localizer();
-		
 		ajaxScenarioList("WEEK");
     });
 
     $('#view_option_month').click(function () {
-
-		$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
-		$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
-		$('#index_collected_events').attr('data-translate', 'index_collected_events_month');
-		localizer();
-		
         ajaxScenarioList('MONTH');
     });
+    
+    // is called if right converison unit is changed from relative -> absolute and vice versa
+	$('#conversion_units').change(function () {
+		renderConversionRate();
+	});
+	
+	$('section  div.index_mandator').hover(function() {
+		$(this).find('.index_hover').css('display', 'table-row');
+	}, function() {
+		$(this).find('.index_hover').css('display', 'none');
+	});
 };
 
 
@@ -385,17 +397,30 @@ function setMandantData(mandatorInfo) {
         success: function (json) {
 
             var mandatorStatistic = json.mandatorStatistic;
-            $('#statistic_events').text(mandatorStatistic.eventsCalenderMonth);
-            //$('#statistic_outdated_objects').text(mandatorStatistic.modelsBuilt);
-            //$('#statistic_outdated_profiles').text(mandatorStatistic.profilesTracked);
-            $('#statistic_active_profiles').text(mandatorStatistic.profilesTracked);
-            $('#statistic_active_objects').text(mandatorStatistic.objectsTracked);
-            $('#statistic_recommendations').text(mandatorStatistic.recommendationsCalenderMonth);
-
+            $('#statistic_events').text(formatInteger(mandatorStatistic.eventsCalenderMonth));
+            $('#statistic_recocalls').text(formatInteger(mandatorStatistic.recommendationCallsCalenderMonth));
+            $('#statistic_active_profiles').text(formatInteger(mandatorStatistic.profilesTracked));
+            $('#statistic_active_objects').text(formatInteger(mandatorStatistic.objectsTracked));
+            $('#statistic_recommendations').text(formatInteger(mandatorStatistic.recommendationsCalenderMonth));
+            $('#statistic_models').text(formatInteger(mandatorStatistic.models));
         },
         error: mainErrorHandler
     });
 }
+
+
+function formatInteger(v) {
+	var result = '';
+	v = v + '';
+	for (var i = 0; i < v.length; i++) {
+		result = v[v.length - 1 - i] + result;
+		if ((i+1) % 3 == 0 && i != v.length - 1) {
+			result = '.' + result;
+		}
+	}
+	return result;
+}
+
 
 var mandatorVersionType='BASIC';
 
@@ -408,18 +433,12 @@ function initialLoadData() {
 	if ( ! ifExtended()) {
 		$(".available_charts select option[value='rate']").hide();
 		$(".available_charts select option[value='blacklist']").hide();
-		$(".available_charts select option[value='owns']").hide();
+		$(".available_charts select option[value='basket']").hide();
 	} else {
 		$(".available_charts select option[value='rate']").show();
 		$(".available_charts select option[value='blacklist']").show();
-		$(".available_charts select option[value='owns']").show();		
+		$(".available_charts select option[value='basket']").show();		
 	}
-	
-    $('.available_scenarios').children('li').each(function (index) {
-        if (index > 0) {
-            $(this).remove();
-        }
-    });
    	
     $('#createNewScenario').off('click').click(function() {
     	$('#settingsF').attr('src',"settingspop.html?customer_id=" + encodeURIComponent(customerID) + "&from_template=3");
@@ -442,13 +461,6 @@ function initialLoadData() {
     	console.log("should close corporate2");
     	$('#messageCopyrights').show();
     });
-
-    if (statistic.length < 1) {
-        showEmptyEventChart();
-        console.log("no items available");
-    } else {
-        renderCollectedEvents();
-    }
 
     $.ajax({
         dataType: "json",
@@ -477,7 +489,10 @@ function initialLoadData() {
         error: mainErrorHandler
     });
 
-//    loadScenarios();
+}
+
+
+function renderScenarioList() {
     
     var json = {"scenarioInfoList" : scenarioInfoList};
     
@@ -513,37 +528,11 @@ function initialLoadData() {
             var additionalParameter = "?reference_code=" + escapedRefCode + "&customer_id=" + customerID;
             //The links at the end of the page must have a referenceCode and customerID at request get parameter
            $(dummyClone).children("div#scenario_" + j).find("h4").children("font.settings").html('<a  onclick="$(\'#settingsF\').attr(\'src\',\'settingspop.html' + additionalParameter + '\'); $(\'#settingsP\').show();"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></a>');
+                
+            var derecos = sumDeliveredRecommendations(scenario);
 
-            $(dummyClone).children("div").children("p.data").removeClass("unavailable").removeClass("ascending").removeClass("descending");
-            if (scenario.statisticItems.length < 1 || scenario.statisticItems.length > 2) {
-                //if the response have not correct data, the arrow gets an unavailable icon
-                console.log("No correct number of items to show delivered recommendations");
-                $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
-                if (scenario.statisticItems.length == 0) {
-                    $(dummyClone).children("div").children("p.data").children("span").children("strong").text("0");
-                } else {
-                    $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[1].deliveredRecommendations);
-                }
-            } else if (scenario.statisticItems.length == 1) {
-                //if there is not enough data to calculate the arrow, the arrow gets an unavailable icon and the one data will be shown in the delivered recommendation text
-                $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[0].deliveredRecommendations);
-                $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
-            } else {
-                //the arrow will be calculated with the cummulated data of the last two weeks.
-                //if the difference of this two values is greater or smaller as 5% an arrow will be shown.
-                //if the value from the newest data is greater, the arrow shows up, else it shows down
-                var difference = scenario.statisticItems[1].deliveredRecommendations - scenario.statisticItems[0].deliveredRecommendations;
-                if (difference > 0) {
-                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("ascending");
-                } else if (difference < 0) {
-                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("descending");
-                } else {
-                    $(dummyClone).children("div").children("p.data").removeClass("unavailable").addClass("unavailable");
-                }
+            $(dummyClone).children("div").children("p.data").children("span").children("strong").text(formatInteger(derecos));
 
-                $(dummyClone).children("div").children("p.data").children("span").children("strong").text(scenario.statisticItems[1].deliveredRecommendations);
-
-            }
             //set the radio buttons initialy
             $(dummyClone).children("div#scenario_" + j).removeClass("problem").removeClass("ready_to_use").removeClass("partly_available");
 
@@ -555,10 +544,8 @@ function initialLoadData() {
                 $(dummyClone).children("div#scenario_" + j).addClass("partly_available");
             }
             if(j == 0){
-//            	console.log( $('.available_scenarios').children('li').length);
             	$('.available_scenarios').empty();
             	$('.available_scenarios').append(dummy);
-//            	console.log( $('.available_scenarios').children('li').length);
             }
           
             $('.available_scenarios').append(dummyClone);
@@ -572,11 +559,9 @@ function initialLoadData() {
 		}
         //Fill the select boxes at the bottom of the middle chart
         $('#select_for_delivered_recommendations_chart_bar_1').find('option').each(removeOptions).end().append(options)
-				.find('option[value="total"]')
-					.siblings()
-						.removeAttr('selected')
-				.end()
-					.attr('selected', 'selected');//select the total scenario
+				.find('option[value="total"]').siblings().removeAttr('selected')
+				.end().attr('selected', 'selected'); //select the total scenario
+        
         $('#select_for_delivered_recommendations_chart_bar_2').find('option').each(removeOptions).end().append(options);
         $('#select_for_delivered_recommendations_chart_bar_3').find('option').each(removeOptions).end().append(options);
 
@@ -588,7 +573,15 @@ function initialLoadData() {
             applicantSelector: "> *"
         });
     }
-    
+}
+
+
+function sumDeliveredRecommendations(scenario) {
+	var result = 0;
+	for (var i in scenario.statisticItems) {
+		result += scenario.statisticItems[i].deliveredRecommendations;
+	}
+	return result;
 }
 
 
@@ -602,13 +595,61 @@ function renderConversionRate() {
 	} else {
 		var conversionRateObject = {};
 		conversionRateObject.relative = [];
-		conversionRateObject.absolute = [];
+		conversionRateObject.revenue = [];
+		conversionRateObject.relativeRecs = [];
+		conversionRateObject.relativeCb = [];
+		conversionRateObject.relativePr = [];
 		for(var i = 0; i < statistic.length; i++){
-			convRate = parseFloat(statistic[i].clickedRecommended) / parseFloat(statistic[i].clickEvents);
+			var convRate = 0.0;
+			var convRateRecs = 0.0;
+			var convRateCb = 0.0;
+			if(parseFloat(statistic[i].recommendationCalls) != 0){
+				convRate = parseFloat(statistic[i].clickedRecommended) / parseFloat(statistic[i].recommendationCalls);
+			}
+			if(parseFloat(statistic[i].clickedRecommended) != 0){
+				convRateRecs = parseFloat(valueOrDefault(statistic[i].purchasedRecommended)) / parseFloat(statistic[i].clickedRecommended);
+			}
+			if(parseFloat(statistic[i].clickEvents) != 0){
+				convRateCb = parseFloat(valueOrDefault(statistic[i].purchaseEvents)) / parseFloat(statistic[i].clickEvents);
+			}
 			conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
-			conversionRateObject.absolute.push(statistic[i].clickedRecommended);
+			conversionRateObject.relativeRecs.push(isNaN(convRateRecs) ? 0.0 : convRateRecs * 100 );
+			conversionRateObject.relativeCb.push(isNaN(convRateCb) ? 0.0 : convRateCb * 100 );
+			conversionRateObject.relativePr.push(valueOrDefault(statistic[i].purchasedRecommended));
+			conversionRateObject.revenue.push(valueOrDefault(statistic[i].revenue));
 		}
-	    updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);
+		if ($("#conversion_units").val() == 'relative') {
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);	
+		} else if ($("#conversion_units").val() == 'relativerecs') {
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative_rate");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.relativeRecs, percentFormatter);	
+		} else if ($("#conversion_units").val() == 'relativecb') {
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative_cb");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.relativeCb, percentFormatter);	
+		} else if ($("#conversion_units").val() == 'relativepr') {
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative_pr");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.relativePr, currencyFormatter);	
+		} else {
+			var currencyCode = mandatorDao.mandator.advancedOptions.currency;
+			var param = $(".conversion_rate_chart span[data-param='0']");
+			param.attr('data-translate', "currency_" + currencyCode);
+			param.text(currencyCode);
+			i18n(param);
+			
+			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_revenue");
+			
+			updateRightCharts(getGraphDescription(), conversionRateObject.revenue, currencyFormatter);
+		}
+		i18n($(".conversion_rate_chart"));
 	}
 }
 
@@ -652,12 +693,12 @@ function getInnerArrayForRenderCollectedEventsWeek(item1,item2) {
 	        case "blacklist":
 	            innerArray.push((item1.blacklistEvents+item2.blacklistEvents));
 	            break;
-	        case "own":
-	            innerArray.push((item1.ownsEvents+item2.ownsEvents));
+	        case "basket":
+	            innerArray.push((item1.ownsEvents+item2.basketEvents));
 	            break;
 	        case "total":
-	            var sum = getTotalSum(item1.clickEvents,item1.consumeEvents,item1.purchaseEvents,item1.clickedRecommended,item1.rateEvents,item1.blacklistEvents,item1.ownsEvents)+
-	            getTotalSum(item2.clickEvents,item2.consumeEvents,item2.purchaseEvents,item2.clickedRecommended,item2.rateEvents,item2.blacklistEvents,item2.ownsEvents);
+	            var sum = getTotalSum(item1.clickEvents,item1.consumeEvents,item1.purchaseEvents,item1.clickedRecommended,item1.rateEvents,item1.blacklistEvents,item1.basketEvents)+
+	            getTotalSum(item2.clickEvents,item2.consumeEvents,item2.purchaseEvents,item2.clickedRecommended,item2.rateEvents,item2.blacklistEvents,item2.basketEvents);
 	             //render removed from the sum
 	            innerArray.push(sum);
 	            break;
@@ -674,9 +715,9 @@ function valueOrDefault(val) {
     return val == undefined ? 0 : val;
 }
 
-function getTotalSum(click1,consume1,purchase1,clickedRecommended1,rate1,blacklist1,owns1 ){
+function getTotalSum(click1,consume1,purchase1,clickedRecommended1,rate1,blacklist1,basket1 ){
 	var sum = valueOrDefault(click1)+valueOrDefault(consume1)+valueOrDefault(purchase1)+
-				valueOrDefault(clickedRecommended1)+valueOrDefault(rate1)+valueOrDefault(blacklist1)+valueOrDefault(owns1);
+				valueOrDefault(clickedRecommended1)+valueOrDefault(rate1)+valueOrDefault(blacklist1)+valueOrDefault(basket1);
 	return sum;
 }
 
@@ -721,11 +762,11 @@ function getInnerArrayForRenderCollectedEvents(item, daterange) {
         case "blacklist":
             innerArray.push(Math.round(item.blacklistEvents));
             break;
-        case "own":
-            innerArray.push(Math.round(item.ownsEvents));
+        case "basket":
+            innerArray.push(Math.round(item.basketEvents));
             break;
         case "total":
-        	var sum = getTotalSum(item.clickEvents,item.consumeEvents,item.purchaseEvents,item.clickedRecommended,item.rateEvents,item.blacklistEvents,item.ownsEvents);
+        	var sum = getTotalSum(item.clickEvents,item.consumeEvents,item.purchaseEvents,item.clickedRecommended,item.rateEvents,item.blacklistEvents,item.basketEvents);
             //var sum = item.clickEvents + item.consumeEvents + item.purchaseEvents + item.clickedRecommended + item.rateEvents + item.blacklistEvents + item.ownsEvents; //render removed from the sum
             innerArray.push(sum);
             break;
@@ -976,9 +1017,17 @@ function myFormatter2(obj, num)
     return String(num);
 }
 
+
 function percentFormatter(obj, num){
 	return num + '%';
 }
+
+
+function currencyFormatter(obj, num){
+	return num;
+}
+
+
 function convertDataArray(dataArray){
     var conArray = [],
 		i,
