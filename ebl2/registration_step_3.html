@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Registration</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Alexander Tsikinovsky">
+    <link rel="shortcut icon" href="img/favicon.ico">
+	<link rel="apple-touch-icon" href="img/favicon.ico">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styles_new.css">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+   <!--  <script src="https://admin.yoochoose.net/js/form_submit_trigger.js"></script> -->
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="js/helperebx2.js"></script>
+    <script src="js/localizations/localizer.js"></script>
+    <script src="js/contactup.js"></script>
+	
+	
+  </head>
+  <body id="registration">
+    <header class="clearfix top_head">
+      <div class="logo_area s1_5">
+        <h1 class="hide" title="YooChoose. We recommend."><span>YooChoose. We recommend.</span></h1>
+      </div>
+      <div class="top_bar clearfix">
+        <ul class="language_selection clearfix">
+          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
+          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
+          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
+        </ul>
+      </div>
+    </header>
+    <section class="registration_step_1 normal_form">
+      <form  method="get" class="clearfix" onsubmit="return false;">
+        <fieldset class="primary_data s2_5">
+          <h3 data-translate="regstep3_createaccount">Configure recommendations</h3>
+          <div class="wrapper clearfix">
+            <p data-translate="regstep3_createaccount_information">Please, choose how your recommendations will look like, the sample product URL is needed in order to set the recommendation content.</p>
+            <div>
+              <label for="recommendation_size" class="required" style="width: 210px;">
+                <span data-translate="regstep3_rec_size">Recommendation size:</span>
+              </label>
+              <select class="gwt-ListBox" name="recommendation_size" id="recommendation_size" style="width: 89%;">
+              	<optgroup label="Recommended">
+              		<option value="1">728 x 240 - Leaderboard</option>
+              		<option value="2">160 x 600 - Wide Skyscraper</option>
+              		<option value="3" disabled="disabled">320 x 50 - Mobile Banner</option>
+              	</optgroup>
+              	<optgroup label="Other - Horizontal" disabled="disabled">
+              		<option value="4">468 x 60 - Banner</option>
+              		<option value="5">234 x 60 - Half Banner</option>
+              	</optgroup>
+              	<optgroup label="Other - Vertical" disabled="disabled">
+              		<option value="6">120 x 600 - Skyscraper</option>
+              		<option value="7">120 x 240 - Vertical Banner</option>
+              		<option value="8">300 x 600 - Large Skyscraper</option>
+              	</optgroup>
+              	<optgroup label="Other - Square" disabled="disabled">
+              		<option value="9">336 x 280 - Large Rectangle</option>
+              		<option value="10">300 x 250 - Medium Rectangle</option>
+              		<option value="11">250 x 250 - Square</option>
+              		<option value="12">200 x 200 - Small Square</option>
+              		<option value="13">180 x 150 - Small Rectangle</option>
+              		<option value="14">125 x 125 - Button</option>
+              	</optgroup>
+              </select>
+           
+            </div>
+            <div>
+              <label for="rec-content-type" class="required" style="width: 210px;">
+                <span data-translate="regstep3_rec_content">Recpmmendation content type:</span>
+              </label>
+              <select class="gwt-ListBox" id="rec-content-type"  name="recommendation_size" style="width: 89%; ">
+              	<option value="3">Product title &amp; image &amp; price</option>
+              	<option value="2">Product title &amp; image</option>
+              	<option value="1">Product title only</option>
+              </select>
+            </div>
+             <div>
+              <label for="site_dom" class="required" style="width: 210px;">
+                <span data-translate="regstep2_websiteurl">Web-site URL:</span>
+              </label>
+              <input type="text" name="site_dom" id="site_dom" value="" style="width: 88%; margin-left: -3px;height: 2em;" title-translate="regstep3_site_tooltip"
+               title="Please provide your web-site URL (main page), for example http://www.mydomain.com"/>
+            </div>
+            <div>
+              <label for="site" class="required" style="width: 210px;">
+                <span data-translate="regstep3_product_url">Sample product URL:</span>
+              </label>
+              <input type="text" name="site" id="site" value="" style="width: 88%; margin-left: -3px;height: 2em;" title-translate="regstep3_product_tooltip"
+              title="Please provide a sample product page URL from your web-site, for example if your site is http://www.mydomain.com, a product page could be http://www.mydomain.com/somepath/someproduct.html " />
+            </div>
+          
+            <div class="actions">
+              <a class="login" data-translate="regstep3_finish_registration">Continue configuration</a>
+            </div>
+          </div>
+        </fieldset>
+        <div class="according_infos s3_5">
+          <h3 data-translate="regstep3_preview">Preview</h3>
+          <div class="wrapper clearfix">
+           
+            <div id="recoPreview" style="display: none;"></div>
+            
+          </div>
+        </div>
+      </form>
+    </section>
+    
+    
+	<div class="message" id="messageYC" style="display:none; position: absolute; top: 100px;right: 40%;">
+      <p>
+        <a class="destroy_message" id="destroy_messageYC" >X</a>
+        <span id="message_text"></span>
+      </p>
+    </div>
+	
+	<div class="overlay" id="messagePassword">
+      <div class="dialog_body change_password" id="messageBodyPassword" >
+        
+        
+        <h2 data-translate="registration_step2_create_new_password">Create new password</h2>
+        
+        <div class="clearfix">
+          <form class="normal_form clearfix" action="#" method="get">
+            <ul>
+              <li>
+                <p class="annotation" data-translate="edit_contact_data_password_length">To keep your password strong enough, provide at least 8&nbsp;characters and&nbsp;1&nbsp;number</p>
+              </li>
+              <li class="new_password">
+                <label for="new_password" class="required">
+                  <span data-translate="edit_contact_data_new_password">New password:</span>
+                </label>
+                <input type="password" name="new_password" id="new_password" style="height: 2em;"/>
+              </li>
+              <li class="new_password_confirm">
+                <label for="new_password_confirm" class="required">
+                  <span data-translate="edit_contact_data_confirm_new_password">Confirm new password:</span>
+                </label>
+                <input type="password" name="new_password_confirm" id="new_password_confirm" style="height: 2em;" />
+              </li>
+              <li class="validation_message" style="display:none">
+                <p class="annotation" id="validation_message2" data-translate="edit_contact_data_confirmation_does_not_match">Confirmation does not match with password. Please, check if it has been typed in correctly. Thank you.</p>
+              </li>
+              <li class="actions">
+                <a onclick="changePassword();" class="save_passwort_change save">Save changes</a>
+              </li>
+            </ul>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+     <footer>
+      Copyright &copy; 2009-<script>document.write(new Date().getFullYear());</script>
+	<noscript>2014</noscript> YOOCHOOSE GmbH
+      <ul class="clearfix">
+        <li><a  id="corporate" data-translate="login_corporate_information">Corporate information</a></li>
+        <li><a  id="privacy" data-translate="login_data_privacy">Data privacy</a></li>
+        <li><a  id="contact" data-translate="login_contact">Contact</a></li>
+      </ul>
+   	</footer>
+   	 <div class="overlay" style="background-color: rgba(63, 63, 63, 0.3);" id="messageContact">
+		<div class="dialog_body change_password" id="messageBodyContact" >
+			<a class="destroy_dialog">X</a>
+			<div class="clearfix">
+				<p>
+					<strong>YOOCHOOSE GmbH</strong><br/>
+					Bonner Str. 484<br/>
+					50968 Köln<br/>
+					Phone: +49 (221) - 367486 0<br/>
+					Fax: +49 (221) - 367486 22<br/>
+					<a href="mailto:info@yoochoose.com">info@yoochoose.com</a><br/>
+					<a href="http://www.yoochoose.com" target="_blank">www.yoochoose.com</a>
+				</p>
+				<p>
+					<strong data-translate="corporate_information_directors">Managing Directors:</strong><br/>
+					Dr. Uwe Alkemper &amp; Michael Friedmann
+				</p>
+				<p>
+					<strong data-translate="corporate_information_tax">Tax ID:</strong> DE264773520
+				</p>
+				<p data-translate="corporate_information_entry_paragraph">
+					<strong>Entry in the Commercial Register of Germany:</strong><br/>Cologne Local Court, HRB 65275
+				</p>
+		       
+		    </div>
+		</div>
+	</div>
+	
+	 <div  class="overlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);" id="messagePrivacy">
+			<div class="dialog_body change_password" id="messageBodyPrivacy">
+				<a class="destroy_dialog">X</a>
+				<section class="general_info clearfix">
+					
+						<h2 data-translate="data_privacy_title1" style="color: rgba(63, 63, 63, 1);">Data privacy</h2>
+						<p data-translate="data_privacy_paragraph1">
+							Based on visiting this website (yoochoose.net), information regarding access (date, time, page viewed) may be stored. This information is not person-related but anonymized and used for statistical evaluations only (see also paragraph on "Data Privacy - Google Analytics"). It is not released to any third party for commercial or non-commercial purposes.
+						</p>
+						<p data-translate="data_privacy_paragraph2">
+							The information you submitted via the <a href="contact.html">contact form</a> or via e-mail will be stored and used by YOOCHOOSE GmbH and the affiliated partner network (subcontractor) exclusively for quotes and order processing. The release to any third party outside of YOOCHOOSE GmbH for commercial or non-commercial purposes is strictly excluded. Any release of such information to any third party outside of YOOCHOOSE GmbH requires the express, personal consent of the rights holder in question.
+						</p>
+						<p data-translate="data_privacy_paragraph3">
+							YOOCHOOSE GmbH expressly points out that data transmission on the Internet (e.g. during communication via e-mail) may not be fully secure and cannot be protected completely from third-party access.
+						</p>
+						<p data-translate="data_privacy_paragraph4">
+							We expressly do not wish that the contact information on our website be used for commercial advertising, unless YOOCHOOSE GmbH has given prior written consent or a business relationship between the parties already exists. YOOCHOOSE GmbH and all individuals named on this website hereby object to any commercial use and transmission of their data.
+						</p>
+				
+					
+				</section>
+		    </div>
+	</div>
+	
+	 <div  class="overlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);" id="messageCorporate">
+			<div class="dialog_body change_password" style="height: 700px; width: 80%;" id="messageBodyCorporate">
+				<a class="destroy_dialog">X</a>
+				 <section class="general_info clearfix"style="max-height: 80%; margin-top: 30px;   overflow: hidden;">
+			<article class="s2_5">
+				<h2 data-translate="corporate_information_title" style="color: rgba(63, 63, 63, 1);">Corporate Information</h2>
+				<p>
+					<strong>YOOCHOOSE GmbH</strong><br/>
+					Bonner Str. 484<br/>
+					50968 Köln<br/>
+					Phone: +49 (221) - 367486 0<br/>
+					Fax: +49 (221) - 367486 22<br/>
+					<a href="mailto:info@yoochoose.com">info@yoochoose.com</a><br/>
+					<a href="http://www.yoochoose.com" target="_blank">www.yoochoose.com</a>
+				</p>
+				<p>
+					<strong data-translate="corporate_information_directors">Managing Directors:</strong><br/>
+					Dr. Uwe Alkemper &amp; Michael Friedmann
+				</p>
+				<p>
+					<strong data-translate="corporate_information_tax">Tax ID:</strong> DE264773520
+				</p>
+				<p data-translate="corporate_information_entry_paragraph">
+					<strong>Entry in the Commercial Register of Germany:</strong><br/>Cologne Local Court, HRB 65275
+				</p>
+			</article>
+			<article class="s3_5" style=" overflow-y: scroll;  max-height: 560px;">
+				<h3 data-translate="corporate_information_disclaimer">Disclaimer</h3>
+				<p data-translate="corporate_information_disclaimer_text">The content of this website was compiled with the utmost diligence. Nevertheless, YOOCHOOSE GmbH cannot guarantee that the information provided on this site is fully accurate, complete and up to date. Users may use this website at their own risk. All contributions containing the name of the author reflect the opinion of said author and not necessarily the opinion of YOOCHOOSE GmbH.<br/><br/>The mere usage of the website yoochoose.net does not constitute a contractual relationship between the user and YOOCHOOSE GmbH.
+				</p>
+				<h3 data-translate="corporate_information_external_links">External links</h3>
+				<p data-translate="corporate_information_external_links_text">
+					This website contains links to the websites of other parties ("external links"). These websites are subject to the liability of their operators. When originally creating the external links, YOOCHOOSE GmbH checked any outside content for potential legal violations. No legal violations were apparent at that point in time. YOOCHOOSE GmbH has no influence whatsoever on the current and future design or on the content of the linked websites.
+				<br/><br/>Setting external links does not mean that YOOCHOOSE GmbH appropriates the content behind the reference or link. YOOCHOOSE GmbH cannot be expected to continually monitor these external links without any specific indication regarding an existing legal violation. As soon as YOOCHOOSE GmbH learns of any legal violation, the affected external links will be deleted immediately. Such information can be reported to YOOCHOOSE GmbH via e-mail.
+				</p>
+				<h3 data-translate="corporate_information_copyrights">Copyrights and ancillary copyrights</h3>
+				<p data-translate="corporate_information_copyrights_text">
+					The content published on this website is subject to German law in terms of copyrights and ancillary copyrights. Each use that is not expressly permitted under the copyright laws and ancillary copyright laws of Germany requires the prior written consent of YOOCHOOSE GmbH or the holder of the copyright in question.<br/><br/>This applies in particular to the duplication, editing, translation, storage, processing or reproduction of content in databases or other electronic media and systems. The content and rights of any third party shall be labeled as such.<br/><br/><strong>In principle, the following shall apply:</strong><br/>The unauthorized duplication or transmission of individual content or complete web pages is not permitted and constitutes a punishable offense. Furthermore, the representation of this website in third-party frames is also subject to written authorization from YOOCHOOSE GmbH.
+				</p>
+				<h3 data-translate="corporate_information_third_party">Third-party copyrights</h3>
+				<p >
+					<span data-translate="corporate_information_third_party_text2">For copyright information pertaining to images, photographs and illustrations on our website, please go to</span>
+					<a id="copyrightsLink" data-translate="copyrightlink">Third-party copyrights.</a>
+				</p>
+			</article>
+		</section>
+		   
+		</div>
+	</div>
+	<div  class="overlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);" id="messageCopyrights">
+	
+			<div class="dialog_body change_password" id="messageBodyCopyrights" style=" width: 70%;">
+				<a class="destroy_dialog">X</a>
+				 <section class="general_info clearfix">
+					<article class="s2_5">
+						<h2 data-translate="copyright_header_left" style="color: rgba(63, 63, 63, 1);">Third-party copyrights</h2>
+						<p data-translate="copyright_text_left">
+							Please find below the copyright information for the photos, graphics and illustrations shown on our website. Among others, our sources included the stock photo portal
+							<a href="http://www.fotolia.com">Fotolia.com</a>
+						</p>
+					</article>
+					<article class="s3_5">
+						<h3 data-translate="copyright_header_right">The YOOCHOOSE website contains the following photos and illustrations:</h3>
+						<ul>
+							<li>Gordian knot by <a href="http://www.pixelwise.de" target="_blank">pixelwise.de</a></li>
+							<li>Businessman hand holding a pendulum ball by <a href="http://www.fotolia.com/id/10325814" target="_blank">Xavier Gallego Morell</a></li>
+							<li>3d network connections by <a href="http://www.fotolia.com/id/6836008" target="_blank">Dmitry Sunagatov</a></li>
+							<li>Circuit intégré von JNT Visual</li>
+							<li>Shopping girls by fotolia</li>
+							<li>Negativfilm by fotolia</li>
+							<li>Abacus by fotolia</li>
+							<li>Mixer by fotolia</li>
+							<li>Apples by fotolia</li>
+							<li>fiber by fotolia</li>
+							<li>Media park tower by Uwe Alkemper</li>
+							<li>Google Logo by <a href="http://www.google.de/stickers.html" target="_blank">Google-Offizielle Logos</a></li>
+						</ul>
+					</article>
+				</section>
+		    </div>
+		
+	</div>
+  </body>
+</html>
