@@ -2209,6 +2209,16 @@ a.remove_attribute_value:hover{
     display: inline-block;
     box-sizing: border-box;
     padding: 5px;
+    padding-left: 0px;
+    vertical-align: bottom;
+    white-space: nowrap;
+}
+
+.editorial_list .listHead span.idCol, .editorial_list ul span.idCol {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 5px;
+    padding-left: 5px;
     vertical-align: bottom;
     white-space: nowrap;
 }
