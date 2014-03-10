@@ -1005,7 +1005,7 @@ function activateSubmodelDialog(modelID) {
     $('#relevant_period').val(val);
 	$('#relevant_period_unit').val(unit);
   	
-  	$('#model_configuration_classic h2').find("span[data-param=0]").attr("data-translate", modelNameKey);
+  	$('#model_configuration_classic h2').find("span[data-param=0]").attr("data-translate", modelNameKey + '_title');
   	
   	if ( ! extendedSolution) {
   		layer.css("height", "auto");
