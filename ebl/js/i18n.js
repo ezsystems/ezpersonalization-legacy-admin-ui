@@ -186,9 +186,20 @@ function i18n() {
 		return;
 	}
 	
+
+	var hrefKey = term + "[href]";
+	if (typeof(jQuery.i18n.map[hrefKey]) != "undefined") {
+		var hrefValue = jQuery.i18n.prop(hrefKey);
+		if (hrefValue) {
+			$(element).attr("href", hrefValue);
+		}
+	}
+
+	
 	var params = i18n_params(element); 
 	var asHtml = to_outer_html(params);
 	
+
 	var translation;
 	
 	if (typeof(jQuery.i18n.map[term]) != "undefined") {
