@@ -752,6 +752,7 @@ function saveScenario() {
   
   function fillSubModelsChange(attributeKey, type) {
 	  if(! attributeKey) {
+		  fillSubmodelValues(null);
 		  return;
 	  }
 
@@ -1004,9 +1005,9 @@ function activateSubmodelDialog(modelID) {
 	var unit = maxRating.D >= 2 ? 'D' : 'H';
     $('#relevant_period').val(val);
 	$('#relevant_period_unit').val(unit);
-  	
-  	$('#model_configuration_classic h2').find("span[data-param=0]").attr("data-translate", modelNameKey + '_title');
-  	
+  	var currentModelConf = 	$('#model_configuration_classic h2').find("span[data-param=0]");
+  	currentModelConf.attr("data-translate", modelNameKey + '_title');
+  	i18n(currentModelConf);
   	if ( ! extendedSolution) {
   		layer.css("height", "auto");
   		layer.css("width", "30em");
@@ -1022,7 +1023,6 @@ function activateSubmodelDialog(modelID) {
   	}
 
   	overlay.show();
-  	localizer();
 }
 
   
