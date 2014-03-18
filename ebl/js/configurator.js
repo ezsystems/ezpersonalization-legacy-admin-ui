@@ -1022,6 +1022,7 @@ function activateSubmodelDialog(modelID) {
   	}
 
   	overlay.show();
+  	localizer();
 }
 
   
