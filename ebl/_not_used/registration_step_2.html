@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Registration</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="css/styles_new.css">
+    
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
+    <script src="js/lib/jquery.cookie.js"></script>
+    <script src="js/lib/jquery.i18n.properties.js"></script>
+	
+    <script src="js/form_submit_trigger.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    
+    <script src="js/i18n.js" data-i18n-files="registration,common"></script>
+    
+	<script>
+	
+	var code = gup('code');
+	var mandator = gup('mandator');
+	var username = gup('username');
+	var lang = gup('lang');
+	var customerID = "";
+	
+	$.cookie('language', lang);
+	
+	$(document).ready(function() {
+		
+		init_i18n(["registration", "common"]);
+
+		$.ajax({
+			type: "POST",
+			beforeSend: function (req) {
+				req.setRequestHeader('no-realm', 'realm1');
+			},
+			url: "ebl/v3/registration/create_access_token",
+			data: {
+				login: username,
+				password: code,
+				set_cookie: true
+			}
+		})
+		.done(
+			function(){
+
+
+
+		$.ajax({
+        dataType: "json",
+		type:"GET",
+		beforeSend: function (req) {
+//				req.setRequestHeader('Authorization', make_base_auth(username, code));
+				req.setRequestHeader('no-realm', 'realm1');
+			},
+        url: "ebl/v3/profile/get_profile_pack/" + mandator,
+        success: function (json) {
+
+            var mandator = json.profilePack.mandator;
+            var customer = json.profilePack.customer;
+			customerID = customer.id;
+            $('body').data('customer', customer);
+			$('body').data('mandator', mandator);
+			
+			if(mandator.website == null)
+			{
+				$('#site').val("");
+			}
+			else
+			{
+				$('#site').val(mandator.website);
+			}
+			if(customer.email == null)
+			{
+				$('#email').val("");
+			}
+			else
+			{
+				$('#email').val(customer.email);
+			}
+			if(customer.company == null)
+			{
+				$('#company').val("");
+			}
+			else
+			{
+				 $('#company').val(customer.company);
+			}
+			if(customer.firstName == null)
+			{
+				$('#fname').val("");
+			}
+			else
+			{
+				$('#fname').val(customer.firstName);
+			}
+			if(customer.lastName == null)
+			{
+				$('#lname').val("");
+			}
+			else
+			{
+				$('#lname').val(customer.lastName);
+			}
+			if(customer.phone == null)
+			{
+				$('#phone').val("");
+			}
+			else
+			{
+				$('#phone').val(customer.phone);
+			}
+			if(customer.address.street == null)
+			{
+				$('#street_and_house').val("");
+			}
+			else
+			{
+				$('#street_and_house').val(customer.address.street);
+			}
+			if(customer.address.zip == null)
+			{
+				$('#zip').val("");
+			}
+            else
+			{
+				$('#zip').val(customer.address.zip);
+			}
+			if(customer.address.city == null)
+			{
+				$('#city').val("");
+			}
+            else
+			{
+				$('#city').val(customer.address.city);
+			}
+			
+			if(customer.address.country == null)
+			{
+				$('#country').val("");
+			}
+			else
+			{
+				$('#country').val(customer.address.country);
+			}
+            updateData();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+			if(jqXHR.status != null && jqXHR.status == 403)
+			{
+				setMessagePopUp("problem", "error_server_error_403");
+			}
+			else if(jqXHR.status != null && jqXHR.status == 401)
+			{
+				setMessagePopUp("problem", "error_server_error_401");
+			}
+			else if(jqXHR.status != null && jqXHR.status == 400)
+			{
+				setMessagePopUp("problem", "error_server_error_400");
+			}
+			else if(jqXHR.status != null && jqXHR.status == 404)
+			{
+				setMessagePopUp("problem", "error_server_error_404");
+			}
+			else if(jqXHR.status != null && jqXHR.status == 409)
+			{
+				setMessagePopUp("problem", "error_server_error_409");
+			}
+			else
+			{
+				setMessagePopUp("problem", "error_server_error");
+			}
+        }
+    });
+			}
+	);
+		$("input, textarea, select").change(function() {
+			updateData();
+		});
+
+		$('#email').val(username);
+	
+		$('.login').click(function(){
+				saveForm("");
+			});
+		
+	});
+	
+	function changePassword()
+	{
+	
+		var password = $('#new_password').val();
+		var passwordConfirm = $('#new_password_confirm').val();
+		if(password == null || password.length < 8 ){
+			$('.new_password').addClass('problem');
+			$('#validation_message2').attr('data-translate', "edit_contact_data_password_length" );
+			localizer();
+			$('.validation_message').show();
+			
+		}else if(password != passwordConfirm){
+			$('.new_password_confirm').addClass('problem');
+			$('#validation_message2').attr('data-translate', "edit_contact_data_confirmation_does_not_match" );
+			localizer();
+			$('.validation_message').show();
+		}
+		if(password != passwordConfirm)
+		{
+			$('.new_password_confirm').addClass('problem');
+			$('.validation_message').show();
+		}
+		else {
+			setLoadingDiv($('.actions'));
+			$.ajax({
+				type:"POST",
+				beforeSend: function(x) {
+					if (x && x.overrideMimeType) {
+					  x.overrideMimeType("application/json;charset=UTF-8");
+					}
+				  },
+				mimeType: "application/json",
+				contentType: "application/json",
+				dataType: "json",
+				data: JSON.stringify(password),
+				url: "ebl/v3/profile/change_password",
+				success: function(json){
+					//on success
+					$.cookie('password', password);
+					$.cookie('email', username);
+					$.cookie('customerID', null);
+					
+					loginAgain();
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown)
+				{
+					if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+				unsetLoadingDiv($('.actions'));
+							}
+			});
+		}
+	
+	}
+	
+	function loginAgain()
+	{
+		var password = $.cookie('password');
+		var username = $.cookie('email');
+		
+		$.ajax({
+				type:"GET",
+				password: password,
+				username: username,
+				url: "ebl/v3/registration/get_me/",
+				beforeSend : function(req) {
+							req.setRequestHeader('no-realm', 'realm1');
+				},
+				success: function(json){
+					$.cookie('password', password);
+					window.location = "index.html";
+				
+				},
+				error : function(jqXHR, textStatus, errorThrown)
+				{
+						if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+						unsetLoadingDiv($('.actions'));
+				}
+		});
+		
+	}
+	
+	function updateData() {
+		
+		var customer = $('body').data('customer');
+		var mandator = $('body').data('mandator');
+		
+		if(customer == null)
+		{
+			var customer = new Object();
+		}
+		
+		customer.email = username;
+		customer.company = $('#company').val();
+		customer.firstName = $('#fname').val();
+		customer.lastName = $('#lname').val();
+		customer.phone = $('#phone').val();
+		customer.id = customerID;
+		var address = new Object();
+		address.street = $('#street_and_house').val();
+		address.zip = $('#zip').val();
+		address.city = $('#city').val();
+		address.country = $('#country').val();
+		customer.address = address;
+		
+		$('body').data('customer', customer);
+		
+		mandator.website = $('#site').val();
+		$('body').data('mandator', mandator);
+	}
+	
+	function saveForm(nextPage)
+	{
+	
+		var showError = false;
+		
+		if($('#site').val() == "")
+		{
+			$('label[for="site"]').parent().addClass("problem");
+			showError = true;
+		}
+		else
+		{
+			$('label[for="site"]').parent().removeClass("problem");
+		}
+		if($('#company').val() == "")
+		{
+			$('label[for="company"]').parent().addClass("problem");
+			showError = true;
+		}
+		else
+		{
+			$('label[for="company"]').parent().removeClass("problem");
+		}
+		if($('#fname').val() == "")
+		{
+			$('label[for="f_name"]').parent().addClass("problem");
+			showError = true;
+		}
+		else
+		{
+			$('label[for="f_name"]').parent().removeClass("problem");
+		}
+		if($('#lname').val() == "")
+		{
+			$('label[for="l_name"]').parent().addClass("problem");
+			showError = true;
+		}
+		else
+		{
+			$('label[for="l_name"]').parent().removeClass("problem");
+		}
+		if($('#street_and_house').val() == "")
+		{
+			$('label[for="address"]').parent().addClass("problem");
+			showError = true;
+		}
+		else
+		{
+			$('label[for="address"]').parent().removeClass("problem");
+		}
+		if($('#zip').val() == "")
+		{
+			$('label[for="zip"]').parent().addClass("problem");
+			showError = true;
+		}
+		else
+		{
+			$('label[for="zip"]').parent().removeClass("problem");
+		}
+		if($('#city').val() == "")
+		{
+			$('label[for="city"]').parent().addClass("problem");
+			showError = true;
+		}
+		else
+		{
+			$('label[for="city"]').parent().removeClass("problem");
+		}
+		if($('#country').val() == "")
+		{
+			$('label[for="country"]').parent().addClass("problem");
+			showError = true;
+		}
+		else
+		{
+			$('label[for="country"]').parent().removeClass("problem");
+		}
+		if($('#phone').val() == "")
+		{
+			$('label[for="phone"]').parent().addClass("problem");
+			showError = true;
+		}
+		else
+		{
+			$('label[for="phone"]').parent().removeClass("problem");
+		}
+		
+		if(showError == true)
+		{
+			setMessagePopUp("problem", "error_fill_required_fields");
+		}
+		else
+		{
+			setLoadingDiv($('.actions'));
+			var customer = $('body').data('customer');
+			$.ajax({
+				username: username,
+				password: code,
+				type:"POST",
+				beforeSend: function(x) {
+					if (x && x.overrideMimeType) {
+					  x.overrideMimeType("application/json;charset=UTF-8");
+					}
+				  },
+				mimeType: "application/json",
+				contentType: "application/json",
+				dataType: "json",
+				data: JSON.stringify(customer),
+				url: "ebl/v3/profile/update_customer",
+				success: function(json){
+					//on success
+					saveMandator();
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown)
+				{
+				setMessagePopUp("problem", "error_server_error");
+				unsetLoadingDiv($('.actions'));
+							}
+			});
+		
+		}
+		
+		function saveMandator()
+		{
+			var mandator = $('body').data('mandator');
+			$.ajax({
+				username: username,
+				password: code,
+				type:"POST",
+				beforeSend: function(x) {
+					if (x && x.overrideMimeType) {
+					  x.overrideMimeType("application/json;charset=UTF-8");
+					}
+				  },
+				mimeType: "application/json",
+				contentType: "application/json",
+				dataType: "json",
+				data: JSON.stringify(mandator),
+				url: "ebl/v3/profile/update_mandator",
+				success: function(json){
+					//on success
+					$.cookie('password', code);
+					$.cookie('email', username);
+					$.cookie('customerID', null);
+											
+					setDialogs("");
+					$('#new_password_confirm').keypress(function (e) {
+						if (e.which == 13) {
+							$(this).blur();
+							changePassword();
+						}
+					});
+			
+					unsetLoadingDiv($('.actions'));
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown)
+				{
+				if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+				unsetLoadingDiv($('.actions'));
+							}
+			});
+		}
+	}
+	
+	</script>
+  </head>
+  <body id="registration">
+    <header class="clearfix top_head">
+      <div class="logo_area s1_5">
+        <h1 class="hide" title="YooChoose. We recommend."><span>YooChoose. We recommend.</span></h1>
+      </div>
+      <div class="top_bar clearfix">
+        <ul class="language_selection clearfix">
+          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
+          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
+          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
+        </ul>
+      </div>
+    </header>
+    <section class="registration_step_1 normal_form">
+      <form action="" method="get" class="clearfix">
+        <fieldset class="primary_data s2_5">
+          <h3 data-translate="regstep2_createaccount">Create an Account</h3>
+          <div class="wrapper clearfix">
+            <p data-translate="regstep2_createaccount_information">Please, provide more information about your company:</p>
+            <div>
+              <label for="email" class="required">
+                <span data-translate="regstep2_email">Email:</span>
+              </label>
+              <input type="text" name="email" id="email" value="jurij@burkanov.com" disabled="disabled" />
+            </div>
+            <div>
+              <label for="company" class="required">
+                <span data-translate="regstep2_company_name">Company name:</span>
+              </label>
+              <input type="text" name="company" id="company" value="" />
+            </div>
+            <div>
+              <label for="site" class="required">
+                <span data-translate="regstep2_websiteurl">Web-site URL:</span>
+              </label>
+              <input type="text" name="site" id="site" value=""/>
+            </div>
+            <div>
+              <label for="f_name" class="required">
+                <span data-translate="regstep2_firstname">First name:</span>
+              </label>
+              <input type="text" name="f_name" id="fname" autofocus="autofocus" />
+            </div>
+            <div>
+              <label for="l_name" class="required">
+                <span data-translate="regstep2_lastname">Last name:</span>
+              </label>
+              <input type="text" name="l_name" id="lname" />
+            </div>
+            <div>
+              <label for="phone" class="required">
+                <span data-translate="regstep2_phonenumber">Phone number:</span>
+              </label>
+              <input type="text" name="phone" id="phone" />
+            </div>
+            <div>
+              <label for="address" class="required">
+                <span data-translate="regstep2_adress">Address:</span>
+              </label>
+              <input type="text" name="address" id="street_and_house" />
+            </div>
+            <div>
+              <label for="zip" class="required">
+                <span data-translate="regstep2_zip">ZIP:</span>
+              </label>
+              <input type="text" name="zip" id="zip" />
+            </div>
+            <div>
+              <label for="city" class="required">
+                <span data-translate="regstep2_city">City:</span>
+              </label>
+              <input type="text" name="city" id="city" />
+            </div>
+            <div>
+              <label for="country" class="required">
+                <span data-translate="regstep2_country">Country:</span>
+              </label>
+              <input type="text" name="country" id="country" />
+            </div>
+            <div class="actions">
+              <a class="login" data-translate="regstep2_finish_registration">Finish registration</a>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+	<div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text"></span>
+      </p>
+    </div>
+	
+	<div class="overlay">
+      <div class="dialog_body change_password">
+        
+        <a class="destroy_dialog">X</a>
+        
+        <h2 data-translate="registration_step2_create_new_password">Create new password</h2>
+        
+        <div class="clearfix">
+          <form class="normal_form clearfix" action="#" method="get">
+            <ul>
+              <li>
+                <p class="annotation" data-translate="edit_contact_data_password_length">To keep your password strong enough, provide at least 8&nbsp;characters and&nbsp;1&nbsp;number</p>
+              </li>
+              <li class="new_password">
+                <label for="new_password" class="required">
+                  <span data-translate="edit_contact_data_new_password">New password:</span>
+                </label>
+                <input type="password" name="new_password" id="new_password" />
+              </li>
+              <li class="new_password_confirm">
+                <label for="new_password_confirm" class="required">
+                  <span data-translate="edit_contact_data_confirm_new_password">Confirm new password:</span>
+                </label>
+                <input type="password" name="new_password_confirm" id="new_password_confirm" />
+              </li>
+              <li class="validation_message" style="display:none">
+                <p class="annotation" id="validation_message2"  data-translate="edit_contact_data_confirmation_does_not_match">Confirmation does not match with password. Please, check if it has been typed in correctly. Thank you.</p>
+              </li>
+              <li class="actions">
+                <a onclick="changePassword();" class="save_passwort_change save">Save changes</a>
+              </li>
+            </ul>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+	
+  </body>
+</html>
