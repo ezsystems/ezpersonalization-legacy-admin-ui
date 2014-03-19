@@ -561,7 +561,13 @@ function saveScenario() {
 			  return current_submodels[i];
 		  }
 	  }
-	  return null;
+	  var newSubmodel = new Object();;
+	  newSubmodel.attributeKey = attributeKey;
+	  newSubmodel.submodelType = attributeType;
+	  if(attributeType == "NOMINAL"){
+		  newSubmodel.attributeValues = new Array();
+	  }
+	  return newSubmodel;
   }
   
   
