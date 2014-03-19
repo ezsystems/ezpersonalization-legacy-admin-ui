@@ -567,6 +567,7 @@ function saveScenario() {
 	  if(attributeType == "NOMINAL"){
 		  newSubmodel.attributeValues = new Array();
 	  }
+	  current_submodels[current_submodels.length] = newSubmodel;
 	  return newSubmodel;
   }
   
