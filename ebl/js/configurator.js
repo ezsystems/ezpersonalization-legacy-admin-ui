@@ -561,7 +561,14 @@ function saveScenario() {
 			  return current_submodels[i];
 		  }
 	  }
-	  return null;
+	  var newSubmodel = new Object();;
+	  newSubmodel.attributeKey = attributeKey;
+	  newSubmodel.submodelType = attributeType;
+	  if(attributeType == "NOMINAL"){
+		  newSubmodel.attributeValues = new Array();
+	  }
+	  current_submodels[current_submodels.length] = newSubmodel;
+	  return newSubmodel;
   }
   
   
@@ -766,8 +773,37 @@ function saveScenario() {
 	  if(type === "NUMERIC") {
 		  fillNumericSubmodelValues(current_submodel);
 	  } else if(type === "NOMINAL") {
-		  fillSubmodelValues(current_submodel);
+		  if(! current_submodel){
+			  fillAttributeEmptyValues(attributeKey, type);
+		  }else{
+			  fillSubmodelValues(current_submodel);
+		  }
 	  }
+  }
+  
+  function fillAttributeEmptyValues(attributeKey,type) {
+
+	  $('.grouping_attributes').children('li').remove();
+	  $('.groups_base').children('li').first().find("ul.user_created_group").children().remove();
+	  $('.groups_base').children('li').slice(1, ($('.groups_base').children('li').length - 1)).remove();
+
+	  $('#nominalSubmodelValues').show().siblings('div').hide();
+	  $('.grouping_attributes').html("");
+	  
+	
+	  getAttributeValues(attributeKey, type).then(function(json) {
+		  //console.log(json);
+		 
+		  //write all the groups and the according attribute values
+		  
+		  //fill the available attribute values, which are not yet in groups
+		  var $container = $('.grouping_attributes');
+	
+		  for(var i = 0; i < json.attribute.values.length; i ++) {
+			   //console.log(json.attribute.values[i]);
+				$container.append('<li data-value="' + json.attribute.values[i] + '">' + json.attribute.values[i] + '</li>');
+		  }
+	  });
   }
 
   
