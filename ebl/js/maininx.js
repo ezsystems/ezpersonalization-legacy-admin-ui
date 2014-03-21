@@ -1,5 +1,7 @@
 
-var customerID = null;
+var open_reference_code = gup('reference_code');
+
+var customerID;
 
 var scenarioInfoList; // loaded by ajaxScenarioList()
 
@@ -29,7 +31,7 @@ $(document).ready(function() {
 			
 			if (mandatorList.length > 0) {
 				
-				var cooMandator = $.cookie('customerID');
+				var cooMandator = gup('customer_id') || $.cookie('customerID');
 				
 				for (var i = 0; i < mandatorList.length; i++) {
 					if (cooMandator == mandatorList[i].name) {
@@ -242,11 +244,20 @@ var initialize = function () {
 		renderConversionRate();
 	});
 	
+    $('#settingsP .closeOverlay').click(function () {
+    	window.parent.history.replaceState(null, null, "/");
+    });
+	
 	$('section  div.index_mandator').hover(function() {
 		$(this).find('.index_hover').css('display', 'table-row');
 	}, function() {
 		$(this).find('.index_hover').css('display', 'none');
 	});
+	
+	if (customerID && open_reference_code) {
+		openScenarioDialog(customerID, open_reference_code);
+	}
+	
 };
 
 
@@ -500,7 +511,7 @@ function renderScenarioList() {
         console.log("no scenarios");
     } else {
 
-        var options = "";
+        var options = [];
 
         for (var j = 0; j < json.scenarioInfoList.length; j++) {
             //set the options in the select boxes
@@ -512,7 +523,9 @@ function renderScenarioList() {
             var dummyClone = $(dummy).clone();
             $(dummyClone).show();
 			var escapedRefCode = escape(scenario.referenceCode);
-            $(dummyClone).children("div").attr("id", "scenario_" + j);
+			
+			var scenarioDiv = $(dummyClone).children("div");
+			scenarioDiv.attr("id", "scenario_" + j);
 
             if (scenario.title == null || $.trim(scenario.title) == "") {
                 scenario.title = scenario.referenceCode;
@@ -520,28 +533,34 @@ function renderScenarioList() {
             if (scenario.description == null) {
                 scenario.description = "Some brief description of the scenario, that can be edited together with other parameters";
             }
-			options = options + "<option value='" + scenario.referenceCode + "'>" + scenario.title + "</option>";
-            $(dummyClone).children("div#scenario_" + j).children("h4").children("span").text(scenario.title);
             
-            $(dummyClone).children("div#scenario_" + j).children("p.description").text(scenario.description);
+            var option = $('<option></option>');
+            option.text(scenario.title);
+            option.attr("value", scenario.referenceCode);
+            options.push(option);
+            
+			scenarioDiv.children("h4").children("span").text(scenario.title);
+			scenarioDiv.children("p.description").text(scenario.description);
+			
+			scenarioDiv.find("h4 a").attr('data-refcode', escapedRefCode);
 
-            var additionalParameter = "?reference_code=" + escapedRefCode + "&customer_id=" + customerID;
-            //The links at the end of the page must have a referenceCode and customerID at request get parameter
-           $(dummyClone).children("div#scenario_" + j).find("h4").children("font.settings").html('<a  onclick="$(\'#settingsF\').attr(\'src\',\'settingspop.html' + additionalParameter + '\'); $(\'#settingsP\').show();"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></a>');
+            scenarioDiv.find("h4 a").click(function() {
+            	openScenarioDialog(customerID, $(this).attr('data-refcode'));
+            });
                 
             var derecos = sumDeliveredRecommendations(scenario);
 
-            $(dummyClone).children("div").children("p.data").children("span").children("strong").text(formatInteger(derecos));
+            scenarioDiv.children("p.data").children("span").children("strong").text(formatInteger(derecos));
 
             //set the radio buttons initialy
-            $(dummyClone).children("div#scenario_" + j).removeClass("problem").removeClass("ready_to_use").removeClass("partly_available");
+            scenarioDiv.removeClass("problem").removeClass("ready_to_use").removeClass("partly_available");
 
             if (scenario.avaliable === "NOT_AVAILABLE") {
-                $(dummyClone).children("div#scenario_" + j).addClass("problem");
+            	scenarioDiv.addClass("problem");
             } else if (scenario.avaliable === "AVAILABLE") {
-                $(dummyClone).children("div#scenario_" + j).addClass("ready_to_use");
+            	scenarioDiv.addClass("ready_to_use");
             } else if (scenario.avaliable === "PARTLY_AVAILABLE") {
-                $(dummyClone).children("div#scenario_" + j).addClass("partly_available");
+            	scenarioDiv.addClass("partly_available");
             }
             if(j == 0){
             	$('.available_scenarios').empty();
@@ -557,22 +576,36 @@ function renderScenarioList() {
 				$(this).remove();
 			}
 		}
+		
+		$('.delivered_recommendation_chart li').each(function() {
+			  var htmlSelect = $(this).find('select');
+			  
+			  htmlSelect.find('option[value!=""][value!="total"]').remove();
+		
+			  for (var i in  options) {
+				  htmlSelect.append(options[i].clone());
+			  }
+	    });
+		
         //Fill the select boxes at the bottom of the middle chart
-        $('#select_for_delivered_recommendations_chart_bar_1').find('option').each(removeOptions).end().append(options)
-				.find('option[value="total"]').siblings().removeAttr('selected')
+        $('#select_for_delivered_recommendations_chart_bar_1').find('option[value="total"]').siblings().removeAttr('selected')
 				.end().attr('selected', 'selected'); //select the total scenario
-        
-        $('#select_for_delivered_recommendations_chart_bar_2').find('option').each(removeOptions).end().append(options);
-        $('#select_for_delivered_recommendations_chart_bar_3').find('option').each(removeOptions).end().append(options);
 
-        $(".available_scenarios")
-				.siblings('.loading').remove().end()
-		.equalize({
+        $(".available_scenarios").siblings('.loading').remove().end().equalize({
             eqItems: "> li:visible",
             segmentSize: 5,
             applicantSelector: "> *"
         });
     }
+}
+
+
+function openScenarioDialog(mandatorId, referenceCode) {
+	
+	var additionalParameter = "?reference_code=" + encodeURIComponent(referenceCode) + "&customer_id=" + encodeURIComponent(mandatorId);
+	
+	$('#settingsF').attr('src', 'settingspop.html' + additionalParameter); 
+	$('#settingsP').show();
 }
 
 
