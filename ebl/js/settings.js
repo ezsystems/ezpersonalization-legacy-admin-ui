@@ -1,7 +1,7 @@
 
-	var reference_code = gup( 'reference_code' );
-	var customerID = gup('customer_id');
-	var fromTemplate = gup('from_template');
+var reference_code = gup('reference_code');
+var customerID     = gup('customer_id');
+var fromTemplate   = gup('from_template');
 
 	
   $(document).ready(function() {
@@ -11,13 +11,16 @@
 		  initialize_configurator_header(),
 		  include(["/js/dao/scenario.js"]).then(function() {
 			  return scenarioDao.init(customerID, reference_code, true);
-	  	  })		  
-      ).done(function() {
-			initializeSolutionAndItemTypes();
-			initialize();
-			
-			unsetLoadingDiv($('body'));
+	  	  })
+	  ).always(function() {
+		  unsetLoadingDiv($('body'));
+	  }).done(function() {
+		  initializeSolutionAndItemTypes();
+		  initialize();
+	  }).fail(function() {
+		  setMessagePopUp("problem", "configurator_error_loading_scenario", reference_code);
 	  });
+	  
   });
 	  
 	
@@ -104,6 +107,12 @@
 				unsetLockedDiv($('#button_save'));
 			}
 		};
+		
+		
+		var title = scenarioDao.scenario.title ? scenarioDao.scenario.title + " (" + scenarioDao.scenario.referenceCode + ")" : scenarioDao.scenario.referenceCode;
+		
+		var additionalParameter = "?reference_code=" + encodeURIComponent(reference_code) + "&customer_id=" + encodeURIComponent(customerID);
+		window.parent.history.replaceState(null, title, "/" + additionalParameter);
 		
 		renderScenario();
 		
