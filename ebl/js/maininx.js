@@ -632,6 +632,10 @@ function renderConversionRate() {
 		conversionRateObject.relativeRecs = [];
 		conversionRateObject.relativeCb = [];
 		conversionRateObject.relativePr = [];
+		var convRateValMax = 0;
+		var convRateRecsValMax = 0;
+		var convRateCbValMax = 0;
+		
 		for(var i = 0; i < statistic.length; i++){
 			var convRate = 0.0;
 			var convRateRecs = 0.0;
@@ -645,32 +649,63 @@ function renderConversionRate() {
 			if(parseFloat(statistic[i].clickEvents) != 0){
 				convRateCb = parseFloat(valueOrDefault(statistic[i].purchaseEvents)) / parseFloat(statistic[i].clickEvents);
 			}
-			conversionRateObject.relative.push(isNaN(convRate) ? 0.0 : convRate * 100 );
-			conversionRateObject.relativeRecs.push(isNaN(convRateRecs) ? 0.0 : convRateRecs * 100 );
-			conversionRateObject.relativeCb.push(isNaN(convRateCb) ? 0.0 : convRateCb * 100 );
+			
+			var convRateVal = isNaN(convRate) ? 0.0 : convRate * 100;
+			conversionRateObject.relative.push(convRateVal);
+			if(convRateVal > convRateValMax){
+				convRateValMax = convRateVal;
+			}
+			
+			var convRateRecsVal = isNaN(convRateRecs) ? 0.0 : convRateRecs * 100; 
+			conversionRateObject.relativeRecs.push(convRateRecsVal);
+			if(convRateRecsVal > convRateRecsValMax){
+				convRateRecsValMax = convRateRecsVal;
+			}
+			
+			var convRateCbVal = isNaN(convRateCb) ? 0.0 : convRateCb * 100;
+			conversionRateObject.relativeCb.push(convRateCbVal);
+			if(convRateCbVal > convRateCbValMax){
+				convRateCbValMax = convRateCbVal;
+			}
+			
 			conversionRateObject.relativePr.push(valueOrDefault(statistic[i].purchasedRecommended));
 			conversionRateObject.revenue.push(valueOrDefault(statistic[i].revenue));
 		}
 		if ($("#conversion_units").val() == 'relative') {
-			
+			var precision = 0;
+			if(convRateValMax<5){
+				precision = 2;
+			}else if(convRateValMax<10){
+				precision = 1;
+			}
 			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative");
 			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);	
+			updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter, precision);	
 		} else if ($("#conversion_units").val() == 'relativerecs') {
-			
+			var precision = 0;
+			if(convRateRecsValMax<5){
+				precision = 2;
+			}else if(convRateRecsValMax<10){
+				precision = 1;
+			}
 			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative_rate");
 			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relativeRecs, percentFormatter);	
+			updateRightCharts(getGraphDescription(), conversionRateObject.relativeRecs, percentFormatter, precision);	
 		} else if ($("#conversion_units").val() == 'relativecb') {
-			
+			var precision = 0;
+			if(convRateCbValMax<5){
+				precision = 2;
+			}else if(convRateCbValMax<10){
+				precision = 1;
+			}
 			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative_cb");
 			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relativeCb, percentFormatter);	
+			updateRightCharts(getGraphDescription(), conversionRateObject.relativeCb, percentFormatter, precision);	
 		} else if ($("#conversion_units").val() == 'relativepr') {
 			
 			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_relative_pr");
 			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relativePr, currencyFormatter);	
+			updateRightCharts(getGraphDescription(), conversionRateObject.relativePr, currencyFormatter, 0);	
 		} else {
 			var currencyCode = mandatorDao.mandator.advancedOptions.currency;
 			var param = $(".conversion_rate_chart span[data-param='0']");
@@ -680,7 +715,7 @@ function renderConversionRate() {
 			
 			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_revenue");
 			
-			updateRightCharts(getGraphDescription(), conversionRateObject.revenue, currencyFormatter);
+			updateRightCharts(getGraphDescription(), conversionRateObject.revenue, currencyFormatter, 0);
 		}
 		i18n($(".conversion_rate_chart"));
 	}
@@ -1160,7 +1195,7 @@ function showEmptyRecommendationChart() {
     middlebar.Draw();
 }
 
-function updateRightCharts(labels, conversionValues, formatter) {
+function updateRightCharts(labels, conversionValues, formatter,precision) {
 //	console.log('updating convRate chart');
 //	console.log(conversionValues);
     RGraph.Clear(document.getElementById("conversion_rate"));
@@ -1173,6 +1208,7 @@ function updateRightCharts(labels, conversionValues, formatter) {
     rightLine.Set('chart.linewidth', 3);
     rightLine.Set('chart.gutter.left', 40);
     rightLine.Set('chart.scale.formatter', formatter);
+    rightLine.Set('chart.scale.decimals', precision);
     rightLine.Set('chart.hmargin', 5);
     rightLine.Set('chart.background.grid.autofit.align', true);
     rightLine.Set('chart.background.grid.color', 'rgba(217, 226, 216, 1)');
