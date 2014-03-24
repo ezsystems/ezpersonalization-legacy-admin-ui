@@ -65,8 +65,10 @@ function loadMandatorInfo(callback) {
 		
 
 function cancelScenario() {
-	  window.parent.$("#settingsP").hide();
-	  window.parent.$('#cover').hide();
+	
+	window.parent.history.replaceState(null, null, "/");
+	window.parent.$("#settingsP").hide();
+	window.parent.$('#cover').hide();
 }
 
 
