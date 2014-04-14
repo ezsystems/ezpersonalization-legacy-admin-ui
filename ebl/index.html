@@ -53,6 +53,26 @@
     
     <script src="js/i18n.js" data-i18n-files="dashboard,common"></script>
 	<script src="js/piwik.js"></script>
+	 <style>
+  .custom-combobox {
+    position: relative;
+    display: inline-block;
+  }
+  .custom-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+    /* support: IE7 */
+    *height: 1.7em;
+    *top: 0.1em;
+  }
+  .custom-combobox-input {
+    margin: 0;
+    padding: 0.3em;
+  }
+  </style>
   </head>
   <body id="dashboard" style="overflow-y:scroll;">
     <header class="clearfix top_head">
@@ -384,7 +404,7 @@
         <div class="clearfix">
             <label>
               <select id="choose_mandant" name="choose_mandant">
-                <option value="" data-translate="index_select_a_mandator">- Select an mandator -</option>
+                <option value="" data-translate="index_select_a_mandator">- Select a mandator -</option>
               </select>
             </label>
             <div class="actions">
