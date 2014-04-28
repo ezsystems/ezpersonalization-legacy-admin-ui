@@ -420,9 +420,9 @@ function getMouseDown(e) {
 
 function getrecommendationScript(){
 	var envYC = 'prod';
-	if((window.location.origin+'').indexOf('dev') == -1){
+	if((window.location.origin+'').indexOf('dev') != -1){
 		envYC = 'dev';
-	}else if((window.location.origin+'').indexOf('test') == -1){
+	}else if((window.location.origin+'').indexOf('test') != -1){
 		envYC = 'test';
 	}
 	var ret = '<br/><textarea readonly dir="ltr" cols="65" rows="7" style="color: black; font-family:\'Courier New\'; font-size: 14px;'+
