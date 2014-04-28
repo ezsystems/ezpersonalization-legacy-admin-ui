@@ -196,9 +196,9 @@ function setScript(){
 				recSize = manInfo.name;
 				
 				var envYC = 'prod';
-				if((window.location.origin+'').indexOf('dev') == -1){
+				if((window.location.origin+'').indexOf('dev') != -1){
 					envYC = 'dev';
-				}else if((window.location.origin+'').indexOf('test') == -1){
+				}else if((window.location.origin+'').indexOf('test') != -1){
 					envYC = 'test';
 				}
 				$('#scriptaria').val('<div id="YCRecos" style="display: none;"></div>\n'+
@@ -305,9 +305,9 @@ function setTabs(){
 						customerID = $.cookie('customerID');
 						
 						var envYC = 'prod';
-						if((window.location.origin+'').indexOf('dev') == -1){
+						if((window.location.origin+'').indexOf('dev') != -1){
 							envYC = 'dev';
-						}else if((window.location.origin+'').indexOf('test') == -1){
+						}else if((window.location.origin+'').indexOf('test') != -1){
 							envYC = 'test';
 						}
 						

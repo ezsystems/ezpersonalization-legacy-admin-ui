@@ -27,7 +27,7 @@
 	$(document).ready(function () {
 
 			var queryString = getUrlVars();
-			
+			var isgambio = queryString["role"];
 			var step = queryString["step"];
 			if (! step) step = 1;
 			
@@ -56,7 +56,12 @@
 					errorCode="product_not_set";
 				}
 			}
-			
+			if(!isgambio){
+				isgambio = product;
+			}
+			if(isgambio && isgambio=='gambio'){
+				$("#igamtext").show();
+			}
 			var step1url = "/registration.html?product=" + encodeURIComponent(product);
 			var step2url = "/registration.html?step=2&product=" + encodeURIComponent(product);
 			var step3url = "/registration.html?step=3"; // product and currency will
@@ -242,6 +247,8 @@
     
       <div id="form-step-1" class="migration" style="display:none;">
           <h3 data-translate="registration.step_1.header">Login or create a user</h3>
+          <div data-translate="registration.step_1.gambio" id="igamtext" style="min-height: 6ex;display: none;">
+          </div>
           <div data-translate="registration.step_1.description" style="min-height: 6ex;">
        	  </div> 
           <div class="actions">
