@@ -198,10 +198,17 @@ function setScript(){
 				if((window.location.origin+'').indexOf('free') == -1){
 					freeEnvPrefix = '/ebl2';
 				}
+				var envYC = 'prod';
+				if((window.location.origin+'').indexOf('dev') == -1){
+					envYC = 'dev';
+				}else if((window.location.origin+'').indexOf('test') == -1){
+					envYC = 'test';
+				}
 				$('#scriptaria').val('<div id="YCRecos" style="display: none;"></div>\n'+
-			 			'<script src="'+ window.location.origin+freeEnvPrefix+'/js/tracker.js"></script>\n'+
+			 			'<script src="https://cdn.yoochoose.net/tracker.js"></script>\n'+
 			 			'<script type="text/javascript">\n'+
 			 			'	var manddatorId = "'+customerID+'";\n'+
+			 			'	var envYC = "'+envYC+'";\n'+
 			 			'	var recSize = "'+recSize+'";\n'+
 			 			'	et_yc_click(manddatorId,recSize);\n'+
 			 			'</script>');
@@ -303,10 +310,18 @@ function setTabs(){
 						if((window.location.origin+'').indexOf('free') == -1){
 							freeEnvPrefix = '/ebl2';
 						}
+						var envYC = 'prod';
+						if((window.location.origin+'').indexOf('dev') == -1){
+							envYC = 'dev';
+						}else if((window.location.origin+'').indexOf('test') == -1){
+							envYC = 'test';
+						}
+						
 						$('#scriptaria').val('<div id="YCRecos" style="display: none;"></div>\n'+
-					 			'<script src="'+ window.location.origin+freeEnvPrefix+'/js/tracker.js"></script>\n'+
+					 			'<script src="https://cdn.yoochoose.net/tracker.js"></script>\n'+
 					 			'<script type="text/javascript">\n'+
 					 			'	var manddatorId = "'+customerID+'";\n'+
+					 			'	var envYC = "'+envYC+'";\n'+
 					 			'	var recSize = "'+recSize+'";\n'+
 					 			'	et_yc_click(manddatorId,recSize);\n'+
 					 			'</script>');

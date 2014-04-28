@@ -423,11 +423,18 @@ function getrecommendationScript(){
 	if((window.location.origin+'').indexOf('free') == -1){
 		freeEnvPrefix = '/ebl2';
 	}
+	var envYC = 'prod';
+	if((window.location.origin+'').indexOf('dev') == -1){
+		envYC = 'dev';
+	}else if((window.location.origin+'').indexOf('test') == -1){
+		envYC = 'test';
+	}
 	var ret = '<br/><textarea readonly dir="ltr" cols="65" rows="7" style="color: black; font-family:\'Courier New\'; font-size: 14px;'+
 		'unicode-bidi: embed; resize: auto; cursor: auto; width: 80%; min-height: 120px;" >&lt;div id="YCRecos" style="display: none;"&gt;&lt;/div&gt;\n'+
-			'&lt;script src="'+ window.location.origin+freeEnvPrefix+'/js/tracker.js">&lt;/script&gt;\n'+
+			'&lt;script src="https://cdn.yoochoose.net/tracker.js">&lt;/script&gt;\n'+
 			'&lt;script type="text/javascript"&gt;\n'+
 			'	var manddatorId = "'+mandator+'";\n'+
+			'	var envYC = "'+envYC+'";\n'+
 			'	var recSize = "'+recSize+'";\n'+
 			'	et_yc_click(manddatorId,recSize);\n'+
 			'&lt;/script&gt;</textarea><br/><br/>';
