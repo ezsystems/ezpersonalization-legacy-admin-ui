@@ -419,10 +419,6 @@ function getMouseDown(e) {
 }
 
 function getrecommendationScript(){
-	var freeEnvPrefix = '';
-	if((window.location.origin+'').indexOf('free') == -1){
-		freeEnvPrefix = '/ebl2';
-	}
 	var envYC = 'prod';
 	if((window.location.origin+'').indexOf('dev') == -1){
 		envYC = 'dev';
