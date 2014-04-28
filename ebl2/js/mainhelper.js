@@ -194,10 +194,7 @@ function setScript(){
 			var manInfo = json.mandatorInfo;
 			if(manInfo != null){
 				recSize = manInfo.name;
-				var freeEnvPrefix = '';
-				if((window.location.origin+'').indexOf('free') == -1){
-					freeEnvPrefix = '/ebl2';
-				}
+				
 				var envYC = 'prod';
 				if((window.location.origin+'').indexOf('dev') == -1){
 					envYC = 'dev';
@@ -306,10 +303,7 @@ function setTabs(){
 					updateStatus();
 					if(changeScript) {
 						customerID = $.cookie('customerID');
-						var freeEnvPrefix = '';
-						if((window.location.origin+'').indexOf('free') == -1){
-							freeEnvPrefix = '/ebl2';
-						}
+						
 						var envYC = 'prod';
 						if((window.location.origin+'').indexOf('dev') == -1){
 							envYC = 'dev';
