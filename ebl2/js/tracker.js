@@ -1,43 +1,26 @@
-//var recoHost = 'http://reco.yoochoose.net';
-//var eventHost ='http://event.yoochoose.net/';
-//var recoHost = 'http://reco.test.yoochoose.net';
-//var eventHost ='http://event.test.yoochoose.net';
-//var recoHost = 'http://cat.development.yoochoose.com:8080/recocontroller';
-//var eventHost ='http://cat.development.yoochoose.com:8080/tracker/';
 var recoHost;
 var eventHost;
 //var recoHost = 'http://localhost:8090/recocontroller';
 //find the base path of a script
 
 function setHost() {
-	var name ='/js/tracker.js';
-	var freeName = 'free';
-	var notFreeName ='ebl2';
-    var dev = 'cat.dev';
-    var test = 'admin.test';
-    var test2 = 'free.test';
-	var scripts = document.getElementsByTagName('script');
-
-    for (var i = scripts.length - 1; i >= 0; --i) {
-    	var src = scripts[i].src;
-    	if(src.indexOf(name)!=-1 && ((src.indexOf(freeName) != -1) || (src.indexOf(notFreeName) != -1))){
-    		if(src.indexOf(dev)!=-1 ){
-    			recoHost = 'http://cat.development.yoochoose.com:8080/recocontroller';
-    			eventHost ='http://cat.development.yoochoose.com:8080/tracker/';
+	 	var protocol = ('https:' == document.location.protocol ? 'https://' : 'http://');
+    	if(envYC == 'dev'){
+    		recoHost = protocol+'cat.development.yoochoose.com:8080/recocontroller';
+    		eventHost = protocol+'cat.development.yoochoose.com:8080/tracker/';
+    		return;
+    	}else{
+    		if(envYC == 'test'){
+    			recoHost =  protocol+'reco.test.yoochoose.net';
+    			eventHost = protocol+'event.test.yoochoose.net/';
     			return;
     		}else{
-    			if(src.indexOf(test)!=-1 || src.indexOf(test2)!=-1 ){
-    				recoHost = 'http://reco.test.yoochoose.net';
-    				eventHost ='http://event.test.yoochoose.net/';
-    				return;
-    			}else{
-    				recoHost = 'http://reco.yoochoose.net';
-    				eventHost ='http://event.yoochoose.net/';
-    				return;
-    			}
+    			recoHost =  protocol+'reco.yoochoose.net';
+    			eventHost = protocol+'event.yoochoose.net/';
+    			return;
     		}
     	}
-    }
+   
 }
 
 
@@ -264,7 +247,7 @@ function show_recommendations(json){
 	}
 	previewHtml+='	</div>'+
     '<br/><p style="text-align: left;  margin-top: -'+((positionOfRecs == 2)?'8':'10')+'px; font-style: italic;  font-size: 0.8em; float: left;  text-decoration: none; '+((positionOfRecs == 2)?'width: 159px;':'')+'">Recommendations powered by '+
-    '<a href="http://yoochoose.com/" style="text-decoration: none;">YOOCHOOSE</a></p>';
+    '<a href="https://yoochoose.com/" style="text-decoration: none;">YOOCHOOSE</a></p>';
 	element.insertAdjacentHTML('beforeend', previewHtml);
 	//window.google_ad_client = "ca-pub-2445550189113422";
 	window.google_ad_client = "ca-pub-7508745585125819";
@@ -279,9 +262,10 @@ function show_recommendations(json){
 	    container.innerHTML = container.innerHTML+content;
 	    document.write = w;
 	};
+	var protocol = ('https:' == document.location.protocol ? 'https://' : 'http://');
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
-	script.src = 'http://pagead2.googlesyndication.com/pagead/show_ads.js';
+	script.src = protocol+'pagead2.googlesyndication.com/pagead/show_ads.js';
 	container.appendChild(script);
 	
 	
