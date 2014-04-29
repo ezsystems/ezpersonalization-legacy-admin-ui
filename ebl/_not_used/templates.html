@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Selecting a scenario</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="css/styles_new.css">
+    <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/jquery-ui.1.8.16.min.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+    <script src="js/browser_detection.js"></script>
+    <script src="js/form_submit_trigger.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="ebl2/js/localizations/localizer.js"></script>
+	
+	<script>
+	$(document).ready(function() {
+		var reference_code = gup( 'reference_code' );
+		var customerID = gup('customer_id');
+		
+	var loginName = $.cookie('email');
+	var licenceKey = $.cookie('licenceKey');
+	
+	$('.edit_contact_data').attr('href', 'edit_contact_data.html?customer_id=' + $.cookie('customerID'));
+
+    $('.account_data').children('li').first().find('strong').text(loginName);
+	$('#licence_key').children('strong').text(licenceKey);
+	
+	setLoadingDiv($('.available_scenarios').last());	
+	
+	$.ajax({
+				dataType: "json",
+				beforeSend: function (req) {
+				req.setRequestHeader('no-realm', 'realm1');
+				},
+				 statusCode: {
+						401: function (jqXHR, textStatus, errorThrown) {
+							$.cookie('password', null);
+							$.cookie('email', null);
+							window.location = "login.html";
+						}
+				},
+				url: "ebl/v3/"+customerID+"/structure/get_scenario_list",
+				success: function(json){
+					
+					if(json.scenarioInfoList.length < 1){
+							console.log("no scenarios");
+							$('.own_scenarios').hide();
+						}
+						else{
+							
+							for(var j = 0; j < json.scenarioInfoList.length; j++)
+								{
+									var scenario = json.scenarioInfoList[j];
+									//the dummy is a emtpy scenario that will be copied and added for all given scenarios from the server
+									//it will be filled with the data from the server
+									var dummy = $('#scenario_dummy');
+									var dummyClone = $(dummy).clone();
+									$(dummyClone).show();
+									
+									$(dummyClone).attr("id", "scenario_"+ scenario.referenceCode);
+									if (scenario.title == null || scenario.title == "") {
+										scenario.title = scenario.referenceCode;
+									}
+									
+									$(dummyClone).children("a").children("h4").children("span").text(scenario.title);
+									$(dummyClone).children("a").children("ul").children("li").children("p").text(scenario.description);
+									if(scenario.description == null || scenario.description == "")
+									{
+										$(dummyClone).children("a").children("ul").children("li").children("h5").hide();
+									}
+									$(dummyClone).children("a").attr("href", "/settings.html?customer_id=" + customerID + "&reference_code=" + escape(scenario.referenceCode)+"&from_template=1");
+									$('.available_scenarios').last().append(dummyClone);
+								
+								}
+							}
+					
+					$('#scenario_own').children("a").attr("href", "/settings.html?customer_id=" + customerID +"&from_template=3");
+					
+					unsetLoadingDiv($('.available_scenarios').last());
+					$(".available_scenarios").equalize({
+								  eqItems: "> li:visible",
+								  segmentSize: 5,
+								  applicantSelector: "> *"
+								});
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown)
+				{
+					if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+                }
+			});
+	
+	//Templates by Yoochoose
+	$.ajax({
+				dataType: "json",
+				beforeSend: function (req) {
+				req.setRequestHeader('no-realm', 'realm1');
+				},
+				data: {available_only: 1,
+						locale: in_to_language
+				},
+				 statusCode: {
+						401: function (jqXHR, textStatus, errorThrown) {
+							$.cookie('password', null);
+							$.cookie('email', null);
+							window.location = "login.html";
+						}
+				},
+				url: "ebl/v3/"+customerID+"/structure/get_library_scenario_list",
+				success: function(json){
+					
+					if(json.libraryScenarioInfoList.length < 1){
+							console.log("no libraries");
+						}
+						else{
+							
+							for(var j = 0; j < json.libraryScenarioInfoList.length; j++)
+								{
+									var scenario = json.libraryScenarioInfoList[j];
+									//the dummy is a emtpy scenario that will be copied and added for all given scenarios from the server
+									//it will be filled with the data from the server
+									var dummy = $('#scenario_dummy');
+									var dummyClone = $(dummy).clone();
+									$(dummyClone).show();
+									
+									$(dummyClone).attr("id", "scenario_"+ scenario.referenceCode);
+									if (scenario.title == null || scenario.title == "") {
+										scenario.title = scenario.referenceCode;
+									}
+									
+									$(dummyClone).children("a").children("h4").children("span").text(scenario.title);
+									$(dummyClone).children("a").children("ul").children("li").children("p").text(scenario.description);
+									if(scenario.description == null || scenario.description == "")
+									{
+										$(dummyClone).children("a").children("ul").children("li").children("h5").hide();
+									}
+									$(dummyClone).children("a").attr("href", "/settings.html?customer_id=" + customerID + "&reference_code=" + escape(scenario.referenceCode)+"&from_template=2");
+									$('.available_scenarios').first().prepend(dummyClone);
+								
+								}
+							}
+					
+					$('#scenario_own').children("a").attr("href", "/settings.html?customer_id=" + customerID +"&from_template=3");
+					
+					unsetLoadingDiv($('.available_scenarios').first());
+					$(".available_scenarios").equalize({
+								  eqItems: "> li:visible",
+								  segmentSize: 5,
+								  applicantSelector: "> *"
+								});
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown)
+				{
+					if(jqXHR.status != null && jqXHR.status == 403)
+					{
+						setMessagePopUp("problem", "error_server_error_403");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 401)
+					{
+						setMessagePopUp("problem", "error_server_error_401");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 400)
+					{
+						setMessagePopUp("problem", "error_server_error_400");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 404)
+					{
+						setMessagePopUp("problem", "error_server_error_404");
+					}
+					else if(jqXHR.status != null && jqXHR.status == 409)
+					{
+						setMessagePopUp("problem", "error_server_error_409");
+					}
+					else
+					{
+						setMessagePopUp("problem", "error_server_error");
+					}
+                }
+			});
+			
+	});
+	
+	</script>
+  </head>
+  <body id="basis_selection">
+    <header class="clearfix top_head">
+      <div class="logo_area s1_5">
+         <h1 title="YooChoose. We recommend."><a href="index.html" class="hide"><span>YooChoose. We recommend.</span></a></h1>
+      </div>
+      <div class="top_bar clearfix">
+        <ul class="language_selection clearfix">
+          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
+          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
+          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
+        </ul>
+        <a href="logout.html" data-translate="index_logout" class="logout">logout</a>
+      </div>
+      <nav class="s2_5">
+        <ul class="main_navi clearfix">
+          <li><a href="index.html" data-translate="index_dashboard">Dashboard</a></li>
+          <li><a href="help.html" data-translate="index_help">Help</a></li>
+        </ul>
+      </nav>
+      <ul class="account_data s2_5">
+        <li><span data-translate="index_login">Login: </span><strong></strong></li>
+        <li id="licence_key"><span data-translate="index_license_key">License Key: </span><strong></strong></li>
+        <li><a href="edit_contact_data.html" class="edit_contact_data" data-translate="index_edit_personal">Edit personal and contact data</a></li>
+      </ul>
+    </header>
+    <section>
+      <header class="clearfix">
+        <h2 data-translate="templates_selecting_basis">Selecting a basis for your scenario</h2>
+      </header>
+      <p class="introduction" data-translate="templates_introduction">
+        We recommend you to build a new scenario based on one of the proven, pre-configured samples &mdash;<br/>
+        so you will only have to adjust their settings to work with your web-site and begin getting recommendations.
+      </p>
+      
+      <h3 data-translate="templates_templates_by_yoochoose" style="display:none">Templates by YooChoose:</h3>
+      
+      <ul class="available_scenarios clearfix" style="display:none">
+        <li id="scenario_own">
+          <a href="#">
+            <h4><span data-translate="templates_own_scenario_title">Totally new, empty scenario</span></h4>
+            <p class="description" data-translate="templates_own_scenario_description">Create your own mixture - we'll lead you with our Scenario Creation Wizard.</p>
+          </a>
+        </li>
+      </ul>
+      
+      <h3 data-translate="templates_your_own_scenarios" class="own_scenarios">Your own scenarios:</h3>
+      <ul class="available_scenarios clearfix">
+        <li id="scenario_dummy" style="display:none;">
+          <a href="#">
+            <h4><span>UNDEFINED</span></h4>
+            <ul class="models_used_in_this_scenario clearfix">
+              <li>
+                <h5 data-translate="templates_description">Description:</h5>
+				<p></p>
+			  </li>
+            </ul>
+          </a>
+        </li>
+      </ul>
+      
+    </section>
+    
+    <footer>
+      Copyright &copy; 2009-<script>document.write(new Date().getFullYear());</script>
+	<noscript>2014</noscript> YOOCHOOSE GmbH
+      <ul class="clearfix">
+        <li><a href="corporate_information.html" data-translate="login_corporate_information">Corporate information</a></li>
+        <li><a href="data_privacy.html" data-translate="login_data_privacy">Data privacy</a></li>
+        <li><a href="contact.html" data-translate="login_contact">Contact</a></li>
+      </ul>
+    </footer>
+    
+    <div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text">Something neutral happened. That's it.</span>
+        <a class="close">OK</a>
+      </p>
+    </div>
+  </body>
+</html>
