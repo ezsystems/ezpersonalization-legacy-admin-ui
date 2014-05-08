@@ -173,6 +173,8 @@ var initialize = function () {
 		}
 		
 		$('.account_data').children('li').first().find('strong').text(name);
+		_paq.push(['setCustomVariable',1,'mandatorREF', name, "visit"]);
+	    
 		
 	    if (loginInfo.provider == "ibs") {
 	    	$('#edit_contact_datal').hide();
