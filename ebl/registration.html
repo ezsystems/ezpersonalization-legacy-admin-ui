@@ -41,6 +41,11 @@
 				}
 			}
 			
+			if (faultCode == "CANCELLED" && step > 1) {
+				step--;
+				faultCode = null;
+			}
+			
 			var product  = queryString["product"];
 			if (!product) {
 				product  = queryString["template"]; // backward compatibility
