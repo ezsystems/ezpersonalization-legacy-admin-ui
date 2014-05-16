@@ -158,7 +158,20 @@ var ajaxScenarioList = function(new_period, callback) {
 	});
 };
 
-	
+var _paq = _paq || [];
+function piwikCaller(name){
+	 _paq.push(['setCustomVariable',1,'mandator name', name, "visit"]);
+	 _paq.push(["trackPageView"]);
+	 _paq.push(["enableLinkTracking"]);
+
+	(function() {
+	   var u=(("https:" == document.location.protocol) ? "https" : "http") + "://www.yoochoose.com/piwik/";
+	   _paq.push(["setTrackerUrl", u+"piwik.php"]);
+	   _paq.push(["setSiteId", "4"]);
+	   var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+	   g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+	})();
+}
 var initialize = function () {
 
 	getCurrentUser(function(loginInfo) {
@@ -173,6 +186,8 @@ var initialize = function () {
 		}
 		
 		$('.account_data').children('li').first().find('strong').text(name);
+		piwikCaller(name);
+	    
 		
 	    if (loginInfo.provider == "ibs") {
 	    	$('#edit_contact_datal').hide();
