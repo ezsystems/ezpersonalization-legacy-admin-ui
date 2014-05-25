@@ -64,7 +64,7 @@ function localizer() {
 			"login_contact": "Contact",
 			"regstep1_createaccount": "Create a new account",
 			"regstep1_createaccount_information": 'Your YOOCHOOSE account provides access to Recommendation Services. If you already have an account, you can <a href="login.html">sign in here',
-			"regstep1_email": "Email:",
+			"regstep1_email": "Email",
 			"regstep1_company_name": "Company name:",
 			"regstep1_publisher_basic": "eZ Publish, Publisher (Basic)",
             "regstep1_publisher_advanced": "eZ Publish, Publisher (Advanced)",
@@ -82,8 +82,8 @@ function localizer() {
 			"regstep2_email" : "Email:",
 			"regstep2_company_name" : "Company name:",
 			"regstep2_websiteurl" : "Website URL:",
-			"regstep2_firstname" : "First name:",
-			"regstep2_lastname" : "Last name:",
+			"regstep2_firstname" : "First name",
+			"regstep2_lastname" : "Last name",
 			"regstep2_phonenumber" : "Phone number:",
 			"regstep2_adress" : "Address:",
 			"regstep2_zip" : "ZIP:",
@@ -763,7 +763,7 @@ function localizer() {
 			"login_contact": "Kontakt",
 			"regstep1_createaccount": "Neuen Account erstellen",
 			"regstep1_createaccount_information": 'Erstellen Sie einen neuen Account für Ihren Empfehlungsdienst. Wenn Sie bereits über einen Zugang verfügen, können Sie sich hier anmelden <a href="login.html">',
-			"regstep1_email": "Email:",
+			"regstep1_email": "Email",
 			"regstep1_company_name": "Unternehmen:",
 			"regstep1_publisher_basic": "eZ Publish, Publisher (Basic)",
 			"regstep1_publisher_advanced": "eZ Publish, Publisher (Advanced)",
@@ -781,8 +781,8 @@ function localizer() {
 			"regstep2_email" : "Email:",
 			"regstep2_company_name" : "Unternehmen:",
 			"regstep2_websiteurl" : "Webseite URL:",
-			"regstep2_firstname" : "Vorname:",
-			"regstep2_lastname" : "Nachname:",
+			"regstep2_firstname" : "Vorname",
+			"regstep2_lastname" : "Nachname",
 			"regstep2_phonenumber" : "Telefon:",
 			"regstep2_adress" : "Adresse:",
 			"regstep2_zip" : "Postleitzahl:",
@@ -1449,7 +1449,7 @@ function localizer() {
 			"login_contact": "Contact",
 			"regstep1_createaccount": "Créer un nouveau compte",
 			"regstep1_createaccount_information": 'Votre compte YOOCHOOSE vous donne accès aux services de Recommandation. Si vous possédez déjà un compte, vous pouvez vous <a href="login.html">identifier ici',
-			"regstep1_email": "Email :",
+			"regstep1_email": "Email ",
 			"regstep1_company_name": "Entreprise :",
 			"regstep1_publisher_basic": "eZ Publish, Editeur (Basic)",
             "regstep1_publisher_advanced": "eZ Publish, Editeur (Advancé)",
@@ -1467,8 +1467,8 @@ function localizer() {
 			"regstep2_email" : "Email :",
 			"regstep2_company_name" : "Entrepise :",
 			"regstep2_websiteurl" : "URL du site :",
-			"regstep2_firstname" : "Prénom :",
-			"regstep2_lastname" : "Nom :",
+			"regstep2_firstname" : "Prénom ",
+			"regstep2_lastname" : "Nom ",
 			"regstep2_phonenumber" : "Téléphone :",
 			"regstep2_adress" : "Adresse :",
 			"regstep2_zip" : "Code postal :",
@@ -2180,6 +2180,20 @@ function localizer() {
 				translation = 'missing_translation_for_'+term;
 			}
 			$this.attr('title', translation);
+		});
+	}
+	
+	var containerstitle = $("[placeholder]");
+	if(containerstitle != null){
+		containerstitle.each(function(){
+			var $this = $(this),
+				term = $this.attr("placeholder"),
+				translation = translate[in_to_language][term];
+			if (typeof translation === 'undefined')
+			{
+				translation = term;
+			}
+			$this.attr('placeholder', translation);
 		});
 	}
     
