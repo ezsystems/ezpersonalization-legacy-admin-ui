@@ -5,6 +5,15 @@ var in_to_language = "en",
 
 
 function setMessagePopUp(type, message, link) {
+	
+	var overlay = $('#MessegeDefault');
+	if(overlay){
+		overlay.show();
+		var fullWidth = $('body').outerWidth(true);
+		var fullHeight = $('body').outerHeight(true);
+		overlay.css({'height':fullHeight + 'px', 'width':fullWidth + 'px'});
+	}
+	
 	$('.message').removeClass("problem");
 	$('.message').removeClass("positive");
     $('.message').addClass(type);
