@@ -105,27 +105,27 @@ $(document).ready(function () {
 		var mailProblem = false;
 		
 		if($('#fname').val() == ""){
-			$('label[for="f_name"]').parent().addClass("problem");
+			$('#fname').parent().addClass("problem");
 			showError = true;
 		}else{
-			$('label[for="f_name"]').parent().removeClass("problem");
+			$('#fname').parent().removeClass("problem");
 		}
 		if($('#lname').val() == ""){
-			$('label[for="l_name"]').parent().addClass("problem");
+			$('#lname').parent().addClass("problem");
 			showError = true;
 		}else{
-			$('label[for="l_name"]').parent().removeClass("problem");
+			$('#lname').parent().removeClass("problem");
 		}
 		var mailValue = $('#email').val();
 		if(mailValue == ""){
-			$('label[for="email"]').parent().addClass("problem");
+			$('#email').parent().addClass("problem");
 			showError = true;
 		}else{
 			if(mailValue.length<5 || mailValue.indexOf('@') == -1 || mailValue.indexOf('.') == -1 ){
-				$('label[for="email"]').parent().addClass("problem");
+				$('#email').parent().addClass("problem");
 				mailProblem = true;
 			}else{
-				$('label[for="email"]').parent().removeClass("problem");
+				$('#email').parent().removeClass("problem");
 			}
 		}	
 		
