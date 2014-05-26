@@ -528,6 +528,10 @@ input[type="text"].inverted {
   margin-left: 2px;
 }
 
+.normal_form div.checkbox label.required span:after {
+  content: "";
+}
+
 .normal_form input {
   display: inline-block;
   font-size: 14px;
@@ -692,7 +696,7 @@ input[type="text"].inverted {
   text-decoration: none;
   color: rgba(70, 78, 66, 1);
   background-color: transparent;
-  border: 10px solid rgba(0, 0, 0, 0.5);
+  border: 3px solid rgba(0, 0, 0, 0.5);
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
   border-radius: 10px;
@@ -749,7 +753,7 @@ input[type="text"].inverted {
 }
 
 .message.neutral > p {
-  background-color: rgba(238, 236, 225, 1);
+  background-color: rgba(248, 98, 93, 1);
 }
 
 .message.problem,
@@ -1684,6 +1688,16 @@ footer > ul {
 }
 
 footer > ul > li {
+  display: inline-block;
+  padding-left: 20px;
+}
+
+footer > div > ul {
+  display: block;
+  float: right;
+}
+
+footer > div > ul > li {
   display: inline-block;
   padding-left: 20px;
 }
