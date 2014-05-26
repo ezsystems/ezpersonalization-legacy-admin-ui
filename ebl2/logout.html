@@ -37,14 +37,14 @@
 			success: function(json){
 					$.cookie('password', null);
 					$.cookie('email', null);
-					window.location = "login.html";
+					window.location = "loginnew.html";
 			},
 			error : function(jqXHR, textStatus, errorThrown)
 			{
 			 if (errorThrown == "Unauthorized") {
 				$.cookie('password', null);
 				$.cookie('email', null);
-				window.location = "login.html";
+				window.location = "loginnew.html";
             } else {
 				setMessagePopUp("problem", "error_server_error");
 			}

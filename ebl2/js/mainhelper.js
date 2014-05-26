@@ -27,7 +27,7 @@ $(document).ready(function () {
                     401: function (jqXHR, textStatus, errorThrown) {
 						$.cookie('password', null);
 						$.cookie('email', null);
-						window.location = "login.html";
+						window.location = "loginnew.html";
                     }
             },
 			url: "/ebl/v3/registration/get_accesible_mandator_list/",
@@ -399,7 +399,7 @@ function getCostumer(){
 						401: function (jqXHR, textStatus, errorThrown) {
 							$.cookie('password', null);
 							$.cookie('email', null);
-							window.location = "login.html";
+							window.location = "loginnew.html";
 						}
 				},
 	    url: "/ebl/v3/profile/get_profile_pack/" + customerID,
