@@ -660,9 +660,12 @@ function setDialogs(modelID) {
   };
   
   var setMessages = function() {
-    
+	var overlay = $('#MessegeDefault');
     var destroyMessageTrigger = $('.message .destroy_message, .message .close');
     destroyMessageTrigger.on("click", function(event){
+      if(overlay){
+    	  overlay.hide();
+      }
       $(this).closest('.message').fadeOut('fast');
     });
     
