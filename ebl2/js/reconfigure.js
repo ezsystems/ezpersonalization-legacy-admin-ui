@@ -130,7 +130,7 @@ function saveSize(){
 	                    401: function (jqXHR, textStatus, errorThrown) {
 							$.cookie('password', null);
 							$.cookie('email', null);
-							window.location = "loginnew.html";
+							window.location = "login.html";
 	                    }
 	            },
 	        url: "/ebl/v3/ebl2/updateRecSize/",
