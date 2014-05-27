@@ -165,7 +165,7 @@ $(document).ready(function () {
 			var fname = $('#fname').val(); 
 			var lname = $('#lname').val(); 
 			setLoadingDiv($('.actions'));
-            var url = $('form').attr('action');
+            var url = $('#regform').attr('action');
             $.ajax({
                 type: "POST",
                 dataType: "json",
