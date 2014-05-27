@@ -73,7 +73,7 @@ function chartListener(){
                     401: function (jqXHR, textStatus, errorThrown) {
 						$.cookie('password', null);
 						$.cookie('email', null);
-						window.location = "loginnew.html";
+						window.location = "login.html";
                     }
             },
             url: "/ebl/v3/" + customerID + "/revenue/summary?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
@@ -196,7 +196,7 @@ function chartListener(){
                     401: function (jqXHR, textStatus, errorThrown) {
 						$.cookie('password', null);
 						$.cookie('email', null);
-						window.location = "loginnew.html";
+						window.location = "login.html";
                     }
             },
             url: "/ebl/v3/" + customerID + "/revenue/summary?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity,
@@ -341,7 +341,7 @@ function fillConversionRateDay() {
 			401: function (jqXHR, textStatus, errorThrown) {
 				$.cookie('password', null);
 				$.cookie('email', null);
-				window.location = "loginnew.html";
+				window.location = "login.html";
 			}
 		},
         url: "/ebl/v3/" + customerID + "/revenue/summary",
