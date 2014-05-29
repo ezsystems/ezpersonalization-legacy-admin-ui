@@ -16,7 +16,7 @@
 		}
 		else
 		{
-			setLoadingDiv($('.actions'));
+			setWaitPopUp();
 			
 			$.ajax({
 				type: "POST",
@@ -63,7 +63,7 @@
 		{
 			setMessagePopUp("problem", "error_server_error");
 		}
-		unsetLoadingDiv($('.actions'));
+		unsetWaitPopUp();
 	}
 	
 $(document).ready(function () {
@@ -150,11 +150,8 @@ $(document).ready(function () {
 		return !showError;
 	}
 	
-	
-	
-    $('a.login').click(function () {
-
-        if (saveForm()) {
+	function registrationPr(){
+		if (saveForm()) {
 
             var username = encodeURI($('#email').val());
             var templateParam = template;
@@ -164,7 +161,7 @@ $(document).ready(function () {
             var isEbl2 = 'ebl2';
 			var fname = $('#fname').val(); 
 			var lname = $('#lname').val(); 
-			setLoadingDiv($('.actions'));
+			setWaitPopUp();
             var url = $('#regform').attr('action');
             $.ajax({
                 type: "POST",
@@ -195,7 +192,7 @@ $(document).ready(function () {
                     }
                 },
                 success: function (json) {
-					unsetLoadingDiv($('.actions'));
+					unsetWaitPopUp();
 					setDialogsContact("messageFinish","messageBodyFinish",'destroy_dialog');
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -223,10 +220,21 @@ $(document).ready(function () {
 					{
 						setMessagePopUp("problem", "error_server_error");
 					}
-					unsetLoadingDiv($('.actions'));
+                    unsetWaitPopUp();
                 }
             });
         } 
+	}
+	
+    $('a.button').click(function () {
+    	registrationPr();
+    });
+    
+    $('#captcha').keypress(function (e) {
+        if (e.which == 13) {
+            $(this).blur();
+            registrationPr();
+        }
     });
 	
 	$('.reload_captcha').click(function() {
