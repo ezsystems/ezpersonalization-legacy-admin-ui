@@ -76,7 +76,7 @@ function changePassword()
 		$('.validation_message').show();
 	}
 	else {
-		setLoadingDiv($('.actions'));
+		setWaitPopUp();
 		$.ajax({
 			type:"POST",
 			beforeSend: function(x) {
@@ -136,7 +136,7 @@ function changePassword()
 					localizer();
 					$('.validation_message').show();
 				}
-			unsetLoadingDiv($('.actions'));
+			unsetWaitPopUp();
 						}
 		});
 	}
@@ -187,7 +187,7 @@ function loginAgain()
 				{
 					setMessagePopUp("problem", "error_server_error");
 				}
-					unsetLoadingDiv($('.actions'));
+					unsetWaitPopUp();
 			}
 	});
 	
@@ -529,7 +529,7 @@ function saveMandator()
 			{
 				setMessagePopUp("problem", "error_server_error");
 			}
-		unsetLoadingDiv($('.actions'));
+		unsetWaitPopUp();
 					}
 	});
 }
@@ -544,7 +544,7 @@ function login() {
 	            var recType = $('#rec-content-type').val();
 	            var recSize = $('#recommendation_size').val();
 	        	var url = $('#site').val();
-	    		setLoadingDiv($('.actions'));
+	        	setWaitPopUp();
 	    		var myObj = new Object();
 	    		myObj.url = url;
 	        	myObj.rectype = recType;
@@ -564,14 +564,14 @@ function login() {
 	    						document.write(html);
 	    					}else{
 	    						gettingPageEbl2 = false;
-	    						unsetLoadingDiv($('.actions'));
+	    						unsetWaitPopUp();
 	    						setMessagePopUp("problem", "error_server_error");
 	    					}
 	    				}
 	    			},
 	    			error: function (jqXHR, textStatus, errorThrown) {
 	    				gettingPageEbl2 = false;
-	    				unsetLoadingDiv($('.actions'));
+	    				unsetWaitPopUp();
 		    			if(jqXHR.status != null && jqXHR.status == 403)
 		    			{
 		    				setMessagePopUp("problem", "error_server_error_403");

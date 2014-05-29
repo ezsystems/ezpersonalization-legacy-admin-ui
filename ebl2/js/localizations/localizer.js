@@ -28,6 +28,22 @@ function setMessagePopUp(type, message, link) {
 }
 
 
+function setWaitPopUp() {
+	
+	var overlay = $('#MessegeWait');
+	if(overlay){
+		overlay.show();
+		var fullWidth = $('body').outerWidth(true);
+		var fullHeight = $('body').outerHeight(true);
+		overlay.css({'height':fullHeight + 'px', 'width':fullWidth + 'px'});
+	}
+}
+
+function unsetWaitPopUp() {
+	var overlay = $('#MessegeWait');
+	overlay.hide();
+}
+
 function localizer() {
 
 	var storedLanguage = $.cookie('language');
