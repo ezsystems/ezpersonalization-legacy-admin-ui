@@ -425,7 +425,7 @@ function getrecommendationScript(){
 	}else if((window.location.origin+'').indexOf('test') != -1){
 		envYC = 'test';
 	}
-	var ret = '<br/><textarea readonly dir="ltr" cols="65" rows="7" style="color: black; font-family:\'Courier New\'; font-size: 14px;'+
+	var ret = '<br/><textarea readonly dir="ltr" cols="65" rows="8" style="color: black; font-family:\'Courier New\'; font-size: 14px;'+
 		'unicode-bidi: embed; resize: auto; cursor: auto; width: 80%; min-height: 120px;" >&lt;div id="YCRecos" style="display: none;"&gt;&lt;/div&gt;\n'+
 			'&lt;script src="https://cdn.yoochoose.net/tracker.js">&lt;/script&gt;\n'+
 			'&lt;script type="text/javascript"&gt;\n'+

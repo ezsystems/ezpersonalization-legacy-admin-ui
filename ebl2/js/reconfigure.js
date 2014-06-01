@@ -273,7 +273,7 @@ function show_recommendationsPreview(positionOfRecs,prtypeOfRecs){
 	var fontSize = 11;
 	var lineHeight = 14;
 	if(positionOfRecs == 2){
-		previewHtml = '<div style="position: relative;  width:160px; height:600px;  " id="previewRecos">';
+		previewHtml = '<div style="position: relative;  width:160px; height:600px; left: 35%; " id="previewRecos">';
 		awidth = 159;
 		aheight = 149;
 		imgwidth = 90;
