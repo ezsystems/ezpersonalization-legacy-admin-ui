@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
     <title>YooChoose Recommendation Engine | Registration</title>
-    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="description" content="YooChoose free solution recommendation engine configurator">
     <meta name="author" content="Alexander Tsikinovsky">
     <link rel="shortcut icon" href="img/favicon.ico">
 	<link rel="apple-touch-icon" href="img/favicon.ico">
@@ -25,27 +25,33 @@
 	
 	
   </head>
-  <body id="registration">
-    <header class="clearfix top_head">
-      <div class="logo_area s1_5">
-        <h1 class="hide" title="YooChoose. We recommend."><span>YooChoose. We recommend.</span></h1>
-      </div>
-      <div class="top_bar clearfix">
-        <ul class="language_selection clearfix">
-          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
-          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
-          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
-        </ul>
-      </div>
+  <body id="registration"
+  	style="background: -webkit-linear-gradient(#eee, #fff); background: -o-linear-gradient(#eee, #fff); background: -moz-linear-gradient(#eee, #fff); background: linear-gradient(#eee, #fff);">
+    <header class="clearfix top_head" style="background: #ddd;">
+    	<div style="width: 1100px; margin: 0 auto;">
+	      <div class="logo_area s1_5">
+	        <h1 class="hide" title="YooChoose. We recommend."><span>YooChoose. We recommend.</span></h1>
+	      </div>
+	      <div class="top_bar clearfix">
+	        <ul class="language_selection clearfix">
+	          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
+	          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
+	          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
+	        </ul>
+	      </div>
+	      <div style="display: block; text-align: center; float: left;">
+				<img src="img/free.png" style="margin-top: 1.5em;">
+			</div>
+	    </div>
     </header>
-    <section class="registration_step_1 normal_form">
+    <section class="registration_step_1 normal_form" style="width: 1100px; margin: 0 auto;">
       <form  method="get" class="clearfix" onsubmit="return false;">
-        <fieldset class="primary_data s2_5">
+        <fieldset class="primary_data s2_5" style="float: left;">
           <h3 data-translate="regstep3_createaccount">Configure recommendations</h3>
           <div class="wrapper clearfix">
             <p data-translate="regstep3_createaccount_information">Please, choose how your recommendations will look like, the sample product URL is needed in order to set the recommendation content.</p>
-            <div>
-              <label for="recommendation_size" class="required" style="width: 210px;">
+            <div style="padding-left: 0px;">
+              <label for="recommendation_size" class="required" style="width: 210px; margin-left: 0px; text-align: left;">
                 <span data-translate="regstep3_rec_size">Recommendation size:</span>
               </label>
               <select class="gwt-ListBox" name="recommendation_size" id="recommendation_size" style="width: 89%;">
@@ -74,8 +80,8 @@
               </select>
            
             </div>
-            <div>
-              <label for="rec-content-type" class="required" style="width: 210px;">
+            <div style="padding-left: 0px;">
+              <label for="rec-content-type" class="required" style="width: 210px; margin-left: 0px; text-align: left;">
                 <span data-translate="regstep3_rec_content">Recommendation content type:</span>
               </label>
               <select class="gwt-ListBox" id="rec-content-type"  name="recommendation_size" style="width: 89%; ">
@@ -84,28 +90,28 @@
               	<option value="1">Product title only</option>
               </select>
             </div>
-             <div>
-              <label for="site_dom" class="required" style="width: 210px;">
+             <div style="padding-left: 0px;">
+              <label for="site_dom" class="required" style="width: 210px; margin-left: 0px; text-align: left;">
                 <span data-translate="regstep2_websiteurl">Web-site URL:</span>
               </label>
-              <input type="text" name="site_dom" id="site_dom" value="" style="width: 88%; margin-left: -3px;height: 2em;" title-translate="regstep3_site_tooltip"
+              <input type="text" name="site_dom" id="site_dom" value="" style="width: 88%; margin-left:0px;height: 2em;" title-translate="regstep3_site_tooltip"
                title="Please provide your web-site URL (main page), for example http://www.mydomain.com"/>
             </div>
-            <div>
-              <label for="site" class="required" style="width: 210px;">
+            <div style="padding-left: 0px;">
+              <label for="site" class="required" style="width: 210px; margin-left: 0px; text-align: left;">
                 <span data-translate="regstep3_product_url">Sample product URL:</span>
               </label>
-              <input type="text" name="site" id="site" value="" style="width: 88%; margin-left: -3px;height: 2em;" title-translate="regstep3_product_tooltip"
+              <input type="text" name="site" id="site" value="" style="width: 88%; margin-left: 0px;height: 2em;" title-translate="regstep3_product_tooltip"
               title="Please provide a sample product page URL from your web-site, for example if your site is http://www.mydomain.com, a product page could be http://www.mydomain.com/somepath/someproduct.html " />
             </div>
           
-            <div class="actions">
+            <div class="actions" style="padding-left: 0px; text-align: left;">
               <a class="login" data-translate="regstep3_finish_registration">Continue configuration</a>
             </div>
           </div>
         </fieldset>
-        <div class="according_infos s3_5">
-          <h3 data-translate="regstep3_preview">Preview</h3>
+        <div class="according_infos s3_5" style="float: right;">
+          <h3 data-translate="regstep3_preview" style="min-width: 688px;">Preview</h3>
           <div class="wrapper clearfix">
            
             <div id="recoPreview" style="display: none;"></div>
@@ -115,12 +121,15 @@
       </form>
     </section>
     
-    
+    <div class="overlay"
+		style="display: none; background-color: rgba(63, 63, 63, 0.3);"
+		id="MessegeDefault">
 	<div class="message" id="messageYC" style="display:none; position: absolute; top: 100px;right: 40%;">
       <p>
         <a class="destroy_message" id="destroy_messageYC" >X</a>
         <span id="message_text"></span>
       </p>
+    </div>
     </div>
 	
 	<div class="overlay" id="messagePassword">
@@ -160,13 +169,15 @@
       </div>
     </div>
      <footer>
-      Copyright 2009-<script>document.write(new Date().getFullYear());</script>
-	<noscript>2014</noscript> YOOCHOOSE GmbH
-      <ul class="clearfix">
-        <li><a  id="corporate" data-translate="login_corporate_information">Corporate information</a></li>
-        <li><a  id="privacy" data-translate="login_data_privacy">Data privacy</a></li>
-        <li><a  id="contact" data-translate="login_contact">Contact</a></li>
-      </ul>
+	     <div style="width: 1100px; margin: 0 auto;">
+		      Copyright 2009-<script>document.write(new Date().getFullYear());</script>
+			<noscript>2014</noscript> YOOCHOOSE GmbH
+		      <ul class="clearfix">
+		        <li><a  id="corporate" data-translate="login_corporate_information">Corporate information</a></li>
+		        <li><a  id="privacy" data-translate="login_data_privacy">Data privacy</a></li>
+		        <li><a  id="contact" data-translate="login_contact">Contact</a></li>
+		      </ul>
+		 </div>
    	</footer>
    	 <div class="overlay" style="background-color: rgba(63, 63, 63, 0.3);" id="messageContact">
 		<div class="dialog_body change_password" id="messageBodyContact" >
@@ -183,7 +194,7 @@
 				</p>
 				<p>
 					<strong data-translate="corporate_information_directors">Managing Directors:</strong><br/>
-					Dr. Uwe Alkemper &amp; Michael Friedmann
+					Michael Friedmann
 				</p>
 				<p>
 					<strong data-translate="corporate_information_tax">Tax ID:</strong> DE264773520
@@ -193,6 +204,14 @@
 				</p>
 		       
 		    </div>
+		</div>
+	</div>
+	
+	<div class="overlay"
+		style="display: none;  background-color: rgba(63, 63, 63, 0.3);"
+		id="MessegeWait">
+		<div class="waitbg" style="/* margin: 0 auto; */ /* top: 50%; */position: fixed;    top: 50%;    left: 50%;    margin-top: -30px;    margin-left: -30px;">
+			<img src="/img/wait30trans.gif" >
 		</div>
 	</div>
 	
@@ -206,7 +225,7 @@
 							Based on visiting this website (yoochoose.net), information regarding access (date, time, page viewed) may be stored. This information is not person-related but anonymized and used for statistical evaluations only (see also paragraph on "Data Privacy - Google Analytics"). It is not released to any third party for commercial or non-commercial purposes.
 						</p>
 						<p data-translate="data_privacy_paragraph2">
-							The information you submitted via the <a href="contact.html">contact form</a> or via e-mail will be stored and used by YOOCHOOSE GmbH and the affiliated partner network (subcontractor) exclusively for quotes and order processing. The release to any third party outside of YOOCHOOSE GmbH for commercial or non-commercial purposes is strictly excluded. Any release of such information to any third party outside of YOOCHOOSE GmbH requires the express, personal consent of the rights holder in question.
+							The information you submitted via the contact form or via e-mail will be stored and used by YOOCHOOSE GmbH and the affiliated partner network (subcontractor) exclusively for quotes and order processing. The release to any third party outside of YOOCHOOSE GmbH for commercial or non-commercial purposes is strictly excluded. Any release of such information to any third party outside of YOOCHOOSE GmbH requires the express, personal consent of the rights holder in question.
 						</p>
 						<p data-translate="data_privacy_paragraph3">
 							YOOCHOOSE GmbH expressly points out that data transmission on the Internet (e.g. during communication via e-mail) may not be fully secure and cannot be protected completely from third-party access.
@@ -237,7 +256,7 @@
 				</p>
 				<p>
 					<strong data-translate="corporate_information_directors">Managing Directors:</strong><br/>
-					Dr. Uwe Alkemper &amp; Michael Friedmann
+					Michael Friedmann
 				</p>
 				<p>
 					<strong data-translate="corporate_information_tax">Tax ID:</strong> DE264773520

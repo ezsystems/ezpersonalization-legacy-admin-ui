@@ -35,7 +35,7 @@
 		
 		if (! step) step = 1;
 		
-		errorCode = queryString["errorCode"];
+		errorCode = queryString["faultCode"];
 		
 		if (queryString["bookingState"] == "CANCELLED") {
 			errorCode = "CANCELLED";

@@ -935,7 +935,7 @@ function renderRecommendationChart() {
                         //the selected scenario was found in the json object
                         for (var k = 0; k < scenario.statisticItems.length; k++) {
                             var item = scenario.statisticItems[k];
-                            if (item.timespanBegin == testDate) {
+                            if (getDateTimeValueFromValue(item.timespanBegin,false) == testDate) {
                                 if (value == "total") {
                                     totalDeliveredRecommendations = totalDeliveredRecommendations + scenario.statisticItems[k].scenarioCalls;
                                 } else {
