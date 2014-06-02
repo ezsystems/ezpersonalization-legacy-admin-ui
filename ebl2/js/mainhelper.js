@@ -354,6 +354,7 @@ function setMandantData() {
             sitePrefix = json.mandatorInfoList[i].website;
             $.cookie('mandatorwebsite', sitePrefix);
             $('.info').children('span').children('.codeid').text(json.mandatorInfoList[i].name);
+            $.cookie('mandator', json.mandatorInfoList[i].name);
 			$.cookie('mandatorType', json.mandatorInfoList[i].type);
         }
     }
