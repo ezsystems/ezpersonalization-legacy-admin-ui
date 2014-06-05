@@ -74,7 +74,7 @@
 									</div></td>
 							</tr>
 							<tr>
-								<td><a href="reset_password.html" class="reset_password"
+								<td><a  class="reset_password" id="reset_password"
 									data-translate="login_forgot">Forgot?</a></td>
 							</tr>
 						</tbody>
@@ -457,6 +457,44 @@
 		</div>
 	</div>
 
+	<div class="overlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);"
+		 id="messageReset">
+		 
+		<div class="dialog_body change_password" id="messageBodyReset" style="width: 400px;" >
+			<a class="destroy_dialog" id="destroy_dialog" >X</a>
+			<form class="normal_form" action="#" method="get">
+				<section class="general_info clearfix">
+					<h2 data-translate="reset_password_forgot_your_password" style="margin-top: 1em;">Forgot your password?</h2>
+		       		<p data-translate="reset_password_reset_your_password_text" style="padding: 0px 0px 20px 10px;">Don't worry, we'll send you a mail with a link to page,<br/>where you can make in a new one.</p>
+		   			<ul>
+	         			<li style="padding-left: 0;">
+	             			
+		            		<input type="text" name="fpemail" id="fpemail" placeholder="regstep1_email" autofocus="autofocus" style="width: 89%;" />
+	      				</li>
+	           			<li class="captcha" style="margin-left: 9px;" >
+	            	    	<img id="fpcaptchaimage" style="width: 50%;" src="" />
+	            		</li>
+	  	      			<li class="captcha new_password_confirm" style="padding-left: 0;">
+	        	        	
+		             		<input type="text" name="fpcaptcha" id="fpcaptcha"  placeholder="Captcha" style="width: 89%;" />
+					 		<input style="display:none;" type="text" name="fpcaptchascope" id="fpcaptchascope" />
+	             		</li>
+	            		<li class="validation_message" id="validation_messageli" style="display:none">
+	                		<p class="annotation" id="validation_message" style="margin-left: 0;" data-translate="error_fill_required_fields">Fill all requeared fields</p>
+	            		</li>
+	            		<li class="actions" style="padding: 10px 0 6px 0;text-align: left; margin-left: 9px;">
+	                		<a id="fplogin" class="send button inline submit" data-translate="reset_password_send">Send</a>
+	                		<a id="fpclose" class="close button inline submit" data-translate="reset_password_close" style="display: none;">Close</a>
+	           			</li>
+	         		</ul>
+	         		</section>
+       	  </form>
+		</div>
+	</div>
+
+	
+	
+	
 	<div class="overlay" id="messageFinish">
 		<div class="dialog_body change_password" id="messageBodyFinish">
 			<h2 data-translate="welcome_page_headline">Vielen Dank f&uuml;r
