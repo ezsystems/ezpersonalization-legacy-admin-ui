@@ -94,6 +94,7 @@
 			<input type="hidden" name="ebl2" id="ebl2" value="ebl2" />
 			<fieldset class="primary_data s2_5" id="userDataEntry"
 				style="float: right; max-width: 400px;">
+				
 				<p style="font-size: 2em; padding-bottom: 1em;">
 					<span data-translate="login_dont_have_account">Sign Up</span>
 				</p>
@@ -109,18 +110,9 @@
 				<div class="wrapper clearfix">
 
 
-					<div style="padding-left: 0; display: inline-block;">
-
-						<input type="text" name="f_name" id="fname"
-							style="height: 2em; border-radius: 5px; width: 172px; font-size: 18px;"
-							placeholder="regstep2_firstname" />
-					</div>
-					<div style="padding-left: 0; display: inline-block;">
-
-						<input type="text" name="l_name" id="lname"
-							style="height: 2em; border-radius: 5px; width: 172px; font-size: 18px; margin-left: 20px;"
-							placeholder="regstep2_lastname" />
-					</div>
+					<input type="hidden" name="f_name" id="fname" value="Anonimus" />
+					<input type="hidden" name="l_name" id="lname" value="Anonimus"/>
+					
 					<div style="padding-left: 0;">
 
 						<input type="text" name="email" id="email"
@@ -144,13 +136,13 @@
 								of the given company name.</span>
 						</label>
 					</div>
-					<div class="captcha_actions"
+					<div class="captcha_actions" id = "captcha_actions"
 						style="padding-left: 0; margin-left: -10px;">
 						<img id="captchaimage" src="" /> <a href="#"
 							class="reload_captcha" data-translate="regstep1_reload_captcha">Reload
 							captcha</a>
 					</div>
-					<div class="captcha" style="padding-left: 0;">
+					<div class="captcha" id = "captcha_input" style="padding-left: 0;">
 
 						<input type="text" name="captcha" id="captcha"
 							style="height: 2em; border-radius: 5px; width: 377px; font-size: 18px;"
@@ -165,6 +157,9 @@
 			</fieldset>
 			<div class="according_infos s3_5" id="licenceDataEntry"
 				style="width: 537px; float: left; ">
+				<p style="font-size: 2em; padding-bottom: 1em;">
+					<span data-translate="login_pnp">Free Plug and Play Recommendations</span>
+				</p>
 				<h3 data-translate="regstep1_licence_and_legal">Licence and
 					legal information</h3>
 				<div class="wrapper clearfix">
