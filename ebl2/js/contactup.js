@@ -84,6 +84,39 @@ function setDialogsContact(overlayId,dialogBodyId,closeButtonId ) {
 	
   }
 
+function setDialogsContact(overlayId,dialogBodyId,closeButtonId,closebuttonid2 ) {
+    
+    var overlay = $('#'+overlayId);
+    var layer = $('#'+dialogBodyId);
+    var closeButtonOk = $('#'+closeButtonId);
+    var closeButtonOk2 = $('#'+closebuttonid2);
+    var layerBody = $('#'+overlayId).parent('body');
+    var closeButton = $('.dialog_body .destroy_dialog');
+    
+    openLayerContact(overlay, layer, layerBody);
+    layerSizingContact(overlay);
+    
+    
+    closeButton.click(function() {
+    	closeLayerContact(layerBody, layer, overlay);
+    });
+    
+    closeButtonOk2.click(function() {
+    	closeLayerContact(layerBody, layer, overlay);
+    });
+    
+    closeButtonOk.click(function() {
+    	closeLayerContact(layerBody, layer, overlay);
+    });
+    
+    $(document).bind('keydown', function(e) { 
+      if (e.which == 27) {
+    	  closeLayerContact(layerBody, layer, overlay);
+      }
+    });
+	
+  }
+
 var closeLayerContact = function(layerBody, layer, overlay){
     layerBody.css({'overflow':'auto'});
     layer.fadeOut('fast');
