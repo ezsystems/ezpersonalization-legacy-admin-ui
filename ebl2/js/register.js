@@ -3,6 +3,7 @@
 	var email    = unescape(gup('email'));
 	var lang     = gup('lang');
 	var customerID = gup("freeusername");
+	var numberOfReloads = 0;
 	
 	
 	function login() {
@@ -85,10 +86,32 @@ $(document).ready(function () {
         login();
     });
     
-
+    var generateCaptcha = false;
+    numberOfReloads = $.cookie('numberOfReloads');
+    if(numberOfReloads == null){
+    	$.cookie('numberOfReloads',1);
+    	numberOfReloads = $.cookie('numberOfReloads');
+    	if(numberOfReloads == null){
+    		generateCaptcha = true;
+    	}
+    }else{
+    	$.cookie('numberOfReloads',parseInt(numberOfReloads)+1);
+    	if(numberOfReloads > 3){
+    		generateCaptcha = true;
+    	}
+    }
+    
+    
     var captchascope = Math.round(Math.random() * 100000);
 
-    $('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
+    if(generateCaptcha){
+    	 $('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
+    }else{
+    	$('#captcha_actions').hide();
+    	$('#captcha_input').hide();
+    	captchascope = -1;
+    }
+   
 
 	var emaildecode = decodeURIComponent(email);
 	$('#email').val(emaildecode);
@@ -104,18 +127,7 @@ $(document).ready(function () {
 		var showError = false;
 		var mailProblem = false;
 		
-		if($('#fname').val() == ""){
-			$('#fname').parent().addClass("problem");
-			showError = true;
-		}else{
-			$('#fname').parent().removeClass("problem");
-		}
-		if($('#lname').val() == ""){
-			$('#lname').parent().addClass("problem");
-			showError = true;
-		}else{
-			$('#lname').parent().removeClass("problem");
-		}
+		
 		var mailValue = $('#email').val();
 		if(mailValue == ""){
 			$('#email').parent().addClass("problem");
