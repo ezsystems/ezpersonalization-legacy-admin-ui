@@ -2453,6 +2453,13 @@ ul.placed_model_settings > li.usesubmodels > div > input {
   color: rgba(192, 80, 77, 1);
 }
 
+ div.validation_message > p.annotation {
+  display: block;
+  padding: 8px 30px 5px 15px;
+  font-style: italic;
+  color: rgba(192, 80, 77, 1);
+}
+
 /* General Infos on static pages */
 
 .general_info h2 {
