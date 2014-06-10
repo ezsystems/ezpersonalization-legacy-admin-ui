@@ -231,12 +231,16 @@ $(document).ready(function () {
 	var emaildecode = decodeURIComponent(email);
 	$('#email').val(emaildecode);
 	
-	var editData =$("#reset_password");
-	   editData.on("click", function(event){
+	var resetPassb =$("#reset_password");
+	   resetPassb.on("click", function(event){
 		   setDialogsContact('messageReset','messageBodyReset','destroy_dialog','fpclose');
 		   resetpass();
 	   });
-	
+	   
+	var showHelp =$("#help");
+	     showHelp.on("click", function(event){
+	    	setDialogsContact('messageHelp','messageBodyHelp','destroy_dialog');
+	    });
 	if(lang != "")
 	{
 		$.cookie('language', lang, { expires: 365 });
