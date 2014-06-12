@@ -50,7 +50,8 @@ var fromTemplate   = gup('from_template');
 	  		}
 			
 			if (fromTemplate) { // creating new scenario
-				$("#input_type_block select").val[defaultItemType];
+				$("#input_type_block select").val(defaultItemType);
+				console.log("defaultItemType="+defaultItemType+".");
 				$("#output_type_block input[value='" + defaultItemType + "']").prop('checked', true);
 			}
 		} else {
