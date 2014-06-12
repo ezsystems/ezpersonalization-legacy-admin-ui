@@ -5,13 +5,49 @@
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
     <title>YooChoose Recommendation Engine | Dashboard</title>
     <meta name="description" content="YooChoose recommendation help page"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-
-	<script>
-	  $(function() {
-	    $( "#helptabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
-	    $( "#helptabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
-	  });
+    <meta name="author" content="Alexander Tsikinovsky">
+    <meta name="viewport" content="width=1280, initial-scale=1">
+ <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script type="text/javascript">
+    var callback2 = function(){
+    	 $(function() {
+    		    $( "#helptabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+    		    $( "#helptabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+    		  });
+    	 
+    	 var ycjq2 = document.createElement('link'); ycjq2.rel = 'stylesheet';
+     	 ycjq2.href =  'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css';
+     	 var ycs = document.getElementsByTagName('script')[0]; ycs.parentNode.insertBefore(ycjq2, ycs);
+     	$(document).ready(function () {
+     		$('#helptabs-1').css('width','660px');
+     		$('#helptabs-2').css('width','660px');
+     		$('#helptabs-3').css('width','660px');
+     		$('#helptabs-4').css('width','660px');
+     		$('#helptabs-5').css('width','660px');
+     	});
+   }
+    var callback1 = function(){
+    	 var ycjq2 = document.createElement('script'); ycjq2.type = 'text/javascript';
+     	 ycjq2.src =  'http://code.jquery.com/ui/1.10.3/jquery-ui.js';
+         var ycs = document.getElementsByTagName('script')[0]; ycs.parentNode.insertBefore(ycjq2, ycs);
+         ycjq2.onreadystatechange = callback2;
+         ycjq2.onload = callback2;
+    }
+    if(self==top){
+    	var ycjq = document.createElement('script'); ycjq.type = 'text/javascript';
+    	ycjq.src =  'http://code.jquery.com/jquery-1.9.1.js';
+        var ycs = document.getElementsByTagName('script')[0]; ycs.parentNode.insertBefore(ycjq, ycs);
+        ycjq.onreadystatechange = callback1;
+        ycjq.onload = callback1;
+       
+    }else{
+    	 $(function() {
+    		    $( "#helptabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+    		    $( "#helptabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+    		  });
+    }
+    
+	 
 	  </script>
 	  <style>
 	  .ui-tabs-vertical { width: 90em; }
