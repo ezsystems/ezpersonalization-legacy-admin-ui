@@ -18,7 +18,9 @@ function createXMLHttpRequest() {
 		 mandator = getCookie('customerID');
 	 }
 	 myObj.mandator = mandator;
-	 
+	 if (backgroundBG != null){
+		 myObj.backgroundBG = backgroundBG;
+	 }
 
 	 if(pricePath!=null){
 		 myObj.price = pricePath;
@@ -83,7 +85,7 @@ function showPreview2(element){
 	}
 	
 	for(var i = 0;i<3;i++){
-		previewHtml+='<a href="#" style="position: relative;  width:'+awidth+'px; height:'+aheight+'px; display: inline-block; margin: 0 10px '+amarginBottom+'px 0; padding: 0; float: left; vertical-align: baseline; background-color: #ebeff4; border: 1px solid #c9d4e3;text-decoration: none;" >';
+		previewHtml+='<a href="#" style="position: relative;  width:'+awidth+'px; height:'+aheight+'px; display: inline-block; margin: 0 10px '+amarginBottom+'px 0; padding: 0; float: left; vertical-align: baseline; background-color: '+backgroundBG+'; border: 1px solid #c9d4e3;text-decoration: none;" >';
 		if(imgValue != null){
 			previewHtml+='<img src ="'+imgValue+'"   style="border: 0px;margin: 0; max-height: '+imgwidth+'px; max-width: '+awidth+'px;" />';
 			
@@ -155,6 +157,7 @@ function getCookie(c_name)
 }
 
 var mandator = getCookie('mandator');
+var backgroundBG = getCookie('backgroundBG');
 var mandatorwebsite =  getCookie('mandatorwebsite');
 var lang = getCookie('language');
 var imgPath = null;
@@ -432,7 +435,7 @@ function getrecommendationScript(){
 			'&lt;script type="text/javascript"&gt;\n'+
 			'	var manddatorId = "'+mandator+'";\n'+
 			'	var envYC = "'+envYC+'";\n'+
-			'	var recSize = "'+recSize+'";\n'+
+			'	var recSize = "'+recSize+'"; var bgColor="'+backgroundBG+'";\n'+
 			'	et_yc_click(manddatorId,recSize);\n'+
 			'&lt;/script&gt;</textarea><br/><br/>';
 	return ret;
