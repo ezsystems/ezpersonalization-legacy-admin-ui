@@ -1,8 +1,11 @@
 var customerID = $.cookie('customerID');
 var recSize = 1;
+var recCT = 3;
 var changeScript = false;
 var productPageUrlFromRecs = null;
 var jsonRecs = null;
+var currentbg = "#ebeff4";
+
 
 $(document).ready(function () {
 	
@@ -74,6 +77,23 @@ $(document).ready(function () {
 						//setLicenceKey(customerID);
 						setMandantData();
 						setScript();
+						$("#Inline").spectrum({
+						    showInput: true,
+						    showAlpha: true,
+						    color: currentbg,
+						    move: function(color) {
+						        var bgcolorPrev = color.toRgbString(); 
+						        $('.recUnit').css("background-color",bgcolorPrev);
+						    },
+						    change: function(color) {
+						    	var bgcolorPrev = color.toRgbString(); 
+						    	currentbg = bgcolorPrev;
+						    },
+						    hide: function(color) {
+						    	$('.recUnit').css("background-color",currentbg);
+						    }
+							
+						});
 						setStatus();
 						
 					}
@@ -193,7 +213,16 @@ function setScript(){
 	request.done(function( json ) {
 			var manInfo = json.mandatorInfo;
 			if(manInfo != null){
-				recSize = manInfo.name;
+				typeAndSize  = manInfo.name;
+				var backgroundBGTemp = manInfo.website;
+				if(backgroundBGTemp != null && backgroundBGTemp != 'null'){
+					currentbg = backgroundBGTemp;
+				}
+				$.cookie('backgroundBG', currentbg);
+				
+				typeAndSizeSplited = typeAndSize.split('a');
+				recSize = typeAndSizeSplited[1];
+				recCT = typeAndSizeSplited[0];
 				
 				var envYC = 'prod';
 				if((window.location.origin+'').indexOf('dev') != -1){
@@ -206,7 +235,7 @@ function setScript(){
 			 			'<script type="text/javascript">\n'+
 			 			'	var manddatorId = "'+customerID+'";\n'+
 			 			'	var envYC = "'+envYC+'";\n'+
-			 			'	var recSize = "'+recSize+'";\n'+
+			 			'	var recSize = "'+recSize+'"; var bgColor="'+currentbg+'"; \n'+
 			 			'	et_yc_click(manddatorId,recSize);\n'+
 			 			'</script>');
 			}
@@ -329,6 +358,8 @@ function setTabs(){
 				}else{
 					if(currentTab == 2){
 						$('#recommendation_size').val(recSize);
+						$('#rec-content-type').val(recCT);
+						
 						if(productPageUrlFromRecs !=null){
 							$('#site').val(productPageUrlFromRecs);
 						}
