@@ -117,6 +117,7 @@ function saveSize(){
 	var myObj = new Object();
 	myObj.mandator = customerID;
 	myObj.recsize = recSize;
+	myObj.bgcolor = currentbg;
 	 $.ajax({
 	        type: "POST",
 	        mimeType: "application/json",
@@ -296,8 +297,8 @@ function show_recommendationsPreview(positionOfRecs,prtypeOfRecs){
 			}
 		}
 		
-		previewHtml+='<a  style="position: relative;  width:'+awidth+'px; height:'+aheight+'px; display: inline-block; margin: 0 10px '+amarginBottom+'px 0; padding: 0; float: left;'+
-		'font-family: Arial,Verdana,Helvetica,sans-serif; vertical-align: baseline; background-color: #ebeff4; border: 1px solid #c9d4e3;text-decoration: none;" >';
+		previewHtml+='<a  class="recUnit" style="position: relative;  width:'+awidth+'px; height:'+aheight+'px; display: inline-block; margin: 0 10px '+amarginBottom+'px 0; padding: 0; float: left;'+
+		'font-family: Arial,Verdana,Helvetica,sans-serif; vertical-align: baseline; background-color: '+currentbg+'; border: 1px solid #c9d4e3;text-decoration: none;" >';
 		if(prtypeOfRecs > 1 ){
 			previewHtml+='<img src ="'+imgValue+'"  style="border: 0px; margin: 0; max-height: '+imgwidth+'px; max-width: '+awidth+'px;" />';
 			

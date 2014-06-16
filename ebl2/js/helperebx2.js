@@ -193,8 +193,26 @@ function loginAgain()
 	
 }
 
+var currentbg = "#ebeff4";
 $(document).ready(function () {
-	
+	$("#Inline").spectrum({
+	    showInput: true,
+	    showAlpha: true,
+	    color: currentbg,
+	    move: function(color) {
+	        var bgcolorPrev = color.toRgbString(); 
+	        $('.recUnit').css("background-color",bgcolorPrev);
+	    },
+	    change: function(color) {
+	    	var bgcolorPrev = color.toRgbString(); 
+	    	currentbg = bgcolorPrev;
+	    },
+	    hide: function(color) {
+	    	$('.recUnit').css("background-color",currentbg);
+	    }
+		
+	});
+		  
 	if(code != null && code!=''){
 		mandator = gup('mandator');
 		username = decodeURIComponent(gup('username'));
@@ -484,6 +502,7 @@ function saveMandator()
 	var mandator = $('body').data('mandator');
 	mandator.website = $('#site_dom').val() ; 
 	setCookie('mandatorwebsite', mandator.website, null);
+	setCookie('backgroundBG', currentbg, null);
 	$.ajax({
 		username: username,
 		password: codePass,
@@ -661,7 +680,7 @@ function show_recommendationsPreview(positionOfRecs,prtypeOfRecs){
 		var titleValue = 'Sample title';
 		var priceValue = '2,69 EUR';
 		
-		previewHtml+='<a  style="position: relative;  width:'+awidth+'px; height:'+aheight+'px; display: inline-block; margin: 0 10px '+amarginBottom+'px 0; padding: 0; float: left; vertical-align: baseline; background-color: #ebeff4; border: 1px solid #c9d4e3;text-decoration: none;" >';
+		previewHtml+='<a  class="recUnit" style="position: relative;  width:'+awidth+'px; height:'+aheight+'px; display: inline-block; margin: 0 10px '+amarginBottom+'px 0; padding: 0; float: left; vertical-align: baseline; background-color: '+currentbg+'; border: 1px solid #c9d4e3;text-decoration: none;" >';
 		if(prtypeOfRecs > 1 ){
 			previewHtml+='<img src ="'+imgValue+'"  width="'+imgwidth+'px" style="border: 0px; margin: 0;" />';
 			
