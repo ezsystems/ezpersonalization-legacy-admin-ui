@@ -10,12 +10,14 @@
 	<link rel="apple-touch-icon" href="img/favicon.ico">
     <meta name="viewport" content="width=1280, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="css/spectrum.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/styles_new.css">
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script src="js/jquery.cookie.js"></script>
    <!--  <script src="https://admin.yoochoose.net/js/form_submit_trigger.js"></script> -->
+    <script src="js/spectrum.js"></script>
     <script src="js/piwik.js"></script>
     <script src="js/equalize.js"></script>
     <script src="js/things.js"></script>
@@ -91,6 +93,13 @@
               	<option value="1">Product title only</option>
               </select>
             </div>
+            <div style="padding-left: 0px;">
+              <label for="Inline" class="required" style="width: 210px; margin-left: 0px; text-align: left;">
+                <span data-translate="regstep3_background">Background color:</span>
+              </label>
+              <input type='text' id="Inline" style="width: 210px; margin-left: 0px; text-align: left;"/>
+            </div>
+            
              <div style="padding-left: 0px;">
               <label for="site_dom" class="required" style="width: 210px; margin-left: 0px; text-align: left;">
                 <span data-translate="regstep2_websiteurl">Web-site URL:</span>
@@ -114,8 +123,9 @@
         <div class="according_infos s3_5" style="float: right;">
           <h3 data-translate="regstep3_preview" style="min-width: 688px;">Preview</h3>
           <div class="wrapper clearfix">
-           
+            
             <div id="recoPreview" style="display: none;"></div>
+           
             
           </div>
         </div>
