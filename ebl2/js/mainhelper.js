@@ -77,23 +77,7 @@ $(document).ready(function () {
 						//setLicenceKey(customerID);
 						setMandantData();
 						setScript();
-						$("#Inline").spectrum({
-						    showInput: true,
-						    showAlpha: true,
-						    color: currentbg,
-						    move: function(color) {
-						        var bgcolorPrev = color.toRgbString(); 
-						        $('.recUnit').css("background-color",bgcolorPrev);
-						    },
-						    change: function(color) {
-						    	var bgcolorPrev = color.toRgbString(); 
-						    	currentbg = bgcolorPrev;
-						    },
-						    hide: function(color) {
-						    	$('.recUnit').css("background-color",currentbg);
-						    }
-							
-						});
+						
 						setStatus();
 						
 					}
@@ -238,6 +222,24 @@ function setScript(){
 			 			'	var recSize = "'+recSize+'"; var bgColor="'+currentbg+'"; \n'+
 			 			'	et_yc_click(manddatorId,recSize);\n'+
 			 			'</script>');
+				$("#Inline").spectrum({
+				    showInput: true,
+				    showAlpha: true,
+				    color: currentbg,
+				    move: function(color) {
+				        var bgcolorPrev = color.toRgbString(); 
+				        $('.recUnit').css("background-color",bgcolorPrev);
+				    },
+				    change: function(color) {
+				    	var bgcolorPrev = color.toRgbString(); 
+				    	currentbg = bgcolorPrev;
+				    	$('#change_size').show();
+				    },
+				    hide: function(color) {
+				    	$('.recUnit').css("background-color",currentbg);
+				    }
+					
+				});
 			}
 	});
 	request.fail(function(jqXHR, textStatus) {
@@ -345,7 +347,7 @@ function setTabs(){
 					 			'<script type="text/javascript">\n'+
 					 			'	var manddatorId = "'+customerID+'";\n'+
 					 			'	var envYC = "'+envYC+'";\n'+
-					 			'	var recSize = "'+recSize+'";\n'+
+					 			'	var recSize = "'+recSize+'"; var bgColor="'+currentbg+'";\n'+
 					 			'	et_yc_click(manddatorId,recSize);\n'+
 					 			'</script>');
 					}
