@@ -39,8 +39,12 @@ var fromTemplate   = gup('from_template');
 	  		for (var i in mandatorInfo.itemTypeConfiguration.types) {
 	  			var t = mandatorInfo.itemTypeConfiguration.types[i];
 	  			var d = t.description + ' (' + t.id + ')';
-	  			
-	  			$('<option value="' + t.id + '"></option>').appendTo($("#input_type_block select")).text(d);
+	  			var selectedTxt = '';
+	  			if(t.id == defaultItemType ){
+	  				selectedTxt = ' id="defaultInItemType" ';
+	  				console.log("defaultItemType="+defaultItemType+".");
+	  			}
+	  			$('<option value="' + t.id + '"'+selectedTxt+'></option>').appendTo($("#input_type_block select")).text(d);
 	  			
 	  			var li = $('<li class="checkbox_field"></li>').appendTo($("#output_type_block ul"));
 
@@ -50,8 +54,7 @@ var fromTemplate   = gup('from_template');
 	  		}
 			
 			if (fromTemplate) { // creating new scenario
-				$("#input_type_block select option[value='" + defaultItemType + "']").prop('selected', true);
-				console.log("defaultItemType="+defaultItemType+".");
+				$("#defaultInItemType").prop('selected', 'selected');
 				$("#output_type_block input[value='" + defaultItemType + "']").prop('checked', true);
 			}
 		} else {
