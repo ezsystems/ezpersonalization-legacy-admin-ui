@@ -233,6 +233,7 @@ function setScript(){
 				    change: function(color) {
 				    	var bgcolorPrev = color.toRgbString(); 
 				    	currentbg = bgcolorPrev;
+				    	$.cookie('backgroundBG', currentbg);
 				    	$('#change_size').show();
 				    },
 				    hide: function(color) {
