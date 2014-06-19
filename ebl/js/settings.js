@@ -39,8 +39,12 @@ var fromTemplate   = gup('from_template');
 	  		for (var i in mandatorInfo.itemTypeConfiguration.types) {
 	  			var t = mandatorInfo.itemTypeConfiguration.types[i];
 	  			var d = t.description + ' (' + t.id + ')';
-	  			
-	  			$('<option value="' + t.id + '"></option>').appendTo($("#input_type_block select")).text(d);
+	  			var selectedTxt = '';
+	  			if(t.id == defaultItemType && fromTemplate ){
+	  				selectedTxt = ' id="defaultInItemType" selected = "selected" ';
+	  				console.log("defaultItemType="+defaultItemType+".");
+	  			}
+	  			$('<option value="' + t.id + '"'+selectedTxt+'></option>').appendTo($("#input_type_block select")).text(d);
 	  			
 	  			var li = $('<li class="checkbox_field"></li>').appendTo($("#output_type_block ul"));
 
@@ -50,8 +54,6 @@ var fromTemplate   = gup('from_template');
 	  		}
 			
 			if (fromTemplate) { // creating new scenario
-				$("#input_type_block select option[value='" + defaultItemType + "']").prop('selected', true);
-				console.log("defaultItemType="+defaultItemType+".");
 				$("#output_type_block input[value='" + defaultItemType + "']").prop('checked', true);
 			}
 		} else {
@@ -351,7 +353,9 @@ var fromTemplate   = gup('from_template');
 	
 		$('#scenario_title').val(json.scenario.title);
 		$('#scenario_id').val(json.scenario.referenceCode);
-		$('#input_type').val(json.scenario.inputItemType);
+		if(json.scenario.inputItemType && json.scenario.inputItemType > 0){
+			$('#input_type').val(json.scenario.inputItemType);
+		}
 		
 		$('input[id^="output_type"]').each(function() {
 			if(json.scenario.outputItemTypes.length > 0) {
