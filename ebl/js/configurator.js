@@ -198,9 +198,9 @@ function saveScenario() {
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
 		  data: JSON.stringify(json.scenario),
-		  url: "ebl/v3/" + customerID + "/structure/update_scenario/",
+		  url: "ebl/v3/" + encodeURIComponent(customerID) + "/structure/update_scenario/",
 		  success: function(json) {
-			  window.location = "configuratorpop.html?reference_code=" + reference_code + "&customer_id=" + customerID + "&saved=true";
+			  window.location = "configuratorpop.html?reference_code=" + encodeURIComponent(reference_code) + "&customer_id=" + encodeURIComponent(customerID) + "&saved=true";
 		  },
 		  error: function() {
 			  unsetLoadingDiv($('body'));
@@ -886,8 +886,7 @@ function saveScenario() {
 		  'beforeSend': function(req) {
 			  req.setRequestHeader('no-realm', 'realm1');
 		  },
-		  'url': "ebl/v3/" + customerID + "/structure/get_attribute_values/"
-				  + type + "/" + attributeKey,
+		  'url': "ebl/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey),
 		  'error': stdAjaxErrorHandler
 	  });
   }
@@ -1623,7 +1622,7 @@ var createPlacedModel = function (placed_model, model) {
 		  name = name ? name : app.data.mandatorName;
 		  return $.ajax({
 			  'type': 'GET',
-			  'url': 'ebl/v3/profile/get_mandator/' + name,
+			  'url': 'ebl/v3/profile/get_mandator/' + encodeURIComponent(name),
 			  'dataType': 'json'
 		  }).then(
 				  function(response) {
@@ -1646,7 +1645,7 @@ var createPlacedModel = function (placed_model, model) {
 			  function(mandator) {
 				  return $.ajax({
 					  'type': 'GET',
-					  'url': 'ebl/v4/' + mandator.name + '/elist/get_list/' + refCode,
+					  'url': 'ebl/v4/' + encodeURIComponent(mandator.name) + '/elist/get_list/' + encodeURIComponent(refCode),
 					  'dataType': 'json'
 				  });
 			  },
@@ -1663,7 +1662,7 @@ var createPlacedModel = function (placed_model, model) {
 	  return $.ajax({
 		  'type': 'POST',
 		  'contentType': 'application/json',
-		  'url': 'ebl/v4/' + app.data.mandatorName + '/elist/update_list/' + refCode,
+		  'url': 'ebl/v4/' + encodeURIComponent(app.data.mandatorName) + '/elist/update_list/' + encodeURIComponent(refCode),
 		  'data': JSON.stringify(list)
 	  });
   };
@@ -1675,7 +1674,7 @@ var createPlacedModel = function (placed_model, model) {
   app.api.getItem = function(type, id) {
 	  return $.ajax({
 		  'type': 'GET',
-		  'url': 'ebl/v4/' + app.data.mandatorName + '/elist/get_single_item/' + type + '/' + id
+		  'url': 'ebl/v4/' + encodeURIComponent(app.data.mandatorName) + '/elist/get_single_item/' + type + '/' + encodeURIComponent(id)
 	  })
 			  .then(null, app.tools.stdAjaxErrorHandler);
   };
