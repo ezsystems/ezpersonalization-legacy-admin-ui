@@ -109,7 +109,13 @@ define(['app/api/ab', 'jquery'], function(api, $){
 	};
 
 	Test.prototype.getNameOfA = function(){
-		return typeof this.a === 'string' ? this.a : this.a.title;
+		var result = typeof this.a === 'string' ? this.a : this.a.title;
+		
+		if (! result) {
+			result = this.getIdOfA();
+		}
+		
+		return result;
 	};
 
 	Test.prototype.getIdOfA = function(){
@@ -117,7 +123,12 @@ define(['app/api/ab', 'jquery'], function(api, $){
 	};
 
 	Test.prototype.getNameOfB = function(){
-		return typeof this.b === 'string' ? this.b : this.b.title;
+		var result = this.b === 'string' ? this.b : this.b.title;
+		
+		if (! result) {
+			result = this.getIdOfB();
+		}
+		return result;
 	};
 
 	Test.prototype.getIdOfB = function(){
