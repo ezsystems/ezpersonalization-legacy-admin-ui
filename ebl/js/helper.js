@@ -48,6 +48,11 @@ function getUrlVars() {
 }
 		
 
+/** @deprecated use gupEncoded instead.
+ *  
+ * @param name
+ * @returns
+ */
 //function gup copied from http://www.netlobo.com/url_query_string_javascript.html
 function gup(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -57,6 +62,18 @@ function gup(name) {
     if (results == null) return "";
     else return results[1];
 }
+
+
+function gupEncoded(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(window.location.href);
+    if (results == null) return "";
+    else return decodeURIComponent(results[1]);
+}
+
+
 
 function jq(myid) {
    return myid.replace(/(:|\.)/g,'\\$1');

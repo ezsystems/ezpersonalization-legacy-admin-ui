@@ -1,4 +1,5 @@
 
+var returnUrl = gupEncoded('returnUrl');
 
 
 $(document).ready(function () {
@@ -118,7 +119,7 @@ function realLogin(email,password) {
         },
 		success: function (json) {
 			$.cookie('email', email);
-			window.location = "index.html";
+			window.location = returnUrl ? returnUrl : "index.html";
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			if(jqXHR.status != null && jqXHR.status == 403){
