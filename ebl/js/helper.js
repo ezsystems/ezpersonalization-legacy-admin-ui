@@ -64,7 +64,7 @@ function gup(name) {
 }
 
 
-function gupEncoded(name) {
+function gupDecoded(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);

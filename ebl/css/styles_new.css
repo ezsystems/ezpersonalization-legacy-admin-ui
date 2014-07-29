@@ -464,13 +464,14 @@ h3 {
 input[type="text"],
 input[type="number"],
 input[type="password"],
+input:not([type]),
 select {
  	margin: 0;
   	border: 1px solid rgba( 165, 165, 165, 1);
  	font-family: 'Istok Web', sans-serif;
   	font-size: 14px;
   	padding: 0 3px;
-  	height: 2em;
+  	height: 1.8em;
 }
 
 
