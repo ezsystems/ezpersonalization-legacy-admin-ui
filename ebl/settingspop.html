@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en-US" style="height: 100%;">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Configurator | Step 1</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width:device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    
+    <link rel="stylesheet" href="css/styles_new.css">
+    <link rel="stylesheet" href="css/configurator.css">
+
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
+    <script src="js/lib/jquery.cookie.js"></script>
+    <script src="js/lib/jquery.i18n.properties.js"></script>
+
+    <script src="js/form_submit_trigger.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    
+    <script src="js/i18n.js" data-i18n-files="scenario,common"></script>
+    
+    <script src="js/configurator_header.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/piwik.js"></script>
+  </head>
+  
+  <body id="settings" class="scenario_configuration_steps" style="height: 100%; overflow-x: hidden; min-width: 0">
+  
+	<h2 data-translate="scenario_configuration_area">Scenario configuration</h2>
+  
+  	<header>
+		<ul class="wizard_steps clearfix">
+			<li class="settings_tab current">
+				<span data-translate="settings_scenario_configuration">Settings</span>
+			</li>
+			<li class="configurator_tab">
+				<a href="#" data-translate="settings_placing_models">Placing models</a>
+			</li>
+			<li class="preview_tab">
+				<a href="#" data-translate="settings_preview">Preview</a>
+			</li>
+		</ul>
+		<section class="scenario_settings">
+			<!-- configurator_header.html will be included here.  -->
+			<a class="button" style="visibility: hidden;">&nbsp;</a>
+		</section>
+	</header>
+        
+    <table class="settings"><tr><td style="border-right: 1px solid rgba(217, 226, 216, 1);" width="50%">
+
+        <ul class="scenario_setting_list clearfix" style="overflow-y: hidden; padding-top: 1ex;">
+          <li class="scenario_id text_field clearfix">
+			<div class="basis tooltip_trigger">
+				<label for="scenario_id" data-translate="settings_scenario_id" style="text-align: left;">Scenario ID:</label>
+		        <span class="tooltip">
+		          	<span data-translate="index_objects_tooltip">Some content.</span>
+		        </span>
+			</div>
+			<div class="value">
+				<div>
+					<input type="text" id="scenario_id" name="scenario_id" value="" >
+				</div>
+			</div>
+          </li>
+          <li class="types_base select_field clearfix" id="input_type_block">
+			<div class="basis">
+				<label for="input_type" class="input_label" data-translate="settings_input_type" style="text-align: left;">Input type:</label>
+            </div>
+			<div class="value" style="visibility: hidden;">
+				<select id="input_type" name="input_type">
+					<option value="1" data-translate="settings_product">Product</option>
+					<option value="2" data-translate="settings_article">Article</option>
+				</select>
+			</div>
+          </li>
+          <li class="types_base clearfix" id="output_type_block">
+			<div class="basis" >
+				<label data-translate="settings_output_type" style="text-align: left;">Output type:</label>
+			</div>
+			<div class="value" style="visibility: hidden;">
+				<ul class="output_types" >
+					<li class="checkbox_field">
+						<input value="1" type="checkbox" id="output_type_product" name="output_type_product" >
+						<label for="output_type_product" data-translate="settings_1_product">(1) Product</label>
+					</li>
+				</ul>
+			</div>
+          </li>
+          <li class="page_id text_area clearfix">
+			<div class="basis">
+				<label for="sc_description" data-translate="settings_scenario_description"  style="text-align: left;">Scenario description:</label>
+			</div>
+			<div class="value">
+				<div>
+					<textarea rows="8" cols="50" id="sc_description" name="sc_description"></textarea>
+				</div>
+			</div>
+		  </li>
+        </ul>
+        
+        </td><td>
+
+        <div class="filters_base" style="overflow-y: hidden; margin-left: 1.5%; padding-left: 1em;">
+            <div id="filter_group_standard">
+              <h4 data-translate="filters_filters_profile_options">User profile related filters</h4>
+              <ul class="filters">
+                <li>
+                  <input type="checkbox" id="no_already_purchased" name="no_already_purchased" >
+                  <label for="no_already_purchased" data-translate="filters_no_already_purchased">Do not recommend products the user already purchased</label>
+                </li>
+                <li>
+                  <input type="checkbox" id="enable_limit_max_recs_per_session" name="enable_limit_max_recs_per_session" >
+                  <label for="enable_limit_max_recs_per_session" data-translate="filters_enable_limit_max">
+                    <input name="limit_max_recs_per_session" id="limit_max_recs_per_session" type="number" min="1" step="1" disabled="disabled" style="width: 2.2em;" data-param="0">
+                  	is the limit of maximum shows of identical recommendations to a user in one session.
+                  </label>
+                </li>
+              </ul>
+            </div>
+            <div id="filter_group_item">
+              <h4 data-translate="filters_filters_on_item">Content object related filters</h4>
+              <ul class="filters">
+                <li>
+                  <input type="checkbox" id="currently_viewed" name="currently_viewed" >
+                  <label for="currently_viewed" data-translate="filters_currently_viewed">Do not recommend the product currently viewed</label>
+                </li>
+				<li>
+                  <input type="checkbox" id="no_top_sellings" name="no_top_sellings" >
+                  <label for="no_top_sellings" data-translate="filters_not_top_sellings">Do not recommend most</label>
+                </li>
+                <li>
+                  <input type="checkbox" id="no_cheaper_products" name="no_cheaper_products" >
+                  <label for="no_cheaper_products" id="textcp" data-translate="filters_no_cheaper_products">Product price must be equal or higher than the price of the product currently viewed</label>
+                </li>
+                <li>
+                  <input type="checkbox" id="enable_min_price" name="enable_min_price" >
+                  <input name="limit_min_price" id="limit_min_price" type="number" min="1" step="1" size="5" value="" disabled="disabled" style="width: 5em;">
+                  <label for="enable_min_price" id="textmp" data-translate="filters_enable_min_price"> minimum price for recommendation</label>
+                </li>
+              </ul>
+            </div>
+            <div id="filter_group_user">
+              <h4 data-translate="filters_filters_on_user">User store related filters</h4>
+              <ul class="filters">  
+                <li>
+                  <input type="checkbox" name="user_boost_enable" data-param="0">
+                  Boost item, if a user has an attribute with the same value.<br>
+                  Item Attribute name <input name="user_boost_attr" size="7" style="width: 5em;" data-param="1" disabled="disabled">,
+                  boost by <input name="user_boost_value" size="2" type="number" min="-99" max="99" step="1" size="5" style="width:3.3em;" data-param="2" disabled="disabled"> positions.<br>
+                  
+                  <input type="checkbox" name="user_boost_diff" data-param="3" disabled="disabled">
+                  User attribute has different name
+                  <input name="user_boost_diff_name" size="7" style="width: 5em;" data-param="4" disabled="disabled">.
+                </li>
+              </ul>
+            </div>
+        </div>
+        
+    	</td></tr>
+    	<tr><td colspan="2">
+    	
+    	<ul style="padding-top: 1ex;">
+		  	<li class="annotation" id="validation_no_ouput_type" data-translate="error_no_ouput_type" style="display:none">
+		  		Select at least one output type.
+			</li>
+			<li class="annotation" id="validation_invalid_max_repeated_reco" data-translate="invalid_max_repeated_reco" style="display:none">
+		  		Invalid value for max repeated recommendation.
+			</li>
+			<li class="annotation" id="validation_invalid_min_price" data-translate="invalid_invalid_min_price" style="display:none">
+		  		Invalid value for minimum price.
+			</li>
+			<li class="annotation" id="validation_no_scenario_id" data-translate="error_no_scenario_id" style="display:none">
+		  		Scenario ID must be set.
+			</li>				
+		</ul>
+		
+		</td></tr></table>
+      
+	<div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text"></span>
+      </p>
+    </div>
+  </body>
+</html>
