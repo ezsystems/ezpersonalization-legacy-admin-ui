@@ -1,7 +1,7 @@
 
-var reference_code = gup('reference_code');
-var customerID     = gup('customer_id');
-var fromTemplate   = gup('from_template');
+var reference_code = gupDecoded('reference_code');
+var customerID     = gupDecoded('customer_id');
+var fromTemplate   = gupDecoded('from_template');
 
 	
   $(document).ready(function() {
@@ -69,13 +69,15 @@ var fromTemplate   = gup('from_template');
 			var d = defaultItemTypeDescription + ' (' + defaultItemType + ')';
 			var l = $('<label></label>').text(d);
 			
-			$('#input_type_block .value').html(l.clone());
-			$('#output_type_block .value').html(l.clone());
+			$('#input_type_block').hide();
+			$('#output_type_block').hide();
 			
 			$('#input_type_block, #output_type_block').css("opacity",'0.50');
 			
-			$('#no_cheaper_products').prop("disabled", true);
-			$('#enable_min_price').prop("disabled", true);
+			$('#filter_group_item li:has(#no_cheaper_products)').hide();
+			$('#filter_group_item li:has(#enable_min_price)').hide();
+
+			$('#filter_group_user').hide();
 			
 			$('#no_cheaper_products, #enable_min_price').parent().css("opacity",'0.50');
 		}
@@ -148,16 +150,16 @@ var fromTemplate   = gup('from_template');
 		
 		var url = "";
 		if(fromTemplate == "") {
-			url = "ebl/v3/"+customerID+"/structure/update_scenario";
+			url = "ebl/v3/" + encodeURIComponent(customerID) + "/structure/update_scenario";
 		}
 		else if(fromTemplate == "1") {
-			url = "ebl/v3/"+customerID+"/structure/create_scenario";
+			url = "ebl/v3/" + encodeURIComponent(customerID) + "/structure/create_scenario";
 		}
 		else if(fromTemplate == "2") {
-			url = "ebl/v3/"+customerID+"/structure/copy_library_scenario?source_reference_code=" + encodeURIComponent(reference_code) + "&destination_reference_code=" + encodeURIComponent($('#scenario_id').val());
+			url = "ebl/v3/" + encodeURIComponent(customerID) + "/structure/copy_library_scenario?source_reference_code=" + encodeURIComponent(reference_code) + "&destination_reference_code=" + encodeURIComponent($('#scenario_id').val());
 		}
 		else if(fromTemplate == "3") {
-			url = "ebl/v3/"+customerID+"/structure/create_scenario";
+			url = "ebl/v3/" + encodeURIComponent(customerID) + "/structure/create_scenario";
 		}
 	
 		var scenarioID = $('#scenario_id').val();
@@ -307,6 +309,7 @@ var fromTemplate   = gup('from_template');
 		var minPriceChecked = $('#enable_min_price')[0].checked;
 		$('#limit_min_price').prop("disabled", ! minPriceChecked);
 		
+		
 		if(minPriceChecked) {
 			if ($('#limit_min_price')[0].validity.valid) {
 				jsonStandard.standardFilterSet.minimalItemPrice = $('#limit_min_price').val();
@@ -318,6 +321,39 @@ var fromTemplate   = gup('from_template');
 		} else {
 			jsonStandard.standardFilterSet.minimalItemPrice = null;
 		}
+		
+		
+		// USER BOOST FILTER
+
+		var boostChecked = $('#filter_group_user input[name="user_boost_enable"]')[0].checked;
+		var diffChecked = $('#filter_group_user input[name="user_boost_diff"]')[0].checked;
+		
+		var $boostAttr  = $('#filter_group_user input[name="user_boost_attr"]');
+		var $boostValue = $('#filter_group_user input[name="user_boost_value"]');
+		var $boostDiff  = $('#filter_group_user input[name="user_boost_diff"]');
+		var $boostDiffName = $('#filter_group_user input[name="user_boost_diff_name"]');
+		
+		$boostAttr.prop("disabled", ! boostChecked);
+		$boostValue.prop("disabled", ! boostChecked);
+		$boostDiff.prop("disabled", ! boostChecked);
+		$boostDiffName.prop("disabled", ! boostChecked || ! diffChecked);
+		
+		if ( ! diffChecked) {
+			$('#filter_group_user input[name="user_boost_diff_name"]').val("");
+		}
+		
+		var boostAttr = $('#filter_group_user input[name="user_boost_attr"]').val();
+		
+		if (boostChecked && $boostAttr.val() && $boostValue.val() != 0) {
+			jsonProfile.profileFilterSet.attributeBoost = {
+					itemAttributeName : $boostAttr.val(),
+					userAttributeName : diffChecked ? $boostDiffName.val() : $boostAttr.val(),
+					boost : $boostValue.val() 
+			};
+		} else {
+			jsonProfile.profileFilterSet.attributeBoost = null;
+		}
+
 					
 		$('body').data('filters_standard', jsonStandard);
 		$('body').data('filters_profile',jsonProfile);
@@ -400,12 +436,14 @@ var fromTemplate   = gup('from_template');
 		
 		// profile filter
 		
-		json = { profileFilterSet : scenarioDao.profileFilterSet }; 
+		json = { profileFilterSet : scenarioDao.profileFilterSet };
+		
+		var pset = json.profileFilterSet;
 		
 		$('body').data('filters_profile', json);
 			
-		var excludeAlreadyPurchased = json.profileFilterSet.excludeAlreadyPurchased;
-		var excludeRepeatedRecommendations = json.profileFilterSet.excludeRepeatedRecommendations;
+		var excludeAlreadyPurchased = pset.excludeAlreadyPurchased;
+		var excludeRepeatedRecommendations = pset.excludeRepeatedRecommendations;
 		
 		if(excludeAlreadyPurchased == true) {
 			$('#no_already_purchased').prop("checked", true);
@@ -416,9 +454,40 @@ var fromTemplate   = gup('from_template');
 			$('#limit_max_recs_per_session').prop("disabled", false);
 			$('#limit_max_recs_per_session').val(excludeRepeatedRecommendations);
 		}
-
+		
+		// USER BOOST FILTER
+		
+		var $boostEnabled  = $('#filter_group_user input[name="user_boost_enable"]');
+		var $boostAttr     = $('#filter_group_user input[name="user_boost_attr"]');
+		var $boostValue    = $('#filter_group_user input[name="user_boost_value"]');
+		var $boostDiff     = $('#filter_group_user input[name="user_boost_diff"]');
+		var $boostDiffName = $('#filter_group_user input[name="user_boost_diff_name"]');
+		
+		if (pset.attributeBoost) {
+			$boostEnabled.prop("checked", true);
+			$boostAttr.val(pset.attributeBoost.itemAttributeName);
+			$boostValue.val(pset.attributeBoost.boost);
+			
+			$boostAttr.prop("disabled", false);
+			$boostValue.prop("disabled", false);
+			$boostDiff.prop("disabled", false);
+			
+			if (pset.attributeBoost.itemAttributeName != pset.attributeBoost.userAttributeName ) {
+				$boostDiff.prop("checked", true);
+				$boostDiffName.val(pset.attributeBoost.userAttributeName);
+				$boostDiffName.prop("disabled", false);
+			} else {
+				$boostDiff.prop("checked", false);
+				$boostDiffName.prop("disabled", true);
+			}
+		} else {
+			$boostEnabled.prop("checked", false);
+			$boostAttr.prop("disabled", true);
+			$boostValue.prop("disabled", true);
+			$boostDiff.prop("disabled", true);
+			$boostDiffName.prop("disabled", true);
+		}
 	}
-
 	
 	
 	function addScenarioToParent(){
