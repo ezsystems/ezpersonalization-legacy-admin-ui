@@ -52,7 +52,7 @@
 		</section>
 	</header>
         
-    <table class="settings"><tr><td style="border-right: 1px solid rgba(217, 226, 216, 1);">
+    <table class="settings"><tr><td style="border-right: 1px solid rgba(217, 226, 216, 1);" width="50%">
 
         <ul class="scenario_setting_list clearfix" style="overflow-y: hidden; padding-top: 1ex;">
           <li class="scenario_id text_field clearfix">
@@ -108,40 +108,55 @@
 
         <div class="filters_base" style="overflow-y: hidden; margin-left: 1.5%; padding-left: 1em;">
             <div id="filter_group_standard">
-              <h4 data-translate="filters_filters_profile_options">Filters on user profile options</h4>
+              <h4 data-translate="filters_filters_profile_options">User profile related filters</h4>
               <ul class="filters">
-                <li class="checkbox_field">
+                <li>
                   <input type="checkbox" id="no_already_purchased" name="no_already_purchased" >
                   <label for="no_already_purchased" data-translate="filters_no_already_purchased">Do not recommend products the user already purchased</label>
                 </li>
-                <li class="checkbox_and_spinner_field">
+                <li>
                   <input type="checkbox" id="enable_limit_max_recs_per_session" name="enable_limit_max_recs_per_session" >
-                  <input name="limit_max_recs_per_session" id="limit_max_recs_per_session" type="number" min="1" step="1" value="" disabled="disabled" style="width: 5em;">
-                  <label for="enable_limit_max_recs_per_session" data-translate="filters_enable_limit_max">is the limit of maximum shows of identical recommendations to a user in one session</label>
+                  <label for="enable_limit_max_recs_per_session" data-translate="filters_enable_limit_max">
+                    <input name="limit_max_recs_per_session" id="limit_max_recs_per_session" type="number" min="1" step="1" disabled="disabled" style="width: 2.2em;" data-param="0">
+                  	is the limit of maximum shows of identical recommendations to a user in one session.
+                  </label>
                 </li>
               </ul>
             </div>
             <div id="filter_group_item">
-              <h4 data-translate="filters_filters_on_item">Filters on item attributes</h4>
+              <h4 data-translate="filters_filters_on_item">Content object related filters</h4>
               <ul class="filters">
-                <li class="checkbox_and_spinner_field">
+                <li>
                   <input type="checkbox" id="currently_viewed" name="currently_viewed" >
                   <label for="currently_viewed" data-translate="filters_currently_viewed">Do not recommend the product currently viewed</label>
                 </li>
-                
-				<li class="checkbox_field">
+				<li>
                   <input type="checkbox" id="no_top_sellings" name="no_top_sellings" >
                   <label for="no_top_sellings" data-translate="filters_not_top_sellings">Do not recommend most</label>
                 </li>
-                
-                <li class="checkbox_field">
+                <li>
                   <input type="checkbox" id="no_cheaper_products" name="no_cheaper_products" >
                   <label for="no_cheaper_products" id="textcp" data-translate="filters_no_cheaper_products">Product price must be equal or higher than the price of the product currently viewed</label>
                 </li>
-                <li class="checkbox_and_spinner_field">
+                <li>
                   <input type="checkbox" id="enable_min_price" name="enable_min_price" >
                   <input name="limit_min_price" id="limit_min_price" type="number" min="1" step="1" size="5" value="" disabled="disabled" style="width: 5em;">
                   <label for="enable_min_price" id="textmp" data-translate="filters_enable_min_price"> minimum price for recommendation</label>
+                </li>
+              </ul>
+            </div>
+            <div id="filter_group_user">
+              <h4 data-translate="filters_filters_on_user">User store related filters</h4>
+              <ul class="filters">
+                <li data-translate="filters_boost">
+                  <input type="checkbox" name="user_boost_enable" data-param="0">
+                  Boost item, if a user has an attribute with the same value.<br>
+                  Item Attribute name <input name="user_boost_attr" size="7" style="width: 5em; margin-top: 1px;" data-param="1" disabled="disabled">,
+                  boost by <input name="user_boost_value" size="2" type="number" min="-99" max="99" step="1" size="5" style="width:3.3em;" data-param="2" disabled="disabled"> positions.<br>
+                  
+                  <input type="checkbox" name="user_boost_diff" data-param="3" disabled="disabled">
+                  User attribute has different name
+                  <input name="user_boost_diff_name" size="7" style="width: 6em; margin-top: 1px;" data-param="4" disabled="disabled">.
                 </li>
               </ul>
             </div>
