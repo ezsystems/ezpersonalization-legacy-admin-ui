@@ -1,5 +1,5 @@
 
-var returnUrl = gupEncoded('returnUrl');
+var returnUrl = gupDecoded('returnUrl');
 
 
 $(document).ready(function () {
