@@ -1,6 +1,6 @@
-  var reference_code = gup('reference_code');
-  var customerID = gup('customer_id');
-  var saved = gup('saved');
+  var reference_code = gupDecoded('reference_code');
+  var customerID = gupDecoded('customer_id');
+  var saved = gupDecoded('saved');
    
   $(document).ready(function() {
 	  setLoadingDiv($('body'));
