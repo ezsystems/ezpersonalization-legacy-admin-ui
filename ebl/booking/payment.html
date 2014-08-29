@@ -1,0 +1,58 @@
+            <form  role="form" class="form" name="paymentForm">
+              <div class="form-group col-sm-12" >
+               <label for="paymentselect" class="control-label">Payment Method</label>
+                <select id="paymentselect" class="form-control" data-ng-model="payment.data.bearer">
+                  <option data-ng-repeat="pm in payment.methodEnum" value="{{pm}}">{{paymentMethodNames[pm] || pm }}</option> 
+                </select>
+              </div>
+
+              <!-- The abstraction of payment methods starts to leak here (hardcoded strings). We'll improve this soon,
+              but of course a direct debit form is different from a credit card form -->
+              <div class="payment-elv" data-ng-show="payment.data.bearer=='Debit:Paymill' || payment.data.bearer=='Debit:FakePSP'">
+                <div class="form-group col-sm-12">
+                  <label for="accountHolder" class="control-label">Account Holder</label>
+                  <input data-ng-model="payment.data.accountHolder" ng-required="payment.data.bearer=='Debit:Paymill' || payment.data.bearer=='Debit:FakePSP'" id="accountHolder" name="accountHolder" type="text" class="form-control" placeholder="Account Holder" />
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="accountNumber" class="control-label">Account Number</label>
+                  <input data-ng-model="payment.data.bankAccountNumber" ng-required="payment.data.bearer=='Debit:Paymill' || payment.data.bearer=='Debit:FakePSP'" id="accountNumber" name="accountNumber" maxlength="10" type="text" class="form-control" placeholder="Account Number" />
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="bankRoutingCode" class="control-label">Bank Routing Code</label>
+                  <input data-ng-model="payment.data.bankRoutingCode" ng-required="payment.data.bearer=='Debit:Paymill' || payment.data.bearer=='Debit:FakePSP'" id="bankRoutingCode" name="bankRoutingCode" maxlength="8" type="text" class="form-control" placeholder="Bank Routing Code" />
+                </div>
+              </div>
+              <div class="payment-cc" data-ng-show="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'">
+                <!-- Note that the input fields don't have a 'name' set, rendering it impossible for the browser
+                to post these fields even if something went wrong in our first line of defense of not having
+                an action on the form. -->
+                <div class="form-group col-sm-12">
+                  <label for="email" class="control-label">Card Holder</label>
+                  <input data-ng-model="payment.data.cardHolder" ng-required="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'" type="text" class="form-control" id="cardholder" placeholder="Card Holder" />
+                </div>
+                <div class="form-group col-xs-8 col-sm-6">
+                  <label for="ccno" class="control-label">Credit Card Number</label>
+                  <input data-ng-model="payment.data.cardNumber" ng-required="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'" maxlength="16" type="text" class="form-control" id="ccno" placeholder="Credit Card Number" />
+                </div>
+                <div class="form-group col-xs-4 col-sm-2">
+                  <label for="cvc" class="control-label">CVC</label>
+                  <input data-ng-model="payment.data.cvc" maxlength="3" ng-required="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'" type="text" class="form-control" id="cvc" placeholder="CVC" />
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                  <label for="validto" class="control-label">Valid Through</label>
+                  <p class="input-group">
+                    <input type="text" id="validto" class="form-control" datepicker-popup="MMM-yyyy" datepicker-mode="'month'" ng-model="payment.validto" is-open="payment.opendatepicker" min-date="payment.today"  datepicker-options="payment.dateOptions" date-disabled="disabled(date, mode)" ng-required="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'" close-text="Close"  />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="payment.pickdate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div class="clearfix"></div>              
+              <div class="form-group col-sm-2 col-sm-offset-10">
+                <button class="btn btn-success pull-right" ng-disabled="!payment.ready || payment.signupRunning" ng-click="payment.done(paymentForm.$valid)" type="submit">Signup & Buy</button>
+              </div>
+            </form>
+            
+            
+
