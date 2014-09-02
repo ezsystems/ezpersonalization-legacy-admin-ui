@@ -1,8 +1,24 @@
-            <form role="form" class="form" name="billingForm">
+            <form role="form" class="form" name="billing.form">
 
               <div class="col-sm-12">
                 <div class="row">
-                  <div class="form-group col-sm-12"  ng-class="{'has-error': billing.showErrors && billingForm.company.$error.required}">
+                
+                  <div class="form-group col-sm-4" show-errors>
+                    <label class="control-label" for="billingContactLastname">Firtsname</label>
+                    <input type="text" required="" placeholder="Firstname" class="form-control" id="billingContactFirstname" name="billingContactFirstname" ng-model="billing.firstname"/>
+                  </div>
+                  <div class="form-group col-sm-4" show-errors>
+                    <label class="control-label" for="billingContactLastname">Lastname</label>
+                    <input type="text" required="" placeholder="Lastname" class="form-control" id="billingContactLastname" name="billingContactLastname" ng-model="billing.lastname" />
+                  </div>
+                  <div class="form-group col-sm-4"  show-errors>
+                    <label class="control-label" for="billingEmail">E-Mail</label>
+                    <input type="email" required="" placeholder="invoice@company.com" class="form-control" id="billingEmail" name="billingEmail" ng-model="billing.email" 
+                    
+                    />
+                  </div>
+
+                  <div class="form-group col-sm-12" show-errors>
                     <label class="control-label" for="company">Company name</label>
                     <input type="text" required="" placeholder="Company name" class="form-control" id="company" name="company" ng-model="billing.company" />
                   </div>
@@ -10,25 +26,25 @@
                     <label class="control-label" for="addressline2">Address line 2</label>
                     <input type="text" placeholder="c/o Accounting" class="form-control" id="addressline2" name="addressline2" ng-model="billing.addressline2" />
                   </div>
-                  <div class="form-group col-sm-10"  ng-class="{'has-error': billing.showErrors && billingForm.street.$error.required}">
+                  <div class="form-group col-sm-10" show-errors>
                     <label class="control-label" for="street">Street</label>
                     <input type="text" required="" placeholder="Street" class="form-control" id="street" name="street" ng-model="billing.street" />
                   </div>
-                  <div class="form-group col-sm-2"  ng-class="{'has-error': billing.showErrors && billingForm.number.$error.required}">
+                  <div class="form-group col-sm-2" show-errors>
                     <label class="control-label" for="number">No.</label>
                     <input type="text" required="" placeholder="No." class="form-control" id="number" name="number" ng-model="billing.number" />
                   </div>
-                  <div class="form-group col-sm-4"  ng-class="{'has-error': billing.showErrors && billingForm.postalcode.$error.required}">
+                  <div class="form-group col-sm-4" show-errors>
                     <label class="control-label" for="postalcode">Postal code</label>
                     <input type="text" required="" placeholder="Postal Code" class="form-control" id="postalcode" name="postalcode" ng-model="billing.postalcode" />
                   </div>
-                  <div class="form-group col-sm-8"  ng-class="{'has-error': billing.showErrors && billingForm.city.$error.required}">
+                  <div class="form-group col-sm-8"  show-errors>
                     <label class="control-label" for="city">City</label>
                     <input type="city" required="" placeholder="City" class="form-control" id="city" name="city" ng-model="billing.city" />
                   </div>
-                  <div class="form-group col-sm-4"  ng-class="{'has-error': billing.showErrors && billingForm.country.$error.required}">
+                  <div class="form-group col-sm-4" show-errors>
                     <label class="control-label" for="country">Country</label>
-                    <select required="" placeholder="Select country" class="form-control" id="country" name="country" ng-model="billing.country" ng-options="c.a2 as c.name for c in billing.countries"></select>
+                    <select required="" placeholder="Select country" class="form-control" id="country" name="country" ng-model="billing.country" ng-options="c.a2 as c.name for c in countries"></select>
                   </div>
                   <div class="form-group col-sm-8"> 
                     <label class="control-label" for="vatid">VAT Id</label>
@@ -36,7 +52,22 @@
                   </div>
                 </div>
               </div>
+
+
+              <div class="col-sm-12">
+                <accordion  close-others="oneAtATime">
+                  <accordion-group heading="Optional Contact Info" is-open="flase" is-disabled="false">
+                    <div class="row">
+                      <div class="form-group col-sm-6">
+                        <label class="control-label" for="billingContactPhone">Phone</label>
+                        <input type="text" placeholder="Phone" class="form-control" id="billingContactPhone" name="billingContactPhone" ng-model="billing.phone" />
+                      </div>
+                    </div>
+                  </accordion-group>
+                </accordion>
+              </div>
+
               <div class="form-group col-sm-2 col-sm-offset-10">
-                <button class="btn btn-default pull-right" ng-click="billing.done(billingForm.$valid)" type="submit">Continue <i class="fa fa-forward"></i></button>
+                <button class="btn btn-default pull-right" ng-click="done(index)" type="submit">Continue <i class="fa fa-forward"></i></button>
               </div>
             </form>

@@ -1,15 +1,13 @@
-            <form  role="form" class="form" name="paymentForm">
-              <div class="form-group col-sm-12" >
+            <form  role="form" class="form" name="payment.form">
+              <div class="form-group col-sm-12" show-errors>
                <label for="paymentselect" class="control-label">Payment Method</label>
-                <select id="paymentselect" class="form-control" data-ng-model="payment.data.bearer">
+                <select name="paymentselect" id="paymentselect" class="form-control" data-ng-model="payment.data.bearer">
                   <option data-ng-repeat="pm in payment.methodEnum" value="{{pm}}">{{paymentMethodNames[pm] || pm }}</option> 
                 </select>
               </div>
 
-              <!-- The abstraction of payment methods starts to leak here (hardcoded strings). We'll improve this soon,
-              but of course a direct debit form is different from a credit card form -->
               <div class="payment-elv" data-ng-show="payment.data.bearer=='Debit:Paymill' || payment.data.bearer=='Debit:FakePSP'">
-                <div class="form-group col-sm-12" ng-class="{'has-error': payment.showErrors && paymentForm.accountHolder.$error.required}">
+                <div class="form-group col-sm-12" show-errors>
                   <label for="accountHolder" class="control-label">Account Holder</label>
                   <input 
                     data-ng-model="payment.data.accountHolder" 
@@ -20,7 +18,7 @@
                     class="form-control" 
                     placeholder="Account Holder" />
                 </div>
-                <div class="form-group col-sm-6" ng-class="{'has-error': payment.showErrors && paymentForm.accountNumber.$error.required}">
+                <div class="form-group col-sm-6" show-errors>
                   <label for="accountNumber" class="control-label">Account Number</label>
                   <input 
                     data-ng-model="payment.data.bankAccountNumber" 
@@ -32,7 +30,7 @@
                     class="form-control" 
                     placeholder="Account Number" />
                 </div>
-                <div class="form-group col-sm-6" ng-class="{'has-error': payment.showErrors && paymentForm.bankRoutingCode.$error.required}">
+                <div class="form-group col-sm-6" show-errors>
                   <label for="bankRoutingCode" class="control-label">Bank Routing Code</label>
                   <input 
                     data-ng-model="payment.data.bankRoutingCode" 
@@ -49,7 +47,7 @@
                 <!-- Note that the input fields don't have a 'name' set, rendering it impossible for the browser
                 to post these fields even if something went wrong in our first line of defense of not having
                 an action on the form. -->
-                <div class="form-group col-sm-12" ng-class="{'has-error': payment.showErrors && paymentForm.cardholder.$error.required}">
+                <div class="form-group col-sm-12" show-errors>
                   <label for="email" class="control-label">Card Holder</label>
                   <input 
                     ng-model="payment.data.cardHolder" 
@@ -57,9 +55,10 @@
                     type="text" 
                     class="form-control" 
                     id="cardholder" 
+                    name="cardholder"
                     placeholder="Card Holder" />
                 </div>
-                <div class="form-group col-xs-8 col-sm-7" ng-class="{'has-error': payment.showErrors && (paymentForm.ccno.$error.required || paymentForm.ccno.$error.card)}">
+                <div class="form-group col-xs-8 col-sm-7" show-errors>
                   <label for="ccno" class="control-label">Credit Card Number</label>
                   <input 
                     ng-model="payment.data.cardNumber" 
@@ -73,7 +72,7 @@
                     payments-type-model="payment.cardtype"
                     />
                 </div>
-                <div class="form-group col-xs-4 col-sm-2" ng-class="{'has-error': payment.showErrors && (paymentForm.cvc.$error.required || paymentForm.cvc.$error.cvc)}">
+                <div class="form-group col-xs-4 col-sm-2" show-errors>
                   <label for="cvc" class="control-label">CVC</label>
                   <input 
                     data-ng-model="payment.data.cvc" 
@@ -85,7 +84,7 @@
                     placeholder="CVC" 
                     maxlength="4" />
                 </div>
-                <div class="col-xs-12 col-sm-3 form-group" ng-class="{'has-error': payment.showErrors && paymentForm.validto.$error.required}">
+                <div class="col-xs-12 col-sm-3 form-group" show-errors>
                   <label for="validto" class="control-label">Expires</label>
                   <p class="input-group">
                     <input type="text" 
@@ -99,7 +98,6 @@
                       is-open="payment.opendatepicker" 
                       min-date="payment.today" 
                       placeholder="MM/yyyy"
-                      ui-mask="99/9999"
                       datepicker-options="payment.dateOptions" 
                       date-disabled="disabled(date, mode)" 
                       ng-required="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'" 
@@ -112,7 +110,7 @@
               </div>
               <div class="clearfix"></div>              
               <div class="form-group col-sm-2 col-sm-offset-10">
-                <button class="btn btn-success pull-right" ng-disabled="!payment.ready || payment.signupRunning" ng-click="payment.done(paymentForm.$valid)" type="submit">Signup & Buy</button>
+                <button class="btn btn-success pull-right" ng-disabled="!payment.ready || payment.signupRunning" ng-click="done(index)" type="submit">Signup & Buy</button>
               </div>
               <!--
             <div class="row">
