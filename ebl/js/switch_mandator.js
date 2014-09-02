@@ -166,6 +166,18 @@ function autocompleteOnSelect(){
 
 var showNoAvailableMandatorPopup = function() {
 	$('#no_mandator_available').show();
+	
+	getCurrentUser(function(user) {
+		$('#no_mandator_available .fullname').text(user.firstName + " " + user.lastName);
+		if (user.provider) {
+			$('#no_mandator_available .logo').attr("src", "/img/auth-providers/250-" + user.provider + ".png");
+			$('#no_mandator_available .logo').attr("alt", user.provider);
+			$('#no_mandator_available .logo').show();
+		} else {
+			$('#no_mandator_available .logo').hide();
+		}
+	});
+	
 };
 
 
