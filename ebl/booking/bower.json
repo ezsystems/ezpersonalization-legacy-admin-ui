@@ -11,7 +11,8 @@
     "angular-bootstrap": "~0.11.0",
     "angular-payments": "*",
     "angular-ui-router": "~0.2.11",
-    "angular-bootstrap-show-errors": "~1.0.4"
+    "angular-bootstrap-show-errors": "~1.0.4",
+    "angular-ui": "~0.4.0"
   },
   "devDependencies": {
     "angular-mocks": "1.2.16",
