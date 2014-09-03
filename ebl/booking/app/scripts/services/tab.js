@@ -31,19 +31,16 @@ angular.module('ycBookingApp')
         id: 'booking',
         title: 'Configure Product',
         icon: "shopping-cart",
-        template: 'product.html',
 
       },
       {
         id: 'billing',
         title: 'Billing',
         icon: "envelope",
-        template: 'billing.html',
       }, {
         id: 'checkout',
         title: 'Checkout',
         icon: "credit-card",
-        template: 'checkout.html',
         done: function(){checkout.paymentDone($scope.product, $scope.billing, $scope.payment)},
       }, ];
 

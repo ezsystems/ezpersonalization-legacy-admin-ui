@@ -37,7 +37,8 @@ angular
         })	
 	.state("booking", {
           url: "/booking",
-          templateUrl: "views/booking.html"
+          templateUrl: "views/booking.html",
+	  controller: "BookingCtrl"
         })
         .state("account", {
           url: "/account",

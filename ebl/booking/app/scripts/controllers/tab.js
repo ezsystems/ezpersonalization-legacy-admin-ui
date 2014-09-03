@@ -21,7 +21,7 @@ angular.module('ycBookingApp')
 
       $scope.tabs = tab.tabs;
 
-      $scope.product = {
+      $scope.booking = {
       };
       $scope.account = {
         email: 'yc-pactas@byom.de',
