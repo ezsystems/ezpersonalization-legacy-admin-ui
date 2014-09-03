@@ -8,10 +8,7 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-  .controller('BookingCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('BookingCtrl', function ($scope, $resource) {
+      var plans = $resource('assets/plans.json',{},{});
+      $scope.plans = plans.get();
   });
