@@ -13,6 +13,7 @@
     <script src="ui-utils.js"></script>
     <script type="text/javascript" src="angular-payments.js"></script>
     <script type="text/javascript" src="https://sandbox.pactas.com/selfService/iterojs"></script>
+    <script type="text/javascript" src="showErrors.js"></script>
     <script src="script.js"></script>
   </head>
 
@@ -23,23 +24,20 @@
       </div>
       <div class="row" ng-controller="bookingCtrl">
         <tabset class="col-sm-12" type="tabs" justified="true" ng-hide="isSuccess">
-          <tab ng-repeat="tab in tabs" active="tab.active" disabled="tab.disabled" deselect="tab.deselect()">
+          <tab ng-repeat="tab in tabs" active="tab.active" disabled="!isEnabled($index)" deselect="deselect($index)" ng-init="index = $index">
             <tab-heading>
-              <i class="fa fa-{{tab.icon}}"></i>
-
-
-
-
-
- {{tab.title}}</tab-heading>
-            <div style="padding-top: 5px;" ng-include="tab.template"></div>
+              <i class="fa fa-{{tab.icon}}"></i>{{tab.title}}
+            </tab-heading>
+            <yc-isolate ng-attr-id="tab.id">
+              <div style="padding-top: 5px;" ng-include="tab.template"></div>
+            </yc-isolate>
           </tab>
         </tabset>
         <div ng-show="isSuccess">
           <div class="row">
             <div class="col-sm-12 alert alert-success">
               <div class="page-header col-sm-12">
-                <h1>Thats it!                                                                                                             <small>You successfully subscribed to Yoochoose Recommendation Engine!</small>
+                <h1>Thats it!<small>You successfully subscribed to Yoochoose Recommendation Engine!</small>
                 </h1>
               </div>
             </div>
