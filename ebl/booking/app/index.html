@@ -9,13 +9,14 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="ycBookingApp">
+  <body ng-app="ycBookingApp" ng-controller="TabCtrl">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -39,10 +40,10 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" collapse="navbarCollapsed">
-<ul class="nav navbar-nav" ng-controller="TabCtrl">
-	<li ng-repeat="tab in tabs" active="tab.active" disabled="!isEnabled($index)" deselect="deselect($index)" ng-init="index = $index">
-		<a href="#">
-			<i class="fa fa-{{tab.icon}}"></i>{{tab.title}}
+<ul class="nav navbar-nav" >
+	<li ng-repeat="tab in tabs" active="tab.active" disabled="!tab.isEnabled($index)" deselect="tab.deselect($index)" ng-init="index = {i: $index}">
+	<a ui-sref="{{tab.id}}">
+			<i class="fa fa-{{tab.icon}}"></i> {{tab.title}}
 		</a>
 	</li>
       </ul>
@@ -144,7 +145,12 @@
 	<script src="scripts/controllers/booking.js"></script>
         <script src="scripts/services/scopecast.js"></script>
 
-        <!-- endbuild -->
+        <script src="scripts/controllers/tab.js"></script>
+        <script src="scripts/services/checkout.js"></script>
+<script src="scripts/services/tab.js"></script>
+	<!-- endbuild -->
+
+	<script type="text/javascript" src="https://sandbox.pactas.com/selfService/iterojs"></script>
 
 <script type="text/javascript">document.write('<script src="' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':35729/livereload.js?snipver=1" type="text/javascript"><\/script>')</script>
 

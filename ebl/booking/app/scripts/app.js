@@ -12,7 +12,10 @@ angular
   .module('ycBookingApp', [
     'ngResource',
     'ngSanitize',
-    'ui.router'
+    'ui.router',
+    'ui.bootstrap.showErrors',
+    'ui.bootstrap'
+
   ])
   .run([ '$rootScope', '$state', '$stateParams',
     function ($rootScope, $state, $stateParams) {
