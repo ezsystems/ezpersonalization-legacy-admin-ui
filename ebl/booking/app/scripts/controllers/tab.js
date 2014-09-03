@@ -71,11 +71,9 @@ angular.module('ycBookingApp')
 	  }
           var form = $scope[tab.id].form;
           if(form === undefined || form.$pristine ||(form.$dirty && !form.$valid)){
-	      console.log('disabled', id);
             return false;
           }
         }
-	      console.log('enabled', id);
         return true;
 
       };
