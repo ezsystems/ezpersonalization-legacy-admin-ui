@@ -41,8 +41,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" collapse="navbarCollapsed">
 <ul class="nav navbar-nav" >
-	<li ng-repeat="tab in tabs" active="tab.active" disabled="!tab.isEnabled($index)" deselect="tab.deselect($index)" ng-init="index = {i: $index}">
-	<a ui-sref="{{tab.id}}">
+	<li ng-repeat="tab in tabs" active="tab.active"  ng-init="index = {i: $index}">
+	<a ui-sref="{{tab.id}}" >
 			<i class="fa fa-{{tab.icon}}"></i> {{tab.title}}
 		</a>
 	</li>
@@ -134,6 +134,7 @@
     <script src="bower_components/angular-payments/lib/angular-payments.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-bootstrap-show-errors/src/showErrors.js"></script>
+    <script src="bower_components/ngstorage/ngStorage.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -148,6 +149,7 @@
         <script src="scripts/controllers/tab.js"></script>
         <script src="scripts/services/checkout.js"></script>
 <script src="scripts/services/tab.js"></script>
+<script src="scripts/controllers/init.js"></script>
 	<!-- endbuild -->
 
 	<script type="text/javascript" src="https://sandbox.pactas.com/selfService/iterojs"></script>

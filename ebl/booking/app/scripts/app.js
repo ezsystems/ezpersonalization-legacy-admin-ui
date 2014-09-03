@@ -14,7 +14,8 @@ angular
     'ngSanitize',
     'ui.router',
     'ui.bootstrap.showErrors',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ngStorage'
 
   ])
   .run([ '$rootScope', '$state', '$stateParams',
@@ -24,15 +25,18 @@ angular
     }
   ])
   .config(
-    ['$stateProvider', '$urlRouterProvider',
-      function($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider
-        .when('/booking?productCode', '/booking/:productCode')
-        .otherwise('/booking');
+    ['$stateProvider', '$urlRouterProvider', '$locationProvider', 
+      function($stateProvider, $urlRouterProvider, $locationProvider) {
+        $locationProvider.html5Mode(true);
+        $urlRouterProvider.otherwise("/?productCode=none");
         $stateProvider
-	
+       	.state("root", {
+        url: "/?productCode",
+          template: "<div>INIT</div>",
+	  controller: "InitCtrl"
+        })	
 	.state("booking", {
-          url: "/booking/:productCode",
+          url: "/booking",
           templateUrl: "views/booking.html"
         })
         .state("account", {
