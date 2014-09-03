@@ -1,18 +1,12 @@
 angular
-  .module('bookingApp', ['ui.bootstrap', 'ui.bootstrap.showErrors', 'ngResource', 'ui.mask', 'angularPayments'])
-  .factory('scopeService', function() {
-    var service = {
-      scopes: {},
-      publishScope: function(id, scope) {
-        this.scopes[id] = scope;
-      },
-      broadcast: function(id, event, attrs) {
-        console.log("broadcasting for id "+ id );
-        this.scopes[id].$broadcast(event, attrs);
-      }
-    };
-    return service;
-  })
+  .module('yc.booking.app', [
+    'yc.booking.services',
+    'ui.bootstrap',
+    'ui.bootstrap.showErrors',
+    'ngResource',
+    'angularPayments',
+    ])
+
 
   .controller('bookingCtrl', ['$scope', '$resource', 'scopeService',
     function($scope, $resource, scopeService) {
@@ -55,60 +49,7 @@ angular
       };
       $scope.payment = {
         opendatepicker: false,
-        done: function() {
-
-          $scope.signupRunning = true;
-          // pass the order, customerData and payment data to IteroJS
-          // DTO: PaymentData
-          cart = {
-            planVariantId: $scope.product.selected,
-            customFields: {
-              website: $scope.product.website
-            }
-          };
-          customerData = {
-            emailAddress: $scope.billing.email,
-            firstName: $scope.billing.firstname,
-            lastName: $scope.billing.lastname,
-            tag: $scope.account.tag,
-            companyName: $scope.billing.company,
-            vatId: $scope.billing.vatid,
-            DefaultBearerMedium: 'Email',
-            customFields: {
-              phone: $scope.billing.phone,
-            },
-            address: {
-              "addressLine1": $scope.billing.company,
-              "addressLine2": $scope.billing.addressline2,
-              "street": $scope.billing.street,
-              "houseNumber": $scope.billing.number,
-              "postalCode": $scope.billing.postalcode,
-              "city": $scope.billing.city,
-              "country": $scope.billing.country
-            },
-          };
-          if ($scope.payment.validto !== undefined) {
-            $scope.payment.data.expiryMonth = $scope.payment.validto.getMonth();
-            $scope.payment.data.expiryYear = $scope.payment.validto.getFullYear();
-          }
-
-          new IteroJS.Signup().subscribe(self.iteroJSPayment, cart, customerData, $scope.payment.data, function(data) {
-            // This callback will be invoked when the signup succeeded (or failed)
-            // Note that the callback must use $apply, otherwise angularjs won't notice we changed something:
-            $scope.$apply(function() {
-              $scope.signupdata = data;
-              $scope.payment.signupRunning = false;
-              if (!data.Url) {
-                $scope.isSuccess = true; //done
-              } else {
-                window.location = data.Url; // redirect required, e.g. paypal, skrill
-              }
-            });
-          }, function(error) {
-            alert("an error occurred during signup!");
-            console.log(error);
-          });
-        },
+        
         ready: false,
         methods: {},
         methodEnum: [],
@@ -174,7 +115,62 @@ angular
             }
           }
         }
-      }
+      };
+      
+      paymentDone = function() {
+
+        $scope.signupRunning = true;
+        // pass the order, customerData and payment data to IteroJS
+        // DTO: PaymentData
+        cart = {
+          planVariantId: $scope.product.selected,
+          customFields: {
+            website: $scope.product.website
+          }
+        };
+        customerData = {
+          emailAddress: $scope.billing.email,
+          firstName: $scope.billing.firstname,
+          lastName: $scope.billing.lastname,
+          tag: $scope.account.tag,
+          companyName: $scope.billing.company,
+          vatId: $scope.billing.vatid,
+          DefaultBearerMedium: 'Email',
+          customFields: {
+            phone: $scope.billing.phone,
+          },
+          address: {
+            "addressLine1": $scope.billing.company,
+            "addressLine2": $scope.billing.addressline2,
+            "street": $scope.billing.street,
+            "houseNumber": $scope.billing.number,
+            "postalCode": $scope.billing.postalcode,
+            "city": $scope.billing.city,
+            "country": $scope.billing.country
+          },
+        };
+        if ($scope.payment.validto !== undefined) {
+          $scope.payment.data.expiryMonth = $scope.payment.validto.getMonth();
+          $scope.payment.data.expiryYear = $scope.payment.validto.getFullYear();
+        }
+
+        new IteroJS.Signup().subscribe(self.iteroJSPayment, cart, customerData, $scope.payment.data, function(data) {
+          // This callback will be invoked when the signup succeeded (or failed)
+          // Note that the callback must use $apply, otherwise angularjs won't notice we changed something:
+          $scope.$apply(function() {
+            $scope.signupdata = data;
+            $scope.payment.signupRunning = false;
+            if (!data.Url) {
+              $scope.isSuccess = true; //done
+            } else {
+              window.location = data.Url; // redirect required, e.g. paypal, skrill
+            }
+          });
+        }, function(error) {
+          alert("an error occurred during signup!");
+          console.log(error);
+        });
+      };
       
       $scope.done = function(index){
         tabDone(index, true);
@@ -184,13 +180,7 @@ angular
         tabDone(index, false);
       };
 
-      $scope.tabs = [{
-        id: 'product',
-        title: 'Configure Product',
-        icon: "shopping-cart",
-        template: 'product.html',
-
-      }, {
+      $scope.tabs = [ {
         id: 'account',
         title: 'Finalize Account',
         icon: "user",
@@ -206,7 +196,15 @@ angular
             $scope.billing.email = $scope.account.email;
           }
         }
-      }, {
+      },
+      {
+        id: 'product',
+        title: 'Configure Product',
+        icon: "shopping-cart",
+        template: 'product.html',
+
+      },
+      {
         id: 'billing',
         title: 'Billing',
         icon: "envelope",
@@ -216,7 +214,7 @@ angular
         title: 'Payment',
         icon: "credit-card",
         template: 'payment.html',
-        done: $scope.payment.done,
+        done: paymentDone,
       }, ];
 
 
