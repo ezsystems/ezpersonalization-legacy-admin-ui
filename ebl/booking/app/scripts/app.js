@@ -32,7 +32,7 @@ angular
         $stateProvider
        	.state("root", {
         url: "/?productCode",
-          template: "<div>INIT</div>",
+          template: '<div class="row"><div class="col-sm-2 col-sm-offset-5"><i class="fa-5x fa fa-refresh fa-spin"></i></div></div>',
 	  controller: "InitCtrl"
         })	
 	.state("booking", {
