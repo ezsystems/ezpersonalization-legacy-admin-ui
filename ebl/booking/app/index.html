@@ -1,24 +1,26 @@
-<script src="scripts/services/scopecast.js"></script>
 <!DOCTYPE html>
-<html>
-
+<html class="no-js">
   <head>
-    <meta charset="UTF-8" />
-    <title>Example - example-example1-production</title>
-    <link data-require="bootstrap-css@~3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
-    <link data-require="font-awesome@*" data-semver="4.1.0" rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" />
-    <script data-require="angular.js@*" data-semver="1.3.0-beta.5" src="https://code.angularjs.org/1.3.0-beta.5/angular.js"></script>
-    <script data-require="ui-bootstrap@0.11.0" data-semver="0.11.0" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.min.js"></script>
-    <script src="http://rawgithub.com/angular-ui/bootstrap/master/src/datepicker/datepicker.js"></script>
-    <script src="http://code.angularjs.org/1.2.14/angular-resource.js" data-semver="1.2.14" data-require="angular-resource@1.2.14"></script>
-    <script src="ui-utils.js"></script>
-    <script type="text/javascript" src="angular-payments.js"></script>
-    <script type="text/javascript" src="https://sandbox.pactas.com/selfService/iterojs"></script>
-    <script type="text/javascript" src="showErrors.js"></script>
-    <script src="script.js"></script>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
   </head>
+  <body ng-app="ycBookingApp">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
 
-  <body ng-app="bookingApp">
+    <!-- Add your site or application content here -->
     <div class="container">
       <div class="row">
         <h3 class="col-sm-12">Booking</h3>
@@ -80,6 +82,39 @@
       </div>
     </div>
     <!-- /.container -->
+
+
+    <!-- build:js(.) scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/checkout.js"></script>
+        <script src="scripts/controllers/billing.js"></script>
+        <script src="scripts/controllers/account.js"></script>
+	<script src="scripts/controllers/booking.js"></script>
+        <script src="scripts/services/scopecast.js"></script>
+
+        <!-- endbuild -->
+
+<script type="text/javascript">document.write('<script src="' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':35729/livereload.js?snipver=1" type="text/javascript"><\/script>')</script>
+
+
   </body>
 
 </html>
