@@ -46,11 +46,19 @@ angular
         })
         .state("checkout", {
           url: "/checkout",
-          templateUrl: "views/checkout.html"
+          templateUrl: "views/checkout.html",
+	  controller: "CheckoutCtrl"
         })
         .state("billing", {
           url: "/billing",
-          templateUrl: "views/billing.html"
+          templateUrl: "views/billing.html",
+	  controller: "BillingCtrl"
+
+        })
+        .state("finished", {
+          url: "/finished",
+          templateUrl: "views/finished.html",
+
         })
       }
     ]);

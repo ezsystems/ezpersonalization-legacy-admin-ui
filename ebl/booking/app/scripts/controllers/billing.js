@@ -8,10 +8,7 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-  .controller('BillingCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('BillingCtrl', function ($scope, $resource) {
+      var countries = $resource('assets/countries.json',{},{});
+      $scope.countries = countries.query();
   });
