@@ -1,17 +1,17 @@
             <form  role="form" class="form" name="payment.form">
               <div class="form-group col-sm-12" show-errors>
                <label for="paymentselect" class="control-label">Payment Method</label>
-                <select name="paymentselect" id="paymentselect" class="form-control" data-ng-model="payment.data.bearer">
-                  <option data-ng-repeat="pm in payment.methodEnum" value="{{pm}}">{{paymentMethodNames[pm] || pm }}</option> 
+                <select name="paymentselect" id="paymentselect" class="form-control" data-ng-model="payment.bearer">
+                  <option data-ng-repeat="pm in paymentMethodEnum" value="{{pm}}">{{paymentMethodNames[pm] || pm }}</option> 
                 </select>
               </div>
 
-              <div class="payment-elv" data-ng-show="payment.data.bearer=='Debit:Paymill' || payment.data.bearer=='Debit:FakePSP'">
+              <div class="payment-elv" data-ng-show="isDebit()">
                 <div class="form-group col-sm-12" show-errors>
                   <label for="accountHolder" class="control-label">Account Holder</label>
                   <input 
-                    data-ng-model="payment.data.accountHolder" 
-                    ng-required="payment.data.bearer=='Debit:Paymill' || payment.data.bearer=='Debit:FakePSP'" 
+                    data-ng-model="payment.accountHolder" 
+                    ng-required="isDebit()" 
                     id="accountHolder" 
                     name="accountHolder" 
                     type="text" 
@@ -21,8 +21,8 @@
                 <div class="form-group col-sm-6" show-errors>
                   <label for="accountNumber" class="control-label">Account Number</label>
                   <input 
-                    data-ng-model="payment.data.bankAccountNumber" 
-                    ng-required="payment.data.bearer=='Debit:Paymill' || payment.data.bearer=='Debit:FakePSP'" 
+                    data-ng-model="payment.bankAccountNumber" 
+                    ng-required="isDebit()" 
                     id="accountNumber" 
                     name="accountNumber" 
                     maxlength="10" 
@@ -33,8 +33,8 @@
                 <div class="form-group col-sm-6" show-errors>
                   <label for="bankRoutingCode" class="control-label">Bank Routing Code</label>
                   <input 
-                    data-ng-model="payment.data.bankRoutingCode" 
-                    ng-required="payment.data.bearer=='Debit:Paymill' || payment.data.bearer=='Debit:FakePSP'" 
+                    data-ng-model="payment.bankRoutingCode" 
+                    ng-required="isDebit()" 
                     id="bankRoutingCode" 
                     name="bankRoutingCode" 
                     maxlength="8" 
@@ -43,15 +43,15 @@
                     placeholder="Bank Routing Code" />
                 </div>
               </div>
-              <div class="payment-cc" data-ng-show="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'">
+              <div class="payment-cc" data-ng-show="isCreditCard()">
                 <!-- Note that the input fields don't have a 'name' set, rendering it impossible for the browser
                 to post these fields even if something went wrong in our first line of defense of not having
                 an action on the form. -->
                 <div class="form-group col-sm-12" show-errors>
                   <label for="email" class="control-label">Card Holder</label>
                   <input 
-                    ng-model="payment.data.cardHolder" 
-                    ng-required="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'" 
+                    ng-model="payment.cardHolder" 
+                    ng-required="isCreditCard()" 
                     type="text" 
                     class="form-control" 
                     id="cardholder" 
@@ -61,8 +61,8 @@
                 <div class="form-group col-xs-8 col-sm-7" show-errors>
                   <label for="ccno" class="control-label">Credit Card Number</label>
                   <input 
-                    ng-model="payment.data.cardNumber" 
-                    ng-required="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'"
+                    ng-model="payment.cardNumber" 
+                    ng-required="isCreditCard()"
                     type="text" 
                     class="form-control" 
                     id="ccno" 
@@ -75,8 +75,8 @@
                 <div class="form-group col-xs-4 col-sm-2" show-errors>
                   <label for="cvc" class="control-label">CVC</label>
                   <input 
-                    data-ng-model="payment.data.cvc" 
-                    ng-required="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'"
+                    data-ng-model="payment.cvc" 
+                    ng-required="isCreditCard()"
                     type="text" 
                     class="form-control" 
                     id="cvc" 
@@ -94,24 +94,24 @@
                       datepicker-popup="MM/yy" 
                       datepicker-mode="'month'"
                       show-button-bar="false"
-                      ng-model="payment.validto" 
-                      is-open="payment.opendatepicker" 
-                      min-date="payment.today" 
+                      ng-model="validto" 
+                      is-open="opendatepicker" 
+                      min-date="today" 
                       placeholder="MM/yy"
                       model-view-value="true"
-                      datepicker-options="payment.dateOptions" 
+                      datepicker-options="dateOptions" 
                       date-disabled="disabled(date, mode)" 
-                      ng-required="payment.data.bearer=='CreditCard:Paymill' || payment.data.bearer=='CreditCard:FakePSP'" 
+                      ng-required="isCreditCard()" 
                       close-text="Close"  />
                     <span class="input-group-btn">
-                      <button type="button" class="btn btn-default" ng-click="payment.pickdate($event)"><i class="fa fa-calendar"></i></button>
+                      <button type="button" class="btn btn-default" ng-click="pickdate($event)"><i class="fa fa-calendar"></i></button>
                     </span>
                   </p>
                 </div>
               </div>
               <div class="clearfix"></div>              
               <div class="form-group col-sm-2 col-sm-offset-10">
-                <button class="btn btn-success pull-right" ng-disabled="!payment.ready || payment.signupRunning" ng-click="done(index)" type="submit">Signup & Buy</button>
+                <button class="btn btn-success pull-right" ng-disabled="!ready || signupRunning" ng-click="checkout()" type="submit">Signup & Buy</button>
               </div>
               <!--
             <div class="row">

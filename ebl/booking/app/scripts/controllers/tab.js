@@ -8,7 +8,7 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-  .controller('TabCtrl', function ($state, $rootScope, $scope, tab, checkout) {
+  .controller('TabCtrl', function ($state, $rootScope, $scope, tab) {
 
     $rootScope.$on('$stateChangeStart', 
     function(event, toState, toParams, fromState, fromParams){
@@ -70,7 +70,7 @@ angular.module('ycBookingApp')
 		  break;
 	  }
           var form = $scope[tab.id].form;
-          if(form === undefined || form.$pristine ||(form.$dirty && !form.$valid)){
+          if(form === undefined || !form.$valid){
             return false;
           }
         }

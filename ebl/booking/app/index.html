@@ -16,14 +16,14 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="ycBookingApp" ng-controller="TabCtrl">
+  <body ng-app="ycBookingApp" ng-controller="TabCtrl" style="padding-top: 70px;">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
-<nav class="navbar navbar-default" role="navigation" >
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" ng-click="navbarCollapsed = !navbarCollapsed">
@@ -40,8 +40,8 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" collapse="navbarCollapsed">
-<ul class="nav navbar-nav" >
-	<li ng-repeat="tab in tabs" active="tab.active"  ng-init="index = {i: $index}">
+<ul class="nav navbar-nav"   ng-hide="$state.current.name=='finished'">
+	<li ng-repeat="tab in tabs" active="tab.active"  ui-sref-active="active">
 	<a ui-sref="{{tab.id}}" >
 			<i class="fa fa-{{tab.icon}}"></i> {{tab.title}}
 		</a>
@@ -49,71 +49,12 @@
       </ul>
 
     </div>
-</nav>
-<div ui-view></div>
-<!--      <div class="row">
-        <h3 class="col-sm-12">Booking</h3>
-      </div>
-      <div class="row" ng-controller="bookingCtrl">
-        <tabset class="col-sm-12" type="tabs" justified="true" ng-hide="isSuccess">
-          <tab ng-repeat="tab in tabs" active="tab.active" disabled="!isEnabled($index)" deselect="deselect($index)" ng-init="index = $index">
-            <tab-heading>
-              <i class="fa fa-{{tab.icon}}"></i>{{tab.title}}
-            </tab-heading>
-            <yc-isolate ng-attr-id="tab.id">
-              <div style="padding-top: 5px;" ng-include="tab.template"></div>
-            </yc-isolate>
-          </tab>
-        </tabset>
-        <div ng-show="isSuccess">
-          <div class="row">
-            <div class="col-sm-12 alert alert-success">
-              <div class="page-header col-sm-12">
-                <h1>Thats it!<small>You successfully subscribed to Yoochoose Recommendation Engine!</small>
-                </h1>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-8 well">
-              <div class="row">
-                <div class="col-sm-6">
-                  Your contract number:
-                </div>
-                <div class="col-sm-6">
-                  {{signupdata.ContractId}}
-                </div>
-                <div class="col-sm-6">
-                  Your customer id:
-                </div>
-                <div class="col-sm-6">
-                  {{signupdata.CustomerId}}
-                </div>
-                <div class="col-sm-6">
-                  Your order id:
-                </div>
-                <div class="col-sm-6">
-                  {{signupdata.OrderId}}
-                </div>
-                <div class="col-sm-6">
-                  Your mandator id:
-                </div>
-                <div class="col-sm-6">
-                  {{mandatorid}}
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              links----
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
+</nav>
+    <div class="container">
+<div   ui-view></div>
 
-    -->    
-    <!-- /.container -->
-
+</div>
 
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
@@ -150,12 +91,12 @@
         <script src="scripts/services/checkout.js"></script>
 <script src="scripts/services/tab.js"></script>
 <script src="scripts/controllers/init.js"></script>
+<script src="scripts/directives/match.js"></script>
 	<!-- endbuild -->
 
 	<script type="text/javascript" src="https://sandbox.pactas.com/selfService/iterojs"></script>
 
 <script type="text/javascript">document.write('<script src="' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':35729/livereload.js?snipver=1" type="text/javascript"><\/script>')</script>
-
 
   </body>
 
