@@ -27,11 +27,12 @@ angular.module('ycBookingApp')
           this.opendatepicker = !this.opendatepicker;
         };
         $scope.dateOptions = {
+          datepickerMode: 'month',
           minMode: 'month',
           maxMode: 'month',
           formatMonth: 'MM',
         };
-        $scope.today = new Date();
+        
      
 
       $scope.isSuccess = false;
