@@ -1,0 +1,12 @@
+{
+  "account_title": "Nutzerdaten eingeben",
+  "booking_title": "Produkt wählen",
+  "billing_title": "Rechnungsdaten eingeben",
+  "checkout_title": "Bestellen",
+  "firstname": "Vorname",
+  "lastname": "Nachname",
+  "email": "e-mail",
+  "password": "Passwort",
+  "verify": "Überprüfen",
+  "continue": "weiter"
+}

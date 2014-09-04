@@ -8,24 +8,12 @@
  * Factory in the ycBookingApp.
  */
 angular.module('ycBookingApp')
-  .factory('tab', function (scopecast) {
+  .factory('tab', function () {
 
     var tabs = [ {
         id: 'account',
-        title: 'Finalize Account',
         icon: "user",
         template: 'account.html',
-        cleanup: function(){
-          if ($scope.billing.firstname === undefined){
-            $scope.billing.firstname = $scope.account.firstname;
-          }
-          if ($scope.billing.lastname === undefined){
-            $scope.billing.lastname = $scope.account.lastname;
-          }
-          if ($scope.billing.email === undefined){
-            $scope.billing.email = $scope.account.email;
-          }
-        }
       },
       {
         id: 'booking',
@@ -41,7 +29,7 @@ angular.module('ycBookingApp')
         id: 'checkout',
         title: 'Checkout',
         icon: "credit-card",
-        done: function(){checkout.paymentDone($scope.product, $scope.billing, $scope.payment)},
+//        done: function(){checkout.paymentDone($scope.product, $scope.billing, $scope.payment)
       }, ];
 
 
