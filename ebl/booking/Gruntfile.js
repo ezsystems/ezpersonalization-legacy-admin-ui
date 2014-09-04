@@ -9,6 +9,9 @@
 
 module.exports = function (grunt) {
 
+	grunt.file.defaultEncoding = 'utf-8';
+        grunt.file.preserveBOM = true;
+
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
@@ -144,6 +147,22 @@ module.exports = function (grunt) {
       },
       server: '.tmp'
     },
+
+    jsonAngularTranslate: {
+        translate: {
+          options: {
+	  //    moduleName: 'ycBookingApp'
+                hasPreferredLanguage: true
+	   },
+          files: [{
+            expand: true,
+            cwd: 'app/locale',
+            src: '*.json',
+            dest: 'app/scripts/locale',
+            ext: '.js'
+          }]
+        }
+      },
 
     // Add vendor prefixed styles
     autoprefixer: {
@@ -390,6 +409,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'jsonAngularTranslate:translate',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',

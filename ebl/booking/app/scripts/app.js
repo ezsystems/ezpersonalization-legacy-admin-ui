@@ -15,18 +15,33 @@ angular
     'ui.router',
     'ui.bootstrap.showErrors',
     'ui.bootstrap',
-    'ngStorage'
+    'ngStorage',
+    'pascalprecht.translate',
+    'translations'
 
   ])
   .run([ '$rootScope', '$state', '$stateParams',
     function ($rootScope, $state, $stateParams) {
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
+
     }
   ])
   .config(
-    ['$stateProvider', '$urlRouterProvider', '$locationProvider', 
-      function($stateProvider, $urlRouterProvider, $locationProvider) {
+    ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$translateProvider', 
+      function($stateProvider, $urlRouterProvider, $locationProvider, $translateProvider) {
+    $translateProvider
+        .registerAvailableLanguageKeys(['en', 'de'], {
+        'en_US': 'en',
+        'en_UK': 'en',
+        'de_DE': 'de',
+        'de_CH': 'de',
+	'de_AT': 'de'
+    })
+    .determinePreferredLanguage();
+    $translateProvider.fallbackLanguage('en');
+    $translateProvider.useMissingTranslationHandlerLog();
+      
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise("/?productCode=none");
         $stateProvider

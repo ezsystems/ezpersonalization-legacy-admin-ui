@@ -1,0 +1,16 @@
+{
+  "account_title": "Finalize Account",
+  "booking_title": "Configure Product",
+  "billing_title": "Billing",
+  "checkout_title": "Checkout",
+  "firstname": "firstname",
+  "lastname": "lastname",
+  "email": "e-mail",
+  "password": "password",
+  "verify": "verify",
+  "continue": "continue",
+  "lang_de": "German",
+  "lang_en": "English"
+  
+
+}
