@@ -8,7 +8,7 @@
   "email": "E-Mail",
   "password": "Password",
   "verify_password": "Verify Password",
-  "continue_password": "Continue",
+  "continue": "Continue",
   "lang_de": "German",
   "lang_en": "English"
   
