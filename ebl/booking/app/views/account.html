@@ -20,6 +20,7 @@
                 <input type="password" required="" placeholder="Verify password"  class="form-control" id="verify" name="verify" ng-model="account.verify" match="account.password"/>
               </div>
               <div class="form-group col-sm-2 col-sm-offset-10">
-                <button class="btn btn-default pull-right" ng-click="done(index)" type="submit">Continue <i class="fa fa-forward"></i></button>
-              </div>
-            </form>
+                <button class="btn btn-default pull-right" ng-click="functions.proceed('account')" type="submit">Continue <i class="fa fa-forward"></i></button>
+	</div>
+	
+      </form>
