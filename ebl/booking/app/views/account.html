@@ -1,26 +1,26 @@
             <form role="form" class="form" name="account.form">
               <div class="form-group col-sm-12 col-md-4">
-                <label class="control-label" for="firstname">E-mail</label>
+                <label class="control-label" for="firstname">{{'email' | translate}}</label>
                 <p class="form-control-static">{{account.email || 'your@email.de'}}</p>
               </div>
               <div class="form-group col-sm-6 col-md-4" show-errors>
-                <label class="control-label" for="firstname">Firstname</label>
+                <label class="control-label" for="firstname">{{'firstname' | translate}}</label>
                 <input type="text" required="" placeholder="First name" class="form-control" id="firstname" name="firstname" ng-model="account.firstname" />
               </div>
               <div class="form-group col-sm-6 col-md-4" show-errors>
-                <label class="control-label" for="lastname">Lastname</label>
+                <label class="control-label" for="lastname">{{'lastname' | translate}}</label>
                 <input type="text" required="" placeholder="Lastname" class="form-control" id="lastname" name="lastname" ng-model="account.lastname" />
               </div>
               <div class="form-group col-sm-6 col-md-4 col-md-offset-4" show-errors>
-                <label class="control-label" for="password">Password</label>
+                <label class="control-label" for="password">{{'password' | translate}}</label>
                 <input type="password" required="" placeholder="Password" class="form-control" id="password" name="password" ng-model="account.password" />
               </div>
               <div class="form-group col-sm-6 col-md-4" show-errors>
-                <label class="control-label" for="verify">Verify</label>
+                <label class="control-label" for="verify">{{'verify' | translate}}</label>
                 <input type="password" required="" placeholder="Verify password"  class="form-control" id="verify" name="verify" ng-model="account.verify" match="account.password"/>
               </div>
               <div class="form-group col-sm-2 col-sm-offset-10">
-                <button class="btn btn-default pull-right" ng-click="functions.proceed('account')" type="submit">Continue <i class="fa fa-forward"></i></button>
+                <button class="btn btn-default pull-right" ng-click="functions.proceed('account')" type="submit">{{'continue' |translate}} <i class="fa fa-forward"></i></button>
 	</div>
 	
       </form>
