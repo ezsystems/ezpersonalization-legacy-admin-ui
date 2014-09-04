@@ -1,0 +1,123 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name ycBookingApp.controller:CheckoutCtrl
+ * @description
+ * # CheckoutCtrl
+ * Controller of the ycBookingApp
+ */
+angular.module('ycBookingApp')
+  .controller('CheckoutCtrl', function ($scope, $state) {
+      var self = this;
+ 
+
+        $scope.opendatepicker =  false;
+        
+        $scope.ready = false;
+        $scope.paymentMethods = {};
+        $scope.paymentMethodEnum = [];
+        $scope.payment = {
+          bearer: ''
+        };
+        $scope.pickdate = function($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+
+          this.opendatepicker = !this.opendatepicker;
+        };
+        $scope.dateOptions = {
+          minMode: 'month',
+          maxMode: 'month',
+          formatMonth: 'MM',
+        };
+        $scope.today = new Date();
+     
+
+      $scope.isSuccess = false;
+
+      var paymentConfig = {
+        // REQUIRED. The initial order to be displayed. This will be requested immediately upon load
+        publicApiKey: "53f1f9371d8dd00714634bf0",
+        // REQUIRED. After payment user will be redirected to this URL.
+        providerReturnUrl: "https://admin.yoochoose.com",
+      };
+      self.iteroJSPayment = new IteroJS.Payment(paymentConfig, function() {
+        $scope.$apply(function() {
+          // When IteroJS is ready, copy the payment methods and initial order
+          $scope.ready = true;
+          $scope.paymentMethods = self.iteroJSPayment.getAvailablePaymentMethods();
+          $scope.paymentMethodEnum = self.iteroJSPayment.getAvailablePaymentMethodEnum();
+          $scope.payment.bearer = $scope.paymentMethodEnum[0];
+        });
+      }, function(errorData) {
+        alert("error initializing payment!");
+        console.log(errorData);
+      });
+
+      $scope.isDebit = function(){
+	      return $scope.payment.bearer=='Debit:Paymill' || $scope.payment.bearer=='Debit:FakePSP';
+      }
+
+      $scope.isCreditCard = function(){
+	      return $scope.payment.bearer=='CreditCard:Paymill' || $scope.payment.bearer=='CreditCard:FakePSP';
+      }
+
+
+      function checkout(cartData, billingData, paymentData) {
+
+      var cart = {
+          planVariantId: cartData.planVariantId,
+          customFields: {
+            website: cartData.website
+          }
+        };
+        var customerData = {
+          emailAddress: billingData.email,
+          firstName: billingData.firstname,
+          lastName: billingData.lastname,
+          tag: billingData.tag,
+          companyName: billingData.company,
+          vatId: billingData.vatid,
+          DefaultBearerMedium: 'Email',
+          customFields: {
+            phone: billingData.phone,
+          },
+          address: {
+            "addressLine1": billingData.company,
+            "addressLine2": billingData.addressline2,
+            "street": billingData.street,
+            "houseNumber": billingData.number,
+            "postalCode": billingData.postalcode,
+            "city": billingData.city,
+            "country": billingData.country
+          },
+        };
+        if (paymentData.validto !== undefined) {
+          paymentData.expiryMonth = $scope.validto.getMonth();
+          paymentData.expiryYear = $scope.validto.getFullYear();
+        }
+	console.log(cart, customerData, paymentData);
+
+        new IteroJS.Signup().subscribe(self.iteroJSPayment, cart, customerData, paymentData, function(data) {
+          // This callback will be invoked when the signup succeeded (or failed)
+          // Note that the callback must use $apply, otherwise angularjs won't notice we changed something:
+          $scope.$apply(function() {
+            if (!data.Url) {
+              $scope.isSuccess = true; //done
+	      $state.go('finished');
+            } else {
+              window.location = data.Url; // redirect required, e.g. paypal, skrill
+            }
+          });
+        }, function(error) {
+          alert("an error occurred during signup!");
+          console.log(error);
+        });
+      };
+
+      $scope.checkout = function(){checkout($scope.booking, $scope.billing, $scope.payment)};
+
+
+		
+		  });
