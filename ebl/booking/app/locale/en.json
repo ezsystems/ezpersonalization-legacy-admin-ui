@@ -3,12 +3,12 @@
   "booking_title": "Configure Product",
   "billing_title": "Billing",
   "checkout_title": "Checkout",
-  "firstname": "firstname",
-  "lastname": "lastname",
-  "email": "e-mail",
-  "password": "password",
-  "verify": "verify",
-  "continue": "continue",
+  "firstname": "Firstname",
+  "lastname": "Lastname",
+  "email": "E-Mail",
+  "password": "Password",
+  "verify_password": "Verify Password",
+  "continue_password": "Continue",
   "lang_de": "German",
   "lang_en": "English"
   
