@@ -5,10 +5,10 @@
   "checkout_title": "Bestellen",
   "firstname": "Vorname",
   "lastname": "Nachname",
-  "email": "e-mail",
+  "email": "E-Mail",
   "password": "Passwort",
-  "verify_password": "Überprüfen",
-  "continue_password": "weiter",
+  "verify_password": "Passwort überprüfen",
+  "continue": "Weiter",
   "lang_de": "Deutsch",
   "lang_en": "Englisch"
 }
