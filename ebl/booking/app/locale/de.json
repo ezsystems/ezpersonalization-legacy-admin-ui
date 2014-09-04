@@ -8,5 +8,7 @@
   "email": "e-mail",
   "password": "Passwort",
   "verify": "Überprüfen",
-  "continue": "weiter"
+  "continue": "weiter",
+  "lang_de": "Deutsch",
+  "lang_en": "Englisch"
 }
