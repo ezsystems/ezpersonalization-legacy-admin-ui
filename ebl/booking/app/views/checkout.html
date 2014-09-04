@@ -92,15 +92,12 @@
                       name="validto"
                       class="form-control" 
                       datepicker-popup="MM/yy" 
-                      datepicker-mode="'month'"
                       show-button-bar="false"
                       ng-model="validto" 
                       is-open="opendatepicker" 
                       min-date="today" 
                       placeholder="MM/yy"
-                      model-view-value="true"
                       datepicker-options="dateOptions" 
-                      date-disabled="disabled(date, mode)" 
                       ng-required="isCreditCard()" 
                       close-text="Close"  />
                     <span class="input-group-btn">
@@ -113,20 +110,7 @@
               <div class="form-group col-sm-2 col-sm-offset-10">
                 <button class="btn btn-success pull-right" ng-disabled="!ready || signupRunning" ng-click="checkout()" type="submit">Signup & Buy</button>
               </div>
-              <!--
-            <div class="row">
-              <div class="col-sm-12">
-                <alert type="danger">
-                  payment data: {{payment.data}} <br />
-                  show Errors: {{payment.showErrors}} <br />
-                  card errors: {{paymentForm.ccno.$error}} <br />
-                  card type: {{payment.cardtype}} <br />
-                  valid: {{paymentForm.$valid}} <br />
-                </alert>
-              </div>
-            </div>
-            -->
-
+{{dateOptions}}
             </form>
             
 
