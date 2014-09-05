@@ -10,5 +10,5 @@
 angular.module('ycBookingApp')
   .controller('InitCtrl', function ($state, $sessionStorage, $scope) {
 		  $sessionStorage.productcode = $state.params.productCode;
-		  $state.go($scope.tabs[0].id);
+		  $state.go($scope.tabs[0].id, {}, {location: false});
   });

@@ -71,8 +71,9 @@ angular
 
         })
         .state("finished", {
-          url: "/finished",
+          url: "/finished/:customerid/:contractid/:orderid",
           templateUrl: "views/finished.html",
+	  controller: "FinishedCtrl"
 
         })
       }

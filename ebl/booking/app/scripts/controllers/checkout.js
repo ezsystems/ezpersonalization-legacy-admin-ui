@@ -106,7 +106,13 @@ angular.module('ycBookingApp')
           $scope.$apply(function() {
             if (!data.Url) {
               $scope.isSuccess = true; //done
-	      $state.go('finished');
+              var params = {
+                  contractid: data.ContractId,
+                  customerid: data.CustomerId,
+                  orderid: data.OrderId
+              }
+              console.log(params);
+	      $state.go('finished', params, {location: false});
             } else {
               window.location = data.Url; // redirect required, e.g. paypal, skrill
             }

@@ -10,7 +10,7 @@
 angular.module('ycBookingApp')
   .controller('TabCtrl', function ($state, $rootScope, $scope, tab) {
 
-    $rootScope.$on('$stateChangeStart', 
+   $rootScope.$on('$stateChangeStart', 
     function(event, toState, toParams, fromState, fromParams){
         if (!isEnabled(toState.name)){ 
                 $scope.$broadcast('show-errors-check-validity');
@@ -78,25 +78,9 @@ angular.module('ycBookingApp')
 
       };
 
-      function proceed(id ){
-	for (var i = 0; (i < $scope.tabs.length); i++){
-          var tab = $scope.tabs[i];
-	  if (tab.id == id) {
-              var nextIndex = i +1;
-              if (nextIndex < $scope.tabs.length){
-                console.log($scope.tabs[nextIndex].id)
-                $state.go($scope.tabs[nextIndex].id)
-              }
-	  }
-       		
-	}
-      };
 
 
       
       
-      $scope.functions = {
-	proceed: proceed,
-      }
 
   });
