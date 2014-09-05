@@ -17,8 +17,8 @@ angular
     'ui.bootstrap',
     'ngStorage',
     'pascalprecht.translate',
-    'translations'
-
+    'translations',
+    'creditCardInput'
   ])
   .run([ '$rootScope', '$state', '$stateParams',
     function ($rootScope, $state, $stateParams) {

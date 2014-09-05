@@ -10,7 +10,20 @@
   "verify_password": "Verify Password",
   "continue": "Continue",
   "lang_de": "German",
-  "lang_en": "English"
-  
+  "lang_en": "English",
+  "company_name": "Company name",
+  "addr_line_2": "Address line 2",
+  "addr_line_2_placeholder": "c/o Accounting",
+  "street": "Street",
+  "street_no": "No.",
+  "postal_code": "Postal Code",
+  "city": "City",
+  "country": "Country",
+  "vatid": "VAT id",
+  "invoice_email_placeholder": "invoice@my-company.com",
+  "optional_contact_info": "Optional contact data",
+  "phone_number": "Phone",
+  "product_select": "Product",
+  "website": "Website" 
 
 }
