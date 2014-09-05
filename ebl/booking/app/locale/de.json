@@ -24,8 +24,20 @@
   "optional_contact_info": "Optionale Kontaktdaten",
   "phone_number": "Telefon",
   "product_select": "Produkt",
-  "website": "Webseite"
-
+  "website": "Webseite",
+  "finished_header": "Das war's",
+  "finished_header_small": "Sie haben sich für den Yoochoose Recommendation Service registriert!",
+  "order_confirm": "Ihre Bestelldaten",
+  "show_customerid": "Ihre Kundennummer:",
+  "show_contractid": "Ihre Vertragsnummer:",
+  "show_orderid": "Ihre Bestellnummer:",
+  "show_mandatorid": "Ihre Mandatennummer:",
+  "docs_header": "Lernen",
+  "docs_teaser": "Wie funktioniert der Recommendation service? was sind Modelle oder Scenarien? Wie funktionieren A/B Tests? Finden Sie es heraus!",
+  "docs_button": "Dokumentation",
+  "dashboard_header": "Loslegen",
+  "dashboard_teaser": "Konfigurieren sie den Service, schauen Sie sich die Statistiken an und verwalten Sie ihre A/B Tests.",
+  "dashboard_button": "Dashboard"
 
 
 
