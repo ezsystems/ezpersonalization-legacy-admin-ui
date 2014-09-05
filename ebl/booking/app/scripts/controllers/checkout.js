@@ -94,8 +94,8 @@ angular.module('ycBookingApp')
             "country": billingData.country
           },
         };
-        if (paymentData.validto !== undefined) {
-          paymentData.expiryMonth = $scope.validto.getMonth();
+        if ($scope.validto !== undefined) {
+          paymentData.expiryMonth = $scope.validto.getMonth() +1;
           paymentData.expiryYear = $scope.validto.getFullYear();
         }
 	console.log(cart, customerData, paymentData);

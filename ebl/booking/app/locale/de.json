@@ -10,5 +10,23 @@
   "verify_password": "Passwort überprüfen",
   "continue": "Weiter",
   "lang_de": "Deutsch",
-  "lang_en": "Englisch"
+  "lang_en": "Englisch",
+  "company_name": "Firmenname",
+  "addr_line_2": "Adresszeile 2",
+  "addr_line_2_placeholder": "c/o Buchhaltung",
+  "street": "Straße",
+  "street_no": "Nr.",
+  "postal_code": "Postleitzahl",
+  "city": "Ort",
+  "country": "Land",
+  "vatid": "Umsatzsteuernummer",
+  "invoice_email_placeholder": "rechnungen@meine-firma.de",
+  "optional_contact_info": "Optionale Kontaktdaten",
+  "phone_number": "Telefon",
+  "product_select": "Produkt",
+  "website": "Webseite"
+
+
+
+
 }
