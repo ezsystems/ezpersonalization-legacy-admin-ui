@@ -44,7 +44,7 @@
 <ul class="nav navbar-nav"   ng-hide="$state.current.name=='finished'">
 	<li ng-repeat="tab in tabs" active="tab.active"  ui-sref-active="active">
 	<!--<a ui-sref="{{tab.id}}" >-->
-	<a href="" ng-click="go(tab.id)" >
+	<a ui-sref="{{tab.id}}" ng-click="go(tab.id)" >
 			<i class="fa fa-{{tab.icon}}"></i> {{tab.id+'_title' | translate}}
 		</a>
 		</li>
