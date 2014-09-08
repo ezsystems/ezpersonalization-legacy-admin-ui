@@ -78,6 +78,9 @@ angular.module('ycBookingApp')
 
       };
 
+      function go(id){$state.go(id,{},{location:false})};
+      $scope.go = go;
+
 
 
       
