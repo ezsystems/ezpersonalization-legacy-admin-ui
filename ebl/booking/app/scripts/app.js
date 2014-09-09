@@ -10,6 +10,7 @@
  */
 angular
   .module('ycBookingApp', [
+    'ycBookingApp.rest',
     'ngResource',
     'ngSanitize',
     'ui.router',
@@ -28,8 +29,8 @@ angular
     }
   ])
   .config(
-    ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$translateProvider', 
-      function($stateProvider, $urlRouterProvider, $locationProvider, $translateProvider) {
+    ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$translateProvider', 'ycRestfrontendProvider',
+      function($stateProvider, $urlRouterProvider, $locationProvider, $translateProvider, ycRestfrontendProvider) {
     $translateProvider
         .registerAvailableLanguageKeys(['en', 'de'], {
         'en_US': 'en',
@@ -43,7 +44,7 @@ angular
     $translateProvider.useMissingTranslationHandlerLog();
       
         $locationProvider.html5Mode(true);
-        $urlRouterProvider.otherwise("/?productCode=none");
+       // $urlRouterProvider.otherwise("/?productCode=none");
         $stateProvider
        	.state("root", {
         url: "/?productCode",
@@ -57,7 +58,14 @@ angular
         })
         .state("account", {
           url: "/account",
-          templateUrl: "views/account.html"
+          templateUrl: "views/account.html",
+          resolve: {loginData: function(ycRestfrontend){
+                           var me = ycRestfrontend.getMe();
+                           console.log(me);
+                           return me;
+                        }
+          },
+          controller: "AccountCtrl"
         })
         .state("checkout", {
           url: "/checkout",
