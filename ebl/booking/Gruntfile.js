@@ -78,17 +78,29 @@ module.exports = function (grunt) {
         hostname: 'localhost',
         livereload: 35729
       },
+        proxies: [
+            {
+                context: '/',
+                host: 'localhost',
+                port: 80,
+                https: false,
+                changeOrigin: true
+            }
+        ],
+
       livereload: {
         options: {
           open: true,
           middleware: function (connect) {
+            var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
             return [
               connect.static('.tmp'),
               connect().use(
                 '/bower_components',
                 connect.static('./bower_components')
               ),
-              connect.static(appConfig.app)
+              connect.static(appConfig.app),
+              proxySnippet
             ];
           }
         }
@@ -393,6 +405,7 @@ module.exports = function (grunt) {
       'wiredep',
       'concurrent:server',
       'autoprefixer',
+      'configureProxies',
       'connect:livereload',
       'watch'
     ]);
