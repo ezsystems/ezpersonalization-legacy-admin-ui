@@ -8,7 +8,7 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-  .controller('CheckoutCtrl', function ($scope, $state) {
+  .controller('CheckoutCtrl', function ($scope, $state, $timeout) {
       var self = this;
  
 
@@ -44,13 +44,13 @@ angular.module('ycBookingApp')
         providerReturnUrl: "https://admin.yoochoose.com",
       };
       self.iteroJSPayment = new IteroJS.Payment(paymentConfig, function() {
-        $scope.$apply(function() {
+      $timeout(function(){$scope.$apply(function() {
           // When IteroJS is ready, copy the payment methods and initial order
           $scope.ready = true;
           $scope.paymentMethods = self.iteroJSPayment.getAvailablePaymentMethods();
           $scope.paymentMethodEnum = self.iteroJSPayment.getAvailablePaymentMethodEnum();
           $scope.payment.bearer = $scope.paymentMethodEnum[0];
-        });
+        });})
       }, function(errorData) {
         alert("error initializing payment!");
         console.log(errorData);
