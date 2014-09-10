@@ -8,7 +8,8 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-  .controller('BookingCtrl', function ($scope, $resource) {
-      var plans = $resource('assets/plans.json',{},{});
+  .controller('BookingCtrl', function ($scope, $sessionStorage, ycRestfrontend) {
+      //var plans = $resource('assets/plans.json',{},{});
+      var plans = ycRestfrontend.getPlans($sessionStorage.productcode);
       $scope.plans = plans.get();
   });
