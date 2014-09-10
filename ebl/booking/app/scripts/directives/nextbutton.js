@@ -19,7 +19,6 @@ angular.module('ycBookingApp')
 	  if (tab.id == $scope.state) {
               var nextIndex = i +1;
               if (nextIndex < $scope.tabs.length){
-                console.log($scope.tabs[nextIndex].id)
                 $state.go($scope.tabs[nextIndex].id, {}, {location: false})
               }
 	  }
