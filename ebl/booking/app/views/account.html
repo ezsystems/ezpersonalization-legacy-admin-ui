@@ -1,5 +1,6 @@
 <div class="container">
-            <form role="form" class="form" name="account.form">
+            <div class="col-sm-1 col-sm-offset-5" ng-if="!ready"><i class="fa fa-spin fa-refresh fa-5x"></i></div>
+            <form role="form" class="form" name="account.form" ng-show="ready">
               <div class="row">
               <div class="form-group col-sm-6 col-md-6">
                 <p class="form-control-static">
@@ -10,7 +11,7 @@
               <div class="row">
               <div class="form-group col-sm-12 col-md-4" show-errors>
                 <label class="control-label" for="email">{{'email' | translate}}</label>
-                <input type="email" ng-required="{{$scope.account.provider}}" ng-disabled="{{$scope.account.provider}}" placeholder="{{'email' | translate}}" class="form-control" id="email" name="email" ng-model="account.email" />
+                <input type="email" ng-required="{{$scope.account.provider}}" ng-disabled="{{!$scope.account.provider}}" placeholder="{{'email' | translate}}" class="form-control" id="email" name="email" ng-model="account.email" />
               </div>
               <div class="form-group col-sm-6 col-md-4" show-errors>
                 <label class="control-label" for="firstname">{{'firstname' | translate}}</label>

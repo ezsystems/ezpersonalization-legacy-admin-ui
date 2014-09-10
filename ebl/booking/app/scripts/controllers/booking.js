@@ -11,5 +11,7 @@ angular.module('ycBookingApp')
   .controller('BookingCtrl', function ($scope, $sessionStorage, ycRestfrontend) {
       //var plans = $resource('assets/plans.json',{},{});
       var plans = ycRestfrontend.getPlans($sessionStorage.productcode);
-      $scope.plans = plans.get();
+      console.log(plans);
+      $scope.plans = plans;
+      $scope.booking.product = $scope.plans.values()[0];
   });

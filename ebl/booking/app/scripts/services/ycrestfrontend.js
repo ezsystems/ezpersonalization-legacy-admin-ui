@@ -22,18 +22,24 @@ angular.module('ycBookingApp.rest', ["ngResource"])
          getMe: {
              url: baseUrl + '/v3/registration/get_me',
              params: {'no-realm': 'true'},
+             timeout: 1000,
          },
          getPlans: {
              url: baseUrl + '/v4/registration/get_product/:product_id',
+             timeout: 1000,
+             transformResponse: function(data, header){
+                   result = {};
+                   result[data.name] = data.comaId.variant;
+                   return result;
+             },
 
          },
 
-       });
+       } );
        this.getMe = restfrontend.getMe;
        this.getBaseUrl = getBaseUrl;
        this.getPlans = function(productCode){
-                             console.log($translate);
-                             restfrontend.getPlans({'product_id': productCode,
+                             return restfrontend.getPlans({'product_id': productCode,
                                                     'lang': $translate.use(),
                                                    });
                              };
