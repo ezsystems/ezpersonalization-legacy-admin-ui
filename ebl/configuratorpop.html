@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en-US" style="height: 100%;">
+  <head>
+    <meta charset="utf-8">
+    <title>YooChoose Recommendation Engine | Configurator | Step 2</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css">
+    
+    <link rel="stylesheet" href="css/styles_new.css">
+    <link rel="stylesheet" href="css/configurator.css">
+    
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
+    <script src="js/lib/jquery.cookie.js"></script>
+    <script src="js/lib/jquery.i18n.properties.js"></script>
+    
+    <script src="js/form_submit_trigger.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    
+    <script src="js/i18n.js" data-i18n-files="scenario,common"></script>
+    
+    <script src="js/configurator_header.js"></script>
+    <script src="js/configurator.js"></script>
+	<script src="js/piwik.js"></script>
+
+  </head>
+  <body id="settings" class="scenario_configuration_steps" style="height: 100%; overflow-x: hidden; min-width: 0">
+  
+ 	<h2 data-translate="scenario_configuration_area">Scenario configuration</h2>
+
+	<header style="margin-bottom: 20px;">
+		<ul class="wizard_steps clearfix">
+			<li class="settings_tab">
+				<a href="#" data-translate="settings_scenario_configuration">Settings</a>
+			</li>
+			<li class="configurator_tab current">
+				<span data-translate="settings_placing_models">Placing models</span>
+			</li>
+			<li class="preview_tab">
+				<a href="#" data-translate="settings_preview">Preview</a>
+			</li>
+		</ul>
+		<section class="scenario_settings">
+			<!-- configurator_header.html will be included here.  -->
+			<a class="button" style="visibility: hidden;">&nbsp;</a>
+		</section>
+	</header>
+    
+    <div class="configurator">
+    
+   		<div class="models_base" style="position: absolute; bottom:0; top:0; left:0; right:542px; overflow-y: scroll;">
+          <h3 class="clearfix">
+            <span></span> <span data-translate="configurator_models">Models</span>
+          </h3>
+          <ul class="models_groups">
+            <li>
+              <h4 data-translate="configurator_collaborative">Collaborative</h4>
+              <ul id="collaborative_list" class="list_of_models clearfix">
+              </ul>
+            </li>
+			<li>
+              <h4 data-translate="configurator_popularity">Popularity</h4>
+			  <ul id="popularity_list" class="list_of_models clearfix">
+              </ul>
+			</li>
+			<li id="other_list_li" >
+              <h4 data-translate="configurator_other">Other</h4>
+			  <ul id="other_list" class="list_of_models clearfix">
+              </ul>
+			</li>
+			<li style="visibility: hidden;"><!-- use hidden, not display:none -->
+              <h4>Hidden</h4>
+			  <ul id="other_list" class="list_of_models clearfix">
+              		<li class="dummymodel model"> 
+	                <div>
+	                   <h5>
+	                    <a class="configure_model"><img src="/img/settings.png"></a>
+	                    <span class="mtitle">Ultimately bought</span><span class="info" style="display: inline;">(60 Days / 90 Days)</span>
+	                   </h5>
+	                   <p>
+	                     <span class="model_description">User who clicked on this content (articles, images, etc), also bought the following products.</span> 
+	                   </p>
+	                </div>
+                </li>
+              </ul>
+			</li>
+          </ul>
+        </div>
+       	<div class="storyboards_base" style="position: absolute; width: 542px!important; bottom:0; top:0; right:0; overflow-y: scroll;">
+          <h3>
+            <input type="hidden" id="primary_category_path">
+            <span data-translate="configurator_primary_recommendations"  style="float:left">Primary recommendation models</span>
+            <span class="edit_category_path img" data-inputId="primary_category_path" style="float:right"></span>
+            <span id="primary_category_path_level" style="float:right"></span>
+            <span id="primary_category_path_str" style="float:right"></span>
+          </h3>
+          <div id="stage1" class="ui-stage">
+            <ul class="clearfix">
+              <li id="li_0_0">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">drag and drop<br>a model here</div>
+                </div>
+              </li>
+              <li id="li_0_1">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">drag and drop<br>a model here</div>
+                </div>
+              </li>
+              <li id="li_0_2" class="extended_stage">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">drag and drop<br>a model here</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <h3>
+            <input type="hidden" id="fallback1_category_path">
+            <span data-translate="configurator_fall_back" style="float: left;">Fall-back</span>
+          	<span class="edit_category_path img" data-inputId="fallback1_category_path" style="float:right"></span>
+            <span id="fallback1_category_path_level" style="float:right"></span>
+            <span id="fallback1_category_path_str"  style="float:right"></span>
+          </h3>
+          <div id="stage2" class="ui-stage">
+            <ul class="clearfix">
+               <li id="li_1_0">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
+                	drag and drop<br>a model here
+					</div>
+                </div>
+              </li>
+              <li id="li_1_1">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
+                  drag and drop<br>a model here
+					</div>
+                </div>
+              </li>
+              <li id="li_1_2" class="extended_stage">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
+                  drag and drop<br>a model here
+					</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <h3 class="extended_stage">
+          	<input type="hidden" id="fallback2_category_path">
+            <span data-translate="configurator_fall_back_2" style="float: left;">Fall back 2 (if everything else fails)</span>
+            <span class="edit_category_path img" data-inputId="fallback2_category_path" style="float:right"></span>
+            <span id="fallback2_category_path_level" style="float:right"></span>
+            <span id="fallback2_category_path_str"  style="float:right"></span>
+          </h3>
+          <div id="stage3" class="ui-stage extended_stage">
+            <ul class="clearfix">
+              <li id="li_2_0">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
+                	drag and drop<br>a model here
+					</div>
+                </div>
+              </li>
+              <li id="li_2_1">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
+                  drag and drop<br>a model here
+					</div>
+                </div>
+              </li>
+              <li id="li_2_2">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
+                  drag and drop<br>a model here
+						</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <h3  class="extended_stage">
+          	<input type="hidden" id="fallback3_category_path">
+            <span data-translate="configurator_fall_back_3" style="float: left;">Fall back 3 (if everything else fails)</span>
+            <span class="edit_category_path img" data-inputId="fallback3_category_path" style="float:right"></span>
+            <span id="fallback3_category_path_level" style="float:right"></span>
+            <span id="fallback3_category_path_str"  style="float:right"></span>
+          </h3>
+          <div id="stage4" class="ui-stage extended_stage">
+            <ul class="clearfix">
+              <li id="li_3_0">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
+                	drag and drop<br>a model here
+					</div>
+                </div>
+              </li>
+              <li id="li_3_1">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
+                  drag and drop<br>a model here
+					</div>
+                </div>
+              </li>
+              <li id="li_3_2">
+                <div class="empty_model_place">
+					<div style="padding: 45px 0;" data-translate="configurator_drag_and_drop">
+                  drag and drop<br>a model here
+						</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          </div>
+	</div>
+	
+	
+
+    <div class="model_config_overlay" style="display:none; position:absolute; left:0; right:0; top:0; bottom:0; z-index:10;">
+      <div class="dialog_body model_settings" id="model_configuration_classic" style="position:relative; margin: 10% auto 0 auto;">
+        <a class="destroy_dialog">X</a>
+        <h2 style="border-bottom: 2px solid gray;" data-translate="model_configuration_classic">
+        	Model Configuration &quot;<span data-param="0">Also clicked</span>&quot; 
+        </h2>
+        <div class="relevance">
+          <label for="relevant_period" data-translate="configurator_relevant">Relevant:</label>
+          <input id="relevant_period" type="number" name="relevant_period" min="1" max="999" step="1"/>
+          <select id="relevant_period_unit" >
+          	<option value="H" data-translate="model_duration_hours">Hours</option>
+          	<option value="D" data-translate="model_duration_days">Days</option>
+          </select>
+        </div>
+		<h2 style="" class="extended_stage" data-translate="configurator_submodel">Submodel Configurations</h2>
+	      <div class="clearfix extended_stage">
+	          <div class="filters_base">
+				  <span class="submodels_attributes" style="display: block">
+				      <label for="submodels_attributes" data-translate="configurator_attributes">Attributes:</label>
+				      <select id="submodels_attributes" name="submodels_attributes">
+						  <option value="" data-translate="configurator_submodel_select_attribute" selected="selected">- Select an attribute -</option>
+					  </select>
+				  </span>
+			  	  <div id="nominalSubmodelValues" style="display:none;">
+	              	  <ul class="grouping_attributes droptrue clearfix">
+	                  </ul>
+	              <ul class="groups_base clearfix">
+	                <li>
+	                  <h5>Group #<span>1</span> <a class="destroy_group" title="Delete this group">X</a></h5>
+	                  <ul class="user_created_group droptrue clearfix">
+	                  </ul>
+	                </li>
+	                <li class="always_empty">
+	                  <a href="#" class="create_one_more_group" data-translate="configurator_add_group">Add group</a>
+	                </li>
+	              </ul>
+	              </div>
+				  <div id="numericSubmodelValues" style="display:none;">
+				  	  <h4 data-translate="configurator_value_range">Value range</h4>
+					  <div id="modelGroups" class="table">
+						  <div class="tr ghost">
+							  <div class="tc">
+								  <label for="" data-translate="configurator_group_from"></label>
+								  <input type="text" class="from">
+							  </div>
+							  <div class="tc">
+								  <label for="" data-translate="configurator_group_to"></label>
+								  <input type="text" class="to">
+							  </div>
+							  <div class="tc"><div class="delete_interval"></div></div>
+						  </div>
+					  </div>
+					  <div style="padding: 15px;">
+					  		<a class="button with_icon create_new inline" data-translate="configurator_add_group">Add Group</a>
+					  </div>
+				  </div>
+			  </div>
+	         </div>
+	  		  <div>
+			  <p class="hintSpace" style="display:none;"></p>
+		  </div>
+		  <div style="text-align: center; margin-top: 10px;">
+		  	<a class="button inline form_submit_button" data-translate="configurator_save_changes">Save changes</a>
+	  	  </div>
+    </div>
+    </div>
+
+    <div id="CB_model_configuration" class="_overlay">
+      <div class="_dialog_body">
+        <a class="destroy_dialog">X</a>
+        <h2 style="font-size: 1.3em;font-weight: 700;border-bottom: 2px solid gray;">
+			"<span class="model_name"></span>"
+			<span data-translate="settings_placing_models">Model Configuration</span>
+			<!--<a class="helpBtn" data-helptxt="configuration_help_cb_model"></a>-->
+		</h2>
+        <div class="content">
+	        <form>
+	        	<div id="maxItemAge" style="margin-bottom: 20px;">
+					<span data-translate="configurator_max_item_age">Maximum item age:</span>
+	        		<input name="maxItemAge" type="text" size="10">
+		        	<select name="maxItemAgeUnit">
+		        		<option value="D" data-translate="model_duration_days">days</option>
+		        		<option value="H" data-translate="model_duration_hours">hours</option>
+		        	</select>
+					<a class="helpBtn" data-helptxt="configuration_help_maximum_item_age"></a>
+	        	</div>
+	        	<div id="cb_attributes" class="table">
+	        		<div class="tr">
+	        			<div class="tc">
+							<span data-translate="configurator_attributes">Attributes</span>
+							<a class="helpBtn" data-helptxt="configuration_help_cb_model_attribute"></a>
+						</div>
+
+						<div class="tc">
+							<span data-translate="configurator_weight">Weight</span>
+							<a class="helpBtn" data-helptxt="configuration_help_cb_model_weight"></a>
+						</div>
+	        		</div>
+
+	        		<div class="tr">
+	        			<div class="tc"><select name="attr0"></select></div>
+	        			<div class="tc"><div id="slider_attr0" class="attr_slider"></div></div>
+	        		</div>
+	        		<div class="tr">
+	        			<div class="tc"><select name="attr1"></select></div>
+	        			<div class="tc"><div id="slider_attr1" class="attr_slider"></div></div>
+	        		</div>
+	        		<div class="tr">
+	        			<div class="tc"><select name="attr2"></select></div>
+	        			<div class="tc"><div id="slider_attr2" class="attr_slider"></div></div>
+	        		</div>
+	        	</div>
+	        	<div class="hintSpace">
+					<div id="maxItemsAgeMessage"></div>
+					<div id="hasNominalMessage"></div>
+					<div id="attrCountMessage"></div>
+	        	</div>
+	        	<a id="save_cbmodel" class="save button inline" data-translate="configurator_save_changes" style="float: right;">Save Changes</a>
+				<div style="clear: both;"></div>
+	        </form>
+        </div>
+      </div>
+    </div>
+
+	<div id="editorial_model_configurator" class="_overlay">
+      <div class="_dialog_body">
+        <a class="destroy_dialog">X</a>
+        <h2 style="font-size: 1.3em;font-weight: 700;border-bottom: 2px solid gray;">
+			"<span class="model_name"></span>"
+			<!--<a class="helpBtn" data-helptxt="configuration_help_cb_model"></a>-->
+		</h2>
+        <div class="content">
+	        <div id="editorial_lists">
+				<div id="dummyList" class="editorial_list" style="display: none;">
+					<h3>replace name</h3>
+					<div class="listHead">
+						<span class="idCol" data-translate="editorial_list_item_id">Id</span>
+						<span class="titleCol" data-translate="editorial_list_item_title">Title</span>
+						<span class="deleteCol" data-translate="editorial_list_delete_item">Delete</span>
+					</div>
+					<ul class="itemList"></ul>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+			<div class="hintSpace"></div>
+			<div>
+				<form>
+					<label for="itemId" data-translate="editorial_list_form_item_id">Item ID: </label><input style="vertical-align: middle;" id="itemId" type="text" name="itemId" size="10" maxlength="10">
+					<label for="itemTypes" data-translate="editorial_list_form_item_type">Item Type: </label><select style="height: 2.1em;vertical-align: middle;" id="itemTypes" name="itemType"></select>
+					<a id="addItem" class="save" data-translate="editorial_list_form_add_item">Add</a>
+				</form>
+			</div>
+			<div>
+				<a id="save_editorial_model" class="save button inline" data-translate="editorial_list_save_changes" style="float: right;">Save Changes</a>
+				<div style="clear: both;"></div>
+			</div>
+        </div>
+      </div>
+    </div>
+
+	<div id="random_model_configuration" class="_overlay">
+		<div class="_dialog_body">
+			<a class="destroy_dialog">X</a>
+			<h2 style="font-size: 1.3em;font-weight: 700;border-bottom: 2px solid gray;">
+				"<span class="model_name"></span>"
+				<span data-translate="settings_placing_models">Model Configuration</span>
+			</h2>
+			<div class="content">
+				<form>
+					<label id="maxItemAge">
+						<span data-translate="configurator_max_item_age">Maximum item age:</span>
+						<input name="maxItemAge" type="text" size="10">
+						<select name="maxItemAgeUnit">
+							<option value="D" data-translate="model_duration_days">days</option>
+							<option value="H" data-translate="model_duration_hours">hours</option>
+						</select><a class="help"></a>
+					</label>
+					<div class="hintSpace">Space for hints and warnings.</div>
+					<a id="save_random_model" class="save button inline" data-translate="configurator_save_changes">Änderungen speichern</a>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div id="category_path_settings" class="_overlay">
+		<div class="_dialog_body">
+			<a class="destroy_dialog">X</a>
+			<h2><span data-translate="configurator_category_path_filtering">Category Path Filtering </span> <a class="help"></a></h2>
+			<div class="content">
+				<form>
+					<div class="left" >
+						<input type="radio" value="noFilter" name="category_filter">
+					</div>
+					<div class="right" data-translate="configurator_recommend_from_whole_shop">
+						Always recommend products from the whole shop. Do not use category path for filtering.
+					</div>
+					<div  class="left">
+						<input type="radio" value="sameCategory" name="category_filter">
+					</div>
+					<div class="right">
+						<div data-translate="configurator_recommend_from_same_category">Recommend only products from the same category</div>
+						<div>
+							<input type="checkbox" id="includeParent" name="includeParent">
+							<label for="includeParent" data-translate="configurator_also_include_parent">Also include the parent category and its subcategories</label>
+						</div>
+						<div>
+							<span id="levelsUp"  class="path_slider"></span>
+							<span class="levelView"></span> <span data-translate="configurator_levels_up">levels up.</span> 
+						</div>
+					</div>
+					<div  class="left">
+						<input type="radio" value="sameMainCategory" name="category_filter">
+					</div>
+					<div class="right">
+						<div data-translate="configurator_recommend_from_same_main_category">Recommend products from the same main category and its subcategories.</div>
+						<div>
+							<span id="levelsDown" class="path_slider"></span>
+							<span class="levelView"></span> <span data-translate="configurator_category_levels">levels down</span> 
+						</div>
+						
+					</div>
+					
+					<div style="text-align: center;">
+						<a id="save_category_path_settings" class="save button inline" data-translate="configurator_button_ok">OK</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="placed_model ghost" style="padding: 0;">
+		<a class="destroy_placed_model">X</a>
+		<h4 style="position: relative;">
+			<span class="name">Model Name</span><br>
+			<span style="font-weight: normal; font-size: 12px;" class="info"></span>
+			<span class="right-shadow"></span>
+		</h4>
+		<form action="#" method="get">
+			<ul class="placed_model_settings clearfix">
+				<li class="context_options">
+					<select class="placed_model_settings" name="placed_model_context_type">
+						<option value="AUTO" data-translate="model_configurator_context_AUTO" selected="selected">Auto</option>
+						<option value="ITEM" data-translate="model_configurator_context_ITEM">Page Context</option>
+						<option value="CLICKED" data-translate="model_configurator_context_CLICKED">Click List</option>
+						<option value="CONSUMED" data-translate="model_configurator_context_CONSUMED">Comsumed List</option>
+					</select>
+				</li>		
+			  	<li class="usesubmodels" style="margin-top: 10px;">
+		            <div>
+						<input name="use_submodels" id="use_submodels" type="checkbox" value="true" ></input>
+						<label for="use_submodels"><span data-translate="configurator_use_submodels">Use submodels:</span></label>
+		            </div>
+		          </li>
+	       	 </ul>
+	     </form>
+    </div>
+
+	<div class="empty_model_place ghost"><div style="padding: 60px 0;" data-translate="configurator_drag_and_drop">drag and drop<br>a model here</div></div>
+    <div class="message" style="display:none; z-index:1000000;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text">Something neutral happened. That's it.</span>
+        <a class="button inline close">OK</a>
+      </p>
+    </div>
+	<div id="hoverView" style="display: none;"></div>
+	<div id="helpView" style="display: none;">
+		<div class="close">x</div>
+		<div class="content"></div>
+	</div>
+  </body>
+
+</html>

@@ -1,0 +1,75 @@
+<div class="container">
+            <form role="form" class="form" name="billing.form">
+
+              <div class="col-sm-12">
+                <div class="row">
+                
+                  <div class="form-group col-sm-4" show-errors>
+                    <label class="control-label" for="billingContactLastname">{{'firstname' | translate}}</label>
+                    <input type="text" required="" placeholder="{{'firstname' | translate}}" class="form-control" id="billingContactFirstname" name="billingContactFirstname" ng-model="billing.firstname"/>
+                  </div>
+                  <div class="form-group col-sm-4" show-errors>
+                    <label class="control-label" for="billingContactLastname">{{'lastname' | translate}}</label>
+                    <input type="text" required="" placeholder="{{'lastname' | translate}}" class="form-control" id="billingContactLastname" name="billingContactLastname" ng-model="billing.lastname" />
+                  </div>
+                  <div class="form-group col-sm-4"  show-errors>
+                    <label class="control-label" for="billingEmail">{{'email' |translate}}</label>
+                    <input type="email" required="" placeholder="{{'invoice_email_placeholder' | translate}}" class="form-control" id="billingEmail" name="billingEmail" ng-model="billing.email" 
+                    
+                    />
+                  </div>
+
+                  <div class="form-group col-sm-12" show-errors>
+                    <label class="control-label" for="company">{{'company_name' | translate}}</label>
+                    <input type="text" required="" placeholder="{{'company_name' |translate}}" class="form-control" id="company" name="company" ng-model="billing.company" />
+                  </div>
+                  <div class="form-group col-sm-12" >
+                    <label class="control-label" for="addressline2">{{'addr_line_2' | translate}}</label>
+                    <input type="text" placeholder="{{'addr_line_2_placeholder' | translate}}" class="form-control" id="addressline2" name="addressline2" ng-model="billing.addressline2" />
+                  </div>
+                  <div class="form-group col-sm-10" show-errors>
+                    <label class="control-label" for="street">{{'street' | translate}}</label>
+                    <input type="text" required="" placeholder="{{'street' | translate }}" class="form-control" id="street" name="street" ng-model="billing.street" />
+                  </div>
+                  <div class="form-group col-sm-2" show-errors>
+                    <label class="control-label" for="number">{{'street_no' | translate}}</label>
+                    <input type="text" required="" placeholder="{{'street_no' | translate}}" class="form-control" id="number" name="number" ng-model="billing.number" />
+                  </div>
+                  <div class="form-group col-sm-4" show-errors>
+                    <label class="control-label" for="postalcode">{{'postal_code' | translate}}</label>
+                    <input type="text" required="" placeholder="{{'postal_code' | translate}}" class="form-control" id="postalcode" name="postalcode" ng-model="billing.postalcode" />
+                  </div>
+                  <div class="form-group col-sm-8"  show-errors>
+                    <label class="control-label" for="city">{{'city' | translate}}</label>
+                    <input type="city" required="" placeholder="{{'city' | translate}}" class="form-control" id="city" name="city" ng-model="billing.city" />
+                  </div>
+                  <div class="form-group col-sm-4" show-errors>
+                    <label class="control-label" for="country">{{'country' | translate}}</label>
+                    <select required="" class="form-control" id="country" name="country" ng-model="billing.country" ng-options="c.a2 as c.name for c in countries"></select>
+                  </div>
+                  <div class="form-group col-sm-8"> 
+                    <label class="control-label" for="vatid">{{'vatid' | translate}}</label>
+                    <input type="text" placeholder="{{'vatid' | translate}}"  class="form-control" id="vatid" name="vatid" ng-model="billing.vatid" />
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-sm-12">
+                <accordion  close-others="oneAtATime">
+                  <accordion-group heading="{{'optional_contact_info' | translate}}" is-open="flase" is-disabled="false">
+                    <div class="row">
+                      <div class="form-group col-sm-6">
+                        <label class="control-label" for="billingContactPhone">{{'phone_number' | translate}}</label>
+                        <input type="text" placeholder="{{'phone_number' | translate}}" class="form-control" id="billingContactPhone" name="billingContactPhone" ng-model="billing.phone" />
+                      </div>
+                    </div>
+                  </accordion-group>
+                </accordion>
+              </div>
+
+              <div class="form-group col-sm-2 col-sm-offset-10">
+<next-button state="'billing'" />
+              </div>
+            </form>
+</div>

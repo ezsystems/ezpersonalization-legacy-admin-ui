@@ -1,0 +1,48 @@
+{
+  "account_title": "Finalize Account",
+  "booking_title": "Configure Product",
+  "billing_title": "Billing",
+  "checkout_title": "Checkout",
+  "firstname": "Firstname",
+  "lastname": "Lastname",
+  "email": "E-Mail",
+  "password": "Password",
+  "verify_password": "Verify Password",
+  "continue": "Continue",
+  "lang_de": "German",
+  "lang_en": "English",
+  "company_name": "Company name",
+  "addr_line_2": "Address line 2",
+  "addr_line_2_placeholder": "c/o Accounting",
+  "street": "Street",
+  "street_no": "No.",
+  "postal_code": "Postal Code",
+  "city": "City",
+  "country": "Country",
+  "vatid": "VAT id",
+  "invoice_email_placeholder": "invoice@my-company.com",
+  "optional_contact_info": "Optional contact data",
+  "phone_number": "Phone",
+  "product_select": "Product",
+  "website": "Website",
+  "finished_header": "That's It!",
+  "finished_header_small": "You have successfully registered for the yoochoose recommendation service.",
+  "order_confirm": "Your Order confirmation",
+  "show_customerid": "Your customer id:",
+  "show_contractid": "Your contract id:",
+  "show_orderid": "Your order id:",
+  "show_mandatorid": "Your mandator id:",
+  "docs_header": "Learn",
+  "docs_teaser": "How does the recommendation service work? What are Models and Scenarios? And how can I use A/B Tests? Find out!",
+  "docs_button": "Documentation",
+  "dashboard_header": "Dive in",
+  "dashboard_teaser": "Configure your service, view statistics or manage your A/B Tests!",
+  "dashboard_button": "Dashboard"
+
+
+
+
+
+ 
+
+}
