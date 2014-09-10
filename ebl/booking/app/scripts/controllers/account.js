@@ -11,8 +11,7 @@ angular.module('ycBookingApp')
   .controller('AccountCtrl', function ($state, $scope, $location, $window, $sessionStorage, loginData) {
                            if (loginData === undefined) {
                                //var p = $location.path() + "?productCode=" + $sessionStorage.productcode;
-                               var p = $state.current.url;
-                               console.log('not logged in', p);
+                               var p =  $location.path();
                                $location.path('/login.html').search({'return_url': p}).replace();
                                $window.location.reload() 
                            } else {
