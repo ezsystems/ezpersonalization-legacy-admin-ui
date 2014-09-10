@@ -8,7 +8,7 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-  .controller('AccountCtrl', function ($state, $scope, $location, $window, $sessionStorage, loginData) {
+  .controller('AccountCtrl', function ($timeout, $state, $scope, $location, $window, $sessionStorage, loginData) {
                            if (loginData === undefined) {
                                //var p = $location.path() + "?productCode=" + $sessionStorage.productcode;
                                var p =  $location.path();
@@ -16,7 +16,7 @@ angular.module('ycBookingApp')
                                $window.location.reload() 
                            } else {
                            loginData.$promise.then(function(result) {
-                              $scope.$apply(function(){
+                              $timeout(function(){$scope.$apply(function(){
                                   $scope.account.email = result.loginInfo.email;
                                   $scope.account.firstname = result.loginInfo.firstName;
                                   $scope.account.lastname = result.loginInfo.lastName;
@@ -24,7 +24,7 @@ angular.module('ycBookingApp')
                                   $scope.account.foreignId = result.loginInfo.id;
                                   $scope.passwordNeeded = result.loginInfo.passwordNeeded;
                               });
-                             });
+                             });});
                                    
 			}
 

@@ -12,7 +12,7 @@ angular.module('ycBookingApp')
                   if ($stateParams.productCode !== undefined){
                     $sessionStorage.productcode = $stateParams.productCode;
                   }
-                  if ($sessionStorage.productcode === undefined) {
+                  if ($sessionStorage.productcode === undefined ) {
                                var p =  $location.path();
                                $location.url('/pricing?lang=' + $translate.use());
                                $window.location.reload() 

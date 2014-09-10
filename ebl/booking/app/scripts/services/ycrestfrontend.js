@@ -16,17 +16,27 @@ angular.module('ycBookingApp.rest', ["ngResource"])
       return baseUrl;
     };
     // Private constructor
-    function RestService($resource) {
+    function RestService($resource, $translate) {
 
        var restfrontend = $resource(baseUrl, {}, {
          getMe: {
              url: baseUrl + '/v3/registration/get_me',
              params: {'no-realm': 'true'},
          },
+         getPlans: {
+             url: baseUrl + '/v4/registration/get_product/:product_id',
+
+         },
 
        });
        this.getMe = restfrontend.getMe;
        this.getBaseUrl = getBaseUrl;
+       this.getPlans = function(productCode){
+                             console.log($translate);
+                             restfrontend.getPlans({'product_id': productCode,
+                                                    'lang': $translate.use(),
+                                                   });
+                             };
     }
 
     // Public API for configuration
@@ -37,11 +47,11 @@ angular.module('ycBookingApp.rest', ["ngResource"])
     this.getBaseUrl = getBaseUrl;
 
     // Method for instantiating
-    this.$get = function () {
-      var myInjector = angular.injector(["ng", "ngResource"]);
-      var $http = myInjector.get("$http");
-      var $resource = myInjector.get("$resource");
+    this.$get = function ($resource, $translate) {
+//      var myInjector = angular.injector(["ng", "ngResource", 'pascalprecht.translate']);
+//      var $translate = myInjector.get("$translate");
+//      var $resource = myInjector.get("$resource");
       
-      return new RestService($resource);
+      return new RestService($resource, $translate);
     };
   });
