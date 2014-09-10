@@ -61,7 +61,6 @@ angular
           templateUrl: "views/account.html",
           resolve: {loginData: function(ycRestfrontend){
                            var me = ycRestfrontend.getMe();
-                           console.log(me);
                            return me;
                         }
           },
