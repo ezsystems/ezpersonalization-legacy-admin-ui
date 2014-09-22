@@ -24,7 +24,6 @@ angular.module('ycBookingApp')
       $scope.booking = {
       };
       $scope.account = {
-        email: 'yc-pactas@byom.de',
       };
       $scope.billing = {
       };
@@ -54,7 +53,7 @@ angular.module('ycBookingApp')
       function getTabIndexById(id){
         for (var i = 0; (i < $scope.tabs.length ) ; i++) {
           var tab = $scope.tabs[i];
-	  if (tab.id == id) {
+	  if (tab.id === id) {
 		  return i;
 	  }
 	}
@@ -63,10 +62,10 @@ angular.module('ycBookingApp')
       
       
       function isEnabled(id){
-	var max = getTabIndexById(id)
+	var max = getTabIndexById(id);
         for (var i = 0; (i < $scope.tabs.length && i < max ) ; i++) {
           var tab = $scope.tabs[i];
-	  if (tab.id == id) {
+	  if (tab.id === id) {
 		  break;
 	  }
           var form = $scope[tab.id].form;
@@ -76,9 +75,9 @@ angular.module('ycBookingApp')
         }
         return true;
 
-      };
+      }
 
-      function go(id){$state.go(id,{},{location:false})};
+      function go(id){$state.go(id,{},{location:false});}
       $scope.go = go;
 
 

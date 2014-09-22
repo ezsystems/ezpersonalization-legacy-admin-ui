@@ -15,11 +15,10 @@ angular.module('ycBookingApp')
      $scope.orderid = $stateParams.orderid;
 
      $scope.setupFinished = false;
-     console.log($stateParams)
 
      $timeout(function(){
         $scope.setupFinished = true;
-        $scope.mandatorid = "FRESH_NEW_1111";
+        $scope.mandatorid = 'FRESH_NEW_1111';
      }, 3000);
 
   });

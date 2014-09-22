@@ -16,15 +16,15 @@ angular.module('ycBookingApp')
       function proceed( ){
 	for (var i = 0; (i < $scope.tabs.length); i++){
           var tab = $scope.tabs[i];
-	  if (tab.id == $scope.state) {
+	  if (tab.id === $scope.state) {
               var nextIndex = i +1;
               if (nextIndex < $scope.tabs.length){
-                $state.go($scope.tabs[nextIndex].id, {}, {location: false})
+                $state.go($scope.tabs[nextIndex].id, {}, {location: false});
               }
 	  }
        		
 	}
-      };
+      }
       $scope.tabs = tab.tabs;
       $scope.proceed = proceed;
 
