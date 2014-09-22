@@ -16,7 +16,7 @@
             </div>
             <div class="form-group col-sm-6 col-md-4" show-errors>
                 <label class="control-label" for="firstname">{{'firstname' | translate}}</label>
-                <input type="text" required="" placeholder="{{'firstname' | translate}}" class="form-control" id="firstname" name="firstname" ng-model="account.firstname"  auto-focus />
+                <input type="text" required="" placeholder="{{'firstname' | translate}}" class="form-control" id="firstname" name="firstname" ng-model="account.firstname" auto-focus />
             </div>
             <div class="form-group col-sm-6 col-md-4" show-errors>
                 <label class="control-label" for="lastname">{{'lastname' | translate}}</label>
@@ -30,7 +30,8 @@
                 <label class="control-label" for="verify">{{'verify_password' | translate}}</label>
                 <input type="password" ng-required="{{passwordNeeded}}" placeholder="{{'verify_password' | translate}}" class="form-control" id="verify" name="verify" ng-model="account.verify" match="account.password" />
             </div>
-
+        </div>
+        <div class="row">
             <div class="form-group col-sm-2 col-sm-offset-10">
                 <next-button state="'account'" />
             </div>
