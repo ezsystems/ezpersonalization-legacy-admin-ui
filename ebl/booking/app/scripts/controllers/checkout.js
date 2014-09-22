@@ -127,7 +127,9 @@ angular.module('ycBookingApp')
         }
 
         $scope.checkout = function () {
-            checkout($scope.booking, $scope.billing, $scope.payment);
+            if ($scope.payment.form.$valid) {
+                checkout($scope.booking, $scope.billing, $scope.payment);
+            }
         };
 
 

@@ -22,7 +22,8 @@ angular.module('ycBookingApp.rest', ['ngResource'])
                     url: baseUrl + '/v3/registration/get_me',
                     params: {
                         'no-realm': 'true'
-                    }
+                    },
+                    cache: true
                 },
                 getPlans: {
                     url: baseUrl + '/v4/registration/get_sister_products/:product_id',
