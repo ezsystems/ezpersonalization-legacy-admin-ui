@@ -7,42 +7,49 @@
  * # ycRestfrontend
  * Provider in the ycBookingApp.
  */
-angular.module('ycBookingApp.rest', ["ngResource"])
+angular.module('ycBookingApp.rest', ['ngResource'])
   .provider('ycRestfrontend', function () {
 
     // Private variables
     var baseUrl = '/api';
     function getBaseUrl() {
       return baseUrl;
-    };
+    }
     // Private constructor
-    function RestService($resource, $translate) {
+    function RestService($resource, $translate, $location, $window) {
 
        var restfrontend = $resource(baseUrl, {}, {
          getMe: {
              url: baseUrl + '/v3/registration/get_me',
              params: {'no-realm': 'true'},
-             timeout: 1000,
          },
          getPlans: {
-             url: baseUrl + '/v4/registration/get_product/:product_id',
-             timeout: 1000,
-             transformResponse: function(data, header){
-                   result = {};
-                   result[data.name] = data.comaId.variant;
-                   return result;
-             },
+             url: baseUrl + '/v4/registration/get_sister_products/:product_id',
+             isArray: true,
+             cache: true,
 
          },
 
        } );
-       this.getMe = restfrontend.getMe;
+       this.getMe = function(){
+
+            return restfrontend.getMe(function(){}, redirect);
+            
+       };
        this.getBaseUrl = getBaseUrl;
        this.getPlans = function(productCode){
                              return restfrontend.getPlans({'product_id': productCode,
                                                     'lang': $translate.use(),
                                                    });
                              };
+                   function redirect(){
+                               console.log('redirecting to login');
+                               //var p =  $location.path();
+                               //$location.path('/login.html').search({'return_url': p}).replace();
+                               $window.location.href = '/login.html?returnUrl=' + $window.location;//$location.url();//'/login.html' + $location.search();
+                               //$window.location.reload();
+                   }
+    this.redirectToLogin = redirect;
     }
 
     // Public API for configuration
@@ -50,14 +57,15 @@ angular.module('ycBookingApp.rest', ["ngResource"])
       baseUrl = url;
     };
 
+
     this.getBaseUrl = getBaseUrl;
 
     // Method for instantiating
-    this.$get = function ($resource, $translate) {
+    this.$get = function ($resource, $translate, $location, $window) {
 //      var myInjector = angular.injector(["ng", "ngResource", 'pascalprecht.translate']);
 //      var $translate = myInjector.get("$translate");
 //      var $resource = myInjector.get("$resource");
       
-      return new RestService($resource, $translate);
+      return new RestService($resource, $translate, $location, $window);
     };
   });

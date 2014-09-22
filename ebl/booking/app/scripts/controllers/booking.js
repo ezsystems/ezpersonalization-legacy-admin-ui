@@ -12,6 +12,21 @@ angular.module('ycBookingApp')
       //var plans = $resource('assets/plans.json',{},{});
       var plans = ycRestfrontend.getPlans($sessionStorage.productcode);
       console.log(plans);
-      $scope.plans = plans;
-      $scope.booking.product = $scope.plans.values()[0];
+      function transformResponse (data){
+                   var result = {};
+                   for (var i = 0; i<data.length; i++){
+                       var product = data[i];
+                       if (product.notAvailable) {
+                          continue;
+                       }
+                       result[product.name] = product.comaId.variant;
+                       if ($sessionStorage.productcode === product.id && !$scope.booking.planVariantId){
+                           $scope.booking.planVariantId = product.comaId.variant;
+                       }
+                   }
+                   $scope.plans = result;
+                   return result;
+             }
+
+      plans.$promise.then(transformResponse);
   });
