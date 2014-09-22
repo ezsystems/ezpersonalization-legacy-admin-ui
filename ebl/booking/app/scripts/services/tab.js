@@ -12,23 +12,23 @@ angular.module('ycBookingApp')
 
     var tabs = [ {
         id: 'account',
-        icon: "user",
+        icon: 'user',
         template: 'account.html',
       },
       {
         id: 'booking',
         title: 'Configure Product',
-        icon: "shopping-cart",
+        icon: 'shopping-cart',
 
       },
       {
         id: 'billing',
         title: 'Billing',
-        icon: "envelope",
+        icon: 'envelope',
       }, {
         id: 'checkout',
         title: 'Checkout',
-        icon: "credit-card",
+        icon: 'credit-card',
 //        done: function(){checkout.paymentDone($scope.product, $scope.billing, $scope.payment)
       }, ];
 
@@ -39,5 +39,5 @@ angular.module('ycBookingApp')
     // Public API here
     return {
 	tabs: tabs,
-      }
+      };
   });
