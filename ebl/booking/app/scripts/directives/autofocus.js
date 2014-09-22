@@ -12,7 +12,6 @@ angular.module('ycBookingApp')
             link: function (_scope, _element) {
                 $timeout(function () {
                     _element[0].focus();
-                    console.log("focus", _element[0]);
                 }, 0);
             }
         };
