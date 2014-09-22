@@ -1,0 +1,71 @@
+'use strict';
+
+/**
+ * @ngdoc service
+ * @name ycBookingApp.ycRestfrontend
+ * @description
+ * # ycRestfrontend
+ * Provider in the ycBookingApp.
+ */
+angular.module('ycBookingApp.rest', ['ngResource'])
+  .provider('ycRestfrontend', function () {
+
+    // Private variables
+    var baseUrl = '/api';
+    function getBaseUrl() {
+      return baseUrl;
+    }
+    // Private constructor
+    function RestService($resource, $translate, $location, $window) {
+
+       var restfrontend = $resource(baseUrl, {}, {
+         getMe: {
+             url: baseUrl + '/v3/registration/get_me',
+             params: {'no-realm': 'true'},
+         },
+         getPlans: {
+             url: baseUrl + '/v4/registration/get_sister_products/:product_id',
+             isArray: true,
+             cache: true,
+
+         },
+
+       } );
+       this.getMe = function(){
+
+            return restfrontend.getMe(function(){}, redirect);
+            
+       };
+       this.getBaseUrl = getBaseUrl;
+       this.getPlans = function(productCode){
+                             return restfrontend.getPlans({'product_id': productCode,
+                                                    'lang': $translate.use(),
+                                                   });
+                             };
+                   function redirect(){
+                               console.log('redirecting to login');
+                               //var p =  $location.path();
+                               //$location.path('/login.html').search({'return_url': p}).replace();
+                               $window.location.href = '/login.html?returnUrl=' + $window.location;//$location.url();//'/login.html' + $location.search();
+                               //$window.location.reload();
+                   }
+    this.redirectToLogin = redirect;
+    }
+
+    // Public API for configuration
+    this.setBaseUrl = function (url) {
+      baseUrl = url;
+    };
+
+
+    this.getBaseUrl = getBaseUrl;
+
+    // Method for instantiating
+    this.$get = function ($resource, $translate, $location, $window) {
+//      var myInjector = angular.injector(["ng", "ngResource", 'pascalprecht.translate']);
+//      var $translate = myInjector.get("$translate");
+//      var $resource = myInjector.get("$resource");
+      
+      return new RestService($resource, $translate, $location, $window);
+    };
+  });
