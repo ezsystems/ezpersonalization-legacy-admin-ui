@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @ngdoc function
  * @name ycBookingApp.controller:FinishedCtrl
@@ -8,17 +6,18 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-  .controller('FinishedCtrl', function ($scope, $stateParams, $timeout) {
+    .controller('FinishedCtrl', function ($scope, $stateParams, $timeout) {
+        'use strict';
 
-     $scope.contractid = $stateParams.contractid;
-     $scope.customerid = $stateParams.customerid;
-     $scope.orderid = $stateParams.orderid;
+        $scope.contractid = $stateParams.contractid;
+        $scope.customerid = $stateParams.customerid;
+        $scope.orderid = $stateParams.orderid;
 
-     $scope.setupFinished = false;
+        $scope.setupFinished = false;
 
-     $timeout(function(){
-        $scope.setupFinished = true;
-        $scope.mandatorid = 'FRESH_NEW_1111';
-     }, 3000);
+        $timeout(function () {
+            $scope.setupFinished = true;
+            $scope.mandatorid = 'FRESH_NEW_1111';
+        }, 3000);
 
-  });
+    });
