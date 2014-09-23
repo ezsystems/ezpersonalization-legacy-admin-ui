@@ -37,7 +37,16 @@
   "docs_button": "Dokumentation",
   "dashboard_header": "Loslegen",
   "dashboard_teaser": "Konfigurieren sie den Service, schauen Sie sich die Statistiken an und verwalten Sie ihre A/B Tests.",
-  "dashboard_button": "Dashboard"
+  "dashboard_button": "Dashboard",
+  "accept_terms": "Ich akzeptiere die <a href=\"https://www.yoochoose.com/agb\">Allgemeinen Geschäftsbedingungen</a>",
+  "payment_method": "Bezahlmethode",
+  "account_holder": "Kontoinhaber",
+  "account_number": "Kontonummer",
+  "bank_routing_code": "Bankleitzahl",
+  "card_holder": "Karteninhaber",
+  "card_number": "Kartennummer",
+  "card_expires": "Gültig bis",
+  "signup_button": "Kostenpflichtig bestellen"
 
 
 

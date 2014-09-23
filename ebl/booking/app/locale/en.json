@@ -37,8 +37,16 @@
   "docs_button": "Documentation",
   "dashboard_header": "Dive in",
   "dashboard_teaser": "Configure your service, view statistics or manage your A/B Tests!",
-  "dashboard_button": "Dashboard"
-
+  "dashboard_button": "Dashboard",
+  "accept_terms": "I accept the <a href=\"https://www.yoochoose.com/agb\">Terms and Conditions</a>",
+  "payment_method": "Payment Method",
+  "account_holder": "Account Holder",
+  "account_number": "Account Number",
+  "bank_routing_code": "Bank Routing Code",
+  "card_holder": "Card Holder",
+  "card_number": "Credit Card Number",
+  "card_expires": "Expires",
+  "signup_button": "Signup & Buy"
 
 
 
