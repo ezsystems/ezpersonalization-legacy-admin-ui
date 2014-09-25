@@ -19,7 +19,7 @@ angular.module('ycBookingApp.rest', ['ngResource'])
 
             var restfrontend = $resource(baseUrl, {}, {
                 getMe: {
-                    url: baseUrl + '/v3/registration/get_me',
+                    url: baseUrl + '/v4/profile/get_me',
                     params: {
                         'no-realm': 'true'
                     },
@@ -29,6 +29,13 @@ angular.module('ycBookingApp.rest', ['ngResource'])
                     url: baseUrl + '/v4/registration/get_sister_products/:product_id',
                     isArray: true,
                     cache: true
+                },
+                updateProfile: {
+                    url: baseUrl + '/v4/profile/update_local_profile/:provider/:user_id',
+                    method: 'POST',
+                    params: {provider: '@provider',
+                             user_id: '@user_id'
+                            }
                 }
 
             });
@@ -40,6 +47,7 @@ angular.module('ycBookingApp.rest', ['ngResource'])
             this.getMe = function () {
                 return restfrontend.getMe(function () {}, redirect);
             };
+            this.updateProfile = restfrontend.updateProfile;
             this.getBaseUrl = getBaseUrl;
             this.getPlans = function (productCode) {
                 return restfrontend.getPlans({

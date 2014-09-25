@@ -10,7 +10,7 @@ angular.module('ycBookingApp')
     .directive('nextButton', function () {
         return {
             scope: {
-                state: '='
+                callback: '='
             },
             template: '<button class="btn btn-default pull-right" ng-click="proceed()" type="submit">{{\'continue\' | translate}} <i class="fa fa-forward"></i></button>',
             replace: true,
@@ -18,8 +18,11 @@ angular.module('ycBookingApp')
                 function proceed() {
                     for (var i = 0; i < $scope.tabs.length; i++) {
                         var tab = $scope.tabs[i];
-                        if (tab.id === $scope.state) {
+                        if (tab.id === $state.current.name) {
                             var nextIndex = i + 1;
+                            if ($scope.callback !== undefined){
+                                $scope.callback()
+                            }
                             if (nextIndex < $scope.tabs.length) {
                                 $state.go($scope.tabs[nextIndex].id, {}, {
                                     location: false
