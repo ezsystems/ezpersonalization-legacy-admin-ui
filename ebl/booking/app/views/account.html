@@ -11,29 +11,29 @@
         </div>
         <div class="row">
             <div class="form-group col-sm-12 col-md-4" show-errors>
-                <label class="control-label" for="email">{{'email' | translate}}</label>
+                <label class="control-label" for="email" translate="email"></label>
                 <input type="email" ng-required="{{$scope.account.provider}}" ng-disabled="{{!$scope.account.provider}}" placeholder="{{'email' | translate}}" class="form-control" id="email" name="email" ng-model="account.email" />
             </div>
             <div class="form-group col-sm-6 col-md-4" show-errors>
-                <label class="control-label" for="firstname">{{'firstname' | translate}}</label>
+                <label class="control-label" for="firstname" translate="firstname"></label>
                 <input type="text" required="" placeholder="{{'firstname' | translate}}" class="form-control" id="firstname" name="firstname" ng-model="account.firstname" auto-focus />
             </div>
             <div class="form-group col-sm-6 col-md-4" show-errors>
-                <label class="control-label" for="lastname">{{'lastname' | translate}}</label>
+                <label class="control-label" for="lastname" translate="lastname"></label>
                 <input type="text" required="" placeholder="{{'lastname' | translate}}" class="form-control" id="lastname" name="lastname" ng-model="account.lastname" />
             </div>
             <div class="form-group col-sm-6 col-md-4 col-md-offset-4" show-errors ng-if="passwordNeeded">
-                <label class="control-label" for="password">{{'password' | translate}}</label>
+                <label class="control-label" for="password" translate="password"></label>
                 <input type="password" ng-required="{{passwordNeeded}}" placeholder="{{'password' | translate}}" class="form-control" id="password" name="password" ng-model="account.password" />
             </div>
             <div class="form-group col-sm-6 col-md-4" show-errors ng-if="passwordNeeded">
-                <label class="control-label" for="verify">{{'verify_password' | translate}}</label>
+                <label class="control-label" for="verify" translate="verify_password"></label>
                 <input type="password" ng-required="{{passwordNeeded}}" placeholder="{{'verify_password' | translate}}" class="form-control" id="verify" name="verify" ng-model="account.verify" match="account.password" />
             </div>
         </div>
         <div class="row">
             <div class="form-group col-sm-2 col-sm-offset-10">
-                <next-button state="'account'" />
+                <next-button callback="updateProfile" />
             </div>
         </div>
     </form>

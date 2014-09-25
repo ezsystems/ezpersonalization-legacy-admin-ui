@@ -6,7 +6,7 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-    .controller('AccountCtrl', function ($timeout, $state, $scope, $sessionStorage, loginData) {
+    .controller('AccountCtrl', function ($timeout, $state, $scope, $sessionStorage, loginData, $translate, ycRestfrontend) {
         'use strict';
         $scope.ready = false;
 
@@ -17,33 +17,50 @@ angular.module('ycBookingApp')
         loginData.$promise.then(function (result) {
             $timeout(function () {
                 if (!$scope.account.email) {
-                    $scope.account.email = result.loginInfo.email;
+                    $scope.account.email = result.localProfile.email;
                 }
                 if (!$scope.account.firstname) {
-                    $scope.account.firstname = result.loginInfo.firstName;
+                    $scope.account.firstname = result.localProfile.firstName;
                 }
                 if (!$scope.account.lastname) {
-                    $scope.account.lastname = result.loginInfo.lastName;
+                    $scope.account.lastname = result.localProfile.lastName;
+                }
+                if (!$scope.account.lang && result.localProfile.lang !== undefined && result.localProfile.lang !== null) {
+                    $scope.account.lang = result.localProfile.lang;
+                    $translate.use($scope.account.lang);
+                }
+                if (!$scope.account.timeZone) {
+                    $scope.account.timeZone = result.localProfile.timeZone;
                 }
                 if (!$scope.account.provider) {
-                    $scope.account.provider = result.loginInfo.provider;
+                    $scope.account.provider = result.provider;
                 }
                 if (!$scope.account.foreignId) {
-                    $scope.account.foreignId = result.loginInfo.id;
+                    $scope.account.foreignId = result.id;
                 }
-                if ((result.loginInfo.provider === undefined || result.loginInfo.provider === null || !result.loginInfo.provider) && (result.loginInfo.email === undefined || result.loginInfo.email === null || !result.loginInfo.email)) {
+                if ((result.provider === undefined || result.provider === null || !result.provider) && (result.localProfile.email === undefined || result.localProfile.email === null || !result.localProfile.email)) {
                     if (!$scope.account.email) {
-                        $scope.account.email = result.loginInfo.id;
+                        $scope.account.email = result.id;
                     }
 
                 }
                 if (!$scope.passwordNeeded) {
-                    $scope.passwordNeeded = result.loginInfo.passwordNeeded;
+                    $scope.passwordNeeded = result.passwordNeeded;
                 }
                 $scope.ready = true;
 
             });
         });
+        $scope.updateProfile = function () {
+            ycRestfrontend.updateProfile({
+                provider: $scope.account.provider,
+                user_id: $scope.account.foreignId,
+                firstname: $scope.account.firstname,
+                lastname: $scope.account.lastName,
+                timeZone: $scope.account.timeZone,
+                lang: $scope.account.lang
+            });
+        };
 
 
 
