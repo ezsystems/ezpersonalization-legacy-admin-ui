@@ -16,7 +16,6 @@ angular.module('ycBookingApp')
             flag: 'de'
         }];
         $scope.changeLanguage = function (langKey) {
-            console.log('switch language to ', langKey);
             $translate.use(langKey);
         };
 
