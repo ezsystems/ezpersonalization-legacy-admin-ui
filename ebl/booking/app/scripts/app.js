@@ -43,14 +43,14 @@ angular
             $translateProvider.useMissingTranslationHandlerLog();
 
             $locationProvider.html5Mode(true);
-//            $urlRouterProvider.when(/.*paymentReturn.*/, function ($location, $sessionStorage) {
-//                $sessionStorage.paymentReturn = $location.search();
-//                return '/paymentDone';
-//            });
+            //            $urlRouterProvider.when(/.*paymentReturn.*/, function ($location, $sessionStorage) {
+            //                $sessionStorage.paymentReturn = $location.search();
+            //                return '/paymentDone';
+            //            });
             $stateProvider
                 .state('root', {
                     url: '/?productCode',
-                    template: '<div class="row" > < div class = "col-sm-2 col-sm-offset-5" > < i class = "fa-5x fa fa-refresh fa-spin"></i></div></div>',
+                    template: '<div class="row"> <div class="col-sm-2 col-sm-offset-5"><i class="fa-5x fa fa-refresh fa-spin"></i></div></div>',
                     controller: 'InitCtrl'
                 })
                 .state('booking', {
@@ -88,15 +88,20 @@ angular
                 })
                 .state('paymentDone', {
                     url: '/paymentDone',
-                    controller: function ($scope, paymentParams) {
+                    controller: function ($scope, paymentParams, $timeout) {
                         console.log('params', paymentParams);
+                        IteroJS.finalize(function (data) {
+                            console.log('data', data);
+                        }, function (error) {
+                            console.log('error', error);
+                        });
                     },
                     resolve: {
-                        paymentParams: function($location) {
+                        paymentParams: function ($location) {
                             return $location.search();
                         }
                     },
-                    template: "Hello"
+                    template: "finalize"
 
                 });
         }
