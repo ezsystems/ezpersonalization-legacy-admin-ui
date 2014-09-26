@@ -43,7 +43,10 @@ angular
             $translateProvider.useMissingTranslationHandlerLog();
 
             $locationProvider.html5Mode(true);
-            // $urlRouterProvider.otherwise('/?productCode=none');
+//            $urlRouterProvider.when(/.*paymentReturn.*/, function ($location, $sessionStorage) {
+//                $sessionStorage.paymentReturn = $location.search();
+//                return '/paymentDone';
+//            });
             $stateProvider
                 .state('root', {
                     url: '/?productCode',
@@ -81,6 +84,19 @@ angular
                     url: '/finished/:customerid/:contractid/:orderid',
                     templateUrl: 'views/finished.html',
                     controller: 'FinishedCtrl'
+
+                })
+                .state('paymentDone', {
+                    url: '/paymentDone',
+                    controller: function ($scope, paymentParams) {
+                        console.log('params', paymentParams);
+                    },
+                    resolve: {
+                        paymentParams: function($location) {
+                            return $location.search();
+                        }
+                    },
+                    template: "Hello"
 
                 });
         }

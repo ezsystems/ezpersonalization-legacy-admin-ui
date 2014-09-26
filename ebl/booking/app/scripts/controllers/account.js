@@ -52,14 +52,16 @@ angular.module('ycBookingApp')
             });
         });
         $scope.updateProfile = function () {
-            ycRestfrontend.updateProfile({
+            var params = {
                 provider: $scope.account.provider,
                 user_id: $scope.account.foreignId,
-                firstname: $scope.account.firstname,
-                lastname: $scope.account.lastName,
+                firstName: $scope.account.firstname,
+                lastName: $scope.account.lastname,
                 timeZone: $scope.account.timeZone,
-                lang: $scope.account.lang
-            });
+                lang: $scope.account.lang,
+                email: $scope.account.email
+            }
+            ycRestfrontend.updateProfile(params);
         };
 
 

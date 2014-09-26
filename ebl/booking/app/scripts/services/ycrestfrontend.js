@@ -33,9 +33,16 @@ angular.module('ycBookingApp.rest', ['ngResource'])
                 updateProfile: {
                     url: baseUrl + '/v4/profile/update_local_profile/:provider/:user_id',
                     method: 'POST',
-                    params: {provider: '@provider',
-                             user_id: '@user_id'
-                            }
+                    params: {
+                        provider: '@provider',
+                        user_id: '@user_id'
+                    },
+                    transformRequest: function (data, header) {
+                        delete data.provider;
+                        delete data.user_id;
+                        return angular.toJson(data);
+                    }
+
                 }
 
             });

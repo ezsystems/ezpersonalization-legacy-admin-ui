@@ -92,7 +92,7 @@ module.exports = function (grunt) {
         options: {
           open: true,
           middleware: function (connect) {
-            var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+            //var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
             return [
               connect.static('.tmp'),
               connect().use(
@@ -100,7 +100,7 @@ module.exports = function (grunt) {
                 connect.static('./bower_components')
               ),
               connect.static(appConfig.app),
-              proxySnippet
+              //proxySnippet
             ];
           }
         }
