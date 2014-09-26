@@ -40,7 +40,9 @@ angular.module('ycBookingApp')
             // REQUIRED. The initial order to be displayed. This will be requested immediately upon load
             publicApiKey: '53f1f9371d8dd00714634bf0',
             // REQUIRED. After payment user will be redirected to this URL.
-            providerReturnUrl: '' + $state.href('paymentDone', {}, {absolute: true}) + '/'
+            providerReturnUrl: $state.href('paymentDone', {}, {
+                absolute: true
+            })
         };
         console.log(paymentConfig.providerReturnUrl);
         self.iteroJSPayment = new IteroJS.Payment(paymentConfig, function () {
@@ -100,30 +102,41 @@ angular.module('ycBookingApp')
                 paymentData.expiryMonth = $scope.validto.getMonth() + 1;
                 paymentData.expiryYear = $scope.validto.getFullYear();
             }
-            console.log(cart, customerData, paymentData);
 
-            new IteroJS.Signup().subscribe(self.iteroJSPayment, cart, customerData, paymentData, function (data) {
-                // This callback will be invoked when the signup succeeded (or failed)
-                // Note that the callback must use $apply, otherwise angularjs won't notice we changed something:
-                $scope.$apply(function () {
-                    if (!data.Url) {
-                        $scope.isSuccess = true; //done
-                        var params = {
-                            contractid: data.ContractId,
-                            customerid: data.CustomerId,
-                            orderid: data.OrderId
-                        };
-                        console.log(params);
-                        $state.go('finished', params, {
-                            location: false
-                        });
-                    } else {
-                        console.log(data);
-                        window.location = data.Url; // redirect required, e.g. paypal, skrill
-                    }
+            var signup = new IteroJS.Signup();
+
+            signup.createOrder(cart, customerData, function (order) {
+                // link contract and login here
+                console.log(order);
+
+                //continue to payment
+                signup.paySignupInteractive(self.iteroJSPayment, paymentData, order, function (data) {
+                    // This callback will be invoked when the signup succeeded (or failed)
+                    // Note that the callback must use $apply, otherwise angularjs won't notice we changed something:
+                    $scope.$apply(function () {
+                        if (!data.Url) {
+                            $scope.isSuccess = true; //done
+                            var params = {
+                                contractid: data.ContractId,
+                                customerid: data.CustomerId,
+                                orderid: data.OrderId
+                            };
+                            console.log(params);
+                            $state.go('finished', params, {
+                                location: false
+                            });
+                        } else {
+                            console.log(data);
+                            window.location = data.Url; // redirect required, e.g. paypal, skrill
+                        }
+                    });
+                }, function (error) {
+                    alert('an error occurred during signup!');
+                    console.log(error);
                 });
+
             }, function (error) {
-                alert('an error occurred during signup!');
+                alert('could not place order');
                 console.log(error);
             });
         }
