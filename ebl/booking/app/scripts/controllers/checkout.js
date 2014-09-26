@@ -6,7 +6,7 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-    .controller('CheckoutCtrl', function ($scope, $state, $timeout) {
+    .controller('CheckoutCtrl', function ($scope, $state, $timeout, $location) {
         'use strict';
         var self = this;
 
@@ -40,8 +40,9 @@ angular.module('ycBookingApp')
             // REQUIRED. The initial order to be displayed. This will be requested immediately upon load
             publicApiKey: '53f1f9371d8dd00714634bf0',
             // REQUIRED. After payment user will be redirected to this URL.
-            providerReturnUrl: 'https://admin.yoochoose.com'
+            providerReturnUrl: '' + $state.href('paymentDone', {}, {absolute: true}) + '/'
         };
+        console.log(paymentConfig.providerReturnUrl);
         self.iteroJSPayment = new IteroJS.Payment(paymentConfig, function () {
             $timeout(function () {
                 $scope.$apply(function () {
@@ -117,6 +118,7 @@ angular.module('ycBookingApp')
                             location: false
                         });
                     } else {
+                        console.log(data);
                         window.location = data.Url; // redirect required, e.g. paypal, skrill
                     }
                 });
