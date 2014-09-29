@@ -44,7 +44,6 @@ angular.module('ycBookingApp')
                 absolute: true
             })
         };
-        console.log(paymentConfig.providerReturnUrl);
         self.iteroJSPayment = new IteroJS.Payment(paymentConfig, function () {
             $timeout(function () {
                 $scope.$apply(function () {

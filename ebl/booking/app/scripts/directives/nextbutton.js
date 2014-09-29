@@ -11,6 +11,7 @@ angular.module('ycBookingApp')
         return {
             scope: {
                 callback: '='
+                
             },
             template: '<button class="btn btn-default pull-right" ng-click="proceed()" type="submit">{{\'continue\' | translate}} <i class="fa fa-forward"></i></button>',
             replace: true,
