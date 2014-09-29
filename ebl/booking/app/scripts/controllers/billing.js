@@ -6,8 +6,7 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-    .controller('BillingCtrl', function ($scope, $resource) {
+    .controller('BillingCtrl', function ($scope, tab) {
         'use strict';
-        var countries = $resource('assets/countries.json', {}, {});
-        $scope.countries = countries.query();
+        $scope.countries = tab.countries;
     });

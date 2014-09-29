@@ -8,7 +8,9 @@
  * Factory in the ycBookingApp.
  */
 angular.module('ycBookingApp')
-    .factory('tab', function () {
+    .factory('tab', function ($resource) {
+    
+    var countries = $resource('assets/countries.json', {}, {}).query();
 
         var tabs = [{
                 id: 'account',
@@ -34,5 +36,6 @@ angular.module('ycBookingApp')
         // Public API here
         return {
             tabs: tabs,
+            countries: countries
         };
     });
