@@ -88,10 +88,18 @@ angular
                 })
                 .state('paymentDone', {
                     url: '/paymentDone',
-                    controller: function ($scope, paymentParams, $timeout) {
+                    controller: function ($scope, paymentParams, $timeout, $state) {
                         console.log('params', paymentParams);
                         IteroJS.finalize(function (data) {
-                            console.log('data', data);
+                            var params = {
+                                contractid: data.ContractId,
+                                customerid: data.CustomerId,
+                                orderid: data.OrderId
+                            };
+                            console.log(params);
+                            $state.go('finished', params, {
+                                location: false
+                            });
                         }, function (error) {
                             console.log('error', error);
                         });
@@ -101,7 +109,6 @@ angular
                             return $location.search();
                         }
                     },
-                    template: "finalize"
 
                 });
         }
