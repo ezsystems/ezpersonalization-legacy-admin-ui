@@ -22,21 +22,15 @@ angular.module('ycBookingApp')
 
         function isEnabled(id) {
             var max = getTabIndexById(id);
-            console.log('isEnabled', id);
             for (var i = 0; (i < $scope.tabs.length && i < max); i++) {
                 var tab = $scope.tabs[i];
                 if (tab.id === id) {
                     break;
                 }
                 var form = $scope[tab.id].form;
-                var formfields = 0;
-                for (var k in form){
-                    if (/^[^$].+/.test(k)){
-                        formfields++;
-                    }
-                }
 
-                if (form === undefined || !form.$valid || formfields == 0) {
+
+                if (form === undefined || !form.$valid || !$scope[tab.id].valid) {
                     return false;
                 }
             }
@@ -46,6 +40,9 @@ angular.module('ycBookingApp')
 
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
+                if ($scope[fromState.name] !== undefined && $scope[fromState.name].form !== undefined){
+                    $scope[fromState.name].valid = $scope[fromState.name].form.$valid;
+                }
                 if (!isEnabled(toState.name)) {
                     $scope.$broadcast('show-errors-check-validity');
                     event.preventDefault();
@@ -55,10 +52,17 @@ angular.module('ycBookingApp')
 
         $scope.tabs = tab.tabs;
 
-        $scope.booking = {};
-        $scope.account = {};
-        $scope.billing = {};
+        $scope.booking = {
+            valid: false
+        };
+        $scope.account = {
+            valid:false
+        };
+        $scope.billing = {
+            valid: false
+        };
         $scope.payment = {
+            valid: false,
             opendatepicker: false,
 
             ready: false,
