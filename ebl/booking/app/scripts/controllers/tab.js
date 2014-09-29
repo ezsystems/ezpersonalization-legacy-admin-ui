@@ -22,13 +22,21 @@ angular.module('ycBookingApp')
 
         function isEnabled(id) {
             var max = getTabIndexById(id);
+            console.log('isEnabled', id);
             for (var i = 0; (i < $scope.tabs.length && i < max); i++) {
                 var tab = $scope.tabs[i];
                 if (tab.id === id) {
                     break;
                 }
                 var form = $scope[tab.id].form;
-                if (form === undefined || !form.$valid) {
+                var formfields = 0;
+                for (var k in form){
+                    if (/^[^$].+/.test(k)){
+                        formfields++;
+                    }
+                }
+
+                if (form === undefined || !form.$valid || formfields == 0) {
                     return false;
                 }
             }
