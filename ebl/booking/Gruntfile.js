@@ -376,7 +376,12 @@ module.exports = function (grunt) {
           cwd: 'bower_components/font-awesome',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>'
-        } ]
+        },{
+          expand: true,
+          cwd: 'bower_components/famfamfam-flags-sprite/src',
+          src: '*.png',
+          dest: '<%= yeoman.dist %>/styles'
+        }]
           
           
       },
@@ -387,12 +392,7 @@ module.exports = function (grunt) {
         src: '{,*/}*.css'
       },
         
-      flags: {
-          expand: true,
-          cwd: 'bower_components/famfamfam-flags-sprite/src',
-          src: '*.png',
-          dest: '<%= yeoman.dist %>/styles'
-        }
+
     },
 
     // Run some tasks in parallel to speed up the build process
