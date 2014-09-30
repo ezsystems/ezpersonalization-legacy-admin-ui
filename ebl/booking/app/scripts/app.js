@@ -88,6 +88,7 @@ angular
                 })
                 .state('paymentDone', {
                     url: '/paymentDone',
+                    template: '<div class="row"> <div class="col-sm-2 col-sm-offset-5"><i class="fa-5x fa fa-refresh fa-spin"></i></div></div>',
                     controller: function ($scope, paymentParams, $timeout, $state) {
                         console.log('params', paymentParams);
                         IteroJS.finalize(function (data) {
@@ -96,12 +97,13 @@ angular
                                 customerid: data.CustomerId,
                                 orderid: data.OrderId
                             };
-                            console.log(params);
                             $state.go('finished', params, {
                                 location: false
                             });
                         }, function (error) {
-                            console.log('error', error);
+                            $state.go('error', error, {
+                                location: false
+                            });
                         });
                     },
                     resolve: {
@@ -110,6 +112,16 @@ angular
                         }
                     },
 
-                });
+                })
+                .state('error', {
+                    url: '/error?errorMessage',
+                    template: '<div class="container"><div class="row"><div class="col-sm-12 alert alert-danger"><strong>Something went wrong:</strong> {{errorMessage}}</div><div class="col-xs-2 col-xs-offset-10"><a class="btn btn-default" ui-sref="root" >Start Over</a></div></div></div>',
+                    controller: function($scope, $stateParams){
+                        $scope.errorMessage = $stateParams.errorMessage;
+                    }
+
+                })
+            
+            ;
         }
         ]);
