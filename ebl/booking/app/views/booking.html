@@ -1,0 +1,19 @@
+<div class="container">
+    <form role="form" class="form" name="booking.form">
+        <div class="row">
+            <div class="form-group col-sm-6" show-errors>
+                <label class="control-label" for="product">{{'product_select' | translate}}</label>
+                <select required="" placeholder="{{'product_select' | translate}}" class="form-control" id="product" name="product" ng-model="booking.planVariantId" ng-options="v as  p for (p, v) in plans" auto-focus></select>
+            </div>
+            <div class="form-group col-sm-6" show-errors>
+                <label class="control-label" for="website">{{'website' | translate}}</label>
+                <input type="url" required="" placeholder="{{'website' | translate}}" class="form-control" id="website" name="website" ng-model="booking.website" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-2 col-sm-offset-10">
+                <next-button />
+            </div>
+        </div>
+    </form>
+</div>
