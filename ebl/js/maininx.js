@@ -1,5 +1,5 @@
 
-var open_reference_code = gup('reference_code');
+var open_reference_code = gupDecoded('reference_code');
 
 var customerID;
 
