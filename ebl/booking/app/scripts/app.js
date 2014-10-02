@@ -114,12 +114,15 @@ angular
 
                 })
                 .state('error', {
-                    url: '/error?errorMessage',
-                    template: '<div class="container"><div class="row"><div class="col-sm-12 alert alert-danger"><strong>Something went wrong:</strong> {{errorMessage}}</div><div class="col-xs-2 col-xs-offset-10"><a class="btn btn-default" ui-sref="root" >Start Over</a></div></div></div>',
-                    controller: function($scope, $stateParams){
-                        $scope.errorMessage = $stateParams.errorMessage;
+                    url: '/error?errorCode',
+                    template: '<div class="container"><div class="row"><error cause="cause"></error></div><div class="row"><div class="pull-right"><div class="col-xs-2 "><a class="btn btn-default" ui-sref="root" translate="restart_button"></a></div></div></div></div>',
+                    controller: function ($scope, $stateParams) {
+                        if (!$stateParams.errorCode instanceof Array) {
+                            $scope.cause = [$stateParams.errorCode];
+                        } else {
+                            $scope.cause = $stateParams.errorCode;
+                        }
                     }
-
                 })
             
             ;

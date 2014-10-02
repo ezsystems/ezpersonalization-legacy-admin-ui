@@ -69,6 +69,7 @@ angular.module('ycBookingApp')
 
 
         function checkout(cartData, billingData, paymentData) {
+            $scope.errorCode =[];
 
             var cart = {
                 planVariantId: cartData.planVariantId,
@@ -105,39 +106,50 @@ angular.module('ycBookingApp')
             var signup = new IteroJS.Signup();
 
             signup.createOrder(cart, customerData, function (order) {
-                // link contract and login here
-                console.log(order);
+                    // link contract and login here
+                    console.log(order);
 
-                //continue to payment
-                signup.paySignupInteractive(self.iteroJSPayment, paymentData, order, function (data) {
-                    // This callback will be invoked when the signup succeeded (or failed)
-                    // Note that the callback must use $apply, otherwise angularjs won't notice we changed something:
-                    $scope.$apply(function () {
-                        if (!data.Url) {
-                            $scope.isSuccess = true; //done
-                            var params = {
-                                contractid: data.ContractId,
-                                customerid: data.CustomerId,
-                                orderid: data.OrderId
-                            };
-                            console.log(params);
-                            $state.go('finished', params, {
-                                location: false
-                            });
-                        } else {
-                            console.log(data);
-                            window.location = data.Url; // redirect required, e.g. paypal, skrill
-                        }
+                    //continue to payment
+                    signup.paySignupInteractive(self.iteroJSPayment, paymentData, order, function (data) {
+                        // This callback will be invoked when the signup succeeded (or failed)
+                        // Note that the callback must use $apply, otherwise angularjs won't notice we changed something:
+                        $scope.$apply(function () {
+                            if (!data.Url) {
+                                $scope.isSuccess = true; //done
+                                var params = {
+                                    contractid: data.ContractId,
+                                    customerid: data.CustomerId,
+                                    orderid: data.OrderId
+                                };
+                                console.log(params);
+                                $state.go('finished', params, {
+                                    location: false
+                                });
+                            } else {
+                                console.log(data);
+                                window.location = data.Url; // redirect required, e.g. paypal, skrill
+                            }
+                        });
+                    }, function (error) {
+                        $scope.$apply(function () {
+                            $scope.errorCode = error['errorCode'];
+                            for (var i in $scope.errorCode) {
+                                if ($scope.errorCode[i] === "") {
+                                    $scope.errorCode[i] = "UnmappedError";
+                                }
+                            }
+                        })
                     });
-                }, function (error) {
-                    alert('an error occurred during signup!');
-                    console.log(error);
-                });
 
-            }, function (error) {
-                alert('could not place order');
-                console.log(error);
-            });
+                },
+                function (error) {
+                    $scope.$apply(function () {
+                        $scope.errorCode = error['errorCode'];
+                        if ($scope.errorCode[i] === "") {
+                            $scope.errorCode[i] = "UnmappedError";
+                        }
+                    })
+                });
         }
 
         $scope.checkout = function () {

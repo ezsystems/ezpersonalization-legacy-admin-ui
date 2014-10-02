@@ -46,10 +46,37 @@
   "card_holder": "Card Holder",
   "card_number": "Credit Card Number",
   "card_expires": "Expires",
-  "signup_button": "Signup & Buy"
-
-
-
+  "signup_button": "Signup & Buy",
+  "restart_button": "Start Over",
+  "IteroServerError": "An error occured in the booking system.",
+  "PspServerError": "An error occured in the payment system.",
+  "Timeout": "The connection timed out.",
+  "InvalidKey": "The provided Key was invalid.",
+  "InvalidConfiguration": "The provided configuration was invalid.",
+  "InvalidPaymentData": "The provided payment data was invalid.",
+  "UnmappedError": "An unknown error occured: UnmappedError",
+  "Aborted": "The action has been aborted.",
+  "AcquirerServerError": "An error occured: AcquirerServerError.",
+  "AuthorizationRejected": "The Authorization was rejected",
+  "RateLimit": "Your Request Rate Limit exceeded. Please try again later.",
+  "InvalidTransaction": "The Transaction was invalid.",
+  "AmountLimitExceeeded": "An unknown error occured: AmountLimitExceeeded",
+  "InvalidPaymentMethod": "The Payment Method is not supported.",
+  "InvalidCardType": "The Card Type is not supported.",
+  "InvalidCardNumber": "The Card Number is not valid.",
+  "InvalidExpirationDate": "The Card expiration date is not valid.",
+  "InvalidCardCvc": "The Card CVC code is not correct.",
+  "InvalidCardHolder": "The Card Holder is not valid.",
+  "3DsProblem": "A problem occured in the 3Ds payment process.",
+  "InvalidAmount": "The supplied amount is not valid.",
+  "InvalidCurrency": "The supplied Currency is not supported.",
+  "InvalidAccountNumber": "The Account number is not valid.",
+  "InvalidAccountHolder": "The Account holder is not valid.",
+  "InvalidBankCode": "The Bank code is not valid.",
+  "InvalidIban": "The supplied IBAN is not valid.",
+  "InvalidBic": "The supplied BIC is not valid.",
+  "InvalidCountry": "The selected Country is not valid.",
+  "BearerRejected": "Your payment has been rejected."
 
  
 
