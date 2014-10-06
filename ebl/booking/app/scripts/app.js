@@ -88,6 +88,7 @@ angular
                 })
                 .state('paymentDone', {
                     url: '/paymentDone',
+                    template: '<div class="row"> <div class="col-sm-2 col-sm-offset-5"><i class="fa-5x fa fa-refresh fa-spin"></i></div></div>',
                     controller: function ($scope, paymentParams, $timeout, $state) {
                         console.log('params', paymentParams);
                         IteroJS.finalize(function (data) {
@@ -96,12 +97,13 @@ angular
                                 customerid: data.CustomerId,
                                 orderid: data.OrderId
                             };
-                            console.log(params);
                             $state.go('finished', params, {
                                 location: false
                             });
                         }, function (error) {
-                            console.log('error', error);
+                            $state.go('error', error, {
+                                location: false
+                            });
                         });
                     },
                     resolve: {
@@ -110,6 +112,19 @@ angular
                         }
                     },
 
-                });
+                })
+                .state('error', {
+                    url: '/error?errorCode',
+                    template: '<div class="container"><div class="row"><error cause="cause"></error></div><div class="row"><div class="pull-right"><div class="col-xs-2 "><a class="btn btn-default" ui-sref="root" translate="restart_button"></a></div></div></div></div>',
+                    controller: function ($scope, $stateParams) {
+                        if (!$stateParams.errorCode instanceof Array) {
+                            $scope.cause = [$stateParams.errorCode];
+                        } else {
+                            $scope.cause = $stateParams.errorCode;
+                        }
+                    }
+                })
+            
+            ;
         }
         ]);
