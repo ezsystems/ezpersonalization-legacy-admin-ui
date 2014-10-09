@@ -6,7 +6,7 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-    .controller('CheckoutCtrl', function ($scope, $state, $timeout, $location) {
+    .controller('CheckoutCtrl', function ($scope, $state, $timeout, $location, $sessionStorage) {
         'use strict';
         var self = this;
 

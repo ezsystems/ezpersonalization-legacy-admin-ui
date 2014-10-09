@@ -8,10 +8,11 @@
  * Controller of the ycBookingApp
  */
 angular.module('ycBookingApp')
-    .controller('TabCtrl', function ($state, $rootScope, $scope, tab) {
+    .controller('TabCtrl', function ($state, $rootScope, $scope, tab, $sessionStorage) {
 
         function getTabIndexById(id) {
-            for (var i = 0; (i < $scope.tabs.length); i++) {
+            for (var i = 0;
+                (i < $scope.tabs.length); i++) {
                 var tab = $scope.tabs[i];
                 if (tab.id === id) {
                     return i;
@@ -22,7 +23,8 @@ angular.module('ycBookingApp')
 
         function isEnabled(id) {
             var max = getTabIndexById(id);
-            for (var i = 0; (i < $scope.tabs.length && i < max); i++) {
+            for (var i = 0;
+                (i < $scope.tabs.length && i < max); i++) {
                 var tab = $scope.tabs[i];
                 if (tab.id === id) {
                     break;
@@ -40,7 +42,7 @@ angular.module('ycBookingApp')
 
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
-                if ($scope[fromState.name] !== undefined && $scope[fromState.name].form !== undefined){
+                if ($scope[fromState.name] !== undefined && $scope[fromState.name].form !== undefined) {
                     $scope[fromState.name].valid = $scope[fromState.name].form.$valid;
                 }
                 if (!isEnabled(toState.name)) {
@@ -52,15 +54,31 @@ angular.module('ycBookingApp')
 
         $scope.tabs = tab.tabs;
 
-        $scope.booking = {
-            valid: false
-        };
-        $scope.account = {
-            valid:false
-        };
-        $scope.billing = {
-            valid: false
-        };
+        if ($scope.booking === undefined && $sessionStorage.booking !== undefined) {
+            $scope.booking = $sessionStorage.booking;
+            delete $sessionStorage.booking;
+        } else {
+            $scope.booking = {
+                valid: false
+            };
+        }
+        if ($scope.account === undefined && $sessionStorage.account !== undefined) {
+            $scope.account = $sessionStorage.account;
+            delete $sessionStorage.account;
+        } else {
+            $scope.account = {
+                valid: false
+            };
+        }
+        if ($scope.billing === undefined && $sessionStorage.billing !== undefined) {
+            $scope.billing = $sessionStorage.billing;
+            delete $sessionStorage.billing;
+        } else {
+            $scope.billing = {
+                valid: false
+            };
+        }
+
         $scope.payment = {
             valid: false,
             opendatepicker: false,

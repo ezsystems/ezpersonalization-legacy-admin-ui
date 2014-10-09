@@ -16,7 +16,11 @@
     "angular-translate-handler-log": "~2.0.1",
     "famfamfam-flags-sprite": "~1.0.0",
     "angular-bootstrap": "~0.11.0",
-    "angular-card-input": "*"
+    "angular-card-input": "*",
+    "angular-moment": "~0.8.2",
+    "moment-timezone": "~0.2.2",
+    "moment": "~2.8.3",
+    "jstzdetect": "~1.0.6"
   },
   "devDependencies": {
     "angular-mocks": "latest",
