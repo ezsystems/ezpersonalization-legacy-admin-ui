@@ -10,6 +10,9 @@ angular.module('ycBookingApp')
         'use strict';
         $scope.ready = false;
 
+        $scope.timezones = moment.tz.names();
+        $scope.account.timezone = jstz.determine().name();
+
         //  if (loginData === undefined) {
         //      //var p = $location.path() + "?productCode=" + $sessionStorage.productcode;
         //      ycrestfronten.redirectToLogin();
@@ -28,9 +31,11 @@ angular.module('ycBookingApp')
                 if (!$scope.account.lang && result.localProfile.lang !== undefined && result.localProfile.lang !== null) {
                     $scope.account.lang = result.localProfile.lang;
                     $translate.use($scope.account.lang);
+                } else if (!$scope.account.lang){
+                    $scope.account.lang == $translate.use();
                 }
-                if (!$scope.account.timeZone) {
-                    $scope.account.timeZone = result.localProfile.timeZone;
+                if (!$scope.account.timezone) {
+                    $scope.account.timezone = result.localProfile.timeZone;
                 }
                 if (!$scope.account.provider) {
                     $scope.account.provider = result.provider;
@@ -57,12 +62,14 @@ angular.module('ycBookingApp')
                 user_id: $scope.account.foreignId,
                 firstName: $scope.account.firstname,
                 lastName: $scope.account.lastname,
-                timeZone: $scope.account.timeZone,
+                timeZone: $scope.account.timezone,
                 lang: $scope.account.lang,
                 email: $scope.account.email
-            }
+            };
+            $sessionStorage.account = $scope.account;
             ycRestfrontend.updateProfile(params);
         };
+
 
 
 

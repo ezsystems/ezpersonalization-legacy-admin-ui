@@ -17,6 +17,7 @@ angular.module('ycBookingApp')
         }];
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
+            $scope.account.lang = langKey;
         };
 
     });

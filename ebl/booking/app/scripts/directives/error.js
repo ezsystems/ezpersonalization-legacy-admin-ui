@@ -20,6 +20,11 @@ angular.module('ycBookingApp')
                 if (!$scope.cause instanceof Array) {
                     $scope.cause = [$scope.cause];
                 }
+                for (var i = 0; i < $scope.cause.length; i++){
+                    if ($scope.cause[i] == "") {
+                        $scope.cause[i] = "UnmappedError";
+                    }
+                }
             }
         };
     });

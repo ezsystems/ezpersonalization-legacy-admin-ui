@@ -76,7 +76,10 @@
   "InvalidIban": "Die angegebene IBAN ist ungültig.",
   "InvalidBic": "Der angegebene BIC ist ungültig.",
   "InvalidCountry": "Das gewählte Land ist ungültig.",
-  "BearerRejected": "Die Bezahlung wurde abgelehnt."
+  "BearerRejected": "Die Bezahlung wurde abgelehnt.",
+  "timezone": "Zeitzone",
+  "currency": "Währung",
+  "language": "Sprache"
 
 
 
