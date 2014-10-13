@@ -79,7 +79,9 @@
   "BearerRejected": "Your payment has been rejected.",
   "timezone": "Timezone",
   "currency": "Currency",
-  "language": "Language"
+  "language": "Language",
+  "month": "Month",
+  "year": "Year"
 
  
 

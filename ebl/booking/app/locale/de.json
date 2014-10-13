@@ -79,7 +79,9 @@
   "BearerRejected": "Die Bezahlung wurde abgelehnt.",
   "timezone": "Zeitzone",
   "currency": "Währung",
-  "language": "Sprache"
+  "language": "Sprache",
+  "month": "Monat",
+  "year": "Jahr"
 
 
 
