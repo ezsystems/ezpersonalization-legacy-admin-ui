@@ -20,7 +20,8 @@ angular
         'pascalprecht.translate',
         'translations',
         'creditCardInput',
-        'ui.date',
+        'ui.validate',
+        'ui.mask'
     ])
     .run(['$rootScope', '$state', '$stateParams',
         function ($rootScope, $state, $stateParams) {
@@ -29,8 +30,9 @@ angular
 
         }
         ])
-    .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$translateProvider',
-        function ($stateProvider, $urlRouterProvider, $locationProvider, $translateProvider) {
+    .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$translateProvider', 'showErrorsConfigProvider',
+        function ($stateProvider, $urlRouterProvider, $locationProvider, $translateProvider, showErrorsConfigProvider) {
+            showErrorsConfigProvider.showSuccess(true);
             $translateProvider
                 .registerAvailableLanguageKeys(['en', 'de'], {
                     'en_US': 'en',

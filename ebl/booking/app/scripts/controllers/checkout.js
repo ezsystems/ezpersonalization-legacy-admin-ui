@@ -9,6 +9,7 @@ angular.module('ycBookingApp')
     .controller('CheckoutCtrl', function ($scope, $state, $timeout, $location, $sessionStorage) {
         'use strict';
         var self = this;
+    
 
 
         $scope.opendatepicker = false;
@@ -99,9 +100,10 @@ angular.module('ycBookingApp')
                 }
             };
             if ($scope.validto !== undefined) {
-                paymentData.expiryMonth = $scope.validto.getMonth() + 1;
-                paymentData.expiryYear = $scope.validto.getFullYear();
+                paymentData.expiryMonth = extractMonth($scope.validto);
+                paymentData.expiryYear = extractYear($scope.validto);
             }
+            console.log($scope.validto, paymentData);
 
             var signup = new IteroJS.Signup();
 
@@ -158,9 +160,53 @@ angular.module('ycBookingApp')
             }
         };
     
-        $scope.validateMonth = function (month) {            
-            
+    
+        var normalizeYear = function( year) {
+            year = parseInt(year,10)
+            if (year < 0) {
+                return year;
+            }
+            if (year < 100) {
+                return 2000 + year;
+            } else {
+                return year;
+            }
         }
+        var extractMonth = function(input) {
+            var pattern = /(\d\d)\/?(\d\d)?/
+            
+            var match = pattern.exec(input);
+            if (match === null) {
+                return -1;
+            }
+            return parseInt(match[1],10);
+        }
+        
+        var extractYear = function(input) {
+            var pattern = /(\d\d)\/?(\d\d)/
+            
+            var match = pattern.exec(input);
+            if (match === null) {
+                return -1;
+            }
+            return normalizeYear(match[2],10);
+        }
+        
+        $scope.validateExpiry = function (maskedInput) {
+            var date = new Date();
+            var now = new Date();
+            var year = extractYear(maskedInput);
+            var month = extractMonth(maskedInput);
+            date.setFullYear(year);
+            date.setMonth(month -1)
+            if (month < 0 || month > 12) {
+                return false;
+            }
+            return now < date;
+        }
+        
+
+
 
 
 
