@@ -39,12 +39,13 @@
                     <input data-ng-model="payment.cvc" ng-required="isCreditCard()" type="cvc" class="form-control" id="cvc" name="cvc" placeholder="CVC" maxlength="4" />
                 </div>
                 <div class="col-xs-12 col-sm-3 form-group" show-errors>
+
                     <label for="validto" class="control-label" translate="card_expires"></label>
+
                     <p class="input-group">
-                        <input type="text" id="validto" name="validto" class="form-control" datepicker-popup="MM/yy" show-button-bar="false" ng-model="validto" is-open="opendatepicker" min-date="today" placeholder="MM/yy" datepicker-options="dateOptions" ng-required="isCreditCard()" />
-                        <span class="input-group-btn">
-                      <button type="button" class="btn btn-default" ng-click="pickdate($event)"><i class="fa fa-calendar"></i></button>
-                    </span>
+                        <input type="number" name="month" typeahead="m for m in months" ui-validate="validateMonth($value) && validateDate()"></input>
+                        <span class="input-group-addon">/</span>
+                        <input type="number" name="year" typeahead="y for y in years" ui-validate="validateYear($value) && validateDate()"></input>
                     </p>
                 </div>
             </div>
@@ -57,7 +58,7 @@
                 </div>
             </div>
             <error cause="errorCode" ng-if="errorCode"></error>
-            
+
             <div class="clearfix"></div>
             <div class="form-group col-sm-2 col-sm-offset-10">
                 <button class="btn btn-primary pull-right" ng-disabled="!ready || signupRunning " ng-click="checkout()" type="submit" translate="signup_button"></button>
