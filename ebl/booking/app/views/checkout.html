@@ -41,13 +41,10 @@
                 <div class="col-xs-12 col-sm-3 form-group" show-errors>
 
                     <label for="validto" class="control-label" translate="card_expires"></label>
+                    <input class="form-control" placeholder="MM/YY" type="text" name="validto" ng-model="validto" ui-mask="99/99" ui-validate="'validateExpiry($value)'"></input>
 
-                    <p class="input-group">
-                        <input type="number" name="month" typeahead="m for m in months" ui-validate="validateMonth($value) && validateDate()"></input>
-                        <span class="input-group-addon">/</span>
-                        <input type="number" name="year" typeahead="y for y in years" ui-validate="validateYear($value) && validateDate()"></input>
-                    </p>
                 </div>
+                
             </div>
             <div class="form-group" show-errors>
                 <div class="checkbox col-xs-12">
@@ -58,7 +55,7 @@
                 </div>
             </div>
             <error cause="errorCode" ng-if="errorCode"></error>
-
+{{payment.form.year.$valid}}
             <div class="clearfix"></div>
             <div class="form-group col-sm-2 col-sm-offset-10">
                 <button class="btn btn-primary pull-right" ng-disabled="!ready || signupRunning " ng-click="checkout()" type="submit" translate="signup_button"></button>
