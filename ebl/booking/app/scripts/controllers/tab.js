@@ -97,7 +97,11 @@ angular.module('ycBookingApp')
             },
             dateOptions: {
                 minMode: 'month',
-                maxMode: 'month',
+
+                datepickerMode: 'month',
+                'min-mode': 'month',
+
+                'datepicker-mode': 'month',
                 formatMonth: 'MM',
             },
             today: new Date(),

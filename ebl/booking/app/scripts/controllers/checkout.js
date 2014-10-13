@@ -157,6 +157,10 @@ angular.module('ycBookingApp')
                 checkout($scope.booking, $scope.billing, $scope.payment);
             }
         };
+    
+        $scope.validateMonth = function (month) {            
+            
+        }
 
 
 

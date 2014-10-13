@@ -19,7 +19,8 @@ angular
         'ngStorage',
         'pascalprecht.translate',
         'translations',
-        'creditCardInput'
+        'creditCardInput',
+        'ui.date',
     ])
     .run(['$rootScope', '$state', '$stateParams',
         function ($rootScope, $state, $stateParams) {
