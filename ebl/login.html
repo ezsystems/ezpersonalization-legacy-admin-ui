@@ -11,6 +11,10 @@
     <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
     <link rel="stylesheet" href="css/styles_new.css">
     
+    
+    <link rel="stylesheet" href="css/login.css">
+    
+    
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/jquery-ui.js"></script>
     <script src="js/lib/jquery.cookie.js"></script>
@@ -41,16 +45,45 @@
     </header>
     
     <section id="login_dialog" class="login_center normal_form" data-i18n-ready="visible">
-      <form action="" method="get" onsubmit="return false">
-        <fieldset>
+      
+        <table><tr><td style="width: 30em;">
           <h3 data-translate="login_welcometo">Welcome to YOOCHOOSE</h3>
           
-          <div class="actions">
-           	  <a class="login inline button go_ibs" data-translate="login_new_login_button" href="/api/v4/registration/login">Login</a>
-          </div>
-            
-          <h3 data-translate="login_old_login_header">For customers registered before 10.02.2014</h3>
+          <div data-translate="login_pactas_hint">Log in using any of the following services. No registration needed, just a single click!</div>
           
+          <div class="actions">
+           	<!--
+           	a class="login inline button go_ibs" data-translate="login_new_login_button" href="/api/v4/registration/login">Login</a-->
+           	  
+            <a href="#" onclick="sso('facebook')">
+			<img src="/img/auth-providers/250-facebook.png" alt="Facebook" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+			
+			<a href="#" onclick="sso('google')">
+			<img src="/img/auth-providers/250-google.png" alt="Google" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+			
+			<a href="#" onclick="sso('xing')">
+			<img src="/img/auth-providers/250-xing.png" alt="Xing" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+			
+			<a href="#" onclick="sso('twitter')">
+			<img src="/img/auth-providers/250-twitter.png" alt="Twitter" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+			
+			<br>
+			
+			<a href="#" onclick="sso('linkedin')">
+			<img src="/img/auth-providers/250-linkedin.png" alt="LinkedIn" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+			
+			<a href="#" onclick="sso('livejournal')">
+			<img src="/img/auth-providers/250-livejournal.png" alt="livejournal" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+			
+			<a href="#" onclick="sso('ibs')">
+			<img src="/img/auth-providers/250-ibs.png" alt="livejournal" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+           	  
+          </div>
+          
+          </td><td style="width: 30em; border-left: 1px solid rgba(140, 150, 138, 0.33)">
+            
+          <h3 data-translate="login_old_login_header">Login with yoochoose account</h3>
+          <form action="" method="get" onsubmit="return false">
           <div>
             <label for="email" class="required">
               <span data-translate="login_email">Email:</span>
@@ -67,10 +100,12 @@
           <div class="actions" style="padding: 10px;">
             <a class="login form_submit_button inline button" data-translate="login_login" tabindex="0">Legacy Login</a>
           </div>
-        </fieldset>
-      </form>
+          </form>
+          
       <a  data-translate="login_dont_have_account" 
       onclick="(in_to_language != 'en')?window.location ='http://www.yoochoose.com/preise/':window.location ='http://www.yoochoose.com/en/pricing/';">Don't have an account? Register here, it's fast and easy</a>
+          
+       	</td></tr></table>
     </section>
     
    	<script type="text/javascript">
