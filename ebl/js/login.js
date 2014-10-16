@@ -1,6 +1,18 @@
 
 var returnUrl = gupDecoded('returnUrl');
 
+var failureUrl = gupDecoded('failureUrl');
+
+var product = gupDecoded('product');
+
+var directId = gupDecoded('directId');
+
+var lang = gupDecoded('lang');
+
+var trustedComputer = gupDecoded('trustedComputer');
+
+
+
 
 $(document).ready(function () {
 
@@ -238,6 +250,43 @@ function resetPass() {
 				resetPasswordValidationMessage(errormsg);
 			}
 		});
+	}
+}
+
+
+function sso(provider) {
+	
+	var params = {};
+	
+	var returnUrl = gupDecoded('returnUrl');
+	if (returnUrl) params.returnUrl = returnUrl;
+
+	var failureUrl = gupDecoded('failureUrl');
+	if (failureUrl) params.failureUrl = failureUrl;
+
+	var product = gupDecoded('product');
+	if (product) params.product = product;
+	
+	var currency = gupDecoded('currency');
+	if (currency) params.currency = currency;
+
+	var directId = gupDecoded('directId');
+	if (directId) params.directId = directId;
+
+	var lang = gupDecoded('lang');
+	if (lang) params.directId = lang;
+
+	var trustedComputer = gupDecoded('trustedComputer');
+	if (trustedComputer) params.trustedComputer = trustedComputer;
+	
+	var queryString = $.param( params );
+		
+	if (provider) {
+		action = "/api/v4/sso/auth/" + encodeURIComponent(provider) + "?" + queryString;
+		window.location = action;
+	} else {
+		action = "/api/v4/sso/auth?" + queryString;
+		window.location = action;
 	}
 }
 
