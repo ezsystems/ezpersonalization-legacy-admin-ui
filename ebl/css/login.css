@@ -5,24 +5,31 @@
   width: 60em;
   margin: 0 auto;
   text-align: center;
-  padding: 30px 0;
-  margin-top: 150px;
-  margin-bottom: 120px;
-  
-  border: 1px solid rgba(140, 150, 138, 0.33);
-  border-radius: 10px;
-  background-color: white;
-  
+  border-spacing: 10px;
+  border-collapse: separate;
 }
 
-/* .login_center { */
-/*   display: block; */
-/*   border: 1px solid rgba(140, 150, 138, 0.33); */
-/*   -moz-border-radius: 10px; */
-/*   -webkit-border-radius: 10px; */
-/*   border-radius: 10px; */
-/*   background-color: white; */
-/* } */
+
+.login_center td {
+  margin: 0 auto;
+  text-align: center;
+  padding: 10px 0;
+  
+  border: 1px solid rgba(140, 150, 138, 0.33);
+
+  background-color: white;
+}
+
+.login_center td:first-child {
+	  border-top-left-radius: 10px;
+	  border-bottom-left-radius: 10px;
+}
+
+.login_center td:last-child {
+	  border-top-right-radius: 10px;
+	  border-bottom-right-radius: 10px;
+}
+
 
 .login_center h3 {
   display: block;
@@ -48,6 +55,8 @@
 
 .login_center div > label {
   position: absolute;
+  padding-left: 1em;
+  text-align: left;
   left: 0;
   top: 3px;
   width: 30%;
@@ -82,4 +91,39 @@
   display: inline-block;
   padding: 5px;
   margin-top: 40px;
+}
+
+
+
+.login_message {
+  display: block;
+  width: 50%;
+  text-decoration: none;
+  color: rgba(70, 78, 66, 1);
+  background-color: transparent;
+  border: 3px solid rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  margin: 0 auto;
+}
+
+.login_message > p {
+  display: block;
+  padding: 20px;
+}
+
+.login_message.neutral > p {
+  background-color: rgba(248, 98, 93, 1);
+}
+
+.login_message.problem > p {
+  background-color: rgba( 192,  80,  77, 1);
+  color: white;
+}
+
+.login_message.problem > p > span, .message.info > p > span {
+  display: block;
+}
+
+.login_message.positive > p, .message.info > p {
+  background-color: rgba( 218, 236, 213, 1);
 }
