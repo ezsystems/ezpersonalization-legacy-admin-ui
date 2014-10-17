@@ -109,6 +109,7 @@
 .login_message > p {
   display: block;
   padding: 20px;
+  border-radius: 10px;
 }
 
 .login_message.neutral > p {
