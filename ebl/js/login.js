@@ -12,37 +12,14 @@ var lang = gupDecoded('lang');
 var trustedComputer = gupDecoded('trustedComputer');
 
 
-
-
 $(document).ready(function () {
-
-    var editData4 =$("#resetp");
-
-    editData4.on("click", function(event){
-    	resetPasswordShow();
-    	return false;
-    });
-    
-    var closeResetp = function(e) { 
-	    if (e.which == 1 || e.which == 27) {
-	    	resetPasswordClose();
-	    }
-    };
-    
-    $(document).bind('keydown', closeResetp);
-    
-    $('#messageReset a.destroy_dialog').on("click", closeResetp);
-    
-    $('#messageReset a.send').on("click", resetPass);
-    $('#messageReset a.close').on("click", closeResetp);
     
     $('#login_dialog .go_ibs').click(function () {
-    	setLoadingDiv($('#login_dialog fieldset'));
+    	setLoadingDiv($('#login_dialog'));
     	window.setTimeout(function() {
-    		unsetLoadingDiv($('#login_dialog fieldset'));
+    		unsetLoadingDiv($('#login_dialog'));
     	}, 5000);
     });
-    
     
     $('#login_dialog input').keypress(function(e) {
         if(e.which == 13) {
@@ -51,78 +28,28 @@ $(document).ready(function () {
         }
     });
     
-    
-    $('#messageReset input').keypress(function(e) {
-        if(e.which == 13) {
-            jQuery(this).blur();
-            jQuery('#messageReset a.submit:visible').focus().click();
-        }
-    });
-    
 });
 
-
-/** Shows password reset div. */
-function resetPasswordShow() {
-	$('label[for="fpemail"]').parent().removeClass("problem");
-	$('label[for="captcha"]').parent().removeClass("problem");
-	$('.validation_message').hide();
-	captchascope = Math.round(Math.random() * 100000);
-    $('#captchaimage').attr('src', '/ebl/v3/registration/create_captcha?captchascope=' + captchascope);
-    $('#captcha').val("");
-    
-    $("#messageReset .close").hide();
-    $("#messageReset li.captcha").show();
-    $("#messageReset .send").show();
-    
-    $('#messageReset input').removeAttr('readonly');
-    
-    $("#messageReset").show();
-}
-
-
-function resetPasswordValidationMessage(i18n_key) {
-	$('.validation_message').show();
-	$('#validation_message').attr('data-translate', i18n_key);
-	
-	i18n($('#validation_message'));
-}
-
-
-/** Sets password reset div into "finished" mode. */
-function resetPasswordFinished() {
-	resetPasswordValidationMessage("reset_password_message_email_sent");
-	
-	$('#messageReset input').attr('readonly', true);
-	
-    $("#messageReset .close").show();
-    $("#messageReset li.captcha").hide();
-    $("#messageReset .send").hide();
-}
-
- 
-/** Closed password reset div. */
-function resetPasswordClose() {
-	$("#messageReset").hide();
-}
-	
 
 function resetPass(email) {
 	
 	var request = {
 		"email" : email
 	};
+	
+	setLoadingDiv($('#login_dialog'));
 
-     $.ajax({
+    $.ajax({
     	 type: "POST",
-         dataType: "json",
+    	 contentType: "application/json",
          data: JSON.stringify(request),
          url: "/api/v4/sso/reset_password?" + loginQueryString(),
 		 success: function (json) {
-			 localMessage("reset_password_message_email_sent");
+			 switchState("login", true);
+			 $("#login_dialog input[name='password']").val("");
+			 localMessage("positive", "reset_password_message_email_sent");
 		 },
 		 error: function (jqXHR, textStatus, errorThrown) {
-			
 			var errormsg;
 			if(jqXHR.status != null && jqXHR.status == 400) {
 		 		errormsg = "error_server_error_400";
@@ -138,6 +65,8 @@ function resetPass(email) {
 			}
 			localMessage("error", errormsg);
 		}
+	}).always(function () {
+		unsetLoadingDiv($('#login_dialog'));
 	});
 }
 
