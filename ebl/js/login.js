@@ -71,6 +71,55 @@ function resetPass(email) {
 }
 
 
+function registration(email) {
+	
+	var request = {
+		"email" : email
+	};
+	
+	setLoadingDiv($());
+
+	yooAjax('#login_dialog', {
+    	 type: "POST",
+         data: JSON.stringify(request),
+         url: "/api/v4/sso/sign_up?" + loginQueryString(),
+		 success: function (json) {
+			 switchState("login", true);
+			 $("#login_dialog input[name='password']").val("");
+			 			 
+			 if (json.product) {
+				 if (json.userExists) {
+					 localMessage("positive", "login_sign_up_email_sent_product_user_exists");	 
+				 } else {
+					 localMessage("positive", "login_sign_up_email_sent_product");
+				 }
+			 } else {
+				 if (json.userExists) {
+					 localMessage("positive", "login_sign_up_email_sent_user_exists");	 
+				 } else {
+					 localMessage("positive", "login_sign_up_email_sent");
+				 }
+			 }
+		 },
+		 fault_emailFault: function(json) {
+			 localMessage("error", "login_fault_email", email); return;
+		 },		 
+		 fault_userDisabledFault: function(json) {
+			 localMessage("error", "login_fault_user_disabled", json.id);
+		 },		 
+		 fault_productNotBookableFault: function(json) {
+			 localMessage("error", "login_fault_product_not_found", json.productId);
+		 },
+		 fault_productNotFoundFault: function(json) {
+			 localMessage("error", "login_fault_product_not_found", json.productId);
+		 },
+		 error: function (jqXHR, textStatus, errorThrown) {
+			localMessage("error", errormsg);
+		}
+	});
+}
+
+
 function localMessage(type, i18n_id) {
 	$('.login_message').removeClass("problem");
 	$('.login_message').removeClass("positive");
@@ -111,6 +160,8 @@ function login() {
 	} else {
 		if (window.history.state == "reset_password") {
 			resetPass(email);
+		} else if (window.history.state == "registration") {
+			registration(email);
 		} else {
 			$('#login_dialog form').attr("action", "/api/v4/sso/back?" + loginQueryString());
 			$('#login_dialog form').submit();

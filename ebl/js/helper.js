@@ -499,6 +499,39 @@ function initHelpBtn(){
 		});
 }
 
+
+
+function yooAjax(blurSelector, options) {
+	
+	if (blurSelector) {
+		setLoadingDiv($(blurSelector));
+	}
+	
+    var old_success = options.success;
+    var old_error = options.success;
+    
+    if (! options.contentType) options.contentType = "application/json"; 
+    
+    options.error = function(jqXHR, textStatus, errorThrown) {
+    	var json = jqXHR.responseJSON;
+    	if (json) {
+    		var call = this["fault_" + json.faultCode] | this["fault_" + jqXHR.status];
+    		if (call) {
+    			return call(json);
+    		}
+    	}
+    	return old_error(jqXHR, textStatus, errorThrown);
+    }
+    return $.ajax(options).always(function () {
+    	if (blurSelector) {
+    		unsetLoadingDiv($(blurSelector));
+    	}
+	});
+}
+
+
+
+
 /**
  * helper function to show a small tooltip
   */

@@ -47,53 +47,6 @@ var setEquals = function () {
 };
 
 
-//var setAccordions = function () {
-//
-//	var accordion = $(".accordion");
-//
-//	if (accordion.length) {
-//		accordion.accordion({
-//			autoHeight: false,
-//			change:     function () {
-//				setEquals();
-//			}
-//		});
-//	}
-//
-//};
-
-
-//var setDragDrop = function () {
-//	$(".model").draggable({
-//		connectToSortable: ".empty_model_place",
-//		helper:            "clone",
-//		helper:            function (event) {
-//			return $('<div class="helper_on_the_move"/>').text($(this).find("h5").text());
-//		},
-//		cursorAt:          {
-//			left:   100,
-//			bottom: 0},
-//		start:             function (event, ui) {
-//			setEquals();
-//		},
-//		stop:              function (event, ui) {
-//			setEquals();
-//		},
-//		revert:            "invalid"
-//	});
-//	$(".empty_model_place").sortable({
-//		revert:  true,
-//		over:    function (event, ui) {
-//			$(this).css({'padding': '0'});
-//		},
-//		receive: function (event, ui) {
-//			createPlacedModel($(this));
-//		}
-//	});
-//};
-
-
-
 /** Returns the first non-null argument */
 var ifnull = function() {
 	
@@ -179,38 +132,6 @@ var layerSizing = function (overlay) {
 	var fullHeight = $('body').outerHeight(true);
 	overlay.css({'height': fullHeight + 'px', 'width': fullWidth + 'px'});
 };
-
-//
-//function setDialogs(modelID) {
-//
-//	var overlay = $('.overlay');
-//	var layer = $('.dialog_body');
-//	var layerBody = overlay.parent('body');
-//	var closeButton = $('.dialog_body .destroy_dialog');
-//
-//	if (modelID.length) {
-//		layer.find("h2 > strong").text(modelID);
-//	}
-//
-//	openLayer(overlay, layer, layerBody);
-//	layerSizing(overlay);
-//
-//	setEquals();
-//	setSortable();
-////	setFilterGroups();
-//	//destroyGroup();
-//
-//	closeButton.on('click',function () {
-//		closeLayer(layerBody, layer, overlay);
-//	});
-//
-//	$(document).on('keydown', function (e) {
-//		if (e.which === 27) {
-//			closeLayer(layerBody, layer, overlay);
-//		}
-//	});
-//}
-
 
 
 /**
