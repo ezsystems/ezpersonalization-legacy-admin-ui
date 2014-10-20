@@ -156,52 +156,6 @@
         <li><a id="contact" data-translate="common_contact" href="contact.html">Contact</a></li>
       </ul>
     </footer>
-
-	
-	<div class="overlay" id="messageReset">
-		<div class="dialog_body change_password" id="messageBodyReset" style="width: 400px;" >
-			<a class="destroy_dialog" id="destroy_dialog" >X</a>
-			<form class="normal_form" action="#" method="get">
-				<h2 data-translate="reset_password_forgot_your_password" >Forgot your password?</h2>
-	       		<p data-translate="reset_password_reset_your_password_text" style="padding: 0px 0px 20px 10px;">Don't worry, we'll send you a mail with a link to page,<br/>where you can make in a new one.</p>
-	   			<ul>
-         			<li>
-             			<label for="fpemail" class="required" style="width: 30%;">
-	             			<span data-translate="reset_password_email">Email:</span>
-	            		</label>
-	            		<input type="text" name="fpemail" id="fpemail" placeholder="Email used for registration" autofocus="autofocus" style="width: 60%;" />
-      				</li>
-           			<li class="captcha" style="text-align: center;">
-            	    	<img id="captchaimage" style="width: 50%;" src="" />
-            		</li>
-  	      			<li class="captcha new_password_confirm">
-        	        	<label for="captcha" class="required" style="width: 30%;">
-	            	    	<span>Captcha:</span>
-	        	    	</label>
-	             		<input type="text" name="captcha" id="captcha" style="width: 60%;" />
-				 		<input style="display:none;" type="text" name="captchascope" id="captchascope" />
-             		</li>
-            		<li class="validation_message" style="display:none">
-                		<p class="annotation" id="validation_message" style="margin-left: 30%;" data-translate="error_fill_required_fields">Fill all requeared fields</p>
-            		</li>
-            		<li class="actions" style="padding-right: 13px;">
-                		<a class="send button inline submit" data-translate="reset_password_send">Send</a>
-                		<a class="close button inline submit" data-translate="reset_password_close">Close</a>
-           			</li>
-         		</ul>
-       	  </form>
-		</div>
-	</div>
-
-	
-	<div class="overlay" style="background-color: rgba(63, 63, 63, 0.3);" id="messageOkReset">
-		<div class="dialog_body change_password" id="messageBodyOkReset" >
-			<a class="destroy_dialog" id="destroy_dialog" >X</a>
-			<section class="general_info clearfix">
-				<h3 data-translate="reset_password_message_email_sent" >Success</h3>
-			</section>
-		</div>
-	</div>
 	
   </body>
 </html>
