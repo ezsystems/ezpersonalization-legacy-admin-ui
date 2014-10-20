@@ -5,6 +5,8 @@ var failureUrl = gupDecoded('failureUrl');
 
 var product = gupDecoded('product');
 
+var currency = gupDecoded('currency');
+
 var directId = gupDecoded('directId');
 
 var lang = gupDecoded('lang');
@@ -32,66 +34,53 @@ $(document).ready(function () {
 
 
 function resetPass(email) {
-	
-	var request = {
-		"email" : email
-	};
-	
-	setLoadingDiv($('#login_dialog'));
 
-    $.ajax({
-    	 type: "POST",
-    	 contentType: "application/json",
-         data: JSON.stringify(request),
-         url: "/api/v4/sso/reset_password?" + loginQueryString(),
+	yooAjax('#login_dialog', {
+		 url: "/api/v4/sso/reset_password?" + loginQueryString(),
+         data: {
+     		"email" : email
+     	 },
 		 success: function (json) {
 			 switchState("login", true);
 			 $("#login_dialog input[name='password']").val("");
 			 localMessage("positive", "reset_password_message_email_sent");
 		 },
+		 fault_emailFault: function(json) {
+			 localMessage("negative", "login_fault_email", email); return;
+		 },
+		 fault_loginNotFoundFault: function(json) {
+			 localMessage("negative", "login_fault_login_not_found", email); return;
+		 },
+		 fault_userDisabledFault: function(json) {
+			 localMessage("negative", "login_fault_user_disabled", email); return;
+		 },
+		 fault: function(json) {
+			 localMessage("negative", "login_fault_unexpected", json.faultCode, JSON.stringify(json.faultDetail));
+		 },			 
 		 error: function (jqXHR, textStatus, errorThrown) {
-			var errormsg;
-			if(jqXHR.status != null && jqXHR.status == 400) {
-		 		errormsg = "error_server_error_400";
-				
-			} else if(jqXHR.status != null && jqXHR.status == 404) {
-				errormsg = "error_server_error_login_not_found";
-				
-			} else if(jqXHR.status != null && jqXHR.status == 409) {
-				errormsg = "error_server_error_409";
-				
-			} else {
-				errormsg = "error_server_error";
-			}
-			localMessage("error", errormsg);
+			 localMessage("negative", "error_server_error", jqXHR.status);
 		}
-	}).always(function () {
-		unsetLoadingDiv($('#login_dialog'));
 	});
 }
 
 
 function registration(email) {
-	
-	var request = {
-		"email" : email
-	};
-	
-	setLoadingDiv($());
 
 	yooAjax('#login_dialog', {
-    	 type: "POST",
-         data: JSON.stringify(request),
-         url: "/api/v4/sso/sign_up?" + loginQueryString(),
-		 success: function (json) {
+		url: "/api/v4/sso/sign_up?" + loginQueryString(),
+        data: {
+    		"email" : email
+    	},
+		success: function (json) {
 			 switchState("login", true);
 			 $("#login_dialog input[name='password']").val("");
-			 			 
 			 if (json.product) {
+				 var pr = (json.product.name || json.product.id);
+				 
 				 if (json.userExists) {
-					 localMessage("positive", "login_sign_up_email_sent_product_user_exists");	 
+					 localMessage("positive", "login_sign_up_email_sent_product_user_exists", pr);	 
 				 } else {
-					 localMessage("positive", "login_sign_up_email_sent_product");
+					 localMessage("positive", "login_sign_up_email_sent_product", pr);
 				 }
 			 } else {
 				 if (json.userExists) {
@@ -100,21 +89,24 @@ function registration(email) {
 					 localMessage("positive", "login_sign_up_email_sent");
 				 }
 			 }
-		 },
-		 fault_emailFault: function(json) {
-			 localMessage("error", "login_fault_email", email); return;
-		 },		 
-		 fault_userDisabledFault: function(json) {
-			 localMessage("error", "login_fault_user_disabled", json.id);
-		 },		 
-		 fault_productNotBookableFault: function(json) {
-			 localMessage("error", "login_fault_product_not_found", json.productId);
-		 },
-		 fault_productNotFoundFault: function(json) {
-			 localMessage("error", "login_fault_product_not_found", json.productId);
-		 },
-		 error: function (jqXHR, textStatus, errorThrown) {
-			localMessage("error", errormsg);
+		},
+		fault_emailFault: function(json) {
+			localMessage("negative", "login_fault_email", email); return;
+		},		 
+		fault_userDisabledFault: function(json) {
+			localMessage("negative", "login_fault_user_disabled", json.id);
+		},		 
+		fault_productNotBookableFault: function(json) {
+			localMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
+		},
+		fault_productNotFoundFault: function(json) {
+			localMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
+		},
+		fault: function(json) {
+			localMessage("negative", "login_fault_unexpected", json.faultCode, JSON.stringify(json.faultDetail));
+		},		
+		error: function (jqXHR, textStatus, errorThrown) {
+			localMessage("negative", "error_server_error", jqXHR.status);
 		}
 	});
 }
@@ -148,6 +140,37 @@ $(document).ready(function () {
 	});
 	
 	switchState(window.history.state, false);
+	
+	if (product) {
+		
+		var url = "/api/v4/registration/get_product/" + encodeURIComponent(product);
+		if (currency) {
+			url = url + (currency ? ("/" + encodeURIComponent(currency)) : "");
+		}
+		
+		yooAjax(null, {
+			url: url,
+			success: function (json) {
+				if (json.notAvailable) {
+					localMessage("negative", "login_fault_product_not_found", json.name || json.id);	
+				} else {
+					localMessage("info", "login_info_bookig_product_step_1", json.name || json.id);
+				}
+			},
+			fault_productNotFoundFault: function(json) {
+				localMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
+				product = null;
+			},
+			fault: function(json) {
+				localMessage("negative", "login_fault_unexpected", json.faultCode, JSON.stringify(json.faultDetail));
+				product = null;
+			},		
+			error: function (jqXHR, textStatus, errorThrown) {
+				localMessage("negative", "error_server_error", jqXHR.status);
+				product = null;
+			}
+		});
+	}
 });
 
 
@@ -202,7 +225,6 @@ function switchState(state, pushNewState) {
 	if (pushNewState) history.pushState(state, "", "#" + state); 
 	
 	$("#products_link_section").css("visibility", (product) ? "hidden" : "visible");
-	
 }
 
 
@@ -216,11 +238,9 @@ function loginQueryString() {
 	var failureUrl = gupDecoded('failureUrl');
 	if (failureUrl) params.failureUrl = failureUrl;
 
-	var product = gupDecoded('product');
-	if (product) params.product = product;
+	if (product) params.product = product; // global variable is used
 	
-	var currency = gupDecoded('currency');
-	if (currency) params.currency = currency;
+	if (currency) params.currency = currency; // global variable is used
 
 	var directId = gupDecoded('directId');
 	if (directId) params.directId = directId;

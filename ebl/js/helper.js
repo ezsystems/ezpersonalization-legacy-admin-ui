@@ -501,6 +501,16 @@ function initHelpBtn(){
 
 
 
+/** Makes a $.ajax() call setting JSON content type ba default.
+ *  If non 2xx returned, calls method <code>fault_[json.faultCode]</code> or <code>fault_[statusCode]</code>
+ *  or <code>fault</code> instead of <code>error</code>. Calls the method <code>error</code> only, 
+ *  if the <code>fault*</code> mehtod was not found.
+ * 
+ *  @param blurSelector
+ *  	selector of the DOM emement to blur during the call. It can be <code>null</code>.
+ *  @param options
+ *  	see <code>$.ajax()</code> for more infromation.
+ */
 function yooAjax(blurSelector, options) {
 	
 	if (blurSelector) {
@@ -510,12 +520,22 @@ function yooAjax(blurSelector, options) {
     var old_success = options.success;
     var old_error = options.success;
     
-    if (! options.contentType) options.contentType = "application/json"; 
+    if (options.data) {
+    	if (! options.type) {
+    		options.type = "POST";
+    	}
+    	if (! options.contentType) {
+    		options.contentType = "application/json";
+    	}
+    	if (options.contentType == "application/json" && typeof options.data === 'object') {
+    		options.data = JSON.stringify(options.data);
+        }
+    }
     
     options.error = function(jqXHR, textStatus, errorThrown) {
     	var json = jqXHR.responseJSON;
     	if (json) {
-    		var call = this["fault_" + json.faultCode] | this["fault_" + jqXHR.status];
+    		var call = this["fault_" + json.faultCode] || this["fault_" + jqXHR.status] || this["fault"];
     		if (call) {
     			return call(json);
     		}

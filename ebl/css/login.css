@@ -109,22 +109,24 @@
 .login_message > p {
   display: block;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 7px;
 }
 
-.login_message.neutral > p {
+.login_message.neutral > p,
+.login_message.warning > p {
   background-color: rgba(248, 98, 93, 1);
+  color: black;
 }
 
-.login_message.problem > p {
+.login_message.problem > p,
+.login_message.error > p,
+.login_message.negative > p {
   background-color: rgba( 192,  80,  77, 1);
   color: white;
 }
 
-.login_message.problem > p > span, .message.info > p > span {
-  display: block;
-}
-
-.login_message.positive > p, .message.info > p {
+.login_message.positive > p, 
+.login_message.info > p {
   background-color: rgba( 218, 236, 213, 1);
+  color: black;
 }
