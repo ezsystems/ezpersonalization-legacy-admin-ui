@@ -75,6 +75,7 @@ function localMessage(type, i18n_id) {
 	$('.login_message').removeClass("problem");
 	$('.login_message').removeClass("positive");
     $('.login_message').addClass(type);
+    $('.login_message').css("visibility", "visible");
     
     var i18n_params = Array.prototype.slice.call(arguments, 2);
     
