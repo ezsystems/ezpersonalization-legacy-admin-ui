@@ -33,6 +33,8 @@ $(document).ready(function () {
 });
 
 
+
+
 function resetPass(email) {
 
 	yooAjax('#login_dialog', {
