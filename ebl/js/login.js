@@ -29,10 +29,7 @@ $(document).ready(function () {
             jQuery('#login_dialog .form_submit_button').focus().click();
         }
     });
-    
 });
-
-
 
 
 function resetPass(email) {
@@ -45,23 +42,17 @@ function resetPass(email) {
 		 success: function (json) {
 			 switchState("login", true);
 			 $("#login_dialog input[name='password']").val("");
-			 localMessage("positive", "reset_password_message_email_sent");
+			 magicMessage("positive", "reset_password_message_email_sent");
 		 },
 		 fault_emailFault: function(json) {
-			 localMessage("negative", "login_fault_email", email); return;
+			 magicMessage("negative", "login_fault_email", email); return;
 		 },
 		 fault_loginNotFoundFault: function(json) {
-			 localMessage("negative", "login_fault_login_not_found", email); return;
+			 magicMessage("negative", "login_fault_login_not_found", email); return;
 		 },
 		 fault_userDisabledFault: function(json) {
-			 localMessage("negative", "login_fault_user_disabled", email); return;
-		 },
-		 fault: function(json) {
-			 localMessage("negative", "login_fault_unexpected", json.faultCode, JSON.stringify(json.faultDetail));
-		 },			 
-		 error: function (jqXHR, textStatus, errorThrown) {
-			 localMessage("negative", "error_server_error", jqXHR.status);
-		}
+			 magicMessage("negative", "login_fault_user_disabled", email); return;
+		 }
 	});
 }
 
@@ -80,58 +71,32 @@ function registration(email) {
 				 var pr = (json.product.name || json.product.id);
 				 
 				 if (json.userExists) {
-					 localMessage("positive", "login_sign_up_email_sent_product_user_exists", pr);	 
+					 magicMessage("positive", "login_sign_up_email_sent_product_user_exists", pr);	 
 				 } else {
-					 localMessage("positive", "login_sign_up_email_sent_product", pr);
+					 magicMessage("positive", "login_sign_up_email_sent_product", pr);
 				 }
 			 } else {
 				 if (json.userExists) {
-					 localMessage("positive", "login_sign_up_email_sent_user_exists");	 
+					 magicMessage("positive", "login_sign_up_email_sent_user_exists");	 
 				 } else {
-					 localMessage("positive", "login_sign_up_email_sent");
+					 magicMessage("positive", "login_sign_up_email_sent");
 				 }
 			 }
 		},
 		fault_emailFault: function(json) {
-			localMessage("negative", "login_fault_email", email); return;
+			magicMessage("negative", "login_fault_email", email); return;
 		},		 
 		fault_userDisabledFault: function(json) {
-			localMessage("negative", "login_fault_user_disabled", json.id);
+			magicMessage("negative", "login_fault_user_disabled", json.id);
 		},		 
 		fault_productNotBookableFault: function(json) {
-			localMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
+			magicMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
 		},
 		fault_productNotFoundFault: function(json) {
-			localMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
-		},
-		fault: function(json) {
-			localMessage("negative", "login_fault_unexpected", json.faultCode, JSON.stringify(json.faultDetail));
-		},		
-		error: function (jqXHR, textStatus, errorThrown) {
-			localMessage("negative", "error_server_error", jqXHR.status);
+			magicMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
 		}
 	});
 }
-
-
-function localMessage(type, i18n_id) {
-	$('.login_message').removeClass("problem");
-	$('.login_message').removeClass("positive");
-    $('.login_message').addClass(type);
-    $('.login_message').css("visibility", "visible");
-    
-    var i18n_params = Array.prototype.slice.call(arguments, 2);
-    
-    for (var i in i18n_params) {
-    	i18n_params[i] = "<span data-param='" + i + "'>" + i18n_params[i] + "</span>";
-    }
-    
-    $('#login_message_text').attr("data-translate", i18n_id);
-	$('#login_message_text').html(i18n_params.join(""));
-	
-	i18n($('#login_message_text'));
-}
-
 
 $(document).ready(function () {
 	
@@ -143,8 +108,20 @@ $(document).ready(function () {
 	
 	switchState(window.history.state, false);
 	
+	var faultCode = gupDecoded('faultCode');
+	var faultMessage = gupDecoded('faultMessage');
+	
+	if (faultCode=="CANCELLED") {
+		// fine. Just continue.
+	} else if (faultCode=="DENIED") {
+		magicMessage("error", "login_fault_sso_denied");
+		return;
+	} else if (faultCode) {
+		magicMessage("error", "fault_unexpected", faultCode, faultMessage || window.location);
+		return;
+	}
+	
 	if (product) {
-		
 		var url = "/api/v4/registration/get_product/" + encodeURIComponent(product);
 		if (currency) {
 			url = url + (currency ? ("/" + encodeURIComponent(currency)) : "");
@@ -154,21 +131,20 @@ $(document).ready(function () {
 			url: url,
 			success: function (json) {
 				if (json.notAvailable) {
-					localMessage("negative", "login_fault_product_not_found", json.name || json.id);	
+					magicMessage("negative", "login_fault_product_not_found", json.name || json.id);	
 				} else {
-					localMessage("info", "login_info_bookig_product_step_1", json.name || json.id);
+					if (json.comaId && json.comaId.coma == "IBS") {
+						var magic = magicMessage("warning", "login_info_bookig_product_force_ibs", json.name || json.id);
+						magic.addLink(ssoLink("ibs"), "login_info_bookig_product_force_ibs_link");
+						
+					} else {
+						magicMessage("info", "login_info_bookig_product_step_1", json.name || json.id);
+					}
 				}
+				
 			},
 			fault_productNotFoundFault: function(json) {
-				localMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
-				product = null;
-			},
-			fault: function(json) {
-				localMessage("negative", "login_fault_unexpected", json.faultCode, JSON.stringify(json.faultDetail));
-				product = null;
-			},		
-			error: function (jqXHR, textStatus, errorThrown) {
-				localMessage("negative", "error_server_error", jqXHR.status);
+				magicMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
 				product = null;
 			}
 		});
@@ -181,7 +157,7 @@ function login() {
     var email = $("#login_dialog input[name='login']").val();
 
 	if(!validateEmail(email)) {
-		localMessage("problem", "error_login_not_valid_email_address");
+		magicMessage("problem", "error_login_not_valid_email_address");
 	} else {
 		if (window.history.state == "reset_password") {
 			resetPass(email);
@@ -261,17 +237,24 @@ function loginQueryString() {
 
 function sso(provider) {
 	
-	var queryString = loginQueryString();
-		
-	if (provider) {
-		action = "/api/v4/sso/auth/" + encodeURIComponent(provider) + "?" + queryString;
-		window.location = action;
-	} else {
-		action = "/api/v4/sso/auth?" + queryString;
-		window.location = action;
-	}
+	var action = ssoLink(provider);
+	window.location = action;
 	
 	return false;
+}
+
+
+function ssoLink(provider) {
+	
+	var queryString = loginQueryString();
+	
+	if (provider) {
+		action = "/api/v4/sso/auth/" + encodeURIComponent(provider) + "?" + queryString;
+	} else {
+		action = "/api/v4/sso/auth?" + queryString;
+	}
+	
+	return action;
 }
 
 

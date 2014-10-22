@@ -777,24 +777,18 @@ input[type="text"].inverted {
   color: rgba(70, 78, 66, 1);
   background-color: transparent;
   border: 10px solid rgba(0, 0, 0, 0.5);
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
   border-radius: 10px;
 }
 
 .message.registration{
   text-align: center;
   border-width: 1px;
-  -moz-border-radius: 10px 10px 10px 10px;
-  -webkit-border-radius: 10px 10px 10px 10px;
   border-radius: 10px 10px 10px 10px;
   z-index: 3000;
 }
 
 .message.registration > p {
   background-color: rgba( 218, 236, 213, 1);
-  -moz-border-radius: 10px 10px 10px 10px;
-  -webkit-border-radius: 10px 10px 10px 10px;
   border-radius: 10px 10px 10px 10px;
 }
 
@@ -808,8 +802,6 @@ input[type="text"].inverted {
   border-width: 1px;
   border-bottom: none;
   border-right: none;
-  -moz-border-radius: 10px 0 0 0;
-  -webkit-border-radius: 10px 0 0 0;
   border-radius: 10px 0 0 0;
   width: auto;
   max-width: 25%;
@@ -841,7 +833,12 @@ input[type="text"].inverted {
   text-align: center;
 }
 
-.message.problem > p {
+.message.problem > p,
+.message.negative > p,
+.message.error > p,
+.message.problem > p a,
+.message.negative > p a,
+.message.error > p a {
   background-color: rgba( 192,  80,  77, 1);
   color: white;
 }
@@ -1558,8 +1555,7 @@ font.settings:hover{
   width: 40%;
 }
 
-.change_mandant .actions,
-.change_password .actions {
+.change_mandant .actions {
   display: block;
   text-align: right;
 }
@@ -1866,37 +1862,6 @@ section.help > article img {
   padding: 4px 0;
 }
 
-.change_password {
-  width: 500px;
-}
-
-.change_password form ul > li {
-  display: block;
-  padding-bottom: 6px;
-}
-
-.change_password form ul > li > label {
-  width: 40%;
-}
-
-.change_password form ul > li > input {
-  width: 50%;
-}
-
-.change_password form ul > li.actions {
-  padding: 20px 23px 0 0;
-}
-
-.change_password form ul > li > .annotation {
-  display: block;
-  margin-left: 40%;
-  padding: 8px 30px 5px 15px;
-  font-style: italic;
-}
-
-.change_password form ul > li.validation_message > .annotation {
-  color: rgba(192, 80, 77, 1);
-}
 
 li.validation_message > .error {
   color: rgba(192, 80, 77, 1);
@@ -2447,4 +2412,51 @@ section.scenarios > header a:not(.button):hover, section.scenarios > header a:no
 	width: 49%;
 }
 
+
+
+
+
+
+#magic_message {
+  display: block;
+  width: 50%;
+  text-decoration: none;
+  color: rgba(70, 78, 66, 1);
+  background-color: transparent;
+  border: 3px solid rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  margin: 0 auto;
+}
+
+#magic_message > p {
+  display: block;
+  padding: 20px;
+  border-radius: 7px;
+}
+
+#magic_message.neutral > p,
+#magic_message.warning > p,
+#magic_message.neutral > p a,
+#magic_message.warning > p a {
+  background-color: rgba(248, 98, 93, 1);
+  color: black;
+}
+
+#magic_message.problem > p,
+#magic_message.error > p,
+#magic_message.negative > p,
+#magic_message.problem > p a,
+#magic_message.error > p a,
+#magic_message.negative > p a {
+  background-color: rgba( 192,  80,  77, 1);
+  color: white;
+}
+
+#magic_message.positive > p, 
+#magic_message.info > p,
+#magic_message.positive > p a, 
+#magic_message.info > p a {
+  background-color: rgba( 218, 236, 213, 1);
+  color: black;
+}
        

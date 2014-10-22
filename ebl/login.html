@@ -42,49 +42,58 @@
       </div>
     </header>
     
-    <div class="login_message" style="visibility: hidden;">
-      <p>
-       	<span id="login_message_text">Message</span>
-      </p>
+    <div id="magic_message" style="visibility: hidden;">
+      <p><span id="magic_message_text">Message</span></p>
     </div>
       
-    <table id="login_dialog" class="login_center" style="margin-top: 2em;"><tr><td style="width: 30em;">
+    <table id="login_dialog" class="login_center" style="margin-top: 2em;"><tr><td>
         
       <h3 data-translate="login_login_one_click">Welcome to YOOCHOOSE</h3>
       
       <div data-translate="login_pactas_hint">Log in using any of the following services. No registration needed, just a single click!</div>
       
       <div class="actions">
-       	<!--
-       	a class="login inline button go_ibs" data-translate="login_new_login_button" href="/api/v4/registration/login">Login</a-->
        	  
         <a href="#" onclick="sso('facebook')">
-		<img src="/img/auth-providers/250-facebook.png" alt="Facebook" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+		<img src="/img/auth-providers/250-facebook-nom.png" alt="Facebook">
+		<span data-translate="login_with_facebook">Login with Facebook</span>
+		</a>
 		
 		<a href="#" onclick="sso('google')">
-		<img src="/img/auth-providers/250-google.png" alt="Google" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+		<img src="/img/auth-providers/250-google-nom.png" alt="Google">
+		<span data-translate="login_with_google">Login with Google</span>
+		</a>
 		
 		<a href="#" onclick="sso('xing')">
-		<img src="/img/auth-providers/250-xing.png" alt="Xing" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+		<img src="/img/auth-providers/250-xing-nom.png" alt="Xing">
+		<span data-translate="login_with_xing">Login with XING</span>
+		</a>
 		
 		<a href="#" onclick="sso('twitter')">
-		<img src="/img/auth-providers/250-twitter.png" alt="Twitter" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
-		
-		<br>
+		<img src="/img/auth-providers/250-twitter-nom.png" alt="Twitter">
+		<span data-translate="login_with_twitter">Login with Twitter</span>
+		</a>
 		
 		<a href="#" onclick="sso('linkedin')">
-		<img src="/img/auth-providers/250-linkedin.png" alt="LinkedIn" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+		<img src="/img/auth-providers/250-linkedin-nom.png" alt="LinkedIn">
+		<span data-translate="login_with_linkedin">Login with LinkedIn</span>
+		</a>
 		
 		<a href="#" onclick="sso('livejournal')">
-		<img src="/img/auth-providers/250-livejournal.png" alt="livejournal" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+		<img src="/img/auth-providers/250-livejournal.png" alt="livejournal">
+		<span data-translate="login_with_livejournal">Login with Livejournal</span>
+		</a>
 		
-		<a href="#" onclick="sso('ibs')">
-		<img src="/img/auth-providers/250-ibs.png" alt="livejournal" style="width:5em; height:5em; vertical-align: text-bottom;"></a>
+		<a href="#" onclick="sso('ibs')" id="login_ibs">
+		<img src="/img/auth-providers/250-ibs.png" alt="IBS">
+		<span data-translate="login_with_ibs">Login with IBS</span>
+		</a>
+		
+		<div style="clear: both;"></div>
        	  
       </div>
       
-      </td><td style="width: 30em; border-left: 1px solid rgba(140, 150, 138, 0.33)">
-      
+      </td><td>
         
       <h3 class="native_login_header" data-translate="login_old_login_header">Login with yoochoose account</h3>
       
@@ -116,7 +125,7 @@
 	      </div>
       </form>
 	      
-      <div class="actions" style="padding: 10px;">
+      <div style="padding: 10px;">
 		  <a class="login form_submit_button inline button" data-translate="login_login_button" tabindex="0" onclick="login();">Login</a>
       </div>
       
@@ -143,11 +152,7 @@
 		$("section.login_center").css('visibility', 'hidden'); // it will be make visible back by i18n library.
 	</script>
     
-    <!--  still in development 
-    <a id="facebook_login" href="#">Login over facebook</a>
-    <a id="google_login" href="#">Login over google</a>
-    <a id="twitter_login" href="#">Login over twitter</a>
-    -->    
+
     <footer>
       Copyright <script>document.write('2009-' + new Date().getFullYear());</script> YOOCHOOSE GmbH
       <ul class="clearfix">

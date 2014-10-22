@@ -10,15 +10,16 @@ $(document).ready(function () {
 		 success: function (json) {
 			 var temporaryToken = json.authenticationInformation.temporary;
 			 if (temporaryToken) {
-				 $("#password_old").hide();
+				 $("#old_password_section").hide();
+				 $("#password").focus();
+			 } else {
+				 $("#old_password_section").focus();
 			 }
 		 },
-		 error: function (jqXHR, textStatus, errorThrown) {
-			 localMessage("negative", "error_server_error", jqXHR.status);
-		}
 	});
-	
 });
+
+
 
 
 function changePassword() {
@@ -28,7 +29,7 @@ function changePassword() {
 	var password = $("#password").val();
 	
 	var password_confirm = $("#password_confirm").val();
-	
-	
 }
+
+
 

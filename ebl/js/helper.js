@@ -69,8 +69,12 @@ function gupDecoded(name) {
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
     var results = regex.exec(window.location.href);
-    if (results == null) return "";
-    else return decodeURIComponent(results[1]);
+    if (results == null) {
+    	return "";
+    } else {
+    	var value = results[1].replace(/\+/g, ' ');
+    	return decodeURIComponent(value);
+    }
 }
 
 
@@ -518,7 +522,7 @@ function yooAjax(blurSelector, options) {
 	}
 	
     var old_success = options.success;
-    var old_error = options.success;
+    var old_error = options.error;
     
     if (options.data) {
     	if (! options.type) {
@@ -530,6 +534,21 @@ function yooAjax(blurSelector, options) {
     	if (options.contentType == "application/json" && typeof options.data === 'object') {
     		options.data = JSON.stringify(options.data);
         }
+    };
+    
+    if (! options.fault_authenticationFailure) {
+	    options.fault_authenticationFailure = function(json) {
+			 var magic = magicMessage("negative", "fault_authenticationFailure", json.faultDetail.faultCode);
+			 var returnUrl = window.location;
+			 
+			 magic.addLink("/login.html?returnUrl=" + encodeURIComponent(returnUrl), "fault_link_login_page");
+		};
+    }
+    
+    if (! options.fault) { 
+    	options.fault = function(json) {
+    		magicMessage("negative", "fault_unexpected", json.faultCode, JSON.stringify(json.faultDetail));
+    	};
     }
     
     options.error = function(jqXHR, textStatus, errorThrown) {
@@ -540,14 +559,90 @@ function yooAjax(blurSelector, options) {
     			return call(json);
     		}
     	}
-    	return old_error(jqXHR, textStatus, errorThrown);
-    }
+    	if (old_error) {
+    		return old_error(jqXHR, textStatus, errorThrown);
+    	} else {
+    		magicMessage("negative", "error_server_error", jqXHR.status);
+    	}
+    };
+    
     return $.ajax(options).always(function () {
     	if (blurSelector) {
     		unsetLoadingDiv($(blurSelector));
     	}
 	});
 }
+
+
+/** Shows a magic message.
+ *  
+ *  It makes the DIV#magic_message visible. If no magic DIV exists,
+ *  creates one as a popup.
+ * 
+ *  @param type
+ *  	'info', 'warining' or 'error'
+ *  @param i18n_id
+ *  @returns
+ *  	returns an object for additional features. Can be ignored.
+ */
+function magicMessage(type, i18n_id) {
+	
+	if (! $('#magic_message').length) {
+		$('body').append('<div id="magic_message" class="message"><p><a class="destroy_message">X</a></p></div>')
+		$('#magic_message p').append("<span id='magic_message_text'></span>");
+		
+		$('#magic_message .destroy_message').click(function() {
+			$('#magic_message').css("visibility", "hidden");
+		});
+		
+		var closeMagicMessage = function(e) { 
+		    if (e.which == 1 || e.which == 27) {
+		    	if ($('#magic_message').is(":visible")) {
+		    		$('#magic_message').css("visibility", "hidden");
+		    	} 
+		    }
+		};
+	    
+	    $(document).bind('keydown', closeMagicMessage);
+	}
+
+	
+	$('#magic_message').removeClass("problem");
+	$('#magic_message').removeClass("positive");
+    $('#magic_message').addClass(type);
+    $('#magic_message').css("visibility", "visible");
+    
+    $('#magic_message > a').remove();
+    $('#magic_message > br').remove();
+    
+    var i18n_params = Array.prototype.slice.call(arguments, 2);
+    
+    for (var i in i18n_params) {
+    	i18n_params[i] = "<span data-param='" + i + "'>" + i18n_params[i] + "</span>";
+    }
+    
+    $('#magic_message_text').attr("data-translate", i18n_id);
+	$('#magic_message_text').html(i18n_params.join(""));
+	
+	i18n($('#magic_message_text'));
+	
+	return {
+		addLink: function(href, i18n_id) {
+			var i18n_params = Array.prototype.slice.call(arguments, 2);		
+
+		    for (var i in i18n_params) {
+		    	i18n_params[i] = "<span data-param='" + i + "'>" + i18n_params[i] + "</span>";
+		    }
+			
+			$('#magic_message_text').parent().
+				append("<br><a href='"+href+"' data-translate='" + encodeURIComponent(i18n_id) + "'>" + i18n_params.join("") + "</a>");
+			
+			i18n($('#magic_message_text').parent());
+		}
+	}
+}
+
+
 
 
 
