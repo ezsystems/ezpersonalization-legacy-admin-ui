@@ -2438,7 +2438,7 @@ section.scenarios > header a:not(.button):hover, section.scenarios > header a:no
 #magic_message.warning > p,
 #magic_message.neutral > p a,
 #magic_message.warning > p a {
-  background-color: rgba(248, 98, 93, 1);
+  background-color: #FFC700;
   color: black;
 }
 

@@ -545,6 +545,16 @@ function yooAjax(blurSelector, options) {
 		};
     }
     
+    if (! options.fault_securityFault) {
+	    options.fault_securityFault = function(json) {
+	    	if (json.faultDetail.object) {
+	    		magicMessage("negative", "fault_securityFault_object", json.faultDetail.code, json.faultDetail.object);
+	    	} else {
+	    		magicMessage("negative", "fault_securityFault", json.faultDetail.code);	
+	    	}
+		};
+    }
+    
     if (! options.fault) { 
     	options.fault = function(json) {
     		magicMessage("negative", "fault_unexpected", json.faultCode, JSON.stringify(json.faultDetail));
