@@ -1,7 +1,7 @@
 
 
 
-var in_to_language = $.cookie('language') || navigator.language || navigator.userLanguage || "en";
+var in_to_language = gupDecoded('lang') || $.cookie('language') || navigator.language || navigator.userLanguage || "en";
 
 var _i18n_ready = false;
 
@@ -46,14 +46,9 @@ function init_i18n(filenames) {
 		$('.language_selection').children('li').click(function(){
 			$('.language_selection').children('li').removeClass('current');
 			
-			in_to_language = $(this).attr('lang');
-			$.cookie('language', in_to_language);
+			changeLang($(this).attr('lang'));
 			
-			$(this).addClass('current');
-			
-			apply_i18n(filenames);
-			
-			if(typeof setEquals === 'function'){
+			if(typeof setEquals === 'function'){ // ?? WTF
 				setEquals();
 			}
 		});
@@ -61,7 +56,29 @@ function init_i18n(filenames) {
 	});
 	
 	apply_i18n(filenames);
+}
+
+
+function changeLang(newLang, updateProfile) {
+	if (in_to_language == newLang) {
+		return;
+	}
 	
+	in_to_language = newLang; // "in_to_language" is a global variable 
+	$.cookie('language', in_to_language);
+	
+	$(this).addClass('current');
+	
+	apply_i18n(filenames);
+	
+	if (updateProfile) {
+		yooAjax('#login_dialog', {
+			 url: "/api/v4/profile/update_lang",
+	         data: {
+	     		"lang" : in_to_language
+	     	 }
+		});
+	}
 }
 
 
