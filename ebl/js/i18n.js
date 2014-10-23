@@ -8,19 +8,8 @@ var _i18n_ready = false;
 
 $(document).ready(function () {
 	
-	var files = [];
-	
 	try {
-		$('script[data-i18n-files]').each(function() {
-			var v = $(this).attr('data-i18n-files');
-			var vv = v.split(",");
-			for (i in vv) {
-				var trimmed = $.trim(vv[i]);
-				if (trimmed.length > 0) {
-					files.push(trimmed);
-				}
-			}
-		});
+		var files = i18n_files();
 		
 		if (files.length > 0) {
 			init_i18n(files);
@@ -31,6 +20,24 @@ $(document).ready(function () {
 		$('[data-i18n-ready=visible]').css('visibility', 'visible');
 	}
 });
+
+
+function i18n_files() {
+	var files = [];
+	
+	$('script[data-i18n-files]').each(function() {
+		var v = $(this).attr('data-i18n-files');
+		var vv = v.split(",");
+		for (i in vv) {
+			var trimmed = $.trim(vv[i]);
+			if (trimmed.length > 0) {
+				files.push(trimmed);
+			}
+		}
+	});
+	
+	return files;
+}
 
 
 /** Initialize the i18n library.
@@ -46,7 +53,8 @@ function init_i18n(filenames) {
 		$('.language_selection').children('li').click(function(){
 			$('.language_selection').children('li').removeClass('current');
 			
-			changeLang($(this).attr('lang'));
+			$(this).addClass('current');
+			changeLang($(this).attr('lang'), true);
 			
 			if(typeof setEquals === 'function'){ // ?? WTF
 				setEquals();
@@ -67,15 +75,16 @@ function changeLang(newLang, updateProfile) {
 	in_to_language = newLang; // "in_to_language" is a global variable 
 	$.cookie('language', in_to_language);
 	
-	$(this).addClass('current');
-	
-	apply_i18n(filenames);
+	apply_i18n(i18n_files());
 	
 	if (updateProfile) {
-		yooAjax('#login_dialog', {
+		yooAjax(null, {
 			 url: "/api/v4/profile/update_lang",
 	         data: {
 	     		"lang" : in_to_language
+	     	 },
+	     	 fault_authenticationFailure: function(json) {
+	     		// nothing, no user, no update
 	     	 }
 		});
 	}
