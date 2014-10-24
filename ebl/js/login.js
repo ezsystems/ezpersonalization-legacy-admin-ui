@@ -106,18 +106,36 @@ $(document).ready(function () {
 		switchState(state, false);
 	});
 	
-	switchState(window.history.state, false);
+	switchState(window.history.state || "login", false);
 	
 	var faultCode = gupDecoded('faultCode');
+	var faultReason = gupDecoded('faultReason');
 	var faultMessage = gupDecoded('faultMessage');
 	
-	if (faultCode=="CANCELLED") {
+	if (faultCode == "CANCELLED") {
 		// fine. Just continue.
-	} else if (faultCode=="DENIED") {
-		magicMessage("error", "login_fault_sso_denied");
+	} else if (faultCode == "DENIED") {
+		
+		var login = gupDecoded('login');
+		
+		if (faultReason == "PASSWORD_NOT_MATCH") {
+			magicMessage("error", "login_fault_password_not_match", login);
+			
+		} else if (faultReason == "LOGIN_DISABLED") {
+			magicMessage("error", "login_fault_login_disabled", login);
+			
+		} else if (faultReason == "LOGIN_NOT_FOUND") {
+			magicMessage("error", "login_fault_login_not_found", login);			
+			
+		} else {
+			magicMessage("error", "login_fault_sso_denied");
+		}
+		
+		switchState("login", false);
+		
 		return;
 	} else if (faultCode) {
-		magicMessage("error", "fault_unexpected", faultCode, faultMessage || window.location);
+		magicMessage("error", "fault_unexpected", faultCode + (faultReason ? " | " + faultReason : "") , faultMessage || window.location);
 		return;
 	}
 	
@@ -140,11 +158,17 @@ $(document).ready(function () {
 					} else {
 						magicMessage("info", "login_info_bookig_product_step_1", json.name || json.id);
 					}
+					
+					$('#product_iframe iframe').attr('src', "https://www.yoochoose.com/product-iframe/" + 
+							encodeURIComponent(in_to_language) + "/" + encodeURIComponent(product));
+					$('#product_iframe').show();
+					$('footer').css("margin-top", "0");
 				}
-				
 			},
 			fault_productNotFoundFault: function(json) {
-				magicMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
+				var magic = magicMessage("negative", "login_fault_product_not_found", json.faultDetail.productId);
+				magic.addLink("https://www.yoochoose.com/product-iframe/" + encodeURIComponent(in_to_language) + "/product_not_found_link",
+						"login_select_product_link");
 				product = null;
 			}
 		});
@@ -153,6 +177,8 @@ $(document).ready(function () {
 
 
 function login() {
+	
+	var product = gupDecoded('product');
 
     var email = $("#login_dialog input[name='login']").val();
 
@@ -161,7 +187,7 @@ function login() {
 	} else {
 		if (window.history.state == "reset_password") {
 			resetPass(email);
-		} else if (window.history.state == "registration") {
+		} else if (window.history.state == "registration" ||  ! window.history.state && product) {
 			registration(email);
 		} else {
 			$('#login_dialog form').attr("action", "/api/v4/sso/back?" + loginQueryString());
@@ -200,7 +226,11 @@ function switchState(state, pushNewState) {
 	i18n($("#login_dialog h3.native_login_header"));
 	i18n($("#login_dialog a.button"));
 	
-	if (pushNewState) history.pushState(state, "", "#" + state); 
+	if (pushNewState) {
+		history.pushState(state, "", "#" + state); 
+	} else {
+		history.replaceState(state, "", "#" + state);
+	}
 	
 	$("#products_link_section").css("visibility", (product) ? "hidden" : "visible");
 }
