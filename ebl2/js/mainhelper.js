@@ -33,10 +33,8 @@ $(document).ready(function () {
 						window.location = "login.html";
                     }
             },
-			url: "/ebl/v3/registration/get_accesible_mandator_list/",
+			url: "/ebl/v3/registration/get_accesible_mandator_list?ebl2only=true",
 			success: function (json) {
-
-
 				var isInList = false;
 				var mandatorListSize = json.mandatorInfoList.length;
 				if(mandatorListSize != 0)

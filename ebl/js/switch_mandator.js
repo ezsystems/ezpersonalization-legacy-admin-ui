@@ -206,18 +206,17 @@ var initSwitchMandator = function() {
 	$("#saveMandatorChange").on("click", function (event) {
 		if($('#choose_mandant').val() != "") {
 			
-			customerID = $('#choose_mandant').val(); // setting global variable.
-			
-			$.cookie('customerID', customerID, { expires: 365 });
+			customerID = $('#choose_mandant').val();              // setting global variable.
+			$.cookie('customerID', customerID, { expires: 365 }); // setting cookie.
 			
 			$.when(
 				mandatorDao.init(customerID),
 				ajaxScenarioList('24H')
 		    ).done(function() {
-				var mandatorInfo = getAccesibleMandator(customerID);
+		    	mandatorDao.init(customerID);
 				
 				initialLoadData();
-				setMandantData(mandatorInfo);
+				setMandantData(mandatorDao.mandator);
 				
 				$('.available_view_options').children('li').removeClass('current');
 				$('.available_view_options').children('li').first().addClass('current');

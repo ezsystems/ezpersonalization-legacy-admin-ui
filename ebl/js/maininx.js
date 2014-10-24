@@ -1,7 +1,7 @@
 
 var open_reference_code = gupDecoded('reference_code');
 
-var customerID;
+var customerID; // <-- user "mandatorDao.mandator.baseInformation.id" instead
 
 var scenarioInfoList; // loaded by ajaxScenarioList()
 
@@ -25,36 +25,39 @@ $(document).ready(function() {
 	setLoadingDiv($('section.mandant > header'));
 	
 	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js"], function() {
-		getAccesibleMandators(function(value) {
-			
-			mandatorList = value;
-			
-			if (mandatorList.length > 0) {
+		
+		yooAjax(null, {
+			url: "/api/v4/profile/get_accessible_mandators?versionFilter=LITE,EXTENDED", // <-- no 2GO mandators
+			success: function (json) {
 				
-				var cooMandator = gup('customer_id') || $.cookie('customerID');
+				mandatorList = json; // "mandatorList" is a global variable
 				
-				for (var i = 0; i < mandatorList.length; i++) {
-					if (cooMandator == mandatorList[i].name) {
-						customerID = cooMandator;
+				if (json.length > 0) {
+					var cooMandator = gupDecoded('customer_id') || $.cookie('customerID');
+					
+					for (var i = 0; i < json.length; i++) {
+						if (cooMandator == json[i].baseInformation.id) {
+							customerID = cooMandator; // "customerID" is a global variable
+						}
 					}
+					if ( ! customerID) {
+						customerID = json[0].baseInformation.id; // "customerID" is a global variable
+						$.cookie('customerID', customerID, { expires: 365 });
+					}
+				} else {
+					showNoAvailableMandatorPopup();
+					return;
 				}
-				if ( ! customerID) {
-					customerID = mandatorList[0].name;
-					$.cookie('customerID', customerID, { expires: 365 });
-				}
-			} else {
-				showNoAvailableMandatorPopup();
-				return;
+				
+				$.when(
+					  mandatorDao.init(customerID),
+					  ajaxScenarioList('24H')
+			    ).always(function() {
+			    	unsetLoadingDiv($('section.mandant > header'));
+			    	initialize();
+			    });		
 			}
-			
-			$.when(
-				  mandatorDao.init(customerID),
-				  ajaxScenarioList('24H')
-		    ).always(function() {
-		    	unsetLoadingDiv($('section.mandant > header'));
-		    	initialize();
-		    });
-	    });		
+		});		
 	});
 });
 
@@ -211,18 +214,16 @@ var initialize = function () {
 		$('.switch').hide();
 	}
 	
-	var currentMandatorInfo = null;
-	
 	for (var i = 0; i < mandatorList.length; i++) {
 		var mandatorInfo = mandatorList[i];
-		$('#choose_mandant').append('<option value="' + mandatorInfo.name + '">' + mandatorInfo.name + ': ' + mandatorInfo.website + '</option>');
-		if (mandatorInfo.name == mandatorDao.mandator.baseInformation.id) {
-			currentMandatorInfo = mandatorInfo;
-		}
+		var id = mandatorList[i].baseInformation.id;
+		var web = mandatorList[i].baseInformation.website;
+		
+		$('#choose_mandant').append('<option value="' + id + '">' + id + ': ' + web + '</option>');
 	}
 
 	initialLoadData();
-	setMandantData(currentMandatorInfo);
+	setMandantData(mandatorDao.mandator);
 
 	$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
 	$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
@@ -416,17 +417,18 @@ function getEditData(json) {
 
 
 function setMandantData(mandatorInfo) {
+	
+	var id = mandatorInfo.baseInformation.id;
+	var website = mandatorInfo.baseInformation.website;
+	var version = mandatorInfo.baseInformation.version;
     
-    $('.info').children('strong').text(mandatorInfo.website);
-    $('.info').children('p').text(mandatorInfo.type + " (" + mandatorInfo.version + ")");
-    $('.info').children('span').children('.codeid').text(mandatorInfo.name);
-	$.cookie('mandatorType', mandatorInfo.type);
+    $('.info').children('strong').text(website);
+    $('.info').children('p').text(" (" + version + ")");
+    $('.info').children('span').children('.codeid').text(id);
 
-    $.ajax({
-        dataType: "json",
-        url: "/ebl/v3/profile/get_mandator_statistic/" + mandatorInfo.name +"?no-realm",
+    yooAjax(null, {
+        url: "/ebl/v3/profile/get_mandator_statistic/" +  decodeURIComponent(id),
         success: function (json) {
-
             var mandatorStatistic = json.mandatorStatistic;
             $('#statistic_events').text(formatInteger(mandatorStatistic.eventsCalenderMonth));
             $('#statistic_recocalls').text(formatInteger(mandatorStatistic.recommendationCallsCalenderMonth));
@@ -435,7 +437,6 @@ function setMandantData(mandatorInfo) {
             $('#statistic_recommendations').text(formatInteger(mandatorStatistic.recommendationsCalenderMonth));
             $('#statistic_models').text(formatInteger(mandatorStatistic.models));
         },
-        error: mainErrorHandler
     });
 }
 
@@ -493,11 +494,9 @@ function initialLoadData() {
     	$('#messageCopyrights').show();
     });
 
-    $.ajax({
-        dataType: "json",
-        url: "ebl/v3/profile/get_profile_pack/" + customerID + "?no-realm",
+    yooAjax(null, {
+        url: "ebl/v3/profile/get_profile_pack/" + decodeURIComponent(customerID),
         success: function (json) {
-
             var mandator = json.profilePack.mandator;
 			if(mandator !=null && 'version' in mandator){
 				mandatorVersionType = mandator.version;
@@ -512,12 +511,7 @@ function initialLoadData() {
 			$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
 			
 			getEditData(json);
-			//To show this parameters on other screens, the will be saved in the session storage
-			//$.cookie('licenceKey', mandator.licenseKey);
-            //$('#licence_key').children('strong').text(mandator.licenseKey);
-
-        },
-        error: mainErrorHandler
+        }
     });
 
 }
