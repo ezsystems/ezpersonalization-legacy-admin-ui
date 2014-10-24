@@ -37,32 +37,15 @@ var logout = function() {
 ///////////////////////////////////////////////////////////// getCurrentUser
 
 
-var user = null;
-
 var getCurrentUser = function(callback) {
-	
-	if (user != null) {
-		if (callback) {
-			callback(user);
-		} else {
-			return user;
-		}
-	}
-	
-    var result = $.ajax({
+	var result = yooAjax(null, {
     	async: (callback == true),
-        type: "GET",
-        url: "/api/v3/registration/get_me/",
-        dataType: "json",
-        beforeSend: function (req) {
-            req.setRequestHeader('no-realm', '1');
-        },
+        url: "/api/v3/registration/get_me",
         success: function (data) {
         	if (callback) {
         		callback(data.loginInfo);
         	}
         },
-        error: defaultErrorHandler
     });
     
     if ( ! callback) {

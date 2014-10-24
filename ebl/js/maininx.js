@@ -198,6 +198,11 @@ var initialize = function () {
 	    	
 	    	$('.ibs_item').hide();
 	    }
+	    
+	    // updating interface language
+	    if (loginInfo.lang && in_to_language != loginInfo.lang) { // "in_to_language" is a global variable defined in "i18n.js"
+	    	changeLang(loginInfo.lang, false);
+	    }
 	});
 	
 	if (mandatorList.length > 1) {

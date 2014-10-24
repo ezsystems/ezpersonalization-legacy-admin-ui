@@ -538,10 +538,22 @@ function yooAjax(blurSelector, options) {
     
     if (! options.fault_authenticationFailure) {
 	    options.fault_authenticationFailure = function(json) {
-			 var magic = magicMessage("negative", "fault_authenticationFailure", json.faultDetail.faultCode);
-			 var returnUrl = window.location;
+	    	
+	    	var auth_code = json.faultDetail ? json.faultDetail.faultCode : null;
+	    	var i18n_id = "fault_authenticationFailure";
+	    	
+	    	if (auth_code == "LOGIN_DISABLED" || auth_code == "LOGIN_NOT_FOUND") {
+	    		i18n_id = "fault_authenticationFailure_LOGIN_DISABLED";
+	    	} else if (auth_code == "TOKEN_EXPIRED") {
+	    		i18n_id = "fault_authenticationFailure_TOKEN_EXPIRED";
+	    	} else if (auth_code == "NOT_AUTHENTICATED") {
+	    		i18n_id = "fault_authenticationFailure_NOT_AUTHENTICATED";
+	    	}
+	    	
+			var magic = magicMessage("negative", i18n_id, auth_code);
+			var returnUrl = window.location;
 			 
-			 magic.addLink("/login.html?returnUrl=" + encodeURIComponent(returnUrl), "fault_link_login_page");
+			magic.addLink("/login.html?returnUrl=" + encodeURIComponent(returnUrl), "fault_link_login_page");
 		};
     }
     
@@ -576,11 +588,21 @@ function yooAjax(blurSelector, options) {
     	}
     };
     
-    return $.ajax(options).always(function () {
+    if (options.async === false) { // sync mode was explicitely set (default is "async")
+    	var result = $.ajax(options);
     	if (blurSelector) {
     		unsetLoadingDiv($(blurSelector));
     	}
-	});
+	    return result;
+    } else {
+    	if (blurSelector) {
+	    	return $.ajax(options).always(function () {
+	    		unsetLoadingDiv($(blurSelector));
+			});
+	    } else {
+	    	return $.ajax(options);
+	    }
+    }
 }
 
 
