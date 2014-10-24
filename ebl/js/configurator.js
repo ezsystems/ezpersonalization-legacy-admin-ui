@@ -1491,8 +1491,8 @@ var createPlacedModel = function (placed_model, model) {
 	  },
 	  'prepare': function(types, model) {
 		  var id, $option, $listClone;
-		  var mandatorType = $.cookie('mandatorType');
-		  var solution = $.cookie('mandatorVersionType');
+//		  var mandatorType = $.cookie('mandatorType');
+//		  var solution = $.cookie('mandatorVersionType');
 		  //clean up all the EditorialListEditor
 		  this.init();
 		  this.reset();//remove all content from prior lists
@@ -1502,8 +1502,9 @@ var createPlacedModel = function (placed_model, model) {
 				  .html(model.modelType + ' ' + model.referenceCode);
 		  //create the lists for the supported
 		  for(id in types) {
-			  if((mandatorType == "SHOP" && id == 1) || 
-					  (mandatorType != "SHOP" && (id == 2|| solution == null || solution == 'undefined' || solution == 'EXTENDED'))){
+//			  if((mandatorType == "SHOP" && id == 1) || 
+//					  (mandatorType != "SHOP" && (id == 2|| solution == null || solution == 'undefined' || solution == 'EXTENDED'))){
+				  
 				  $option = $('<option></option>');
 				  $option.attr('data-translate', 'editorial_list_item_type_' + id)
 						  .html(types[id]).val(id);
@@ -1519,7 +1520,7 @@ var createPlacedModel = function (placed_model, model) {
 						  });
 				  $listClone.appendTo(this.$editorialLists);
 				  this.lists[id] = $listClone;
-			  }
+//			  }
 		  }
 		  this.$editorialLists.append('<div style="clear: both;"></div>');
 		  localizer();
