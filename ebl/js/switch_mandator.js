@@ -176,6 +176,11 @@ var showNoAvailableMandatorPopup = function() {
 		} else {
 			$('#no_mandator_available .logo').hide();
 		}
+		
+	    // updating interface language
+	    if (user.lang && in_to_language != user.lang) { // "in_to_language" is a global variable defined in "i18n.js"
+	    	changeLang(user.lang, false);
+	    }
 	});
 	
 };

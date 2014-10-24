@@ -7,15 +7,8 @@ var _i18n_ready = false;
 
 
 $(document).ready(function () {
-	
 	try {
-		var files = i18n_files();
-		
-		if (files.length > 0) {
-			init_i18n(files);
-		} else {
-			console.error("No i18n files specified. Use attribute 'data-i18n-files' in the [script] tag.");
-		}
+		init_i18n();
 	} finally {
 		$('[data-i18n-ready=visible]').css('visibility', 'visible');
 	}
@@ -49,7 +42,6 @@ function i18n_files() {
 function init_i18n(filenames) {
 	
 	$(document).ready(function () {
-		
 		$('.language_selection').children('li').click(function(){
 			$('.language_selection').children('li').removeClass('current');
 			
@@ -60,10 +52,19 @@ function init_i18n(filenames) {
 				setEquals();
 			}
 		});
-		
 	});
 	
-	apply_i18n(filenames);
+	var files = i18n_files();
+	
+	if (files.length > 0) {
+		apply_i18n(files);
+		if (in_to_language) {
+			$('.language_selection').children('li').removeClass('current');
+			$('.language_selection').children('li[lang=' + in_to_language + ']').addClass('current');
+		}
+	} else {
+		console.error("No i18n files specified. Use attribute 'data-i18n-files' in the [script] tag.");
+	}
 }
 
 
