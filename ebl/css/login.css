@@ -3,6 +3,7 @@
 	text-align: left;
 	padding-left: 0.7em;
 	padding-right: 0;
+	margin-bottom: 0;
 }
 
 .login_center .actions a {
@@ -35,11 +36,21 @@
 
 
 .login_center {
+	margin: 0 auto;
+}
+
+div.login_center {
+	border: 1px solid rgba(140, 150, 138, 0.33);
+	border-radius: 10px;
+  	background-color: white;
+}
+
+
+table.login_center {
+  width: 67em;
   display: block;
-  width: 66em;
-  margin: 0 auto;
   text-align: center;
-  border-spacing: 10px;
+  border-spacing: 1em;
   border-collapse: separate;
 }
 
@@ -47,10 +58,9 @@
 .login_center td {
   margin: 0 auto;
   text-align: center;
-  padding: 10px 0;
-  width: 32em;
+  padding: 1em 0;
+  width: 33em;
   border: 1px solid rgba(140, 150, 138, 0.33);
-
   background-color: white;
 }
 
@@ -70,7 +80,8 @@
   background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
   color: white;
   line-height: 40px;
-  margin: 20px 0;
+  margin-top: .5em;
+  margin-bottom: 1em;
   text-align: center;
   text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
 }
@@ -81,7 +92,6 @@
 }
 
 .login_center div {
-  display: block;
   position: relative;
   text-align: center;
   margin-bottom: 6px;
@@ -117,12 +127,46 @@
   font-style: italic;
 }
 
-.login_center div.actions {
-  margin: 10px 0;
-}
-
 .login_center > a {
   display: inline-block;
   padding: 5px;
   margin-top: 40px;
+}
+
+
+.login_message {
+  display: block;
+  text-decoration: none;
+  color: rgba(70, 78, 66, 1);
+}
+
+.login_message > p {
+  display: block;
+  padding: 20px;
+}
+
+.login_message.neutral > p,
+.login_message.warning > p,
+.login_message.neutral > p a,
+.login_message.warning > p a {
+  background-color: #FFC700;
+  color: black;
+}
+
+.login_message.problem > p,
+.login_message.error > p,
+.login_message.negative > p,
+.login_message.problem > p a,
+.login_message.error > p a,
+.login_message.negative > p a {
+  background-color: rgba( 192,  80,  77, 1);
+  color: white;
+}
+
+.login_message.positive > p, 
+.login_message.info > p,
+.login_message.positive > p a, 
+.login_message.info > p a {
+  background-color: rgba( 218, 236, 213, 1);
+  color: black;
 }

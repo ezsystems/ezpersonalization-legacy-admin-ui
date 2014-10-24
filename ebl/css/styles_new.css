@@ -2413,11 +2413,7 @@ section.scenarios > header a:not(.button):hover, section.scenarios > header a:no
 }
 
 
-
-
-
-
-#magic_message {
+.default_message {
   display: block;
   width: 50%;
   text-decoration: none;
@@ -2428,34 +2424,34 @@ section.scenarios > header a:not(.button):hover, section.scenarios > header a:no
   margin: 0 auto;
 }
 
-#magic_message > p {
+.default_message > p {
   display: block;
   padding: 20px;
   border-radius: 7px;
 }
 
-#magic_message.neutral > p,
-#magic_message.warning > p,
-#magic_message.neutral > p a,
-#magic_message.warning > p a {
+.default_message.neutral > p,
+.default_message.warning > p,
+.default_message.neutral > p a,
+.default_message.warning > p a {
   background-color: #FFC700;
   color: black;
 }
 
-#magic_message.problem > p,
-#magic_message.error > p,
-#magic_message.negative > p,
-#magic_message.problem > p a,
-#magic_message.error > p a,
-#magic_message.negative > p a {
+.default_message.problem > p,
+.default_message.error > p,
+.default_message.negative > p,
+.default_message.problem > p a,
+.default_message.error > p a,
+.default_message.negative > p a {
   background-color: rgba( 192,  80,  77, 1);
   color: white;
 }
 
-#magic_message.positive > p, 
-#magic_message.info > p,
-#magic_message.positive > p a, 
-#magic_message.info > p a {
+.default_message.positive > p, 
+.default_message.info > p,
+.default_message.positive > p a, 
+.default_message.info > p a {
   background-color: rgba( 218, 236, 213, 1);
   color: black;
 }

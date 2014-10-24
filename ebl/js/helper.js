@@ -620,7 +620,7 @@ function yooAjax(blurSelector, options) {
 function magicMessage(type, i18n_id) {
 	
 	if (! $('#magic_message').length) {
-		$('body').append('<div id="magic_message" class="message"><p><a class="destroy_message">X</a></p></div>')
+		$('body').append('<div id="magic_message" class="default_message"><p><a class="destroy_message">X</a></p></div>')
 		$('#magic_message p').append("<span id='magic_message_text'></span>");
 		
 		$('#magic_message .destroy_message').click(function() {

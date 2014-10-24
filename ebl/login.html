@@ -23,13 +23,13 @@
     <script src="js/things.js"></script>
     <script src="js/helper.js"></script>
     
-     <script src="js/login.js"></script>
+    <script src="js/login.js"></script>
     
 	<script src="js/i18n.js" data-i18n-files="login,common"></script>
 	<script src="js/piwik.js"></script>
   </head>
   <body id="login">
-    <header class="clearfix top_head">
+    <header class="clearfix top_head" style="margin-bottom: 0;">
       <div class="logo_area s1_5">
         <h1 class="hide" title="YooChoose. We recommend."><span>YooChoose. We recommend.</span></h1>
       </div>
@@ -42,11 +42,15 @@
       </div>
     </header>
     
-    <div id="magic_message" style="visibility: hidden;">
-      <p><span id="magic_message_text">Message</span></p>
+    <div id="product_iframe" class="login_center" style="max-width:100%; width: 72em; height: 27em; margin-bottom: 1em; padding: 0.5em; display:none;">
+    	<iframe src="http://www.yoochoose.com/gambio-pricing" style="width: 100%; height: 100%;"></iframe>
+    </div>
+    
+    <div id="magic_message" class="login_message" style="visibility: hidden;">
+      	<p><span id="magic_message_text">Message</span></p>
     </div>
       
-    <table id="login_dialog" class="login_center" style="margin-top: 2em;"><tr><td>
+    <table id="login_dialog" class="login_center" style="margin-top: 0em;"><tr><td>
         
       <h3 data-translate="login_login_one_click">Welcome to YOOCHOOSE</h3>
       
@@ -144,16 +148,15 @@
    	</td></tr></table>
    	
    	<!--  this section is enabled only if the product is not selected yet -->
-	<div id="products_link_section" style="text-align: center; margin: 2em 0 10em 0; visibility:visible;">	      
+	<div id="products_link_section" style="text-align: center; margin: 2em 0 10em 0; display: none;">	      
 	   <a data-translate="login_products_page_link" onclick="(in_to_language != 'en')?window.location ='http://www.yoochoose.com/preise/':window.location ='http://www.yoochoose.com/en/pricing/';">Product page</a>
 	</div>
     
    	<script type="text/javascript">
 		$("section.login_center").css('visibility', 'hidden'); // it will be make visible back by i18n library.
 	</script>
-    
 
-    <footer>
+    <footer style="margin-top: 7em">
       Copyright <script>document.write('2009-' + new Date().getFullYear());</script> YOOCHOOSE GmbH
       <ul class="clearfix">
         <li><a id="corporate" data-translate="common_corporate_information" href="corporate_information.html">Corporate information</a></li>
