@@ -175,7 +175,14 @@ function piwikCaller(name){
 	   g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
 	})();
 }
-var initialize = function () {
+
+
+/** Called only once, when the page is loaded.
+ *  User related GUI emements must be configured here. 
+ *  
+ *  @see #initialLoadData()
+ */
+function initialize() {
 
 	getCurrentUser(function(loginInfo) {
 		
@@ -190,15 +197,10 @@ var initialize = function () {
 		
 		$('.account_data').children('li').first().find('strong').text(name);
 		piwikCaller(name);
-	    
 		
 	    if (loginInfo.provider == "ibs") {
-	    	$('#edit_contact_datal').hide();
+	    	$('.ibs_item').show();
 	    } else {
-	    	$('#edit_contact_datal').off('click').click(function() {
-	    		$('#editDataOverlay').show();
-	    	});
-	    	
 	    	$('.ibs_item').hide();
 	    }
 	    
@@ -280,6 +282,25 @@ var initialize = function () {
 	}
 	
 };
+
+
+/** Opens the popup "Edit personal and contact data".
+ *  It opens the legacy customer data or Pactas popup.
+ *  
+ *  It must not be called for IBS mandator.
+ */
+function openContractDetails() {
+	var mandator = mandatorDao.mandator;
+	if (! mandator) {
+		console.log("No mandator loaded. Unable to open Pactas/Customer popup.");
+		return;
+	}
+	if (mandatorDao.mandator.product.comaId.coma == "PACTAS") {
+		$('#pactasPopup').show();
+	} else {
+		$('#editDataOverlay').show();
+	}
+}
 
 
 var ifExtended = function() {
@@ -458,9 +479,13 @@ var mandatorVersionType='BASIC';
 
 
 
-/** This function is called, after the mandator is loaded sucessfully */ 
- 
+/** This function is called, after the mandator was  sucessfully loaded
+ * */ 
 function initialLoadData() {
+	
+	if (mandatorDao.getProductComa() == 'IBS') {
+		$("#edit_contact_datal").hide();
+	}
 	
 	if ( ! ifExtended()) {
 		$(".available_charts select option[value='rate']").hide();
