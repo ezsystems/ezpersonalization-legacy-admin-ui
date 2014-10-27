@@ -95,7 +95,10 @@
       <ul class="account_data s2_5">
         <li><span data-translate="index_login">Login:</span> <strong></strong></li>
         <li id="licence_key"><a id="showLicenseKey" href="#" data-translate="show_license_key"></a></li>
-        <li><a id="edit_contact_datal" class="edit_contact_data" data-translate="index_edit_personal">Edit personal and contact data</a></li>
+        <li><a id="edit_contact_datal" class="edit_contact_data" 
+        	data-translate="index_edit_personal"
+        	onclick="openContractDetails(); return false;"
+        	>Edit personal and contact data</a></li>
       </ul>
     </header>
     <section class="mandant" style="margin: 0 20px;">
@@ -651,6 +654,15 @@
 			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
 				<a class="closeOverlay" style="position:absolute; top:-1em; right:-1em;">X</a>
 				<iframe id ='settingsF' style="width: 100%; height: 100%;"></iframe>
+			</div>
+		</div>
+	</div>
+	
+	<div id="pactasPopup" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
+		<div class="content" id="contentFrame" style="width: 100%;  height: 85%; min-height: 65%; position: relative;">
+			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
+				<a class="closeOverlay" style="position:absolute; top:-1em; right:-1em;">X</a>
+				<iframe id ='pactasFrame' style="width: 100%; height: 100%;"></iframe>
 			</div>
 		</div>
 	</div>

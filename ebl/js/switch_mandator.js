@@ -213,8 +213,6 @@ var initSwitchMandator = function() {
 				mandatorDao.init(customerID),
 				ajaxScenarioList('24H')
 		    ).done(function() {
-		    	mandatorDao.init(customerID);
-				
 				initialLoadData();
 				setMandantData(mandatorDao.mandator);
 				

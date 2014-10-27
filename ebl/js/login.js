@@ -106,6 +106,12 @@ $(document).ready(function () {
 		switchState(state, false);
 	});
 	
+	var login = gupDecoded('login');
+	
+	if (login) { 
+		$('input[name="login"]').val(login);
+	}
+	
 	switchState(window.history.state || "login", false);
 	
 	var faultCode = gupDecoded('faultCode');
@@ -115,8 +121,6 @@ $(document).ready(function () {
 	if (faultCode == "CANCELLED") {
 		// fine. Just continue.
 	} else if (faultCode == "DENIED") {
-		
-		var login = gupDecoded('login');
 		
 		if (faultReason == "PASSWORD_NOT_MATCH") {
 			magicMessage("error", "login_fault_password_not_match", login);
