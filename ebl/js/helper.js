@@ -63,6 +63,16 @@ function gup(name) {
     else return results[1];
 }
 
+function anchorDecoded(name) {
+	var url = window.location.href;
+	var i = url.indexOf("#")
+	if (i != -1) {
+		return decodeURIComponent(url.substring(i + 1));
+	} else {
+		return null
+	}
+}
+
 
 function gupDecoded(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -242,13 +252,13 @@ function getCurrentDateTimeMinusDays(days,hour) {
 }
 
 
-function setLoadingDiv(element) {
-    var width  = $(element).outerWidth();
-    var height = $(element).outerHeight();
+function setLoadingDiv(selector) {
+    var width  = $(selector).outerWidth();
+    var height = $(selector).outerHeight();
 	
-	if($(element).is(":visible")) {
+	if($(selector).is(":visible")) {
 		
-		$(element).each(function() {
+		$(selector).each(function() {
 			
 		 	var loaddiv = $(this).prev();
 		 	
@@ -528,6 +538,9 @@ function yooAjax(blurSelector, options) {
     	if (! options.type) {
     		options.type = "POST";
     	}
+    }
+    
+    if (options.type == "POST") {
     	if (! options.contentType) {
     		options.contentType = "application/json";
     	}
@@ -669,14 +682,27 @@ function magicMessage(type, i18n_id) {
 			$('#magic_message_text').parent().
 				append("<br><a href='"+href+"' data-translate='" + encodeURIComponent(i18n_id) + "'>" + i18n_params.join("") + "</a>");
 			
+			$('#magic_message_text').parent().children('a.destroy_message').hide();
+			
 			i18n($('#magic_message_text').parent());
 		}
 	}
 }
 
 
-
-
+/** Swith the history state to the specified value.
+ * 
+ *  @param state
+ *  @param pushState
+ *  	if <code>true</code>, pushs the state, otherwise replases it.
+ */
+function switchHistoryState(state, pushState) {
+	if (pushState) {
+		history.pushState(state, null, "#" + state);
+	} else {
+		history.replaceState(state, null, "#" + state);
+	}
+}
 
 
 /**

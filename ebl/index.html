@@ -11,6 +11,7 @@
     <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
     <link rel="stylesheet" href="css/styles_new.css">
     <link rel="stylesheet" href="css/ab-smoothness/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" href="css/maininx.css">
     
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/jquery-ui.js"></script>
@@ -37,7 +38,7 @@
     <script src="js/libraries/RGraph/RGraph.gantt.js"></script>            <!-- Just needed for gantt charts -->
     <script src="js/libraries/RGraph/RGraph.hbar.js"></script>             <!-- Just needed for horizontal bar charts -->
     <script src="js/libraries/RGraph/RGraph.hprogress.js"></script>        <!-- Just needed for horizontal progress bars -->
-    <script src="js/libraries/RGraph/RGraph.led.js" charset="UTF-8"></script>              <!-- Just needed for LED charts -->
+    <script src="js/libraries/RGraph/RGraph.led.js" charset="UTF-8"></script>  <!-- Just needed for LED charts -->
     <script src="js/libraries/RGraph/RGraph.line.js"></script>             <!-- Just needed for line charts -->
     <script src="js/libraries/RGraph/RGraph.meter.js"></script>            <!-- Just needed for meter charts -->
     <script src="js/libraries/RGraph/RGraph.odo.js"></script>              <!-- Just needed for odometers -->
@@ -94,11 +95,15 @@
       </nav>
       <ul class="account_data s2_5">
         <li><span data-translate="index_login">Login:</span> <strong></strong></li>
-        <li id="licence_key"><a id="showLicenseKey" href="#" data-translate="show_license_key"></a></li>
-        <li><a id="edit_contact_datal" class="edit_contact_data" 
+        <li id="licence_key"><a id="showLicenseKey" href="#" 
+        	data-translate="show_license_key"
+        	onclick="openLicenseKey(true); return false;">Show license key</a></li>
+        <li><a id="edit_personal_datal" class="edit_contact_data" 
         	data-translate="index_edit_personal"
-        	onclick="openContractDetails(); return false;"
-        	>Edit personal and contact data</a></li>
+        	onclick="openPersonalDetails(true); return false;">Edit personal data</a></li>
+        <li><a id="edit_contact_datal" class="edit_contact_data" 
+        	data-translate="index_edit_contract"
+        	onclick="openContractDetails(true); return false;">Edit contract data</a></li>        	
       </ul>
     </header>
     <section class="mandant" style="margin: 0 20px;">
@@ -561,80 +566,82 @@
 		</div>
 	</div>
 	
-	 <div class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);" id="editDataOverlay">
+	 <div id="editDataOverlay" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
 		<div class="content" style="min-width: 450px;">
 			<div class="contentWrapper">
 				<a class="closeOverlay">X</a>
-				<h2 data-translate="edit_contact_account_details">Account Details</h2>
-				<div class="clearfix">
-					 <form class="normal_form clearfix" action="#" method="get">
+				
+				<h2 data-translate="edit_contact_personal_details">Personal Details</h2>
+				<form id="personal_details" class="normal_form clearfix" action="#" method="get" style="position: relative;">
+					<img src="/img/auth-providers/250-facebook-nom.png" class="sso-icon" style="display: none;">
+           			<ul class="editdata">
+			          <li class="clearfix">
+			            <label for="p_email" data-translate="edit_contact_email">Email:</label>
+			            <input type="text" name="p_email" value="" disabled="disabled" />
+			          </li>
+			          <li class="clearfix">
+			            <label for="p_firstname" data-translate="edit_contact_firstname">Firstname:</label>
+			            <input type="text" name="p_firstname"/>
+			          </li>
+			          <li class="clearfix">
+			            <label for="p_lastname" data-translate="edit_contact_lastname">Lastname:</label>
+			            <input type="text" name="p_lastname"/>
+			          </li>
+		         	 </ul>
+		        </form>
+				
+				<div id="contract_details">
+					<h2 data-translate="edit_contact_account_details">Contract Details</h2>
+	
+					<form class="normal_form clearfix" action="#" method="get">
 	           			<ul class="editdata">
 				          <li class="clearfix">
-				            <label for="eemail" class="required">
-				              <span data-translate="edit_contact_email">Email:</span>
-				            </label>
-				            <input type="text" name="eemail" id="eemail" value="" disabled="disabled" />
+				            <label for="eemail" class="required" data-translate="edit_contact_email">Email:</label>
+				            <input type="text" name="eemail" id="eemail" value=""/>
 				          </li>
 				          <li class="clearfix">
-				            <label for="ecompany" class="required">
-				              <span data-translate="edit_contact_company">Company:</span>
-				            </label>
-				            <input type="text" name="ecompany" id="ecompany" placeholder="Company" />
+				            <label for="ecompany" class="required" data-translate="edit_contact_company">Company:</label>
+				            <input type="text" name="ecompany" id="ecompany"/>
 				          </li>
 				          <li class="clearfix">
-				            <label for="efname" class="required">
-				              <span data-translate="edit_contact_firstname">First name:</span>
-				            </label>
-				            <input type="text" name="efname" id="efname" placeholder="First name" />
+				            <label for="efname" class="required" data-translate="edit_contact_firstname">First name:</label>
+				            <input type="text" name="efname" id="efname"/>
 				          </li>
 				          <li class="clearfix">
-				            <label for="elname" class="required">
-				              <span data-translate="edit_contact_lastname">Last name:</span>
-				            </label>
-				            <input type="text" name="elname" id="elname" placeholder="Last name" />
+				            <label for="elname" class="required" data-translate="edit_contact_lastname">Last name:</label>
+				            <input type="text" name="elname" id="elname"/>
 				          </li>
 				          <li class="clearfix">
-				            <label for="ephone">
-				              <span data-translate="edit_contact_phone">Phone:</span>
-				            </label>
-				            <input type="text" name="ephone" id="ephone" placeholder="with +country-code, please" />
+				            <label for="ephone" data-translate="edit_contact_phone">Phone:</label>
+				            <input type="text" name="ephone" id="ephone"/>
 				          </li>
 				          <li class="clearfix">
-				            <label for="estreet_and_house" class="required">
-				              <span data-translate="edit_contact_street_and_house">Street and house Nr.:</span>
-				            </label>
+				            <label for="estreet_and_house" class="required" data-translate="edit_contact_street_and_house">Street and house Nr.:</label>
 				            <input type="text" name="estreet_and_house" id="estreet_and_house" placeholder="Street and Number" />
 				          </li>
 				          <li class="clearfix">
-				            <label for="ezip" class="required">
-				                <span data-translate="regstep2_zip">ZIP:</span>
-				              </label>
+				              <label for="ezip" class="required" data-translate="regstep2_zip">ZIP:</label>
 				              <input type="text" name="ezip" id="ezip" />
 				          </li>
 						  <li class="clearfix">
-						   <label for="ecity" class="required">
-				                <span data-translate="regstep2_city">City:</span>
-				              </label>
+						   <label for="ecity" class="required" data-translate="regstep2_city">City:</label>
 				              <input type="text" name="ecity" id="ecity" />
 						  </li>
 				          <li class="clearfix">
-				            <label for="ecountry" class="required">
-				              <span data-translate="edit_contact_country">Country:</span>
-				            </label>
+				            <label for="ecountry" class="required" data-translate="edit_contact_country">Country:</label>
 				            <input type="text" name="ecountry" id="ecountry" placeholder="Country" />
 				          </li>
-						
-				          <li style="text-align: right;padding: 20px 16px 0 0;" class="clearfix actions" >
-				            <a class="save" id="changeEditdata"  data-translate="edit_contact_save_changes">Save changes</a>
-				          </li>
 				        </ul>
-	        	  </form>
+	        		</form>
 				</div>
+			   	<div style="text-align: right;padding: 20px 16px 0 0;" class="clearfix actions" >
+	            	<a class="button inline save" id="changeEditdata" data-translate="edit_contact_save_changes" onclick="saveForme(); return false;">Save changes</a>
+	        	</div>
 			</div>
 		</div>
 	</div>
     	
-	<div  class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3); padding: 300px 0;" id="licenceKeyId">
+	<div id="licenceKeyId" style="display: none; background-color: rgba(63, 63, 63, 0.3); padding: 300px 0;">
 		<div class="content">
 			<div class="contentWrapper">
 				<a class="closeOverlay">X</a>
@@ -650,7 +657,7 @@
 	</div>
 	
 	<div id="settingsP" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
-		<div class="content" id="contentFrame" style="width: 100%;  height: 85%; min-height: 65%; position: relative;">
+		<div class="content" id="contentFrame" style="width: 100%; height: 85%; min-height: 65%; position: relative;">
 			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
 				<a class="closeOverlay" style="position:absolute; top:-1em; right:-1em;">X</a>
 				<iframe id ='settingsF' style="width: 100%; height: 100%;"></iframe>
@@ -658,12 +665,10 @@
 		</div>
 	</div>
 	
-	<div id="pactasPopup" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
-		<div class="content" id="contentFrame" style="width: 100%;  height: 85%; min-height: 65%; position: relative;">
-			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
-				<a class="closeOverlay" style="position:absolute; top:-1em; right:-1em;">X</a>
-				<iframe id ='pactasFrame' style="width: 100%; height: 100%;"></iframe>
-			</div>
+	<div id="pactasPopup"style="display: none; background-color: rgba(63, 63, 63, 0.3);">
+		<a class="closeOverlay">X</a>
+		<div class="content" id="contentFrame">
+			<iframe id ='pactasFrame' style="width: 100%; height: 100%;"></iframe>
 		</div>
 	</div>
 
@@ -796,12 +801,12 @@
 		</div>
 	</div>
 
-	<div class="message" style="display:none;">
-		<p>
-			<a class="destroy_message">X</a>
-			<span id="message_text">Something neutral happened. That's it.</span>
-			<a class="button inline close">OK</a>
-		</p>
-	</div>
+<!-- 	<div class="message" style="display:none;"> -->
+<!-- 		<p> -->
+<!-- 			<a class="destroy_message">X</a> -->
+<!-- 			<span id="message_text">Something neutral happened. That's it.</span> -->
+<!-- 			<a class="button inline close">OK</a> -->
+<!-- 		</p> -->
+<!-- 	</div> -->
   </body>
 </html>

@@ -39,7 +39,6 @@ var logout = function() {
 
 var getCurrentUser = function(callback) {
 	var result = yooAjax(null, {
-    	async: (callback == true),
         url: "/api/v3/registration/get_me",
         success: function (data) {
         	if (callback) {
@@ -47,10 +46,6 @@ var getCurrentUser = function(callback) {
         	}
         },
     });
-    
-    if ( ! callback) {
-    	return result.responseJSON.loginInfo;
-    }
 };
 
 
