@@ -146,8 +146,7 @@ function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
 		setMessagePopUp("problem", "error_server_error_403");
 		
 	} else if(jqXHR.status != null && jqXHR.status == 401) {
-		$.cookie('password', null);
-		$.cookie('email', null);
+
 		window.parent.location = "/login.html";
 		
 	} else if(jqXHR.status != null && jqXHR.status == 400) {

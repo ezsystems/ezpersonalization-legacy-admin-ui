@@ -104,37 +104,47 @@ function setMessagePopUpLink(type, link, i18n_id) {
 	
 	var i18n_params = Array.prototype.slice.call(arguments, 3);
 	
-	setMessagePopUp.apply(null, [type, i18n_id].concat(i18n_params));
+	var magic = magicMessage.apply(null, [type, i18n_id].concat(i18n_params));
+	magic.addLink(link, "OK");
 	
-	if (link) {
-    	$('.message a.close').attr('href', link);
-    }
+//	setMessagePopUp.apply(null, [type, i18n_id].concat(i18n_params));
+	
+//	if (link) {
+//    	$('.message a.close').attr('href', link);
+//    }
 }
 
 
 function setMessagePopUp(type, i18n_id) {
-	$('.message').removeClass("problem");
-	$('.message').removeClass("positive");
-    $('.message').addClass(type);
-    
-    var i18n_params = Array.prototype.slice.call(arguments, 2);
-    
-    for (var i in i18n_params) {
-    	i18n_params[i] = "<span data-param='" + i + "'>" + i18n_params[i] + "</span>";
-    }
-    
-    $('#message_text').attr("data-translate", i18n_id);
-	$('#message_text').html(i18n_params.join(""));
 	
-	i18n($('#message_text'));
-  
-    if ( (type == 'positive') || (type == 'neutral') ){
-    	$('.message').removeAttr('style').delay(2500).fadeOut('slow');
-    } else {
-    	$('.message').removeAttr('style');
-    }
+	var i18n_params = Array.prototype.slice.call(arguments, 2);
+	
+	magicMessage.apply(null, [type, i18n_id].concat(i18n_params));
 
-	$('.message a.close').removeAttr('href');
+	return;
+	
+//	$('.message').removeClass("problem");
+//	$('.message').removeClass("positive");
+//    $('.message').addClass(type);
+//    
+//    
+//    
+//    for (var i in i18n_params) {
+//    	i18n_params[i] = "<span data-param='" + i + "'>" + i18n_params[i] + "</span>";
+//    }
+//    
+//    $('#message_text').attr("data-translate", i18n_id);
+//	$('#message_text').html(i18n_params.join(""));
+//	
+//	i18n($('#message_text'));
+//  
+//    if ( (type == 'positive') || (type == 'neutral') ){
+//    	$('.message').removeAttr('style').delay(2500).fadeOut('slow');
+//    } else {
+//    	$('.message').removeAttr('style');
+//    }
+//
+//	$('.message a.close').removeAttr('href');
 }
 
 

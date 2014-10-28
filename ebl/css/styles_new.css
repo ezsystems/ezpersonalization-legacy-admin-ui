@@ -707,8 +707,6 @@ input[type="text"].inverted {
   box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
   border: 1px solid #000000;
   border-radius: 6px; 
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
 }
 
 
@@ -998,7 +996,7 @@ h1 > a {
 
 
 .account_data > li:first-child {
-  margin-top: 26px;
+  margin-top: 14px;
 }
 
 .account_data > li.current:before {
@@ -2414,6 +2412,10 @@ section.scenarios > header a:not(.button):hover, section.scenarios > header a:no
 
 
 .default_message {
+	position: absolute;
+	top: 17em;	
+	left: 25%;
+	right: 25%;
   display: block;
   width: 50%;
   text-decoration: none;
@@ -2422,6 +2424,7 @@ section.scenarios > header a:not(.button):hover, section.scenarios > header a:no
   border: 3px solid rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   margin: 0 auto;
+  z-index: 100;
 }
 
 .default_message > p {

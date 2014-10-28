@@ -11,8 +11,92 @@ var period;
 
 var mandatorList;
 
+var customer; // NOT A MANDATOR, but Customer JSON object
+
+var loginInfo;
+
+
+
+//DOCUMENT READY
 
 $(document).ready(function() {
+
+	// STATIC INITIALIZER
+	
+	//Revert to a previously saved state
+	window.addEventListener('popstate', function(event) {
+		var state = event.state;
+		switchState(state, false);
+	});
+	
+	var closePopup = function(e) {
+	    if (e.which == 1 || e.which == 27) { // left click or Esc
+	    	if ($("#pactasPopup").is(':visible')) {
+	    		switchState("", true);
+	    	}
+	    	if ($("#licenceKeyId").is(':visible')) {
+	    		switchState("", true);
+	    	}
+	    	if ($("#editDataOverlay").is(':visible')) {
+	    		switchState("", true);
+	    	}
+	    }
+	};
+	
+	$(document).bind('keydown', closePopup);
+
+	$('#pactasPopup a.closeOverlay, #licenceKeyId a.closeOverlay').click(function () {
+	    switchState("", true);
+	});	
+	
+	$('#copyrightsLink').off('click').click(function() {
+		$('#messageCorporate').hide();
+		$('#messageCopyrights').show();
+	});
+	
+	//Change the value in selectbox 1 in collected events
+	$('select[id^="events_select_for_chart_bar"]').change(function () {
+	    renderCollectedEvents();
+	});
+	
+	$('select[id^="select_for_delivered_recommendations_chart_bar"]').change(function () {
+	    renderRecommendationChart();
+	});
+	
+	//Last day click event
+	$('#view_option_day').click(function () {
+	    ajaxScenarioList("24H");
+	});
+	
+	$('#view_option_week').click(function () {
+		ajaxScenarioList("WEEK");
+	});
+	
+	$('#view_option_month').click(function () {
+	    ajaxScenarioList('MONTH');
+	});
+	
+	// is called if right converison unit is changed from relative -> absolute and vice versa
+	$('#conversion_units').change(function () {
+		renderConversionRate();
+	});
+	
+	$('#settingsP .closeOverlay').click(function () {
+		window.parent.history.replaceState(null, null, "/");
+	});
+	
+	$('section  div.index_mandator').hover(function() {
+		$(this).find('.index_hover').css('display', 'table-row');
+	}, function() {
+		$(this).find('.index_hover').css('display', 'none');
+	});
+	
+	
+	$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
+	$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
+	$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
+
+	
 
     //set drop down field to default values: click, purchase, consume
     $('#events_select_for_chart_bar_1').val('click');
@@ -21,10 +105,11 @@ $(document).ready(function() {
 
 	showEmptyCharts();
 	showEmptyEventChart();
-	
-	setLoadingDiv($('section.mandant > header'));
+
 	
 	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js"], function() {
+		
+		setLoadingDiv('section.mandant > header');
 		
 		yooAjax(null, {
 			url: "/api/v4/profile/get_accessible_mandators?versionFilter=LITE,EXTENDED", // <-- no 2GO mandators
@@ -50,17 +135,19 @@ $(document).ready(function() {
 				}
 				
 				$.when(
-					  mandatorDao.init(customerID),
-					  ajaxScenarioList('24H')
+					mandatorDao.init(customerID),
+					ajaxScenarioList('24H')
 			    ).always(function() {
-			    	unsetLoadingDiv($('section.mandant > header'));
-			    	initialize();
+			    	initialize().always(function() {
+		    			unsetLoadingDiv('section.mandant > header');		
+			    	});
 			    });		
 			}
-		});		
+		}).always(function() {
+			unsetLoadingDiv('section.mandant > header');		
+    	});
 	});
 });
-
 
 
 
@@ -161,6 +248,7 @@ var ajaxScenarioList = function(new_period, callback) {
 	});
 };
 
+
 var _paq = _paq || [];
 function piwikCaller(name){
 	 _paq.push(['setCustomVariable',1,'mandator name', name, "visit"]);
@@ -184,7 +272,7 @@ function piwikCaller(name){
  */
 function initialize() {
 
-	getCurrentUser(function(loginInfo) {
+	var userLoadingPromise = getCurrentUser(function(loginInfo) {
 		
 		var name = "";
 		if (loginInfo.firstName) name += loginInfo.firstName;
@@ -210,97 +298,168 @@ function initialize() {
 	    }
 	});
 	
-	if (mandatorList.length > 1) {
-		$('.switch').show();
-	} else {
-		$('.switch').hide();
-	}
-	
-	for (var i = 0; i < mandatorList.length; i++) {
-		var mandatorInfo = mandatorList[i];
-		var id = mandatorList[i].baseInformation.id;
-		var web = mandatorList[i].baseInformation.website;
-		
-		$('#choose_mandant').append('<option value="' + id + '">' + id + ': ' + web + '</option>');
-	}
-
-	initialLoadData();
-	setMandantData(mandatorDao.mandator);
-
-	$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
-	$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
-	$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
-	
-	
-	$('#copyrightsLink').off('click').click(function() {
-    	console.log("should close corporate1");
-    	$('#messageCorporate').hide();
-    	console.log("should close corporate2");
-    	$('#messageCopyrights').show();
-    });
-
-
-    //Change the value in selectbox 1 in collected events
-    $('select[id^="events_select_for_chart_bar"]').change(function () {
-        renderCollectedEvents();
-    });
-
-    $('select[id^="select_for_delivered_recommendations_chart_bar"]').change(function () {
-        renderRecommendationChart();
-    });
-
-    //Last day click event
-    $('#view_option_day').click(function () {
-        ajaxScenarioList("24H");
-    });
-
-    $('#view_option_week').click(function () {
-		ajaxScenarioList("WEEK");
-    });
-
-    $('#view_option_month').click(function () {
-        ajaxScenarioList('MONTH');
-    });
-    
-    // is called if right converison unit is changed from relative -> absolute and vice versa
-	$('#conversion_units').change(function () {
-		renderConversionRate();
-	});
-	
-    $('#settingsP .closeOverlay').click(function () {
-    	window.parent.history.replaceState(null, null, "/");
-    });
-	
-	$('section  div.index_mandator').hover(function() {
-		$(this).find('.index_hover').css('display', 'table-row');
-	}, function() {
-		$(this).find('.index_hover').css('display', 'none');
-	});
-	
-	if (customerID && open_reference_code) {
-		openScenarioDialog(customerID, open_reference_code);
-	}
+	return $.when(
+		userLoadingPromise,
+		initialLoadData(),                   // getting profile pack
+		setMandantData(mandatorDao.mandator) // getting mandator statistic	
+    ).always(function() {
+    	
+    	if (mandatorList.length > 1) {
+    		$('.switch').show();
+    	} else {
+    		$('.switch').hide();
+    	}
+    	
+    	for (var i = 0; i < mandatorList.length; i++) {
+    		var mandatorInfo = mandatorList[i];
+    		var id = mandatorList[i].baseInformation.id;
+    		var web = mandatorList[i].baseInformation.website;
+    		
+    		$('#choose_mandant').append('<option value="' + id + '">' + id + ': ' + web + '</option>');
+    	}
+    	
+    	if (customerID && open_reference_code) {
+    		openScenarioDialog(customerID, open_reference_code);
+    	} else {
+    		var anchor = anchorDecoded();
+    		switchState(anchor, false)
+    	}
+    });	
 	
 };
 
 
-/** Opens the popup "Edit personal and contact data".
- *  It opens the legacy customer data or Pactas popup.
- *  
- *  It must not be called for IBS mandator.
+
+
+
+function switchState(state, pushState) {
+	if (state == "contract") {
+		openContractDetails(pushState);
+	} else if (state == "personal") {
+		openPersonalDetails(pushState);
+	} else if (state == "license") {
+		openLicenseKey(pushState);		
+	} else {
+		switchHistoryState("", pushState);
+		
+		$('#editDataOverlay').hide();
+		$('#pactasPopup').hide();
+		$('#licenceKeyId').hide();
+	}
+}
+
+
+/** Opens the popup "Edit personal data".
  */
-function openContractDetails() {
+function openLicenseKey(pushState) {
+	
+	mandatorDao.loadRegistrationData("header.top_head", function(json) {
+		$('#thekeyid').html(json.licenseKey);
+	    $('#licenceKeyId').show();	
+	    
+	    switchHistoryState("license", pushState);
+	});
+    
+}
+
+
+/** Opens the popup "Edit personal data".
+ */
+function openPersonalDetails(pushState) {
+
+	var mandator = mandatorDao.mandator;
+	if (! mandator) {
+		console.log("No mandator loaded. Unable to open personal data popup.");
+		return;
+	}
+	
+    var customerPromise = yooAjax(null, {
+        url: "/api/v3/profile/get_profile_pack/" + decodeURIComponent(mandatorDao.getId()),
+        success: function (json) {
+            customer = json.profilePack.customer; // <-- "customer" is a global variable
+            
+            if (customer.id) {
+	        	$('#eemail').val(ifnull(customer.email, ""));
+	        	$('#ecompany').val(ifnull(customer.company, ""));
+	        	$('#efname').val(ifnull(customer.firstName, ""));
+	        	$('#elname').val(ifnull(customer.lastName, ""));
+	        	$('#ephone').val(ifnull(customer.phone, ""));
+	        	$('#estreet_and_house').val(ifnull(customer.address.street, ""));
+	        	$('#ezip').val(ifnull(customer.address.zip, ""));
+	        	$('#ecity').val(ifnull(customer.address.city, ""));
+	        	$('#ecountry').val(ifnull(customer.address.country, ""));
+	        	
+	        	$('#contract_details').show();
+            } else {
+            	$('#contract_details').hide();
+            }
+        }
+    });
+    
+    var personalPromise = yooAjax(null, {
+        url: "/api/v4/profile/get_me",
+        success: function (json) {
+        	loginInfo = json; // <-- "loginInfo" is a global variable
+        	
+            var localProfile = loginInfo.localProfile; // <-- "loginInfo" is a global variable
+            
+            if (json.provider) {
+            	$("#personal_details img.sso-icon").attr("src", "");
+            } else {
+            	$("#personal_details img.sso-icon").hide("/img/auth-providers/250-" + json.provider + "-nom.png");
+            	$("#personal_details input[name='p_email']").val(ifnull(json.id, ""));
+            	$("#personal_details input[name='p_email']").attr("disabled", "disabled");
+            }
+            
+            if (localProfile) {
+            	if (json.provider) {            	
+            		$("#personal_details input[name='p_email']").val(ifnull(localProfile.email, ""));
+            		$("#personal_details input[name='p_email']").removeAttr("disabled");
+            	}
+	        	$("#personal_details input[name='p_firstname']").val(ifnull(localProfile.firstName, ""));
+	        	$("#personal_details input[name='p_lastname']").val(ifnull(localProfile.lastName, ""));
+            }
+        }
+    });
+    
+    setLoadingDiv("header.top_head");
+    
+	$.when(
+		customerPromise,
+		personalPromise
+    ).always(function() {
+    	switchHistoryState("personal", pushState);
+    	$('#editDataOverlay').show();
+    	unsetLoadingDiv("header.top_head");
+    });	
+
+}
+
+
+/** Opens the popup "Edit contact data".
+ */
+function openContractDetails(pushState) {
+
 	var mandator = mandatorDao.mandator;
 	if (! mandator) {
 		console.log("No mandator loaded. Unable to open Pactas/Customer popup.");
 		return;
 	}
-	if (mandatorDao.mandator.product.comaId.coma == "PACTAS") {
-		$('#pactasPopup').show();
-	} else {
-		$('#editDataOverlay').show();
-	}
+	
+	var custId = mandatorDao.getId();
+
+	yooAjax("header.top_head", {
+		type: "POST", // but no data
+        url: "/api/v4/base/create_self_service_token/" + encodeURIComponent(custId),
+        success: function (json) {
+        	$('#pactasPopup iframe').attr("src", json.url);
+        	$('#pactasPopup').show();
+        	
+        	switchHistoryState("contract", pushState);
+        },
+    });	
 }
+
 
 
 var ifExtended = function() {
@@ -311,130 +470,88 @@ var ifExtended = function() {
 };
 
 
-function updateDatae() {
 
-    var json = $('body').data('dataprp');
-    var customer = json.profilePack.customer;
-    customer.company = $('#ecompany').val();
-    customer.firstName = $('#efname').val();
-    customer.lastName = $('#elname').val();
-    customer.phone = $('#ephone').val();
-    customer.address.street = $('#estreet_and_house').val();
-    customer.address.zip = $('#ezip').val();
-	customer.address.city = $('#ecity').val();
-    customer.address.country = $('#ecountry').val();
-	console.log("customer: "+customer);
-    $('body').data('dataprp', json);
-
+function validateField(name) {
+		
+	if($("input[name='" + name + "']").val() == "") {
+		$("label[for='" + name + "']").parent().addClass("problem");
+		return false;
+	} else {
+		$("label[for='" + name + "']").parent().removeClass("problem");
+		return true;
+	}
 }
+
 
 function saveForme() {
-
-	var showError = false;
-	if($('#ecompany').val() == "") {
-		$('label[for="ecompany"]').parent().addClass("problem");
-		showError = true;
-	} else {
-		$('label[for="ecompany"]').parent().removeClass("problem");
-	}
-	if($('#efname').val() == "") {
-		$('label[for="efname"]').parent().addClass("problem");
-		showError = true;
-	} else {
-		$('label[for="efname"]').parent().removeClass("problem");
-	}
-	if($('#elname').val() == "") {
-		$('label[for="elname"]').parent().addClass("problem");
-		showError = true;
-	} else {
-		$('label[for="elname"]').parent().removeClass("problem");
-	}
-	if($('#estreet_and_house').val() == "") {
-		$('label[for="estreet_and_house"]').parent().addClass("problem");
-		showError = true;
-	} else {
-		$('label[for="estreet_and_house"]').parent().removeClass("problem");
-	}
-	if($('#ezip').val() == "") {
-		$('label[for="ezip"]').parent().addClass("problem");
-		showError = true;
-	} else {
-		$('label[for="ezip"]').parent().removeClass("problem");
-	}
-	if($('#ecity').val() == "") {
-		$('label[for="ecity"]').parent().addClass("problem");
-		showError = true;
-	} else {
-		$('label[for="ecity"]').parent().removeClass("problem");
-	}
-	if($('#ecountry').val() == "") {
-		$('label[for="ecountry"]').parent().addClass("problem");
-		showError = true;
-	} else {
-		$('label[for="ecountry"]').parent().removeClass("problem");
-	}
-	if($('#ephone').val() == "") {
-		$('label[for="ephone"]').parent().addClass("problem");
-		showError = true;
-	} else {
-		$('label[for="ephone"]').parent().removeClass("problem");
-	}
 	
-	if(showError == true) {
+	var validated =
+			validateField("ecompany") &
+			validateField("efname") &
+			validateField("elname") &
+			validateField("estreet_and_house") &
+			validateField("ezip") &
+			validateField("ecity") &
+			validateField("ecountry") &
+			validateField("ephone");
+	
+	var showError = ! validated;
+	
+	if(customer.id && showError == true) {
 		setMessagePopUp("problem", "error_fill_required_fields");
 	} else {
-		var json = $('body').data('dataprp'),
-			customer = json.profilePack.customer;
-
-		$.ajax({
-			type: "POST",
-			beforeSend: function (x) {
-				if (x && x.overrideMimeType) {
-					x.overrideMimeType("application/json;charset=UTF-8");
+		
+		var localProfile = loginInfo.localProfile; // <-- "loginInfo" is a global variable
+		
+		localProfile.email     = $("#personal_details input[name='p_email']").val();
+		localProfile.firstName = $("#personal_details input[name='p_firstname']").val();
+		localProfile.lastName  = $("#personal_details input[name='p_lastname']").val();
+		
+		var updateContract;
+		
+		if (customer.id) {
+			
+		    customer.company         = $("#contract_details input[name='ecompany']").val();
+		    customer.firstName       = $("#contract_details input[name='efname']").val();
+		    customer.lastName        = $("#contract_details input[name='elname']").val();
+		    customer.phone           = $("#contract_details input[name='ephone']").val();
+		    customer.address.street  = $("#contract_details input[name='estreet_and_house']").val();
+		    customer.address.zip     = $("#contract_details input[name='ezip']").val();
+			customer.address.city    = $("#contract_details input[name='ecity']").val();
+		    customer.address.country = $("#contract_details input[name='ecountry']").val();
+		    
+			updateContract = yooAjax(null, {
+				data: customer,
+				url: "/api/v3/profile/update_customer",
+				success: function (json) {
+					//on success
 				}
-			},
-			mimeType: "application/json",
-			contentType: "application/json",
-			dataType: "json",
-			data: JSON.stringify(customer),
-			url: "ebl/v3/profile/update_customer?no-realm",
+			});
+		} else {
+			updateContract = $.Deferred();
+			updateContract.resolve();
+		}
+	    
+		var updatePersonal = yooAjax(null, {
+			data: localProfile,
+			url: "/api/v4/profile/update_local_profile",
 			success: function (json) {
 				//on success
-				setMessagePopUp("positive", "message_data_saved_successfully");
-			},
-			error: mainErrorHandler
+			}
 		});
+
+		setLoadingDiv("#editDataOverlay");
+		$.when(
+			updateContract,
+			updatePersonal
+	    ).success( function() {
+    		setMessagePopUp("positive", "message_data_saved_successfully");
+	    }).always(function() {
+	    	unsetLoadingDiv("#editDataOverlay");
+	    });	
 	}
 }
 
-
-function getEditData(json) {
-
-    $('#editDataOverlay').find("input").off('change').change(function () {
-        updateDatae();
-    });
-    $('#showLicenseKey').off('click').on('click', function(){
-        $('#thekeyid').html(json.profilePack.mandator.licenseKey);
-        $('#licenceKeyId').show();
-	});
-	
-    var customer = json.profilePack.customer;
-    $('body').data('dataprp', json);
-			
-	$('#eemail').val(ifnull(customer.email, ""));
-	$('#ecompany').val(ifnull(customer.company, ""));
-	$('#efname').val(ifnull(customer.firstName, ""));
-	$('#elname').val(ifnull(customer.lastName, ""));
-	$('#ephone').val(ifnull(customer.phone, ""));
-	$('#estreet_and_house').val(ifnull(customer.address.street, ""));
-	$('#ezip').val(ifnull(customer.address.zip, ""));
-	$('#ecity').val(ifnull(customer.address.city, ""));
-	$('#ecountry').val(ifnull(customer.address.country, ""));
-       
-    $('#changeEditdata').click(function () {
-        saveForme();
-    });
-}
 
 
 function setMandantData(mandatorInfo) {
@@ -447,7 +564,7 @@ function setMandantData(mandatorInfo) {
     $('.info').children('p').text(" (" + version + ")");
     $('.info').children('span').children('.codeid').text(id);
 
-    yooAjax(null, {
+    return yooAjax(null, {
         url: "/ebl/v3/profile/get_mandator_statistic/" +  decodeURIComponent(id),
         success: function (json) {
             var mandatorStatistic = json.mandatorStatistic;
@@ -475,17 +592,25 @@ function formatInteger(v) {
 }
 
 
-var mandatorVersionType='BASIC';
-
-
 
 /** This function is called, after the mandator was  sucessfully loaded
  * */ 
 function initialLoadData() {
 	
+	var coma = mandatorDao.getProductComa();
+	
 	if (mandatorDao.getProductComa() == 'IBS') {
-		$("#edit_contact_datal").hide();
+		$("#edit_personal_datal").hide();
+	} else {
+		$("#edit_personal_datal").show();
 	}
+	
+	if (coma == 'PACTAS') {
+		$('#edit_contact_datal').show();
+	} else {
+		$('#edit_contact_datal').hide();
+	}
+	
 	
 	if ( ! ifExtended()) {
 		$(".available_charts select option[value='rate']").hide();
@@ -518,27 +643,15 @@ function initialLoadData() {
     	console.log("should close corporate2");
     	$('#messageCopyrights').show();
     });
-
-    yooAjax(null, {
-        url: "ebl/v3/profile/get_profile_pack/" + decodeURIComponent(customerID),
-        success: function (json) {
-            var mandator = json.profilePack.mandator;
-			if(mandator !=null && 'version' in mandator){
-				mandatorVersionType = mandator.version;
-			}
-			$.cookie('mandatorVersionType', mandatorVersionType);
-			if(mandatorVersionType == 'EXTENDED'){
-				$('#ABTestTab').show();
-			}else{
-				$('#ABTestTab').hide();
-			}
-			$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
-			$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
-			
-			getEditData(json);
-        }
-    });
-
+    
+	if(mandatorDao.getVersion() == 'EXTENDED'){
+		$('#ABTestTab').show();
+	}else{
+		$('#ABTestTab').hide();
+	}
+	$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
+	$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
+ 
 }
 
 
@@ -1303,19 +1416,17 @@ function updateLeftChart(labels, dataArray) {
 
 function mainErrorHandler(jqXHR, textStatus, errorThrown) {
     if(jqXHR.status != null && jqXHR.status == 403) {
-		setMessagePopUp("problem", "error_server_error_403");
+    	magicMessage("problem", "error_server_error_403");
 	} else if(jqXHR.status != null && jqXHR.status == 401) {
-		$.cookie('password', null);
-		$.cookie('email', null);
 		window.location = "/login.html";
 	} else if(jqXHR.status != null && jqXHR.status == 400) {
-		setMessagePopUp("problem", "error_server_error_400");
+		magicMessage("problem", "error_server_error_400");
 	} else if(jqXHR.status != null && jqXHR.status == 404) {
-		setMessagePopUp("problem", "error_server_error_404");
+		magicMessage("problem", "error_server_error_404");
 	} else if(jqXHR.status != null && jqXHR.status == 409) {
-		setMessagePopUp("problem", "error_server_error_409");
+		magicMessage("problem", "error_server_error_409");
 	} else {
-		setMessagePopUp("problem", "error_server_error");
+		magicMessage("problem", "error_server_error");
 	}
 }
 

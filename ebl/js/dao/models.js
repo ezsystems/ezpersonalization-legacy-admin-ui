@@ -230,8 +230,6 @@ modelDao.loadModels = function(customerID) {
 		dataType: "json",
 		statusCode: {
 			401: function(jqXHR, textStatus, errorThrown) {
-				$.cookie('password', null);
-				$.cookie('email', null);
 				window.parent.location = "login.html";
 			}
 		},
