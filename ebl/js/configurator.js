@@ -1646,7 +1646,7 @@ var createPlacedModel = function (placed_model, model) {
 			  function(mandator) {
 				  return $.ajax({
 					  'type': 'GET',
-					  'url': 'ebl/v4/' + encodeURIComponent(mandator.name) + '/elist/get_list/' + encodeURIComponent(refCode),
+					  'url': '/api/v4/' + encodeURIComponent(mandator.name) + '/elist/get_list/' + encodeURIComponent(refCode),
 					  'dataType': 'json'
 				  });
 			  },
