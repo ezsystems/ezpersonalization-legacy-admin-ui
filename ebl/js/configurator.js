@@ -1534,6 +1534,14 @@ var createPlacedModel = function (placed_model, model) {
 			  $item.find(".idCol").text(item.id);
 			  $item.find(".titleCol").text(ifnull(item.title, ''));
 			  
+			  if (item.id && (item.id + "").length > 8) {
+				  $item.find(".idCol").attr("title", item.id);
+			  }
+			  
+			  if (item.title && item.title.length > 27) {
+				  $item.find(".titleCol").attr("title", item.title);
+			  }
+			  
 			  //prepend the list element to the list, new elements are always set on top of the list
 			  this.lists[item.type].find('ul').prepend($item).sortable('refresh');
 			  
