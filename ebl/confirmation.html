@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+  <title>YooChoose Recommendation Engine | Login</title>
+  <meta name="description" content="YooChoose recommendation engine configurator">
+  <meta name="author" content="Jurij Burkanov">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="css/reset.css">
+  <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+  <link rel="stylesheet" href="css/styles_new.css">
+  
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
+    <script src="js/lib/jquery.cookie.js"></script>
+    <script src="js/lib/jquery.i18n.properties.js"></script>
+  
+  <script src="js/equalize.js"></script>
+  <script src="js/things.js"></script>
+	<script src="js/helper.js"></script>
+	
+	<script src="js/i18n.js" data-i18n-files="registration,common"></script>
+
+  </head>
+  <body id="confirmation">
+    <header class="clearfix top_head">
+      <div class="logo_area s1_5">
+        <h1 class="hide" title="YooChoose. We recommend."><span>YooChoose. We recommend.</span></h1>
+      </div>
+      <div class="top_bar clearfix">
+        <ul class="language_selection clearfix">
+          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
+          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
+          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
+        </ul>
+      </div>
+    </header>
+    <section class="login_center normal_form">
+        <fieldset>
+          <h3 data-translate="welcome_page_headline">Vielen Dank f&uuml;r Ihre Registrierung!</h3>
+          <div>
+            <p data-translate="welcome_page_body"><strong>Herzlich Willkommen bei Ihrem Empfehlungsdienst!</strong><br/><br/>
+Sie erhalten nun eine automatische Best&auml;tigungs-Mail an Ihre angegebene E-Mail-Adresse. Bitte best&auml;tigen Sie Ihre Registrierung durch einen Klick auf den darin angegebenen Link und folgen Sie den weiteren Schritten.
+Danach k&ouml;nnen Sie sich mit Ihrer E-Mail und dem von Ihnen gew&auml;hlten Passwort einloggen.<br/><br/>
+<em>Ihr YOOCHOOSE Team.</em>
+            </p>
+          </div>
+          <div class="actions">
+            <a href="login.html" class="login" data-translate="welcome_page_button">Zur Login Seite</a>
+          </div>
+        </fieldset>
+    </section>
+    
+    <footer>
+     Copyright &copy; 2009-<script>document.write(new Date().getFullYear());</script>
+	<noscript>2014</noscript> YOOCHOOSE GmbH
+      <ul class="clearfix">
+        <li><a href="corporate_information.html" data-translate="login_corporate_information">Corporate information</a></li>
+        <li><a href="data_privacy.html" data-translate="login_data_privacy">Data privacy</a></li>
+        <li><a href="contact.html" data-translate="login_contact">Contact</a></li>
+      </ul>
+    </footer>
+    <div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text">Something neutral happened. That's it.</span>
+        <a class="button inline close">OK</a>
+      </p>
+    </div>
+  </body>
+</html>
