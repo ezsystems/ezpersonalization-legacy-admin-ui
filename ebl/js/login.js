@@ -258,7 +258,7 @@ function loginQueryString() {
 	if (directId) params.directId = directId;
 
 	var lang = gupDecoded('lang');
-	if (lang) params.directId = lang;
+	if (lang) params.lang = lang;
 
 	var trustedComputer = gupDecoded('trustedComputer');
 	if (trustedComputer) params.trustedComputer = trustedComputer;
