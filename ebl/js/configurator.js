@@ -12,7 +12,10 @@
 		  }),
 		  include(["/js/dao/scenario.js"]).then(function() {
 			  return scenarioDao.init(customerID, reference_code);
-	  	  })		  
+	  	  }),
+		  include(["/js/dao/mandator.js"]).then(function() {
+			  return mandatorDao.init(customerID);
+	  	  })
       ).done(function() {
 		  initialize();
 		  
@@ -41,8 +44,9 @@ var initialize = function() {
 		row++;
 	});
 
-	$('.settings_tab').find('a').attr('href', 'settingspop.html?reference_code=' + reference_code + '&customer_id=' + customerID);
-	$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + customerID);
+	$('.settings_tab').find('a').attr("href", "settingspop.html?reference_code=" + encodeURIComponent(reference_code) + "&customer_id=" + encodeURIComponent(customerID));
+	
+	$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + encodeURIComponent(reference_code) + "&customer_id=" + encodeURIComponent(customerID));
 			  
 	json = modelDao.getModels(); // must be already loaded at this moment
 
@@ -86,7 +90,7 @@ var initialize = function() {
 	localizer();
 
 	if(saved == "true") {
-		setMessagePopUp("positive", "message_data_saved_successfully");
+		magicMessage("positive", "message_data_saved_successfully");
 	}
 
 	$("#button_save").click(saveScenario);
@@ -188,17 +192,11 @@ function saveScenario() {
 
 	  $.ajax({
 		  type: "POST",
-		  beforeSend: function(x) {
-			  if(x && x.overrideMimeType) {
-				  x.overrideMimeType("application/json;charset=UTF-8");
-			  }
-			  x.setRequestHeader('no-realm', 'realm1');
-		  },
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
 		  data: JSON.stringify(json.scenario),
-		  url: "ebl/v3/" + encodeURIComponent(customerID) + "/structure/update_scenario/",
+		  url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/update_scenario/",
 		  success: function(json) {
 			  window.location = "configuratorpop.html?reference_code=" + encodeURIComponent(reference_code) + "&customer_id=" + encodeURIComponent(customerID) + "&saved=true";
 		  },
@@ -883,10 +881,7 @@ function saveScenario() {
   function getAttributeValues(attributeKey, type) {
 	  return $.ajax({
 		  'dataType': "json",
-		  'beforeSend': function(req) {
-			  req.setRequestHeader('no-realm', 'realm1');
-		  },
-		  'url': "ebl/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey),
+		  'url': "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey),
 		  'error': stdAjaxErrorHandler
 	  });
   }
@@ -1165,8 +1160,7 @@ function fillNumericSubmodelValues(sm) {
 	  $content = $content ? $content : $('#numericSubmodelValues');
 	  var $groups = $content.find('.interval'), values = [], error = false, val, l, regex = /^$|^[-+]?[0-9]*\.?[0-9]+$/;
 	  //console.log($groups);
-	  $groups
-			  .each(function(index) {
+	  $groups.each(function(index) {
 				  if(error)
 					  return;
 				  var from, to, l, group;
@@ -1319,12 +1313,8 @@ function fillNumericSubmodelValues(sm) {
 
   	$(".empty_model_place").droppable({
   		'revert':  true,
-  		//over:    function (event, ui) {
-  		//	$(this).css({'padding': '0'});
-  		//},
   		'accept': '.dropable_model',
   		'drop': function (event, ui) {
-//  			createPlacedModel($(this));
   			createPlacedModel($(this), $(ui.draggable));
   		}
   	});
@@ -1401,10 +1391,7 @@ var createPlacedModel = function (placed_model, model) {
 	  'classes': {},
 	  'tools': {},
 	  'init': function() {
-		  //load the mandator
-		  var mandatorName = $.cookie('customerID'); //the cutomerID cookie is used in a wrong way all over the legacy code
-		  //TODO: replace the cookie name 'customerID' in index.html and probably in other files too
-		  this.data.mandatorName = mandatorName ? mandatorName : null;
+		  this.data.mandatorName = customerID;
 	  }
   };
 
@@ -1423,23 +1410,29 @@ var createPlacedModel = function (placed_model, model) {
 			  $(this).closest('._overlay').hide();
 		  });
 		  this.$overlay.find('#addItem').on('click', function() {
-			  var $form = $(this).closest('form'),
-					  id = $form.find('#itemId').val(),
-					  type = $form.find('#itemTypes').val();
+			  var $form = $(this).closest('form');
+			  var id = $form.find('#itemId').val();
+			  var type = $form.find('#itemTypes').val();
+			  
 			  if(! id.length) {
 				  self.showError('editorial_list_error_empty_id_field');
 				  return;
 			  }
-			  //test if the id contains just digits
-			  if(/\D/.test(id)) {
-				  //we have non digits in the field
-				  self.showError('editorial_list_error_invalid_id');
-				  return;
-			  }
-			  id = parseInt(id, 10);
-			  if(id > 2147483647 || id < 0) {
-				  self.showError('editorial_list_error_id_out_of_bounds');
-				  return
+			  
+			  var alpha = mandatorDao.isAlphanumericItems();
+			  
+			  if (! alpha) {
+				  //test if the id contains just digits
+				  if(/\D/.test(id)) {
+					  //we have non digits in the field
+					  self.showError('editorial_list_error_invalid_id');
+					  return;
+				  }
+				  id = parseInt(id, 10);
+				  if (id > 2147483647 || id < 0) {
+					  self.showError('editorial_list_error_id_out_of_bounds');
+					  return
+				  }
 			  }
 
 			  //check if Item already in list
@@ -1462,10 +1455,9 @@ var createPlacedModel = function (placed_model, model) {
 			  //self.$overlay.find('.cover').show();
 			  app.api.saveEditorialList(self.referenceCode, self.getItems()).then(
 					function(list){
-						$('#model_' + self.referenceCode)
-								.find('.info')
-								.html(list.length + ' items');
-						setMessagePopUp("positive", "message_data_saved_successfully");
+						$('#model_' + self.referenceCode).find('.info').html(list.length + ' items');
+						
+						magicMessage("positive", "message_data_saved_successfully");
 					},
 					app.tools.stdAjaxErrorHandler
 			  	)
@@ -1491,8 +1483,7 @@ var createPlacedModel = function (placed_model, model) {
 	  },
 	  'prepare': function(types, model) {
 		  var id, $option, $listClone;
-//		  var mandatorType = $.cookie('mandatorType');
-//		  var solution = $.cookie('mandatorVersionType');
+
 		  //clean up all the EditorialListEditor
 		  this.init();
 		  this.reset();//remove all content from prior lists
@@ -1501,26 +1492,21 @@ var createPlacedModel = function (placed_model, model) {
 				  .attr('data-translate', 'editorial_list_title_' + model.referenceCode)
 				  .html(model.modelType + ' ' + model.referenceCode);
 		  //create the lists for the supported
-		  for(id in types) {
-//			  if((mandatorType == "SHOP" && id == 1) || 
-//					  (mandatorType != "SHOP" && (id == 2|| solution == null || solution == 'undefined' || solution == 'EXTENDED'))){
-				  
-				  $option = $('<option></option>');
-				  $option.attr('data-translate', 'editorial_list_item_type_' + id)
-						  .html(types[id]).val(id);
-				  this.$typeSelect.append($option);
-				  $listClone = this.$dummyList.clone();
-				  $listClone.attr('id', 'type_' + id);
-				  $listClone.find('h3').attr('data-translate', 'editorial_list_item_type_'+ id).html(types[id]);
-				  $listClone.show();
-				  $listClone.find('ul')
-						  .sortable({
-							  'helper': 'clone',
-							  'axis': 'y'
-						  });
-				  $listClone.appendTo(this.$editorialLists);
-				  this.lists[id] = $listClone;
-//			  }
+		  for(i in types) {
+			  var id = types[i].id;
+			  var desc = types[i].description;
+			    
+			  $option = $('<option></option>');
+			  $option.html(desc).val(id);
+			  this.$typeSelect.append($option);
+			  $listClone = this.$dummyList.clone();
+			  $listClone.attr('id', 'type_' + id);
+			  $listClone.find('h3').html(desc);
+
+			  $listClone.find('ul').sortable({ helper: 'clone', axis: 'y' });
+			  
+			  $listClone.appendTo(this.$editorialLists);
+			  this.lists[id] = $listClone;
 		  }
 		  this.$editorialLists.append('<div style="clear: both;"></div>');
 		  localizer();
@@ -1533,28 +1519,38 @@ var createPlacedModel = function (placed_model, model) {
 	  },
 	  'addItem': function(item) {
 		  var $item;
-		  if(this.getItem(item.type, item.id) !== null) {
+		  if (this.getItem(item.type, item.id) !== null) {
 			  return;
 		  }
 		  //precede if we have a list for the item
-		  if(this.lists[item.type]) {
+		  if (this.lists[item.type]) {
 			  //create a list element
 			  $item = $('<li id="item_' + item.type + '_' + item.id + '">' +
-					  '<span class="idCol">' + item.id + '</span>' +
-					  '<span class="titleCol">' + (item.title === null ? '' : item.title) + '</span>' +
+					  '<span class="idCol"></span>' +
+					  '<span class="titleCol"></span>' +
 					  '<span class="deleteCol deleteItem">X</span>' +
-					  '</li>')
-					  .data('item', item);
+					  '</li>').data('item', item);
+			  
+			  $item.find(".idCol").text(item.id);
+			  $item.find(".titleCol").text(ifnull(item.title, ''));
+			  
+			  if (item.id && (item.id + "").length > 8) {
+				  $item.find(".idCol").attr("title", item.id);
+			  }
+			  
+			  if (item.title && item.title.length > 27) {
+				  $item.find(".titleCol").attr("title", item.title);
+			  }
+			  
 			  //prepend the list element to the list, new elements are always set on top of the list
-			  this.lists[item.type]
-					  .find('ul')
-					  .prepend($item)
-					  .sortable('refresh');
+			  this.lists[item.type].find('ul').prepend($item).sortable('refresh');
+			  
 			  //add the event handlers for mouse over tooltips
-			  app.tools.toolTipFullContent($item.find('.titleCol'),
-				  {
-					  'filter': this.etc.titleFilter
-			  	});
+			  app.tools.toolTipFullContent($item.find('.titleCol'), {
+				  'filter': this.etc.titleFilter
+			  });
+			  
+			  this.lists[item.type].show();
 		  }
 	  },
 	  'addItems': function(items) {
@@ -1569,9 +1565,8 @@ var createPlacedModel = function (placed_model, model) {
 				  .data('item');
 	  },
 	  'getItems': function() {
-		  var type,
-				  $list,
-				  items = [];
+		  var type, $list, items = [];
+		  
 		  for(type in this.lists) {
 			  $list = this.lists[type];
 			  $list.find('li').each(function() {
@@ -1610,127 +1605,52 @@ var createPlacedModel = function (placed_model, model) {
 
   };
 
-  /**
-   * loads the mandator
-   * @param name optional
-   * @returns {*}
-   * @author maik.seyring
-   */
-  app.api.getMandator = function(name) {
-	  if(app.data.mandator && (name === undefined || app.data.mandator.name === name)) {
-		  return $.Deferred().resolve(app.data.mandator).promise();
-	  } else {
-		  name = name ? name : app.data.mandatorName;
-		  return $.ajax({
-			  'type': 'GET',
-			  'url': 'ebl/v3/profile/get_mandator/' + encodeURIComponent(name),
-			  'dataType': 'json'
-		  }).then(
-				  function(response) {
-					  app.data.mandator = response.mandator;
-					  return app.data.mandator;
-				  },
-				  app.tools.stdAjaxErrorHandler
-		  );
-	  }
-  };
-
-  /**
-   * loads the editorial list for the given model
-   * @param model
-   * @returns $.XHR
+  
+  /** Loads the editorial list for the given model
    */
   app.api.getEditorialList = function(refCode) {
-	  return app.api.getMandator() // load the mandator
-			  .then(
-			  function(mandator) {
-				  return $.ajax({
-					  'type': 'GET',
-					  'url': '/api/v4/' + encodeURIComponent(mandator.name) + '/elist/get_list/' + encodeURIComponent(refCode),
-					  'dataType': 'json'
-				  });
-			  },
-			  app.tools.stdAjaxErrorHandler
-	  );
-  };
-
-  /**
-   * saves the list of items on the server
-   * @param list
-   * @returns {*}
-   */
-  app.api.saveEditorialList = function(refCode, list) {
-	  return $.ajax({
-		  'type': 'POST',
-		  'contentType': 'application/json',
-		  'url': 'ebl/v4/' + encodeURIComponent(app.data.mandatorName) + '/elist/update_list/' + encodeURIComponent(refCode),
-		  'data': JSON.stringify(list)
+	  return yooAjax(null, {
+		  url: '/api/v4/' + encodeURIComponent(mandatorDao.getId()) + '/elist/get_list/' + encodeURIComponent(refCode),
 	  });
   };
-  /**
-   * retrieves a item from server with given Id
-   * @param id
-   * @returns {*}
+
+  
+  /** Saves the list of items on the server
+   */
+  app.api.saveEditorialList = function(refCode, list) {
+	  return yooAjax("#editorial_model_configurator div._dialog_body", {
+		  url: '/api/v4/' + encodeURIComponent(app.data.mandatorName) + '/elist/update_list/' + encodeURIComponent(refCode),
+		  data: list
+	  });
+  };
+  
+  
+  /** Retrieves a item from server with given Id
    */
   app.api.getItem = function(type, id) {
-	  return $.ajax({
-		  'type': 'GET',
-		  'url': 'ebl/v4/' + encodeURIComponent(app.data.mandatorName) + '/elist/get_single_item/' + type + '/' + encodeURIComponent(id)
-	  })
-			  .then(null, app.tools.stdAjaxErrorHandler);
+	  return yooAjax("#editorial_model_configurator div._dialog_body", {
+		  url: '/api/v4/' + encodeURIComponent(app.data.mandatorName) + '/elist/get_single_item/' + type + '/' + encodeURIComponent(id),
+		  fault_itemNotFoundFault: function(json) { 
+			  
+			  var itemTypeDesc = mandatorDao.getItemTypeDescription(json.faultDetail.type);
+			  
+			  magicMessage("negative", "fault_itemNotFoundFault", itemTypeDesc, json.faultDetail.id);
+		  }
+	  });
   };
 
-  /**
-   * loads the available item types for the mandator
-   * @returns {*}
-   */
-  app.api.getItemTypes = function() {
-	  var deferred = $.Deferred();
-	  app.api.getMandator()
-			  .then(
-			  function(mandator) {
-				  var itemTypes = {};
-				  if(mandator.type === 'SHOP') {
-					  itemTypes['1'] = 'Product';
-
-					  if(mandator.version === 'EXTENDED') {
-						  itemTypes['2'] = 'Article';
-						  itemTypes['3'] = 'Image';
-						  itemTypes['4'] = 'Media';
-						  itemTypes['5'] = 'User generated';
-					  }
-				  }
-				  if(mandator.type === 'PUBLISHER') {
-					  itemTypes['1'] = 'Product';
-					  itemTypes['2'] = 'Article';
-
-					  if(mandator.version === 'EXTENDED') {
-						  itemTypes['3'] = 'Image';
-						  itemTypes['4'] = 'Media';
-						  itemTypes['5'] = 'User generated';
-					  }
-				  }
-				  deferred.resolve(itemTypes);
-				  return itemTypes;
-			  },
-			  function() {
-				  deferred.reject();
-			  }
-	  );
-	  return deferred.promise();
-  };
 
   app.gui.showEditorialListEditor = function(model) {
-	  $.when(app.api.getEditorialList(model.referenceCode), app.api.getItemTypes())
-			  .then(
-			  function(items, types) {
+	  $.when(app.api.getEditorialList(model.referenceCode)).then(
+			  function(items) {
+				  var types = mandatorDao.getItemTypes();
 				  app.editorialListsEditor.prepare(types, model);
-				  app.editorialListsEditor.addItems(items[0]);
+				  app.editorialListsEditor.addItems(items);
 				  app.editorialListsEditor.show();
-
 			  }
 	  );
   };
+  
   (function() {
 	  var config = {
 

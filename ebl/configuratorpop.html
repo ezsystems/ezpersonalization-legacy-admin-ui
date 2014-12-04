@@ -357,7 +357,7 @@
 					<div class="listHead">
 						<span class="idCol" data-translate="editorial_list_item_id">Id</span>
 						<span class="titleCol" data-translate="editorial_list_item_title">Title</span>
-						<span class="deleteCol" data-translate="editorial_list_delete_item">Delete</span>
+						<!-- span class="deleteCol" data-translate="editorial_list_delete_item">Delete</span -->
 					</div>
 					<ul class="itemList"></ul>
 				</div>
@@ -366,9 +366,9 @@
 			<div class="hintSpace"></div>
 			<div>
 				<form>
-					<label for="itemId" data-translate="editorial_list_form_item_id">Item ID: </label><input style="vertical-align: middle;" id="itemId" type="text" name="itemId" size="10" maxlength="10">
+					<label for="itemId" data-translate="editorial_list_form_item_id">Item ID: </label><input style="vertical-align: middle;" id="itemId" type="text" name="itemId" size="10">
 					<label for="itemTypes" data-translate="editorial_list_form_item_type">Item Type: </label><select style="height: 2.1em;vertical-align: middle;" id="itemTypes" name="itemType"></select>
-					<a id="addItem" class="save" data-translate="editorial_list_form_add_item">Add</a>
+					<a id="addItem" class="button inline save" data-translate="editorial_list_form_add_item">Add</a>
 				</form>
 			</div>
 			<div>
@@ -397,7 +397,7 @@
 						</select><a class="help"></a>
 					</label>
 					<div class="hintSpace">Space for hints and warnings.</div>
-					<a id="save_random_model" class="save button inline" data-translate="configurator_save_changes">Änderungen speichern</a>
+					<a id="save_random_model" class="save button inline" data-translate="configurator_save_changes">Save changes</a>
 				</form>
 			</div>
 		</div>
@@ -477,13 +477,7 @@
     </div>
 
 	<div class="empty_model_place ghost"><div style="padding: 60px 0;" data-translate="configurator_drag_and_drop">drag and drop<br>a model here</div></div>
-    <div class="message" style="display:none; z-index:1000000;">
-      <p>
-        <a class="destroy_message">X</a>
-        <span id="message_text">Something neutral happened. That's it.</span>
-        <a class="button inline close">OK</a>
-      </p>
-    </div>
+
 	<div id="hoverView" style="display: none;"></div>
 	<div id="helpView" style="display: none;">
 		<div class="close">x</div>

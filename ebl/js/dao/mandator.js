@@ -17,7 +17,7 @@ mandatorDao.getId = function() {
 	} else {
 		return null;
 	}
-}
+};
 
 
 mandatorDao.getVersion = function() {
@@ -27,8 +27,69 @@ mandatorDao.getVersion = function() {
 	} else {
 		return null;
 	}
-}
+};
+
+
+mandatorDao.getDefaultItemTypeId = function() {
+	if (this.mandator == null) {
+		return null;
+	}
 	
+	var result = this.mandator.baseInformation.defaultType;
+	
+	return result;
+};
+
+
+mandatorDao.isAlphanumericItems = function() {
+	if (this.mandator == null) {
+		return null;
+	}
+	
+	var result = (this.mandator.baseInformation != "NUMERIC");
+	
+	return result;
+};
+
+
+mandatorDao.getItemTypes = function() {
+	if (this.mandator == null) {
+		return null;
+	}
+	
+	var result = this.mandator.itemTypeConfiguration.types;
+	
+	if (!result || result.length == 0) {
+		result.push({id : 1, description : 'Product'});
+		
+		if (mandator.baseInformation.version == 'EXTENDED') {
+			result.push({id : 2, description : 'Article'});
+			result.push({id : 3, description : 'Image'});
+			result.push({id : 4, description : 'Media'});
+			result.push({id : 5, description : 'User generated'});
+		}
+	}
+	
+	return result;
+}
+
+
+mandatorDao.getItemTypeDescription = function(id) {
+	if (this.mandator == null) {
+		return null;
+	}
+	
+	var result = null;
+	
+	this.getItemTypes().forEach(function(itemType) {
+	    if (itemType.id == id) {
+	    	result = itemType.description;
+	    }
+	});
+	
+	return result;
+}
+
 
 mandatorDao.init = function(mandatorId, callback) {
 	
