@@ -138,7 +138,9 @@ var fromTemplate   = gupDecoded('from_template');
 		
 		saveSettingsForm(function () {
 			unsetLoadingDiv($('body'));
-			setMessagePopUp("positive", "message_positive_data_saved_successfully");
+			
+			magicMessage("positive", "message_data_saved_successfully");
+			
 			if(fromTemplate != ""){
 				window.location = $('.configurator_tab').find('a').attr("href");
 			}
