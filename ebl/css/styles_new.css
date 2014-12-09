@@ -694,7 +694,7 @@ input[type="text"].inverted {
   top: 0;
   bottom: 0;
   right: 0;
-  z-index: 999;
+  z-index: 10;
 }
 
 ._dialog_body {
@@ -2071,87 +2071,6 @@ a.remove_attribute_value:hover{
     color: red;
 }
 
-.editorial_list{
-    display: block;
-    float: left;
-    width: 250px;
-    margin: 10px;
-    box-sizing: border-box;
-}
-
-.editorial_list .listHead{
-    display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
-    background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
-    color: rgba( 216, 216, 216, 1);
-    border: 1px solid rgba(63, 63, 63, 1);
-    border-radius: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-
-}
-
-.editorial_list .listHead span, .editorial_list ul span {
-    display: inline-block;
-    box-sizing: border-box;
-    padding: 5px;
-    padding-left: 0px;
-    vertical-align: bottom;
-    white-space: nowrap;
-}
-
-.editorial_list .listHead span.idCol, .editorial_list ul span.idCol {
-    display: inline-block;
-    box-sizing: border-box;
-    padding: 5px;
-    padding-left: 5px;
-    vertical-align: bottom;
-    white-space: nowrap;
-}
-
-.editorial_list ul li{
-    white-space: nowrap;
-}
-
-.idCol{
-    width: 80px;
-}
-
-.titleCol{
-    width: 130px;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-.deleteCol{
-    width: 20px;
-    text-align: center;
-}
-
-.editorial_list ul{
-    clear: both;
-    height: 100px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    border: 1px dotted #000000;
-    border-radius: 5px;
-}
-
-.editorial_list ul li{
-    display: block;
-    list-style: none;
-    background: white url("../img/rauschen.png") repeat left top;
-    cursor: move;
-}
-
-.editorial_list ul li .deleteCol{
-    cursor: pointer;
-}
-
-.editorial_list .deleteItem:hover{
-    color: #ff0000;
-}
 
 body > .cover{
     position: fixed;
@@ -2411,51 +2330,120 @@ section.scenarios > header a:not(.button):hover, section.scenarios > header a:no
 }
 
 
-.default_message {
+
+/********************     MASSAGE    *************************/
+
+
+.default_message .close_link {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 2px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 12px;
+  color: rgba(6, 9, 4, 1);
+  line-height: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+
+.default_message .countdown {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 22px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 12px;
+  color: rgba(6, 9, 4, 1);
+  line-height: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+
+
+.default_message.problem,
+.default_message.error,
+.default_message.negative,
+.default_message.neutral,
+.default_message.warning {
 	position: absolute;
 	top: 17em;	
 	left: 25%;
 	right: 25%;
-  display: block;
-  width: 50%;
-  text-decoration: none;
-  color: rgba(70, 78, 66, 1);
-  background-color: transparent;
-  border: 3px solid rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-  margin: 0 auto;
-  z-index: 100;
+	display: block;
+	width: 50%;
+	text-decoration: none;
+	color: rgba(70, 78, 66, 1);
+	background-color: transparent;
+	border: 3px solid rgba(0, 0, 0, 0.5);
+	border-radius: 10px;
+	margin: 0 auto;
+	z-index: 100;
 }
+
+
+.default_message.positive, 
+.default_message.info {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: block;
+	text-decoration: none;
+	color: rgba(70, 78, 66, 1);
+	background-color: transparent;
+	border-top: 3px solid rgba(0, 0, 0, 0.5);
+	z-index: 100;
+}
+
 
 .default_message > p {
-  display: block;
-  padding: 20px;
-  border-radius: 7px;
+	display: block;
+	padding: 20px;
 }
 
+
 .default_message.neutral > p,
-.default_message.warning > p,
+.default_message.warning > p {
+	background-color: #FFC700;
+	color: black;
+	border-radius: 7px;
+}
+
 .default_message.neutral > p a,
 .default_message.warning > p a {
-  background-color: #FFC700;
-  color: black;
+	color: black;
 }
 
 .default_message.problem > p,
 .default_message.error > p,
-.default_message.negative > p,
+.default_message.negative > p {
+	background-color: rgba( 192,  80,  77, 1);
+	color: white;
+	border-radius: 7px;
+}
+
+
 .default_message.problem > p a,
 .default_message.error > p a,
 .default_message.negative > p a {
-  background-color: rgba( 192,  80,  77, 1);
-  color: white;
+	color: white;
 }
 
+
 .default_message.positive > p, 
-.default_message.info > p,
+.default_message.info > p {
+	background-color: rgba( 218, 236, 213, 1);
+	color: black;
+}
+
+
 .default_message.positive > p a, 
 .default_message.info > p a {
-  background-color: rgba( 218, 236, 213, 1);
-  color: black;
+	color: black;
 }
        

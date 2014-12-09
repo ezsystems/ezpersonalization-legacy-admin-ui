@@ -619,6 +619,10 @@ function yooAjax(blurSelector, options) {
 }
 
 
+/** Used by magicMessage() */
+var magicCountdown;
+
+
 /** Shows a magic message.
  *  
  *  It makes the DIV#magic_message visible. If no magic DIV exists,
@@ -633,13 +637,13 @@ function yooAjax(blurSelector, options) {
 function magicMessage(type, i18n_id) {
 	
 	if (! $('#magic_message').length) {
-		$('body').append('<div id="magic_message" class="default_message"><p><a class="destroy_message">X</a></p></div>')
+		$('body').append('<div id="magic_message" class="default_message"><p><a class="close_link">X</a><span class="countdown">10</span></p></div>')
 		$('#magic_message p').append("<span id='magic_message_text'></span>");
 		
-		$('#magic_message .destroy_message').click(function() {
-			$('#magic_message').css("visibility", "hidden");
+		$('#magic_message .close_link').click(function() {
+			$('#magic_message').css("visibility", "hidden"); // not "hide"
 		});
-		
+				
 		var closeMagicMessage = function(e) { 
 		    if (e.which == 1 || e.which == 27) {
 		    	if ($('#magic_message').is(":visible")) {
@@ -651,9 +655,16 @@ function magicMessage(type, i18n_id) {
 	    $(document).bind('keydown', closeMagicMessage);
 	}
 
+	$('#magic_message .countdown').hide();
 	
 	$('#magic_message').removeClass("problem");
+	$('#magic_message').removeClass("negative");
+	$('#magic_message').removeClass("error");
 	$('#magic_message').removeClass("positive");
+	$('#magic_message').removeClass("info");
+	$('#magic_message').removeClass("neutral");
+	$('#magic_message').removeClass("warning");
+	
     $('#magic_message').addClass(type);
     $('#magic_message').css("visibility", "visible");
     
@@ -671,7 +682,12 @@ function magicMessage(type, i18n_id) {
 	
 	i18n($('#magic_message_text'));
 	
-	return {
+	clearInterval(magicCountdown);
+	
+	var magicMessage = {
+			
+		countdown: null,
+			
 		addLink: function(href, i18n_id) {
 			var i18n_params = Array.prototype.slice.call(arguments, 2);		
 
@@ -685,8 +701,42 @@ function magicMessage(type, i18n_id) {
 			$('#magic_message_text').parent().children('a.destroy_message').hide();
 			
 			i18n($('#magic_message_text').parent());
+		},
+		timeout: function() {
+			var $countdown = $('#magic_message .countdown');
+			
+			if ($countdown.length == 0) {
+				return;
+			}
+			
+			clearInterval(magicCountdown);
+			
+			var value = arguments.length == 0 ? 10 : arguments[0];	
+			
+			$('#magic_message .countdown').text(value);
+			$('#magic_message .countdown').show();
+			
+			magicCountdown = window.setInterval(function() {
+				var value = parseInt($('#magic_message .countdown').text()) - 1;
+				if (value < 0 || isNaN(value)) {
+					clearInterval(magicCountdown);
+					$('#magic_message').css("visibility", "hidden");
+				}
+				$('#magic_message .countdown').text(value);
+			}, 1000);
+			
+			$("#magic_message").mouseover(function() {
+				$('#magic_message .countdown').hide();
+				clearInterval(magicCountdown);
+			});
 		}
 	}
+	
+	if (type == "info" || type == "positive") {
+		magicMessage.timeout(10);
+	}
+	 
+	return magicMessage;
 }
 
 
