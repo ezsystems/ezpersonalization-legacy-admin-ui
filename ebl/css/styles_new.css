@@ -589,6 +589,7 @@ input[type="text"].inverted {
 }
 
 .normal_form input[type="text"],
+.normal_form input[type="url"],
 .normal_form input[type="password"] {
   line-height: 28px;
 }
