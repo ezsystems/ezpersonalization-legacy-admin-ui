@@ -1,0 +1,106 @@
+var customerID = gup('customer_id');
+var mandatorInfo;
+
+$(document).ready(function() {
+	 
+	  setLoadingDiv($('body'));
+	  	  
+	  $.when(
+		  initialize_first(null, "preview_send")
+		  
+     ).done(function() {
+    	 
+  	  unsetLoadingDiv($('body'));
+		  initialize();
+	  });
+});
+
+function initialize_first(callback, i18n_save_button) {
+	
+	var m = encodeURIComponent(customerID);
+	alert('was here');
+	$('#import_schedule').change(function(){
+		var cval = $( this ).val();
+		if(cval  == '2'){
+			$('#dayOfweek').show();
+			$('#hourOfday').show();
+		}else if( cval == '1'){
+			$('#dayOfweek').hide();
+			$('#hourOfday').show();
+		}else if( cval == '0'){
+			$('#dayOfweek').hide();
+			$('#hourOfday').hide();
+		}
+		
+	});
+ 
+
+	var result = $.when(
+		$.get("/includes/configurator_header.html", '', function(data) {
+	
+			
+	
+			if (i18n_save_button) {
+				$("#button_save").attr("data-translate", i18n_save_button);
+			}
+	
+			i18n($(".scenario_settings")); // internationalize just loaded
+													// file
+	
+			
+		}), 
+		loadMandatorInfo(function(json) {
+			mandatorInfo = json;
+		})
+	).done(function(json) {
+		if (callback) {
+			callback();
+		}
+	});
+	return result;
+}
+
+function loadMandatorInfo(callback) {
+	
+	var result = $.ajax({
+		dataType: "json",
+		url: "/api/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration&no-realm",
+		success: callback,
+		error : function(jqXHR, textStatus, errorThrown) {
+			configuratorErrorHandler(jqXHR, textStatus, errorThrown);
+        }
+	});
+	return result;
+}
+
+
+function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
+	
+	unsetLoadingDiv($('body'));
+	
+	if(jqXHR.status != null && jqXHR.status == 403) {
+		setMessagePopUp("problem", "error_server_error_403");
+		
+	} else if(jqXHR.status != null && jqXHR.status == 401) {
+
+		window.parent.location = "/login.html";
+		
+	} else if(jqXHR.status != null && jqXHR.status == 400) {
+		setMessagePopUp("problem", "error_server_error_400");
+		
+	} else if(jqXHR.status != null && jqXHR.status == 404) {
+		setMessagePopUp("problem", "error_server_error_404");
+		
+	} else if(jqXHR.status != null && jqXHR.status == 409) {
+		setMessagePopUp("problem", "error_server_error_409");
+		
+	} else {
+		setMessagePopUp("problem", "error_server_error");
+	}
+}
+
+var initialize = function() {
+	
+	
+	
+}
