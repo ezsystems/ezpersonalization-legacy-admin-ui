@@ -37,16 +37,12 @@ function initialize_first(callback, i18n_save_button) {
 
 	var result = $.when(
 		$.get("/includes/configurator_header.html", '', function(data) {
-	
-			
-	
 			if (i18n_save_button) {
 				$("#button_save").attr("data-translate", i18n_save_button);
 			}
 	
 			i18n($(".scenario_settings")); // internationalize just loaded
 													// file
-	
 			
 		}), 
 		loadMandatorInfo(function(json) {
@@ -100,7 +96,32 @@ function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
 }
 
 var initialize = function() {
+	$("#button_save").click(saveImport);
 	
-	
-	
+}
+
+function saveImport() {
+	 setLoadingDiv($('body'));
+	 var retObj = new Object();
+	 retObj.url = $("#url").val();
+	 retObj.importFr = $("#import_schedule").val();
+	 retObj.importWeek = $("#dayOfweek").val();
+	 retObj.importHour = $("#hourOfday").val();
+	 retObj.itemId = $("#itemId").val();
+	 retObj.delimiter = $("#delimiter").val();
+	 $.ajax({
+		  type: "POST",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  data: JSON.stringify(retObj),
+		  url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/update_import/",
+		  success: function(json) {
+			  window.location = "configuratorpop.html?reference_code=" + encodeURIComponent(reference_code) + "&customer_id=" + encodeURIComponent(customerID) + "&saved=true";
+		  },
+		  error: function() {
+			  unsetLoadingDiv($('body'));
+			  stdAjaxErrorHandler();
+		  }
+	  });
 }
