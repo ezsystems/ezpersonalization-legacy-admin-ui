@@ -673,6 +673,7 @@ ul.placed_model_settings > li.usesubmodels > div > input {
 
 .preview_settings div.value input[type="number"],
 .preview_settings div.value input[type="text"],
+.preview_settings div.value input[type="url"],
 .preview_settings div.value textarea,
 .preview_settings div.value .content {
 	padding: 0 7px 0 10px;
