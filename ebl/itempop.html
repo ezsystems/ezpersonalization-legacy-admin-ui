@@ -28,7 +28,8 @@
     <script src="js/items_import.js"></script>
 	<script src="js/piwik.js"></script>
   </head>
-  <body id="settings" class="scenario_configuration_steps" style="height: 100%; overflow-x: hidden; min-width: 0">
+  <body id="settings" class="scenario_configuration_steps" style="height: 100%; overflow-x: hidden; min-width: 0px;
+  background-image: url('img/import.png');background-repeat: no-repeat;background-position-x: right;background-position-y: bottom;">
   
     <h2 data-translate="item_import">Item Import</h2>
      
@@ -64,7 +65,7 @@
 			        </span>
 				</div>
 				<div class="value">
-					<input type="url" id="url" name="url" placeholder="URL" value="" />
+					<input type="url" id="url" required="required" name="url" placeholder="URL" value="" />
 				</div>
 	          </li>
 	          
@@ -91,7 +92,7 @@
 			        </span>
 				</div>
 				<div class="value">
-					<input type="text" id="itemId" name="itemId"  placeholder="Item ID field name" value="" />
+					<input type="text" required="required" id="itemId" name="itemId"  placeholder="Item ID field name" value="" />
 				</div>
 	          </li>
 	          
@@ -103,7 +104,7 @@
 			        </span>
 				</div>
 				<div class="value">
-					<input type="text" id="delimiter" name="delimiter" maxlength="3" placeholder="Data delimiter" value="" />
+					<input type="text" id="delimiter" required="required" name="delimiter" maxlength="3" placeholder="Data delimiter" value="" />
 				</div>
 	          </li>
 	          
@@ -112,7 +113,7 @@
 	        </ul>
 	        </form>
        
-       		<div style="padding: 10px 10px 0 0; word-wrap: break-word; border-top: 1px solid rgba(217, 226, 216, 1);" id="urlid"></div>
+       		
        </div>
        
       
