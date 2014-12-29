@@ -649,7 +649,11 @@ function initialLoadData() {
 	if(mandatorDao.getVersion() == 'EXTENDED'){
 		$('#ABTestTab').show();
 		$('#itemImortTab').show();
-		$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID)); 
+		$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
+		$('#itemImortTab').off('click').click(function() {
+			$('#itemimportP').show();
+		});
+		
 	}else{
 		$('#ABTestTab').hide();
 		$('#itemImortTab').hide();
