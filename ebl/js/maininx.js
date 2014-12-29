@@ -157,6 +157,8 @@ var ajaxScenarioList = function(new_period, callback) {
 		return;
 	}
 	
+	$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID)); 
+	
 	setLoadingDiv($('#statistic_charts'));
 	setLoadingDiv($('.available_scenarios'));
 	
@@ -646,8 +648,11 @@ function initialLoadData() {
     
 	if(mandatorDao.getVersion() == 'EXTENDED'){
 		$('#ABTestTab').show();
+		$('#itemImortTab').show();
+		$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID)); 
 	}else{
 		$('#ABTestTab').hide();
+		$('#itemImortTab').hide();
 	}
 	$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
 	$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
