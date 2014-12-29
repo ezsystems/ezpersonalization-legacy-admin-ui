@@ -30,7 +30,10 @@ function initialize_first(callback, i18n_save_button) {
 		}
 		
 	});
- 
+	$('#import_primary_settings').submit(function () {
+		saveImport();
+		return false;
+    });
 
 	var result = $.when(
 		loadMandatorInfo(function(json) {
@@ -84,9 +87,13 @@ function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
 }
 
 var initialize = function() {
-	$("#button_save").click(saveImport);
+	$("#button_save").click(submitImport);
 	
 };
+
+function submitImport() {
+	$('#import_primary_settings').submit();
+}
 
 function saveImport() {
 	 setLoadingDiv($('body'));
