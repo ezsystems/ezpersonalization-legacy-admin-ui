@@ -37,6 +37,8 @@ function initialize_first(callback, i18n_save_button) {
 
 	var result = $.when(
 		$.get("/includes/configurator_header.html", '', function(data) {
+			
+			$(".scenario_settings").html(data);
 			if (i18n_save_button) {
 				$("#button_save").attr("data-translate", i18n_save_button);
 			}
