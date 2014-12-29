@@ -16,9 +16,6 @@ $(document).ready(function() {
 });
 
 function initialize_first(callback, i18n_save_button) {
-	
-	var m = encodeURIComponent(customerID);
-	alert('was here');
 	$('#import_schedule').change(function(){
 		var cval = $( this ).val();
 		if(cval  == '2'){
@@ -89,7 +86,7 @@ function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
 var initialize = function() {
 	$("#button_save").click(saveImport);
 	
-}
+};
 
 function saveImport() {
 	 setLoadingDiv($('body'));
