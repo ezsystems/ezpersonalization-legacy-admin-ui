@@ -132,29 +132,32 @@ function getImport() {
 		  dataType: "json",
 		  url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_import/",
 		  success: function(json) {
-			 var url = json.url;
-			 if(url){
-				 $("#url").val(url);
-			 }
-			 var importFr = json.importFr;
-			 if(importFr){
-				 $("#import_schedule").val(importFr);
-			 }
-			 var importWeek = json.importWeek;
-			 if(importWeek){
-				 $("#dayOfweek").val(importWeek);
-			 }
-			 var importHour = json.importHour;
-			 if(importHour){
-				 $("#hourOfday").val(importHour);
-			 }
-			 var itemId = json.itemId;
-			 if(itemId){
-				 $("#itemId").val(itemId);
-			 }
-			 var delimiter = json.delimiter;
-			 if(delimiter){
-				 $("#delimiter").val(delimiter);
+			 var obj = json.importData;
+			 if(obj){
+				 var url = obj.url;
+				 if(url){
+					 $("#url").val(url);
+				 }
+				 var importFr = obj.importFr;
+				 if(importFr){
+					 $("#import_schedule").val(importFr);
+				 }
+				 var importWeek = obj.importWeek;
+				 if(importWeek){
+					 $("#dayOfweek").val(importWeek);
+				 }
+				 var importHour = obj.importHour;
+				 if(importHour){
+					 $("#hourOfday").val(importHour);
+				 }
+				 var itemId = obj.itemId;
+				 if(itemId){
+					 $("#itemId").val(itemId);
+				 }
+				 var delimiter = obj.delimiter;
+				 if(delimiter){
+					 $("#delimiter").val(delimiter);
+				 }
 			 }
 			 unsetLoadingDiv($('body'));
 			 
