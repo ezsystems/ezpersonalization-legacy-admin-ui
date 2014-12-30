@@ -38,7 +38,8 @@ function initialize_first(callback, i18n_save_button) {
 	var result = $.when(
 		loadMandatorInfo(function(json) {
 			mandatorInfo = json;
-		})
+		}),
+		getImport()
 	).done(function(json) {
 		if (callback) {
 			callback();
@@ -112,11 +113,54 @@ function saveImport() {
 		  data: JSON.stringify(retObj),
 		  url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/update_import/",
 		  success: function(json) {
-			  window.location = "configuratorpop.html?reference_code=" + encodeURIComponent(reference_code) + "&customer_id=" + encodeURIComponent(customerID) + "&saved=true";
+			  unsetLoadingDiv($('body'));
+			  setMessagePopUp("positive", "message_data_saved_successfully");
 		  },
 		  error: function() {
 			  unsetLoadingDiv($('body'));
 			  stdAjaxErrorHandler();
+		  }
+	  });
+}
+
+function getImport() {
+	 setLoadingDiv($('body'));
+	$.ajax({
+		  type: "POST",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_import/",
+		  success: function(json) {
+			 var url = json.url;
+			 if(url){
+				 $("#url").val(url);
+			 }
+			 var importFr = json.importFr;
+			 if(importFr){
+				 $("#import_schedule").val(importFr);
+			 }
+			 var importWeek = json.importWeek;
+			 if(importWeek){
+				 $("#dayOfweek").val(importWeek);
+			 }
+			 var importHour = json.importHour;
+			 if(importHour){
+				 $("#hourOfday").val(importHour);
+			 }
+			 var itemId = json.itemId;
+			 if(itemId){
+				 $("#itemId").val(itemId);
+			 }
+			 var delimiter = json.delimiter;
+			 if(delimiter){
+				 $("#delimiter").val(delimiter);
+			 }
+			 unsetLoadingDiv($('body'));
+			 
+		  },
+		  error: function() {
+			  unsetLoadingDiv($('body'));
 		  }
 	  });
 }
