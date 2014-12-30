@@ -142,6 +142,13 @@ function getImport() {
 				 if(importFr){
 					 $("#import_schedule").val(importFr);
 				 }
+				 if(importFr  == '2'){
+						$('#dayOfweek').show();
+						$('#hourOfday').show();
+				 }else if( importFr == '1'){
+						$('#dayOfweek').hide();
+						$('#hourOfday').show();
+				 }
 				 var importWeek = obj.importWeek;
 				 if(importWeek){
 					 $("#dayOfweek").val(importWeek);
