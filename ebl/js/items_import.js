@@ -92,7 +92,7 @@ var initialize = function() {
 };
 
 function submitImport() {
-	$('#import_primary_settings').submit();
+	$('<input type="submit">').hide().appendTo($('#import_primary_settings')).click().remove();
 }
 
 function saveImport() {
@@ -119,4 +119,25 @@ function saveImport() {
 			  stdAjaxErrorHandler();
 		  }
 	  });
+}
+
+function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
+	  if(jqXHR != null && jqXHR.status == 403) {
+		  setMessagePopUp("problem", "error_server_error_403");
+	  }
+	  else if(jqXHR != null && jqXHR.status == 401) {
+		  setMessagePopUp("problem", "error_server_error_401");
+	  }
+	  else if(jqXHR != null && jqXHR.status == 400) {
+		  setMessagePopUp("problem", "error_server_error_400");
+	  }
+	  else if(jqXHR != null && jqXHR.status == 404) {
+		  setMessagePopUp("problem", "error_server_error_404");
+	  }
+	  else if(jqXHR != null && jqXHR.status == 409) {
+		  setMessagePopUp("problem", "error_server_error_409");
+	  }
+	  else {
+		  setMessagePopUp("problem", "error_server_error");
+	  }
 }
