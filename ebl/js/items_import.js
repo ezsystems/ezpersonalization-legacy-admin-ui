@@ -99,19 +99,33 @@ function submitImport() {
 function saveImport() {
 	 setLoadingDiv($('body'));
 	 var retObj = new Object();
-	 retObj.url = $("#url").val();
-	 retObj.importFr = $("#import_schedule").val();
-	 retObj.importWeek = $("#dayOfweek").val();
-	 retObj.importHour = $("#hourOfday").val();
-	 retObj.itemId = $("#itemId").val();
+	 retObj.uri = $("#url").val();
 	 retObj.delimiter = $("#delimiter").val();
+	 retObj.interval = $("#import_schedule").val();
+	 var d = new Date();
+	 var currentDay = d.getDay();
+	 var fromDay =  $("#dayOfweek").val();
+	 var diff = fromDay-currentDay;
+	 if(fromDay < currentDay){
+		 diff = 7+diff; 
+	 }
+	 d.setDate(d.getDate()+diff);
+	 d.setHours($("#hourOfday").val(), 0, 0, 0);
+	 retObj.startDate = d;
+	 retObj.mappings = new Array();
+	 retObj.mappings[0] = new Object();
+	 retObj.mappings[0].key = "itemid";
+	 retObj.mappings[0].value = $("#itemId").val();
+	 retObj.mappings[0].valuePk = true;
+	 retObj.mappings[0].format = "DECIMAL";
+	
 	 $.ajax({
 		  type: "POST",
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
 		  data: JSON.stringify(retObj),
-		  url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/update_import/",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/save_importjob",
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
 			  setMessagePopUp("positive", "message_data_saved_successfully");
@@ -130,7 +144,7 @@ function getImport() {
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_import/",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjobs/",
 		  success: function(json) {
 			 var obj = json.importData;
 			 if(obj){
