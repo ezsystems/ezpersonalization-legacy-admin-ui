@@ -100,6 +100,7 @@ function saveImport() {
 	 setLoadingDiv($('body'));
 	 var retObj = new Object();
 	 retObj.uri = $("#url").val();
+	 retObj.name = encodeURIComponent(customerID)+'_1';
 	 retObj.delimiter = $("#delimiter").val();
 	 retObj.interval = $("#import_schedule").val();
 	 var d = new Date();
