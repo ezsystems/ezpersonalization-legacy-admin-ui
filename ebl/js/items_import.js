@@ -145,7 +145,7 @@ function saveImport() {
 function getImport() {
 	 setLoadingDiv($('body'));
 	$.ajax({
-		  type: "POST",
+		  type: "GET",
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
