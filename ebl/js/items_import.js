@@ -18,13 +18,13 @@ $(document).ready(function() {
 function initialize_first(callback, i18n_save_button) {
 	$('#import_schedule').change(function(){
 		var cval = $( this ).val();
-		if(cval  == '2'){
+		if(cval  == 'WEEKLY'){
 			$('#dayOfweek').show();
 			$('#hourOfday').show();
-		}else if( cval == '1'){
+		}else if( cval == 'DAILY'){
 			$('#dayOfweek').hide();
 			$('#hourOfday').show();
-		}else if( cval == '0'){
+		}else if( cval == 'ONCE'){
 			$('#dayOfweek').hide();
 			$('#hourOfday').hide();
 		}
@@ -103,14 +103,18 @@ function saveImport() {
 	 retObj.delimiter = $("#delimiter").val();
 	 retObj.interval = $("#import_schedule").val();
 	 var d = new Date();
-	 var currentDay = d.getDay();
-	 var fromDay =  $("#dayOfweek").val();
-	 var diff = fromDay-currentDay;
-	 if(fromDay < currentDay){
-		 diff = 7+diff; 
+	 if(retObj.interval = 'WEEKLY'){
+		 var currentDay = d.getDay();
+		 var fromDay =  $("#dayOfweek").val();
+		 var diff = fromDay-currentDay;
+		 if(fromDay < currentDay){
+			 diff = 7+diff; 
+		 }
+		 d.setDate(d.getDate()+diff);
 	 }
-	 d.setDate(d.getDate()+diff);
-	 d.setHours($("#hourOfday").val(), 0, 0, 0);
+	 if(retObj.interval == 'WEEKLY' || retObj.interval == 'DAILY'){
+		 d.setHours($("#hourOfday").val(), 0, 0, 0);
+	 }
 	 retObj.startDate = d;
 	 retObj.mappings = new Array();
 	 retObj.mappings[0] = new Object();
@@ -156,10 +160,10 @@ function getImport() {
 				 if(importFr){
 					 $("#import_schedule").val(importFr);
 				 }
-				 if(importFr  == '2'){
+				 if(importFr  == 'WEEKLY'){
 						$('#dayOfweek').show();
 						$('#hourOfday').show();
-				 }else if( importFr == '1'){
+				 }else if( importFr == 'DAILY'){
 						$('#dayOfweek').hide();
 						$('#hourOfday').show();
 				 }
