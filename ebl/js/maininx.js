@@ -668,7 +668,6 @@ function initialLoadData() {
 var imports = new Array();
 
 function readImportJobs(){
-	setLoadingDiv($('body'));
 	$.ajax({
 		  type: "GET",
 		  mimeType: "application/json",
@@ -702,9 +701,7 @@ function readImportJobs(){
           	$('#importJobs').html(htmlToAppend);
 			  
 		  },
-		  error: function() {
-			  unsetLoadingDiv($('body'));
-		  }
+		  error: mainErrorHandler
 	  });
 }
 
