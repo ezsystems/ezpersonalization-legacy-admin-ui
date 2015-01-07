@@ -103,6 +103,7 @@ function saveImport() {
 	 retObj.name = encodeURIComponent(customerID)+'_1';
 	 retObj.delimiter = $("#delimiter").val();
 	 retObj.interval = $("#import_schedule").val();
+	 retObj.enabled = true;
 	 var d = new Date();
 	 if(retObj.interval = 'WEEKLY'){
 		 var currentDay = d.getDay();
