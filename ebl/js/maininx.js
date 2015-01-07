@@ -653,6 +653,7 @@ function initialLoadData() {
 		$('#createNewImport').off('click').click(function() {
 			$('#itemimportP').show();
 		});
+		readImportJobs();
 		
 	}else{
 		$('#ABTestTab').hide();
@@ -661,6 +662,7 @@ function initialLoadData() {
 	$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
 	$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
  
+	
 }
 
 var imports = new Array();
@@ -684,7 +686,6 @@ function readImportJobs(){
 			      htmlToAppend +='	<div class="tc" data-translate="item_import_start_date">Start Date</div>\n';
 				  htmlToAppend +='</div>';
 				  for(var i = 0; i < json.length; i++) {
-					   htmlToAppend +='<div class="tr test">\n';
 					    var obj = json[i];
 					    var name = obj.name;
 					    var interval = obj.interval;
@@ -698,7 +699,7 @@ function readImportJobs(){
 				  htmlToAppend +='<div>';
 			  }
 			$('#importJobs').empty();
-          	$('#importJobs').append(htmlToAppend);
+          	$('#importJobs').html(htmlToAppend);
 			  
 		  },
 		  error: function() {
