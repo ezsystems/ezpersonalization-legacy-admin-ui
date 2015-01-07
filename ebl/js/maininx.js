@@ -650,7 +650,7 @@ function initialLoadData() {
 		$('#ABTestTab').show();
 		$('#itemImortTab').show();
 		$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
-		$('#itemImortTab').off('click').click(function() {
+		$('#createNewImport').off('click').click(function() {
 			$('#itemimportP').show();
 		});
 		
@@ -663,6 +663,49 @@ function initialLoadData() {
  
 }
 
+var imports = new Array();
+
+function readImportJobs(){
+	setLoadingDiv($('body'));
+	$.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjobs/",
+		  success: function(json) {
+			  var htmlToAppend ='';
+			  if(json.length == 0){
+				  htmlToAppend = '<div id="noTests" data-translate="item_import_no_jobs">you have no import jobs defined</div>';
+			  }else{
+				  htmlToAppend ='<div class="table" style="width: 100%;">\n';
+				  htmlToAppend +='  <div class="tr head">	\n <div class="tc" data-translate="item_import_name_of_job">Name of Import Job</div>\n';
+			      htmlToAppend +='	<div class="tc" data-translate="import_schedule">Schedule Import</div>\n';
+			      htmlToAppend +='	<div class="tc" data-translate="item_import_start_date">Start Date</div>\n';
+				  htmlToAppend +='</div>';
+				  for(var i = 0; i < json.length; i++) {
+					   htmlToAppend +='<div class="tr test">\n';
+					    var obj = json[i];
+					    var name = obj.name;
+					    var interval = obj.interval;
+					    var startdate = obj.startDate;
+					    htmlToAppend +='<div class="tr test">\n';
+					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
+					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
+					    htmlToAppend +=' <div class="tc startdate">'+startdate+'</div>';
+					    htmlToAppend +='</div>';
+				  } 
+				  htmlToAppend +='<div>';
+			  }
+			$('#importJobs').empty();
+          	$('#importJobs').append(htmlToAppend);
+			  
+		  },
+		  error: function() {
+			  unsetLoadingDiv($('body'));
+		  }
+	  });
+}
 
 function renderScenarioList() {
     
