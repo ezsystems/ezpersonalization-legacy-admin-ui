@@ -683,16 +683,27 @@ function readImportJobs(){
 				  htmlToAppend +='  <div class="tr head">	\n <div class="tc" data-translate="item_import_name_of_job">Name of Import Job</div>\n';
 			      htmlToAppend +='	<div class="tc" data-translate="import_schedule">Schedule Import</div>\n';
 			      htmlToAppend +='	<div class="tc" data-translate="item_import_start_date">Start Date</div>\n';
+			      htmlToAppend +='	<div class="tc" data-translate="item_import_last_date">Last Import Date</div>\n';
+			      htmlToAppend +='	<div class="tc" data-translate="item_import_configuration">View Config</div>\n';
+			      htmlToAppend +='	<div class="tc" data-translate="item_import_status">Status</div>\n';
 				  htmlToAppend +='</div>';
 				  for(var i = 0; i < json.length; i++) {
 					    var obj = json[i];
 					    var name = obj.name;
 					    var interval = obj.interval;
 					    var startdate = obj.startDate;
+					    var enabled = obj.enabled;
+					    var statusURL = 'img/red.png';
+					    if(enabled){
+					    	statusURL = 'img/blue.png';
+					    }
 					    htmlToAppend +='<div class="tr test">\n';
 					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
 					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
 					    htmlToAppend +=' <div class="tc startdate">'+startdate+'</div>';
+					    htmlToAppend +=' <div class="tc lastimport">none</div>';
+					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+');$(\'#itemimportP\').show();">Edit</a> </div>';
+					    htmlToAppend +=' <div class="tc jobstatus"><img src="'+statusURL+'" /></div>';
 					    htmlToAppend +='</div>';
 				  } 
 				  htmlToAppend +='<div>';
