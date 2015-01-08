@@ -693,6 +693,7 @@ function readImportJobs(){
 					    var interval = obj.interval;
 					    var startdate = obj.startDate;
 					    var enabled = obj.enabled;
+					    var id=obj.id;
 					    var statusURL = 'img/red.png';
 					    if(enabled){
 					    	statusURL = 'img/blue.png';
