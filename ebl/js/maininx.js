@@ -703,7 +703,7 @@ function readImportJobs(){
 					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
 					    htmlToAppend +=' <div class="tc startdate">'+startdate+'</div>';
 					    htmlToAppend +=' <div class="tc lastimport">none</div>';
-					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+');$(\'#itemimportP\').show();">Edit</a> </div>';
+					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+'\');$(\'#itemimportP\').show();">Edit</a> </div>';
 					    htmlToAppend +=' <div class="tc jobstatus"><img src="'+statusURL+'" /></div>';
 					    htmlToAppend +='</div>';
 				  } 
