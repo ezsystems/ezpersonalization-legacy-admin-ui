@@ -154,7 +154,7 @@ function getImport() {
 		  dataType: "json",
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjob?jobId="+importJobId,
 		  success: function(json) {
-			 var obj = json.ImportJob;
+			 var obj = json;
 			 if(obj){
 				 var url = obj.uri;
 				 if(url){
@@ -171,20 +171,25 @@ function getImport() {
 						$('#dayOfweek').hide();
 						$('#hourOfday').show();
 				 }
-				 var importWeek = obj.importWeek;
+				 var startDate = obj.startDate;
+				 
+				 var importWeek = startDate.getDay();
 				 if(importWeek){
 					 $("#dayOfweek").val(importWeek);
 				 }
-				 var importHour = obj.importHour;
+				 var importHour = startDate.d.getHours();
 				 if(importHour){
 					 $("#hourOfday").val(importHour);
 				 }
 				 var maps = obj.mappings;
+				 var itemId = false;
 				 for(var i = 0;i<maps.length; i++){
 					 var map = maps[i];
+					 if(map.valuePk){
+						 itemId = map.value;
+					 }
 					
 				 }
-				 var itemId = obj.itemId;
 				 if(itemId){
 					 $("#itemId").val(itemId);
 				 }
