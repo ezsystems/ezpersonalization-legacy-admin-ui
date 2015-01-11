@@ -152,7 +152,7 @@ function getImport() {
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjob?jobId="+importJobId,
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjob/"+importJobId,
 		  success: function(json) {
 			 var obj = json;
 			 if(obj){
