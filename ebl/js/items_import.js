@@ -184,7 +184,7 @@ function getImport() {
 					 if(importWeek){
 						 $("#dayOfweek").val(importWeek);
 					 }
-					 var importHour = startDate.d.getHours();
+					 var importHour = startDate.getHours();
 					 if(importHour){
 						 $("#hourOfday").val(importHour);
 					 }
