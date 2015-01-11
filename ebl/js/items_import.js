@@ -1,4 +1,6 @@
-var customerID = gup('customer_id');
+var customerID = gupEncoded('customer_id');
+var importJobId = gupEncoded('importJobId');
+
 var mandatorInfo;
 
 $(document).ready(function() {
@@ -150,15 +152,15 @@ function getImport() {
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjobs/",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjob?jobId="+importJobId,
 		  success: function(json) {
-			 var obj = json.importData;
+			 var obj = json.ImportJob;
 			 if(obj){
-				 var url = obj.url;
+				 var url = obj.uri;
 				 if(url){
 					 $("#url").val(url);
 				 }
-				 var importFr = obj.importFr;
+				 var importFr = obj.interval;
 				 if(importFr){
 					 $("#import_schedule").val(importFr);
 				 }
@@ -176,6 +178,11 @@ function getImport() {
 				 var importHour = obj.importHour;
 				 if(importHour){
 					 $("#hourOfday").val(importHour);
+				 }
+				 var maps = obj.mappings;
+				 for(var i = 0;i<maps.length; i++){
+					 var map = maps[i];
+					
 				 }
 				 var itemId = obj.itemId;
 				 if(itemId){
