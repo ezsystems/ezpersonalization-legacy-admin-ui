@@ -101,6 +101,9 @@ function submitImport() {
 function saveImport() {
 	 setLoadingDiv($('body'));
 	 var retObj = new Object();
+	 if(retObjOld){
+		 retObj = retObjOld;
+	 }
 	 retObj.uri = $("#url").val();
 	 retObj.name = encodeURIComponent(customerID)+'_1';
 	 retObj.delimiter = $("#delimiter").val();
@@ -145,66 +148,71 @@ function saveImport() {
 	  });
 }
 
+var retObjOld;
+
 function getImport() {
-	 setLoadingDiv($('body'));
-	$.ajax({
-		  type: "GET",
-		  mimeType: "application/json",
-		  contentType: "application/json;charset=UTF-8",
-		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjob/"+importJobId,
-		  success: function(json) {
-			 var obj = json;
-			 if(obj){
-				 var url = obj.uri;
-				 if(url){
-					 $("#url").val(url);
-				 }
-				 var importFr = obj.interval;
-				 if(importFr){
-					 $("#import_schedule").val(importFr);
-				 }
-				 if(importFr  == 'WEEKLY'){
-						$('#dayOfweek').show();
-						$('#hourOfday').show();
-				 }else if( importFr == 'DAILY'){
-						$('#dayOfweek').hide();
-						$('#hourOfday').show();
-				 }
-				 var startDate = obj.startDate;
-				 
-				 var importWeek = startDate.getDay();
-				 if(importWeek){
-					 $("#dayOfweek").val(importWeek);
-				 }
-				 var importHour = startDate.d.getHours();
-				 if(importHour){
-					 $("#hourOfday").val(importHour);
-				 }
-				 var maps = obj.mappings;
-				 var itemId = false;
-				 for(var i = 0;i<maps.length; i++){
-					 var map = maps[i];
-					 if(map.valuePk){
-						 itemId = map.value;
+	if(importJobId){
+		setLoadingDiv($('body'));
+		$.ajax({
+			  type: "GET",
+			  mimeType: "application/json",
+			  contentType: "application/json;charset=UTF-8",
+			  dataType: "json",
+			  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjob/"+importJobId,
+			  success: function(json) {
+				 var obj = json;
+				 if(obj){
+					 retObjOld = obj;
+					 var url = obj.uri;
+					 if(url){
+						 $("#url").val(url);
 					 }
-					
+					 var importFr = obj.interval;
+					 if(importFr){
+						 $("#import_schedule").val(importFr);
+					 }
+					 if(importFr  == 'WEEKLY'){
+							$('#dayOfweek').show();
+							$('#hourOfday').show();
+					 }else if( importFr == 'DAILY'){
+							$('#dayOfweek').hide();
+							$('#hourOfday').show();
+					 }
+					 var startDate = new Date(obj.startDate);
+					 
+					 var importWeek = startDate.getDay();
+					 if(importWeek){
+						 $("#dayOfweek").val(importWeek);
+					 }
+					 var importHour = startDate.d.getHours();
+					 if(importHour){
+						 $("#hourOfday").val(importHour);
+					 }
+					 var maps = obj.mappings;
+					 var itemId = false;
+					 for(var i = 0;i<maps.length; i++){
+						 var map = maps[i];
+						 if(map.valuePk){
+							 itemId = map.value;
+						 }
+						
+					 }
+					 if(itemId){
+						 $("#itemId").val(itemId);
+					 }
+					 var delimiter = obj.delimiter;
+					 if(delimiter){
+						 $("#delimiter").val(delimiter);
+					 }
 				 }
-				 if(itemId){
-					 $("#itemId").val(itemId);
-				 }
-				 var delimiter = obj.delimiter;
-				 if(delimiter){
-					 $("#delimiter").val(delimiter);
-				 }
-			 }
-			 unsetLoadingDiv($('body'));
-			 
-		  },
-		  error: function() {
-			  unsetLoadingDiv($('body'));
-		  }
-	  });
+				 unsetLoadingDiv($('body'));
+				 
+			  },
+			  error: function() {
+				  unsetLoadingDiv($('body'));
+			  }
+		  });
+	}
 }
 
 function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
