@@ -1,5 +1,5 @@
-var customerID = gupEncoded('customer_id');
-var importJobId = gupEncoded('importJobId');
+var customerID = gup('customer_id');
+var importJobId = gup('importJobId');
 
 var mandatorInfo;
 
