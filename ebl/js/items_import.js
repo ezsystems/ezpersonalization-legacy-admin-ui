@@ -125,6 +125,9 @@ function saveImport() {
 	 retObj.startDate = d;
 	 retObj.mappings = new Array();
 	 retObj.mappings[0] = new Object();
+	 if(itemIdPk){
+		 retObj.mappings[0].id = itemIdPk;
+	 }
 	 retObj.mappings[0].key = "itemid";
 	 retObj.mappings[0].value = $("#itemId").val();
 	 retObj.mappings[0].valuePk = true;
@@ -149,6 +152,7 @@ function saveImport() {
 }
 
 var retObjOld;
+var itemIdPk;
 
 function getImport() {
 	if(importJobId){
@@ -194,6 +198,7 @@ function getImport() {
 						 var map = maps[i];
 						 if(map.valuePk){
 							 itemId = map.value;
+							 itemIdPk = map.id;
 						 }
 						
 					 }
