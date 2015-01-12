@@ -125,8 +125,10 @@ function saveImport() {
 	 retObj.startDate = d;
 	 retObj.mappings = new Array();
 	 retObj.mappings[0] = new Object();
+	 var urlsufix = '/save_importjob';
 	 if(itemIdPk){
 		 retObj.mappings[0].id = itemIdPk;
+		 urlsufix = '/update_importjob';
 	 }
 	 retObj.mappings[0].key = "itemid";
 	 retObj.mappings[0].value = $("#itemId").val();
@@ -139,7 +141,7 @@ function saveImport() {
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
 		  data: JSON.stringify(retObj),
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/save_importjob",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + urlsufix,
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
 			  setMessagePopUp("positive", "message_data_saved_successfully");
