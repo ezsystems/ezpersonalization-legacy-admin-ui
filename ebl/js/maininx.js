@@ -680,14 +680,7 @@ function readImportJobs(){
 			  if(json.length == 0){
 				  htmlToAppend = '<div id="noTests" data-translate="item_import_no_jobs">you have no import jobs defined</div>';
 			  }else{
-				  htmlToAppend ='<div class="table" style="width: 100%;">\n';
-				  htmlToAppend +='  <div class="tr head">	\n <div class="tc" data-translate="item_import_name_of_job">Name of Import Job</div>\n';
-			      htmlToAppend +='	<div class="tc" data-translate="import_schedule">Schedule Import</div>\n';
-			      htmlToAppend +='	<div class="tc" data-translate="item_import_start_date">Start Date</div>\n';
-			      htmlToAppend +='	<div class="tc" data-translate="item_import_last_date">Last Import Date</div>\n';
-			      htmlToAppend +='	<div class="tc" data-translate="item_import_configuration">View Config</div>\n';
-			      htmlToAppend +='	<div class="tc" data-translate="item_import_status">Status</div>\n';
-				  htmlToAppend +='</div>';
+				
 				  for(var i = 0; i < json.length; i++) {
 					    var obj = json[i];
 					    var name = obj.name;
@@ -710,8 +703,9 @@ function readImportJobs(){
 				  } 
 				  htmlToAppend +='<div>';
 			  }
-			$('#importJobs').empty();
-          	$('#importJobs').html(htmlToAppend);
+			$('#importJobsTable').empty();  
+          	$('#importJobsTable').append(htmlToAppend);
+          	$('#importJobsTable').show();
 			  
 		  },
 		  error: mainErrorHandler
