@@ -128,7 +128,6 @@ function saveImport() {
 	 var urlsufix = '/save_importjob';
 	 if(itemIdPk){
 		 retObj.mappings[0].id = itemIdPk;
-		 urlsufix = '/update_importjob';
 	 }
 	 retObj.mappings[0].key = "itemid";
 	 retObj.mappings[0].value = $("#itemId").val();
