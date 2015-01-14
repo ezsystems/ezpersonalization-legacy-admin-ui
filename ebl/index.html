@@ -338,6 +338,7 @@
 		  <ul class="options_menu">
 			  <li class="tab"  data-target="#available_scenarios" data-controls="#scenarioControls"><label data-translate="index_your_scenarios"></label></li>
 			  <li class="tab" id="ABTestTab" data-target="#ABTests" data-controls="#abControls" style="display: none;"><label  data-translate="ab_test_ab_tests"></label></li>
+			  <li class="tab" id="itemImortTab"  data-target="#importJobs" style="display: none;" data-controls="#itemImortControls" ><label  data-translate="item_import"></label></li>
 		  </ul>
         <!--<h3 class="tab" data-translate="index_your_scenarios" data-target="#available_scenarios" data-controls="#scenarioControls"></h3>-->
 		<!--<h3 class="tab" data-translate="ab_test_ab_tests" data-target="#ABTests" data-controls="#abControls"></h3>-->
@@ -349,6 +350,10 @@
 			<a id="createNewTest" class="create_new" data-translate="ab_test_create_new_test"></a>
 			<a class="helpLink" data-target="#ABHelp"></a>
 		</div>
+		<div id="itemImortControls" class="controls" style="display: none;">
+			<a id="createNewImport" class="create_new" data-translate="item_import_create_new_job"></a>
+		</div>
+		
       </header>
       <ul id="available_scenarios" class="available_scenarios clearfix tabContent" style="min-height: 150px;">
         <li class="dummy_scenario" style="display:none; heigth: 100ex;">
@@ -366,6 +371,18 @@
           </div>
         </li>
       </ul>
+		<div id="importJobs" class="importItems tabContent" style="display: none;">
+			<div class="table" id="importJobsTable" style="width: 100%;display: none;">
+				<div class="tr head" id = "import_head">
+					<div class="tc" data-translate="item_import_name_of_job">Name of Import Job</div>
+					<div class="tc" data-translate="import_schedule">Schedule Import</div>
+				    <div class="tc" data-translate="item_import_start_date">Start Date</div>
+				    <div class="tc" data-translate="item_import_last_date">Last Import Date</div>
+				    <div class="tc" data-translate="item_import_configuration">View Config</div>
+				    <div class="tc" data-translate="item_import_status">Status</div>
+				</div>
+			</div>
+		</div>
 		<div id="ABTests" class="abView tabContent" style="display: none">
 			<div id="noTests" data-translate="ab_test_no_tests_configured">you have no tests defined</div>
 			<div id="testList" style="display: none;">
@@ -660,6 +677,15 @@
 			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
 				<a class="closeOverlay" style="position:absolute; top:-1em; right:-1em;">X</a>
 				<iframe id ='settingsF' style="width: 100%; height: 100%;"></iframe>
+			</div>
+		</div>
+	</div>
+	
+	<div id="itemimportP" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
+		<div class="content" id="contentFrame" style="width: 900px; height: 400px; min-height: 45%; position: relative;">
+			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
+				<a class="closeOverlay" style="position:absolute; top:-1em; right:-1em;">X</a>
+				<iframe id ='itemimportF' style="width: 100%; height: 100%;"></iframe>
 			</div>
 		</div>
 	</div>

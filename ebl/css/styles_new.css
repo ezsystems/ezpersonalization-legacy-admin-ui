@@ -589,6 +589,7 @@ input[type="text"].inverted {
 }
 
 .normal_form input[type="text"],
+.normal_form input[type="url"],
 .normal_form input[type="password"] {
   line-height: 28px;
 }
@@ -2157,6 +2158,19 @@ body > .cover{
 }
 
 #ABTests .tr:nth-child(odd){
+    background-color: rgba(235, 235, 235, 1);
+}
+
+#importJobs .tc.results a:hover, #ABTests .tc.config a:hover, #ABTests .tc.remove a:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#importJobs .tr.head{
+    font-weight: 700;
+}
+
+#importJobs .tr:nth-child(odd){
     background-color: rgba(235, 235, 235, 1);
 }
 

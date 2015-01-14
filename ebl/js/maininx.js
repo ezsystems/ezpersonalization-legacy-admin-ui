@@ -84,6 +84,9 @@ $(document).ready(function() {
 	$('#settingsP .closeOverlay').click(function () {
 		window.parent.history.replaceState(null, null, "/");
 	});
+	$('#itemimportP .closeOverlay').click(function () {
+		 readImportJobs();
+	});
 	
 	$('section  div.index_mandator').hover(function() {
 		$(this).find('.index_hover').css('display', 'table-row');
@@ -156,6 +159,8 @@ var ajaxScenarioList = function(new_period, callback) {
 	if (!customerID) {
 		return;
 	}
+	
+	$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID)); 
 	
 	setLoadingDiv($('#statistic_charts'));
 	setLoadingDiv($('.available_scenarios'));
@@ -678,14 +683,71 @@ function initialLoadData() {
     
 	if(mandatorDao.getVersion() == 'EXTENDED'){
 		$('#ABTestTab').show();
+		$('#itemImortTab').show();
+		$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
+		$('#createNewImport').off('click').click(function() {
+			$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
+			$('#itemimportP').show();
+		});
+		readImportJobs();
+		
 	}else{
 		$('#ABTestTab').hide();
+		$('#itemImortTab').hide();
 	}
 	$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
 	$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
  
+	
 }
 
+var imports = new Array();
+
+function readImportJobs(){
+	$.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjobs/",
+		  success: function(json) {
+			  var htmlToAppend ='';
+			  if(json.length == 0){
+				  htmlToAppend = '<div id="noTests" data-translate="item_import_no_jobs">you have no import jobs defined</div>';
+			  }else{
+				
+				  for(var i = 0; i < json.length; i++) {
+					    var obj = json[i];
+					    var name = obj.name;
+					    var interval = obj.interval;
+					    var startdate = obj.startDate;
+					    var enabled = obj.enabled;
+					    var id=obj.id;
+					    var statusURL = 'img/red.png';
+					    if(enabled){
+					    	statusURL = 'img/blue.png';
+					    }
+					    htmlToAppend +='<div class="tr test">\n';
+					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
+					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
+					    htmlToAppend +=' <div class="tc startdate">'+startdate+'</div>';
+					    htmlToAppend +=' <div class="tc lastimport">none</div>';
+					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+'\');$(\'#itemimportP\').show();">Edit</a> </div>';
+					    htmlToAppend +=' <div class="tc jobstatus"><img src="'+statusURL+'" /></div>';
+					    htmlToAppend +='</div>';
+				  } 
+				  htmlToAppend +='<div>';
+			  }
+			var header = $('#import_head').clone();
+			$('#importJobsTable').empty(); 
+			$('#importJobsTable').append(header);
+          	$('#importJobsTable').append(htmlToAppend);
+          	$('#importJobsTable').show();
+			  
+		  },
+		  error: mainErrorHandler
+	  });
+}
 
 function renderScenarioList() {
     
