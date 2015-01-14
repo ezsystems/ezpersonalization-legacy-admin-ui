@@ -338,9 +338,10 @@ function initialize() {
 
 
 function switchState(state, pushState) {
-	if (state == "contract") {
-		openContractDetails(pushState);
-	} else if (state == "personal") {
+//	if (state == "contract") {
+//		openContractDetails(pushState);
+//	} else 
+	if (state == "personal") {
 		openPersonalDetails(pushState);
 	} else if (state == "license") {
 		openLicenseKey(pushState);		
@@ -441,31 +442,41 @@ function openPersonalDetails(pushState) {
 }
 
 
-/** Opens the popup "Edit contact data".
- */
-function openContractDetails(pushState) {
+///** Opens the popup "Edit contact data".
+// */
+//function openContractDetails(pushState, a) {
+//
+//	var mandator = mandatorDao.mandator;
+//	if (! mandator) {
+//		console.log("No mandator loaded. Unable to open Pactas/Customer popup.");
+//		return;
+//	}
+//	
+//	var custId = mandatorDao.getId();
+//
+//	yooAjax("header.top_head", {
+//		type: "POST", // but no data
+//        url: "/api/v4/base/create_self_service_token/" + encodeURIComponent(custId),
+//        success: function (json) {
+////        	$('#pactasPopup iframe').attr("src", json.url);
+////        	$('#pactasPopup').show();
+//        	
+//        	$(a).attr("href", json.url);
+//        	
+////        	closePopupIfOpen("pactas_contract_details");
+////        	var win = window.open(json.url, "pactas_contract_details", "width=800, height=550, scrollbars=yes", true);
+////        	win.focus();
+////        	setTimeout(function(){win.focus();},1000);
+////        	switchHistoryState("contract", pushState);
+//        },
+//    });	
+//}
 
-	var mandator = mandatorDao.mandator;
-	if (! mandator) {
-		console.log("No mandator loaded. Unable to open Pactas/Customer popup.");
-		return;
+function closePopupIfOpen(popupName){
+	if(typeof(window[popupName]) != 'undefined' && !window[popupName].closed){
+		window[popupName].close();
 	}
-	
-	var custId = mandatorDao.getId();
-
-	yooAjax("header.top_head", {
-		type: "POST", // but no data
-        url: "/api/v4/base/create_self_service_token/" + encodeURIComponent(custId),
-        success: function (json) {
-        	$('#pactasPopup iframe').attr("src", json.url);
-        	$('#pactasPopup').show();
-        	
-        	switchHistoryState("contract", pushState);
-        },
-    });	
 }
-
-
 
 var ifExtended = function() {
 	  var solution = mandatorDao.mandator.baseInformation.version;
@@ -610,10 +621,31 @@ function initialLoadData() {
 		$("#edit_personal_datal").show();
 	}
 	
+	$('#edit_contact_datal').hide();
+	
 	if (coma == 'PACTAS') {
-		$('#edit_contact_datal').show();
-	} else {
-		$('#edit_contact_datal').hide();
+		
+		var custId = mandatorDao.getId();
+
+		yooAjax("header.top_head", {
+			type: "POST", // but no data
+	        url: "/api/v4/base/create_self_service_token/" + encodeURIComponent(custId),
+	        success: function (json) {
+//	        	$('#pactasPopup iframe').attr("src", json.url);
+//	        	$('#pactasPopup').show();
+	        	
+	        	$('#edit_contact_datal').attr("href", json.url);
+	        	
+	        	$('#edit_contact_datal').show();
+	        	
+//	        	closePopupIfOpen("pactas_contract_details");
+//	        	var win = window.open(json.url, "pactas_contract_details", "width=800, height=550, scrollbars=yes", true);
+//	        	win.focus();
+//	        	setTimeout(function(){win.focus();},1000);
+//	        	switchHistoryState("contract", pushState);
+	        },
+	    });	
+		
 	}
 	
 	
