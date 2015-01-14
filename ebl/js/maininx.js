@@ -84,6 +84,9 @@ $(document).ready(function() {
 	$('#settingsP .closeOverlay').click(function () {
 		window.parent.history.replaceState(null, null, "/");
 	});
+	$('#itemimportP .closeOverlay').click(function () {
+		 readImportJobs();
+	});
 	
 	$('section  div.index_mandator').hover(function() {
 		$(this).find('.index_hover').css('display', 'table-row');
@@ -703,7 +706,9 @@ function readImportJobs(){
 				  } 
 				  htmlToAppend +='<div>';
 			  }
-			$('#importJobsTable').empty();  
+			var header = $('#import_head').clone();
+			$('#importJobsTable').empty(); 
+			$('#importJobsTable').append(header);
           	$('#importJobsTable').append(htmlToAppend);
           	$('#importJobsTable').show();
 			  
