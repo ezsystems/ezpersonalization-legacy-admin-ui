@@ -41,6 +41,7 @@ function initialize_first(callback, i18n_save_button) {
 		loadMandatorInfo(function(json) {
 			mandatorInfo = json;
 		}),
+		loadTypes(),
 		getImport()
 	).done(function(json) {
 		if (callback) {
@@ -48,6 +49,21 @@ function initialize_first(callback, i18n_save_button) {
 		}
 	});
 	return result;
+}
+
+function loadTypes(){
+	var defaultItemType = mandatorInfo.itemTypeConfiguration.defaultType;
+	$("#input_type_block select").html(""); // removing all options
+	for (var i in mandatorInfo.itemTypeConfiguration.types) {
+		var t = mandatorInfo.itemTypeConfiguration.types[i];
+		var d = t.description + ' (' + t.id + ')';
+		var selectedTxt = '';
+		if(t.id == defaultItemType ){
+			selectedTxt = ' id="defaultInItemType" selected = "selected" ';
+			console.log("defaultItemType="+defaultItemType+".");
+		}
+		$('<option value="' + t.id + '"'+selectedTxt+'></option>').appendTo($("#input_type_block select")).text(d);	
+	}
 }
 
 function loadMandatorInfo(callback) {
