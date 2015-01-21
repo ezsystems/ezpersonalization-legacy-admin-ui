@@ -683,12 +683,12 @@ function initialLoadData() {
     
 	if(mandatorDao.getVersion() == 'EXTENDED'){
 		$('#ABTestTab').show();
-		/*$('#itemImortTab').show();
+		$('#itemImortTab').show();
 		$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
 		$('#createNewImport').off('click').click(function() {
 			$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
 			$('#itemimportP').show();
-		});*/
+		});
 		readImportJobs();
 		
 	}else{
