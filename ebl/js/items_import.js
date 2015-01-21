@@ -120,6 +120,7 @@ function saveImport() {
 	 if(retObjOld){
 		 retObj = retObjOld;
 	 }
+	 retObj.itemType = $("#input_type").val();
 	 retObj.uri = $("#url").val();
 	 retObj.name = encodeURIComponent(customerID)+'_1';
 	 retObj.delimiter = $("#delimiter").val();
