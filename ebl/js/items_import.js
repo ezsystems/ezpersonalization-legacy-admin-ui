@@ -41,9 +41,9 @@ function initialize_first(callback, i18n_save_button) {
 		loadMandatorInfo(function(json) {
 			mandatorInfo = json;
 		}),
-		loadTypes(),
 		getImport()
 	).done(function(json) {
+		loadTypes();
 		if (callback) {
 			callback();
 		}
