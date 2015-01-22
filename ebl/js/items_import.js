@@ -160,7 +160,7 @@ function saveImport() {
 	 retObj.mappings[0].key = "itemid";
 	 retObj.mappings[0].value = $("#itemId").val();
 	 retObj.mappings[0].valuePk = true;
-	 retObj.mappings[0].format = "DECIMAL";
+	 retObj.mappings[0].valueFormat = "DECIMAL";
 	
 	 $.ajax({
 		  type: "POST",
