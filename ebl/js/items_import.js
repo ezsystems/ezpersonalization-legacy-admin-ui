@@ -53,6 +53,9 @@ function initialize_first(callback, i18n_save_button) {
 
 function loadTypes(){
 	var defaultItemType = mandatorInfo.itemTypeConfiguration.defaultType;
+	if(itemTypeFromJob){
+		defaultItemType = itemTypeFromJob;
+	}
 	$("#input_type_block select").html(""); // removing all options
 	for (var i in mandatorInfo.itemTypeConfiguration.types) {
 		var t = mandatorInfo.itemTypeConfiguration.types[i];
@@ -122,6 +125,14 @@ function saveImport() {
 	 }
 	 retObj.itemType = $("#input_type").val();
 	 retObj.uri = $("#url").val();
+	 var username = $("#username").val();
+	 if(username && username.trim().length > 0){
+		 retObj.username = username;
+	 }
+	 var password = $("#password").val();
+	 if(password && password.trim().length > 0){
+		 retObj.password = password;
+	 }
 	 retObj.name = encodeURIComponent(customerID)+'_1';
 	 retObj.delimiter = $("#delimiter").val();
 	 retObj.interval = $("#import_schedule").val();
@@ -171,6 +182,7 @@ function saveImport() {
 
 var retObjOld;
 var itemIdPk;
+var itemTypeFromJob;
 
 function getImport() {
 	if(importJobId){
@@ -189,6 +201,15 @@ function getImport() {
 					 if(url){
 						 $("#url").val(url);
 					 }
+					 var username = obj.username;
+					 if(username && username.trim().length > 0){
+						 $("#username").val(username);
+					 }
+					 var password = obj.password;
+					 if(password && password.trim().length > 0){
+						 $("#password").val(password);
+					 }
+					 itemTypeFromJob = obj.itemType;
 					 var importFr = obj.interval;
 					 if(importFr){
 						 $("#import_schedule").val(importFr);
