@@ -117,9 +117,34 @@ function submitImport() {
 	$('<input type="submit">').hide().appendTo($('#import_primary_settings')).click().remove();
 }
 
+var retObj;
+
+function getCSVFields(){
+	setLoadingDiv($('body'));
+	if(retObj){
+		var urlsufix = '/get_csv_fields';
+		 $.ajax({
+			  type: "POST",
+			  mimeType: "application/json",
+			  contentType: "application/json;charset=UTF-8",
+			  dataType: "json",
+			  data: JSON.stringify(retObj),
+			  url: "/api/v4/" + encodeURIComponent(customerID) + urlsufix,
+			  success: function(json) {
+				  setMessagePopUp("positive", json);
+			  },
+			  error: function() {
+				  stdAjaxErrorHandler();
+			  }
+		  });
+		
+	}
+	unsetLoadingDiv($('body'));
+}
+
 function saveImport() {
 	 setLoadingDiv($('body'));
-	 var retObj = new Object();
+	 retObj = new Object();
 	 if(retObjOld){
 		 retObj = retObjOld;
 	 }
@@ -172,6 +197,7 @@ function saveImport() {
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
 			  setMessagePopUp("positive", "message_data_saved_successfully");
+			  getCSVFields();
 		  },
 		  error: function() {
 			  unsetLoadingDiv($('body'));
