@@ -36,6 +36,10 @@ function initialize_first(callback, i18n_save_button) {
 		saveImport();
 		return false;
     });
+	$('#"import_secondary_settings"').submit(function () {
+		saveImport2();
+		return false;
+    });
 
 	var result = $.when(
 		loadMandatorInfo(function(json) {
@@ -110,6 +114,7 @@ function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
 
 var initialize = function() {
 	$("#button_save").click(submitImport);
+	$("#button_save2").click(submitImport2);
 	
 };
 
@@ -117,7 +122,12 @@ function submitImport() {
 	$('<input type="submit">').hide().appendTo($('#import_primary_settings')).click().remove();
 }
 
+function submitImport2() {
+	$('<input type="submit">').hide().appendTo($('#import_secondary_settings')).click().remove();
+}
+
 var retObj;
+var csvFields;
 
 function getCSVFields(){
 	setLoadingDiv($('body'));
@@ -131,7 +141,54 @@ function getCSVFields(){
 			  data: JSON.stringify(retObj),
 			  url: "/api/v4/" + encodeURIComponent(customerID) + urlsufix,
 			  success: function(json) {
-				  setMessagePopUp("positive", json);
+				  var htmlToSet ='';
+				  var fields = json.fields;
+				  csvFields = fields;
+				  for(var i=0;i<fields.length;i++){
+					  var field = fields[i];
+					 
+					  htmlToSet += '<li class="types_base select_field clearfix">\n'+
+						'<div class="basis" >\n'+
+							'<label for="field'+i+'" id="name_field'+i+' class="input_label" style="text-align: left;">'+field+'</label>\n'+
+			            '</div>\n'+
+						'<div class="value">\n'+
+							'<select id="field'+i+'" name="field'+i+'">\n'+
+							    '<option value="id"  selected="selected" >ID</option>\n'+
+							    '<option value="title"   >Title</option>\n'+
+							    '<option value="imgurl"   >Image URL</option>\n'+
+							    '<option value="description"   >Description</option>\n'+
+							    '<option value="price"   >Price</option>\n'+
+							    '<option value="currency"   >Currency</option>\n'+
+							    '<option value="validfrom"  >Valid from</option>\n'+
+							    '<option value="validto"  >Valid to</option>\n'+
+							    '<option value="categorypath"  >Categorypath</option>\n'+
+							    '<option value="author"  >Author</option>\n'+
+							    '<option value="agency"  >Agency</option>\n'+
+							    '<option value="vendor"  >Vendor</option>\n'+
+							    '<option value="geolocation"  >Geolocation</option>\n'+
+							    '<option value="abstract"  >Abstract</option>\n'+
+							    '<option value="tags"  >Tags</option>\n'+
+							    '<option value="vendor"  >Vendor</option>\n'+
+							'</select>\n'+
+							'<select id="type_field'+i+'" name="type_field'+i+'">\n'+
+								'<option value="DECIMAL"  selected="selected" >NUMERIC</option>\n'+
+								'<option value="TEXT"   >TEXT</option>\n'+
+								'<option value="YYYYMMDD"   >YYYYMMDD</option>\n'+
+								'<option value="DDYYMMMM"  >DDYYMMMM</option>\n'+
+								'<option value="YYYYMMDD_HHMISS" >YYYYMMDD_HHMISS</option>\n'+
+								'<option value="DDYYMMMM_HHMISS"  >DDYYMMMM_HHMISS</option>\n'+
+								'<option value="URI" >URI</option>\n'+
+								'<option value="CURRENCY">CURRENCY</option>\n'+
+							'</select>\n'+
+						'</div>\n'+
+			          '</li>\n';
+				  }
+				  $("#import_secondary_settings_ul").html(htmlToSet);
+				  $("#import_primary_settings").hide();
+				  $("#import_secondary_settings").show();
+				  $("#button_save").hide();
+				  $("#button_save2").show();
+
 			  },
 			  error: function() {
 				  stdAjaxErrorHandler();
@@ -140,6 +197,48 @@ function getCSVFields(){
 		
 	}
 	unsetLoadingDiv($('body'));
+}
+
+function saveImport2() {
+	if(retObj && csvFields) {
+		setLoadingDiv($('body'));
+		
+		 retObj.mappings = new Array();
+		 for(var i=0;i<csvFields.length;i++){
+			 var fid="field"+i;
+			 var fidn="name_field"+i;
+			 var fidv="type_field"+i;
+			 retObj.mappings[i] = new Object();
+			 retObj.mappings[i].key = $("#"+fid).val(); 
+			 retObj.mappings[i].value = $("#"+fidn).val();
+			 if(retObj.mappings[i].key == 'id'){
+				 retObj.mappings[i].valuePk = true;
+			 }else{
+				 retObj.mappings[i].valuePk = false;
+			 }
+			 retObj.mappings[i].valueFormat = $("#"+fidv).val(); ;
+		 }
+		 
+		
+		 var urlsufix = '/save_importjob';
+		 $.ajax({
+			  type: "POST",
+			  mimeType: "application/json",
+			  contentType: "application/json;charset=UTF-8",
+			  dataType: "json",
+			  data: JSON.stringify(retObj),
+			  url: "/api/v4/" + encodeURIComponent(customerID) + urlsufix,
+			  success: function(json) {
+				  unsetLoadingDiv($('body'));
+				  retObj = json;
+				  setMessagePopUp("positive", "message_data_saved_successfully");
+			  },
+			  error: function() {
+				  unsetLoadingDiv($('body'));
+				  stdAjaxErrorHandler();
+			  }
+		  });
+	}
 }
 
 function saveImport() {
@@ -177,15 +276,7 @@ function saveImport() {
 	 }
 	 retObj.startDate = d;
 	 retObj.mappings = new Array();
-	 retObj.mappings[0] = new Object();
-	 var urlsufix = '/save_importjob';
-	 if(itemIdPk){
-		 retObj.mappings[0].id = itemIdPk;
-	 }
-	 retObj.mappings[0].key = "itemid";
-	 retObj.mappings[0].value = $("#itemId").val();
-	 retObj.mappings[0].valuePk = true;
-	 retObj.mappings[0].valueFormat = "DECIMAL";
+	 
 	
 	 $.ajax({
 		  type: "POST",
@@ -196,7 +287,7 @@ function saveImport() {
 		  url: "/api/v4/" + encodeURIComponent(customerID) + urlsufix,
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
-			  setMessagePopUp("positive", "message_data_saved_successfully");
+			  retObj = json;
 			  getCSVFields();
 		  },
 		  error: function() {
