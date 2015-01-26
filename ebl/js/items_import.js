@@ -36,7 +36,7 @@ function initialize_first(callback, i18n_save_button) {
 		saveImport();
 		return false;
     });
-	$('#import_secondary_settings"').submit(function () {
+	$('#import_secondary_settings').submit(function () {
 		saveImport2();
 		return false;
     });
@@ -124,7 +124,7 @@ function submitImport() {
 
 function submitImport2() {
 	$('<input type="submit">').hide().appendTo($('#import_secondary_settings')).click().remove();
-}
+}//#import_secondary_settings
 
 var retObj;
 var csvFields;
