@@ -154,7 +154,7 @@ function getCSVFields(){
 						'<div class="value">\n'+
 							'<select id="field'+i+'" name="field'+i+'" onchange="changeType(\''+i+'\');">\n'+
 								'<option value="notfu"  selected="selected" >CUSTOM</option>\n'+
-							    '<option value="id"  selected="selected" >ID</option>\n'+
+							    '<option value="id"  >ID</option>\n'+
 							    '<option value="title"   >Title</option>\n'+
 							    '<option value="imgurl"   >Image URL</option>\n'+
 							    '<option value="description"   >Description</option>\n'+
