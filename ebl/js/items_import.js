@@ -152,7 +152,8 @@ function getCSVFields(){
 							'<label for="field'+i+'" id="name_field'+i+' class="input_label" style="text-align: left;">'+field+'</label>\n'+
 			            '</div>\n'+
 						'<div class="value">\n'+
-							'<select id="field'+i+'" name="field'+i+'">\n'+
+							'<select id="field'+i+'" name="field'+i+'" onchange="changeType(\''+i+'\');">\n'+
+								'<option value="notfu"  selected="selected" >CUSTOM</option>\n'+
 							    '<option value="id"  selected="selected" >ID</option>\n'+
 							    '<option value="title"   >Title</option>\n'+
 							    '<option value="imgurl"   >Image URL</option>\n'+
@@ -171,8 +172,8 @@ function getCSVFields(){
 							    '<option value="vendor"  >Vendor</option>\n'+
 							'</select>\n'+
 							'<select id="type_field'+i+'" name="type_field'+i+'">\n'+
-								'<option value="DECIMAL"  selected="selected" >NUMERIC</option>\n'+
-								'<option value="TEXT"   >TEXT</option>\n'+
+								'<option value="DECIMAL"   >NUMERIC</option>\n'+
+								'<option value="TEXT"  selected="selected" >TEXT</option>\n'+
 								'<option value="YYYYMMDD"   >YYYYMMDD</option>\n'+
 								'<option value="DDYYMMMM"  >DDYYMMMM</option>\n'+
 								'<option value="YYYYMMDD_HHMISS" >YYYYMMDD_HHMISS</option>\n'+
@@ -199,24 +200,44 @@ function getCSVFields(){
 	unsetLoadingDiv($('body'));
 }
 
+function changeType(typeId){
+	var valType = $("#field"+typeId).val();
+	if(valType == 'id' || valType == 'price'){
+		$("#type_field"+typeId).val("DECIMAL");
+	}else{
+		if(valType == 'imgurl' ){
+			$("#type_field"+typeId).val("URI");
+		}else{
+			if(valType == 'validfrom' || valType == 'validto'){
+				$("#type_field"+typeId).val("YYYYMMDD");
+			}
+		}
+	}
+		
+}
+
 function saveImport2() {
 	if(retObj && csvFields) {
 		setLoadingDiv($('body'));
 		
 		 retObj.mappings = new Array();
+		 var j = 0;
 		 for(var i=0;i<csvFields.length;i++){
 			 var fid="field"+i;
 			 var fidn="name_field"+i;
 			 var fidv="type_field"+i;
-			 retObj.mappings[i] = new Object();
-			 retObj.mappings[i].key = $("#"+fid).val(); 
-			 retObj.mappings[i].value = $("#"+fidn).val();
-			 if(retObj.mappings[i].key == 'id'){
-				 retObj.mappings[i].valuePk = true;
-			 }else{
-				 retObj.mappings[i].valuePk = false;
+			 if( $("#"+fid).val() != 'notfu'){
+				 retObj.mappings[j] = new Object();
+				 retObj.mappings[j].key = $("#"+fid).val(); 
+				 retObj.mappings[j].value = $("#"+fidn).val();
+				 if(retObj.mappings[j].key == 'id'){
+					 retObj.mappings[j].valuePk = true;
+				 }else{
+					 retObj.mappings[j].valuePk = false;
+				 }
+				 retObj.mappings[j].valueFormat = $("#"+fidv).val();
+				 j++;
 			 }
-			 retObj.mappings[i].valueFormat = $("#"+fidv).val(); ;
 		 }
 		 
 		
