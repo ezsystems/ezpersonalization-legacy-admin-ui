@@ -276,7 +276,7 @@ function saveImport() {
 	 }
 	 retObj.startDate = d;
 	 retObj.mappings = new Array();
-	 
+	 var urlsufix = '/save_importjob';
 	
 	 $.ajax({
 		  type: "POST",
