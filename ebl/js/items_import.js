@@ -295,27 +295,8 @@ function saveImport() {
 	 if(retObj.interval == 'WEEKLY' || retObj.interval == 'DAILY'){
 		 d.setHours($("#hourOfday").val(), 0, 0, 0);
 	 }
-	 retObj.startDate = d;
-	 retObj.mappings = new Array();
-	 var urlsufix = '/save_importjob';
-	
-	 $.ajax({
-		  type: "POST",
-		  mimeType: "application/json",
-		  contentType: "application/json;charset=UTF-8",
-		  dataType: "json",
-		  data: JSON.stringify(retObj),
-		  url: "/api/v4/" + encodeURIComponent(customerID) + urlsufix,
-		  success: function(json) {
-			  unsetLoadingDiv($('body'));
-			  retObj = json;
-			  getCSVFields();
-		  },
-		  error: function() {
-			  unsetLoadingDiv($('body'));
-			  stdAjaxErrorHandler();
-		  }
-	  });
+	 retObj.startDate = d;	
+	 getCSVFields();
 }
 
 var retObjOld;
