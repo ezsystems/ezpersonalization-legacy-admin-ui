@@ -36,7 +36,7 @@ function initialize_first(callback, i18n_save_button) {
 		saveImport();
 		return false;
     });
-	$('#"import_secondary_settings"').submit(function () {
+	$('#import_secondary_settings"').submit(function () {
 		saveImport2();
 		return false;
     });
