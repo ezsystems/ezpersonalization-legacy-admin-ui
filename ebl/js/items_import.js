@@ -171,7 +171,7 @@ function getCSVFields(){
 							    '<option value="tags"  >Tags</option>\n'+
 							    '<option value="vendor"  >Vendor</option>\n'+
 							'</select>\n'+
-							'<select id="type_field'+i+'" name="type_field'+i+'">\n'+
+							'<select id="type_field'+i+'" name="type_field'+i+'"  onchange="addPrefix(\''+i+'\');">\n'+
 								'<option value="DECIMAL"   >NUMERIC</option>\n'+
 								'<option value="TEXT"  selected="selected" >TEXT</option>\n'+
 								'<option value="YYYYMMDD"   >YYYYMMDD</option>\n'+
@@ -181,6 +181,7 @@ function getCSVFields(){
 								'<option value="URI" >URI</option>\n'+
 								'<option value="CURRENCY">CURRENCY</option>\n'+
 							'</select>\n'+
+							'<input type="url" id="prefixURL'+i+'" name="prefixURL'+i+'" placeholder="Prefix URL" value="" style="display: none;" />'+
 						'</div>\n'+
 			          '</li>\n';
 				  }
@@ -189,6 +190,21 @@ function getCSVFields(){
 				  $("#import_secondary_settings").show();
 				  $("#button_save").hide();
 				  $("#button_save2").show();
+				  if(retObj.mappings){
+					  for(var i = 0; i <  retObj.mappings.length ;i++){
+						  for(var j = 0;j<fields.length;j++){
+							  var field = fields[i];
+							  var val = retObj.mappings[i].value;
+							  if(val && val == field){
+								  $("#field"+j).val(retObj.mappings[i].key);
+								  $("#type_field"+j).val(retObj.mappings[i].valueFormat);
+								  if(retObj.mappings[j].valueFormat == 'URI'){
+									  $("#prefixURL"+j).val(retObj.mappings[i].valuePrefix);
+								  }
+							  }
+						  }
+					  }
+				  }
 
 			  },
 			  error: function() {
@@ -198,6 +214,15 @@ function getCSVFields(){
 		
 	}
 	unsetLoadingDiv($('body'));
+}
+
+function addPrefix(typeId){
+	var valType = $("#type_field"+typeId).val();
+	if(valType == 'URI'){
+		$("#prefixURL"+typeId).show();
+	}else{
+		$("#prefixURL"+typeId).hide();
+	}
 }
 
 function changeType(typeId){
@@ -219,7 +244,6 @@ function changeType(typeId){
 function saveImport2() {
 	if(retObj && csvFields) {
 		setLoadingDiv($('body'));
-		
 		 retObj.mappings = new Array();
 		 var j = 0;
 		 for(var i=0;i<csvFields.length;i++){
@@ -236,6 +260,9 @@ function saveImport2() {
 					 retObj.mappings[j].valuePk = false;
 				 }
 				 retObj.mappings[j].valueFormat = $("#"+fidv).val();
+				 if(retObj.mappings[j].valueFormat == 'URI' && $("#prefixURL"+i).val() != null && $("#prefixURL"+i).val() != '' ){
+					 retObj.mappings[j].valuePrefix = $("#prefixURL"+i).val();
+				 }
 				 j++;
 			 }
 		 }
@@ -283,7 +310,7 @@ function saveImport() {
 	 retObj.interval = $("#import_schedule").val();
 	 retObj.enabled = true;
 	 var d = new Date();
-	 if(retObj.interval = 'WEEKLY'){
+	 if(retObj.interval == 'WEEKLY'){
 		 var currentDay = d.getDay();
 		 var fromDay =  $("#dayOfweek").val();
 		 var diff = fromDay-currentDay;
