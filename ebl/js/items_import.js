@@ -254,7 +254,7 @@ function saveImport2() {
 			 if( $("#"+fid).val() != 'notfu'){
 				 retObj.mappings[j] = new Object();
 				 retObj.mappings[j].key = $("#"+fid).val(); 
-				 retObj.mappings[j].value = $("#"+fidn).val();
+				 retObj.mappings[j].value = $("#"+fidn).html();
 				 if(retObj.mappings[j].key == 'id'){
 					 retObj.mappings[j].valuePk = true;
 				 }else{
