@@ -171,7 +171,7 @@ function getCSVFields(){
 							    '<option value="tags"  >Tags</option>\n'+
 							    '<option value="vendor"  >Vendor</option>\n'+
 							'</select>\n'+
-							'<select id="type_field'+i+'" name="type_field'+i+'"  onchange="addPrefix(\''+i+'\');">\n'+
+							'<select id="type_field'+i+'" name="type_field'+i+'"  onchange="addPrefix('+i+');">\n'+
 								'<option value="DECIMAL"   >NUMERIC</option>\n'+
 								'<option value="TEXT"  selected="selected" >TEXT</option>\n'+
 								'<option value="YYYYMMDD"   >YYYYMMDD</option>\n'+
@@ -192,14 +192,14 @@ function getCSVFields(){
 				  $("#button_save2").show();
 				  if(retObj.mappings){
 					  for(var i = 0; i <  retObj.mappings.length ;i++){
+						  var val = retObj.mappings[i].value;
 						  for(var j = 0;j<fields.length;j++){
-							  var field = fields[i];
-							  var val = retObj.mappings[i].value;
+							  var field = fields[j];
 							  if(val && val == field){
 								  console.log("key: "+retObj.mappings[i].key+" for value: "+val);
 								  $("#field"+j).val(retObj.mappings[i].key);
 								  $("#type_field"+j).val(retObj.mappings[i].valueFormat);
-								  if(retObj.mappings[j].valueFormat == 'URI'){
+								  if(retObj.mappings[i].valueFormat == 'URI'){
 									  $("#prefixURL"+j).val(retObj.mappings[i].valuePrefix);
 								  }
 							  }
@@ -230,12 +230,15 @@ function changeType(typeId){
 	var valType = $("#field"+typeId).val();
 	if(valType == 'id' || valType == 'price'){
 		$("#type_field"+typeId).val("DECIMAL");
+		$("#prefixURL"+typeId).hide();
 	}else{
 		if(valType == 'imgurl' ){
 			$("#type_field"+typeId).val("URI");
+			$("#prefixURL"+typeId).show();
 		}else{
 			if(valType == 'validfrom' || valType == 'validto'){
 				$("#type_field"+typeId).val("YYYYMMDD");
+				$("#prefixURL"+typeId).hide();
 			}
 		}
 	}
