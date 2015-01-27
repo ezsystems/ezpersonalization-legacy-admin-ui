@@ -149,7 +149,7 @@ function getCSVFields(){
 					 
 					  htmlToSet += '<li class="types_base select_field clearfix">\n'+
 						'<div class="basis" >\n'+
-							'<label for="field'+i+'" id="name_field'+i+' class="input_label" style="text-align: left;">'+field+'</label>\n'+
+							'<label for="field'+i+'" id="name_field'+i+'" class="input_label" style="text-align: left;">'+field+'</label>\n'+
 			            '</div>\n'+
 						'<div class="value">\n'+
 							'<select id="field'+i+'" name="field'+i+'" onchange="changeType(\''+i+'\');">\n'+
