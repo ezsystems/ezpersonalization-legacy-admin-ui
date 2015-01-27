@@ -200,7 +200,10 @@ function getCSVFields(){
 								  $("#field"+j).val(retObj.mappings[i].key);
 								  $("#type_field"+j).val(retObj.mappings[i].valueFormat);
 								  if(retObj.mappings[i].valueFormat == 'URI'){
-									  $("#prefixURL"+j).val(retObj.mappings[i].valuePrefix);
+									  if(retObj.mappings[i].valuePrefix){
+										  $("#prefixURL"+j).val(retObj.mappings[i].valuePrefix);
+									  }
+									  $("#prefixURL"+j).show();
 								  }
 							  }
 						  }
@@ -326,7 +329,11 @@ function saveImport() {
 	 if(retObj.interval == 'WEEKLY' || retObj.interval == 'DAILY'){
 		 d.setHours($("#hourOfday").val(), 0, 0, 0);
 	 }
-	 retObj.startDate = d;	
+	 retObj.startDate = d;
+	 if($("#input_language").val() != 'notUsed'){
+		 retObj.language = $("#input_language").val();
+	 }
+	 
 	 getCSVFields();
 }
 
@@ -397,6 +404,9 @@ function getImport() {
 					 var delimiter = obj.delimiter;
 					 if(delimiter){
 						 $("#delimiter").val(delimiter);
+					 }
+					 if(obj.language){
+						 $("#input_language").val(obj.language); 
 					 }
 				 }
 				 unsetLoadingDiv($('body'));
