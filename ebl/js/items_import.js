@@ -327,7 +327,7 @@ function saveImport() {
 		 d.setDate(d.getDate()+diff);
 	 }
 	 if(retObj.interval == 'WEEKLY' || retObj.interval == 'DAILY'){
-		 d.setHours($("#hourOfday").val(), 0, 0, 0);
+		 d.setHours($("#hourOfday").val(), 0, 0);
 	 }
 	 retObj.startDate = d;
 	 if($("#input_language").val() != 'notUsed'){
