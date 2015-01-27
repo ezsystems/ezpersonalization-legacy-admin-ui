@@ -196,6 +196,7 @@ function getCSVFields(){
 							  var field = fields[i];
 							  var val = retObj.mappings[i].value;
 							  if(val && val == field){
+								  console.log("key: "+retObj.mappings[i].key+" for value: "+val);
 								  $("#field"+j).val(retObj.mappings[i].key);
 								  $("#type_field"+j).val(retObj.mappings[i].valueFormat);
 								  if(retObj.mappings[j].valueFormat == 'URI'){
