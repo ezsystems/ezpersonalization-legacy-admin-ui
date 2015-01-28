@@ -690,7 +690,7 @@ function initialLoadData() {
 			$('#itemimportP').show();
 		});
 		readImportJobs();
-		
+		*/
 	}else{
 		$('#ABTestTab').hide();
 		$('#itemImortTab').hide();
