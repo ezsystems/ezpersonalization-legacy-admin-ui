@@ -275,7 +275,7 @@ function saveImport2() {
 		 }
 		 
 		
-		 var urlsufix = '/save_importjob';
+		 var urlsufix = '/import/save_importjob';
 		 $.ajax({
 			  type: "POST",
 			  mimeType: "application/json",
@@ -349,7 +349,7 @@ function getImport() {
 			  mimeType: "application/json",
 			  contentType: "application/json;charset=UTF-8",
 			  dataType: "json",
-			  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjob/"+importJobId,
+			  url: "/api/v4/" + encodeURIComponent(customerID) + "/import/get_importjob/"+importJobId,
 			  success: function(json) {
 				 var obj = json;
 				 if(obj){
