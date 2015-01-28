@@ -709,7 +709,7 @@ function readImportJobs(){
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/get_importjobs/",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/import/get_importjobs/",
 		  success: function(json) {
 			  var htmlToAppend ='';
 			  if(json.length == 0){
