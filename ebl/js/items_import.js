@@ -132,7 +132,7 @@ var csvFields;
 function getCSVFields(){
 	setLoadingDiv($('body'));
 	if(retObj){
-		var urlsufix = '/get_csv_fields';
+		var urlsufix = '/import/get_csv_fields';
 		 $.ajax({
 			  type: "POST",
 			  mimeType: "application/json",
