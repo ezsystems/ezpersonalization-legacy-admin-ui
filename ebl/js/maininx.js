@@ -688,9 +688,9 @@ function initialLoadData() {
 		$('#createNewImport').off('click').click(function() {
 			$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
 			$('#itemimportP').show();
-		});*/
+		});
 		readImportJobs();
-		
+		*/
 	}else{
 		$('#ABTestTab').hide();
 		$('#itemImortTab').hide();
