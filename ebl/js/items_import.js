@@ -342,11 +342,11 @@ function saveImport() {
 	 }else{
 		 retObj.name = "ONE TIME ";
 	 }
-	 retObj.name = retObj.name+ " "+ $("#input_type").html()+" IMPORT ";
+	 retObj.name = retObj.name+ " "+ $("#input_type").find(":selected").text()+" IMPORT ";
 	 retObj.startDate = d;
 	 if($("#input_language").val() != 'notUsed'){
 		 retObj.language = $("#input_language").val();
-		 retObj.name = retObj.name+ " IN "+ $("#input_language").html();
+		 retObj.name = retObj.name+ " IN "+ $("#input_language").find(":selected").text();
 	 }
 	 
 	 getCSVFields();
