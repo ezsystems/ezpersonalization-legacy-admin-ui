@@ -252,6 +252,7 @@ function saveImport2() {
 	if(retObj && csvFields) {
 		setLoadingDiv($('body'));
 		 retObj.mappings = new Array();
+		 var foundID = 0;
 		 var j = 0;
 		 for(var i=0;i<csvFields.length;i++){
 			 var fid="field"+i;
@@ -263,6 +264,7 @@ function saveImport2() {
 				 retObj.mappings[j].value = $("#"+fidn).html();
 				 if(retObj.mappings[j].key == 'id'){
 					 retObj.mappings[j].valuePk = true;
+					 foundID++;
 				 }else{
 					 retObj.mappings[j].valuePk = false;
 				 }
@@ -273,7 +275,15 @@ function saveImport2() {
 				 j++;
 			 }
 		 }
-		 
+		 if(foundID != 1){
+			 unsetLoadingDiv($('body'));
+			 if(foundID == 0){
+				 setMessagePopUp("problem", "item_import_error_must_set_id");
+			 }else{
+				 setMessagePopUp("problem", "item_import_error_only_one_id");
+			 }
+			 return;
+		 }
 		
 		 var urlsufix = '/import/save_importjob';
 		 $.ajax({
