@@ -349,7 +349,6 @@ function saveImport() {
 		 retObj.name = retObj.name+ " IN "+ $("#input_language").html();
 	 }
 	 
-	 retObj.name = encodeURIComponent(customerID)+'_'+retObj.itemType;
 	 getCSVFields();
 }
 
