@@ -322,7 +322,7 @@ function saveImport() {
 	 if(password && password.trim().length > 0){
 		 retObj.password = password;
 	 }
-	 retObj.name = encodeURIComponent(customerID)+'_1';
+	
 	 retObj.delimiter = $("#delimiter").val();
 	 retObj.interval = $("#import_schedule").val();
 	 retObj.enabled = true;
@@ -338,12 +338,18 @@ function saveImport() {
 	 }
 	 if(retObj.interval == 'WEEKLY' || retObj.interval == 'DAILY'){
 		 d.setHours($("#hourOfday").val(), 0, 0);
+		 retObj.name = retObj.interval;
+	 }else{
+		 retObj.name = "ONE TIME ";
 	 }
+	 retObj.name = retObj.name+ " "+ $("#input_type").html()+" IMPORT ";
 	 retObj.startDate = d;
 	 if($("#input_language").val() != 'notUsed'){
 		 retObj.language = $("#input_language").val();
+		 retObj.name = retObj.name+ " IN "+ $("#input_language").html();
 	 }
 	 
+	 retObj.name = encodeURIComponent(customerID)+'_'+retObj.itemType;
 	 getCSVFields();
 }
 
