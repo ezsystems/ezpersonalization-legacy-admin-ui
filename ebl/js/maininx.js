@@ -721,6 +721,7 @@ function readImportJobs(){
 					    var name = obj.name;
 					    var interval = obj.interval;
 					    var startdate = obj.startDate;
+					    var lastRun  = obj.lastRun;
 					    var enabled = obj.enabled;
 					    var id=obj.id;
 					    var statusURL = 'img/red.png';
@@ -731,7 +732,7 @@ function readImportJobs(){
 					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
 					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
 					    htmlToAppend +=' <div class="tc startdate">'+startdate+'</div>';
-					    htmlToAppend +=' <div class="tc lastimport">none</div>';
+					    htmlToAppend +=' <div class="tc lastimport">'+lastRun+'</div>';
 					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+'\');$(\'#itemimportP\').show();">Edit</a> </div>';
 					    htmlToAppend +=' <div class="tc jobstatus"><img src="'+statusURL+'" /></div>';
 					    htmlToAppend +='</div>';
