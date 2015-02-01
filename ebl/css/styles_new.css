@@ -2161,7 +2161,7 @@ body > .cover{
     background-color: rgba(235, 235, 235, 1);
 }
 
-#importJobs .tc.results a:hover, #ABTests .tc.config a:hover, #ABTests .tc.remove a:hover{
+#importJobs .tc.results a:hover, #importJobs .tc.config a:hover, #importJobs .tc.remove a:hover{
     text-decoration: underline;
     cursor: pointer;
 }
@@ -2171,6 +2171,19 @@ body > .cover{
 }
 
 #importJobs .tr:nth-child(odd){
+    background-color: rgba(235, 235, 235, 1);
+}
+
+#itemimportHistoryP .tc.results a:hover, #itemimportHistoryP .tc.config a:hover, #itemimportHistoryP .tc.remove a:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#itemimportHistoryP .tr.head{
+    font-weight: 700;
+}
+
+#itemimportHistoryP .tr:nth-child(odd){
     background-color: rgba(235, 235, 235, 1);
 }
 

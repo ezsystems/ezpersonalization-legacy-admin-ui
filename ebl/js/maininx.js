@@ -722,6 +722,9 @@ function readImportJobs(){
 					    var interval = obj.interval;
 					    var startdate = obj.startDate;
 					    var lastRun  = obj.lastRun;
+					    if(!lastRun){
+					    	lastRun = 'nope';
+					    }
 					    var enabled = obj.enabled;
 					    var id=obj.id;
 					    var statusURL = 'img/red.png';
@@ -733,6 +736,7 @@ function readImportJobs(){
 					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
 					    htmlToAppend +=' <div class="tc startdate">'+startdate+'</div>';
 					    htmlToAppend +=' <div class="tc lastimport">'+lastRun+'</div>';
+					    htmlToAppend +=' <div class="tc showHistory"><a onclick="showImportHistory('+obj.id+')">Show History</a> </div>';
 					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+'\');$(\'#itemimportP\').show();">Edit</a> </div>';
 					    htmlToAppend +=' <div class="tc jobstatus"><img src="'+statusURL+'" /></div>';
 					    htmlToAppend +='</div>';
@@ -744,6 +748,50 @@ function readImportJobs(){
 			$('#importJobsTable').append(header);
           	$('#importJobsTable').append(htmlToAppend);
           	$('#importJobsTable').show();
+			  
+		  },
+		  error: mainErrorHandler
+	  });
+}
+
+function showImportHistory(jobId) {
+	$.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/import/get_importjobHistory/"+jobId,
+		  success: function(json) {
+			  var htmlToAppend ='';
+			  if(json.length == 0){
+				  htmlToAppend = '<div id="noTests" data-translate="item_import_no_history">no import history for this job found</div>';
+			  }else{
+				
+				  for(var i = 0; i < json.length; i++) {
+					    var obj = json[i];
+					    var startTime = obj.runtime;
+					    var finishTime = obj.runtime;
+					    var amount = obj.amount;
+					    var log = obj.log;
+	
+					    if(!finishTime){
+					    	finishTime = 'nope';
+					    }
+					   
+					    htmlToAppend +='<div class="tr test">\n';
+					    htmlToAppend +=' <div class="tc startTime">'+startTime+'</div>';
+					    htmlToAppend +=' <div class="tc finishTime">'+finishTime+'</div>';
+					    htmlToAppend +=' <div class="tc amount">'+amount+'</div>';
+					    htmlToAppend +=' <div class="tc log"><a href="'+log+'"> show log </a></div>';
+					    htmlToAppend +='</div>';
+				  } 
+				  htmlToAppend +='<div>';
+			  }
+			var header = $('#import_history_head').clone();
+			$('#importJobsHistoryTable').empty(); 
+			$('#importJobsHistoryTable').append(header);
+        	$('#importJobsHistoryTable').append(htmlToAppend);
+        	$('#itemimportHistoryP').show();
 			  
 		  },
 		  error: mainErrorHandler
