@@ -172,12 +172,10 @@ function getCSVFields(){
 							    '<option value="vendor"  >Vendor</option>\n'+
 							'</select>\n'+
 							'<select id="type_field'+i+'" name="type_field'+i+'"  onchange="addPrefix('+i+');">\n'+
-								'<option value="DECIMAL"   >NUMERIC</option>\n'+
+								'<option value="NUMERIC"   >NUMERIC</option>\n'+
 								'<option value="TEXT"  selected="selected" >TEXT</option>\n'+
-								'<option value="YYYYMMDD"   >YYYYMMDD</option>\n'+
-								'<option value="DDYYMMMM"  >DDYYMMMM</option>\n'+
-								'<option value="YYYYMMDD_HHMISS" >YYYYMMDD_HHMISS</option>\n'+
-								'<option value="DDYYMMMM_HHMISS"  >DDYYMMMM_HHMISS</option>\n'+
+								'<option value="DATE_ISO"   >DATE ISO</option>\n'+
+								'<option value="DATETIME_ISO"  >DATETIME ISO</option>\n'+
 								'<option value="URI" >URI</option>\n'+
 								'<option value="CURRENCY">CURRENCY</option>\n'+
 							'</select>\n'+
