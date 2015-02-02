@@ -770,7 +770,7 @@ function showImportHistory(jobId) {
 				  for(var i = 0; i < json.length; i++) {
 					    var obj = json[i];
 					    var startTime = obj.runtime;
-					    var finishTime = obj.runtime;
+					    var finishTime = obj.finishtime;
 					    var amount = obj.amount;
 					    var log = obj.log;
 	
