@@ -782,7 +782,7 @@ function showImportHistory(jobId) {
 					    htmlToAppend +=' <div class="tc startTime">'+startTime+'</div>';
 					    htmlToAppend +=' <div class="tc finishTime">'+finishTime+'</div>';
 					    htmlToAppend +=' <div class="tc amount">'+amount+'</div>';
-					    htmlToAppend +=' <div class="tc log" id="logFiles'+i+'"><a  onclick="showLogFiles('+log+',"logFiles'+i+'");">show log </a></div>'; 
+					    htmlToAppend +=' <div class="tc log" id="logFiles'+i+'"><a  onclick="showLogFiles(\''+log+'\',\'logFiles'+i+'\');">show log </a></div>';
 					    //htmlToAppend +=' <div class="tc log"><a href="/api/v4/'+ encodeURIComponent(customerID) +log+'"> show log </a></div>';
 					    htmlToAppend +='</div>';
 				  } 
@@ -800,19 +800,24 @@ function showImportHistory(jobId) {
 }
 
 function showLogFiles(log,appenderId) {
-		$.ajax({
-			  type: "GET",
-			  mimeType: "application/json",
-			  contentType: "application/json;charset=UTF-8",
-			  dataType: "text/html",
-			  url: "/api/v4/" + encodeURIComponent(customerID) + log,
-			  success: function(json) {
-				  $('#'+appenderId).html(json) ; 
-			  },
-			  error: mainErrorHandler
-		  });
-	 
+    $.get( "/api/v4/" + encodeURIComponent(customerID) + log, function( data ) {
+            $('#'+appenderId).html(data) ;
+    });
+
+    //$.ajax({
+    //        type: "GET",
+    //        mimeType: "application/json",
+    //        contentType: "application/json;charset=UTF-8",
+    //        dataType: "text/html",
+    //        url: "/api/v4/" + encodeURIComponent(customerID) + log.replace(' ','/'),
+    //        complete: function(json) {
+    //                $('#'+appenderId).html(json) ;
+    //        },
+    //        error: mainErrorHandler
+      //});
+
 }
+
 
 function renderScenarioList() {
     
