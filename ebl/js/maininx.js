@@ -327,7 +327,7 @@ function initialize() {
     		openScenarioDialog(customerID, open_reference_code);
     	} else {
     		var anchor = anchorDecoded();
-    		switchState(anchor, false)
+    		switchState(anchor, false);
     	}
     });	
 	
@@ -805,6 +805,13 @@ function showLogFiles(log,appenderId) {
     });
 }
 
+function showSpecificLog(urlLog){
+	
+	 $.get(urlLog, function( data ) {
+         $('#importJobsHistoryLogTable').html(data) ;
+         $('#itemimportHistoryLogP').show();
+ });
+}
 
 function renderScenarioList() {
     
