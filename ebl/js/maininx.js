@@ -803,19 +803,6 @@ function showLogFiles(log,appenderId) {
     $.get( "/api/v4/" + encodeURIComponent(customerID) + log, function( data ) {
             $('#'+appenderId).html(data) ;
     });
-
-    //$.ajax({
-    //        type: "GET",
-    //        mimeType: "application/json",
-    //        contentType: "application/json;charset=UTF-8",
-    //        dataType: "text/html",
-    //        url: "/api/v4/" + encodeURIComponent(customerID) + log.replace(' ','/'),
-    //        complete: function(json) {
-    //                $('#'+appenderId).html(json) ;
-    //        },
-    //        error: mainErrorHandler
-      //});
-
 }
 
 
