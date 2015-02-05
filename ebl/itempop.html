@@ -52,6 +52,8 @@
 				</div>
 				<div class="value">
 					<input type="url" id="url" required="required" name="url" placeholder="URL" value="" />
+					<input type="text" id="username"  name="username" placeholder="USERNAME" value="" />
+					<input type="password" id="password"  name="password" placeholder="PASSWORD" value="" />
 				</div>
 	          </li>
 	          
@@ -66,21 +68,10 @@
 						<option value="WEEKLY" data-translate="import_weekly">Weekly</option>
 					</select>
 					<select id="dayOfweek" name="dayOfweek" style="display: none;"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="7">Sunday</option></select>
-					<select id="hourOfday" name="hourOfday" style="display: none;"><option value="0">00:00 UTC</option><option value="1">01:00 UTC</option><option value="2">02:00 UTC</option><option value="3">03:00 UTC</option><option value="4">04:00 UTC</option><option value="5">05:00 UTC</option><option value="6">06:00 UTC</option><option value="7">07:00 UTC</option><option value="8">08:00 UTC</option><option value="9">09:00 UTC</option><option value="10">10:00 UTC</option><option value="11">11:00 UTC</option><option value="12">12:00 UTC</option><option value="13">13:00 UTC</option><option value="14">14:00 UTC</option><option value="15">15:00 UTC</option><option value="16">16:00 UTC</option><option value="17">17:00 UTC</option><option value="18">18:00 UTC</option><option value="19">19:00 UTC</option><option value="20">20:00 UTC</option><option value="21">21:00 UTC</option><option value="22">22:00 UTC</option><option value="23">23:00 UTC</option></select>
+					<select id="hourOfday" name="hourOfday" style="display: none;"><option value="0">00:00</option><option value="1">01:00</option><option value="2">02:00</option><option value="3">03:00</option><option value="4">04:00</option><option value="5">05:00</option><option value="6">06:00</option><option value="7">07:00</option><option value="8">08:00</option><option value="9">09:00</option><option value="10">10:00</option><option value="11">11:00</option><option value="12">12:00</option><option value="13">13:00</option><option value="14">14:00</option><option value="15">15:00</option><option value="16">16:00</option><option value="17">17:00</option><option value="18">18:00</option><option value="19">19:00</option><option value="20">20:00</option><option value="21">21:00</option><option value="22">22:00</option><option value="23">23:00</option></select>
 				</div>
 	          </li>
-	          
-	          <li class="scenario_id text_field clearfix">
-				<div class="basis tooltip_trigger" >
-					<label for="itemId" data-translate="item_import_itemId" style="text-align: left;">Item ID field name:</label>
-			        <span class="tooltip">
-			          <span data-translate="index_objects_tooltip">Some content.</span>
-			        </span>
-				</div>
-				<div class="value">
-					<input type="text" required="required" id="itemId" name="itemId"  placeholder="Item ID field name" value="" />
-				</div>
-	          </li>
+	         
 	          
 	          <li class="scenario_id text_field clearfix">
 				<div class="basis tooltip_trigger" >
@@ -93,18 +84,178 @@
 					<input type="text" id="delimiter" required="required" name="delimiter" maxlength="3" placeholder="Data delimiter" value="" />
 				</div>
 	          </li>
-	          
-			  
+	          <li class="types_base select_field clearfix" id="input_type_block">
+				<div class="basis">
+					<label for="input_type" class="input_label" data-translate="settings_input_type" style="text-align: left;">Input type:</label>
+	            </div>
+				<div class="value">
+					<select id="input_type" name="input_type">
+						<option value="1" data-translate="settings_product">Product</option>
+						<option value="2" data-translate="settings_article">Article</option>
+					</select>
+				</div>
+	          </li>
+			   <li class="types_base select_field clearfix" id="input_lang_block">
+				<div class="basis">
+					<label for="input_lang" class="input_label" data-translate="item_import_language" style="text-align: left;">Input Language:</label>
+	            </div>
+				<div class="value">
+					<select id="input_language" name="input_language">
+						<option value="notUsed">-</option>
+						<option value="af">Afrikaans</option>
+						<option value="sq">Albanian - Shqip</option>
+						<option value="am">Amharic - አማርኛ</option>
+						<option value="ar">Arabic - العربية</option>
+						<option value="hy">Armenian - հայերեն</option>
+						<option value="az">Azerbaijani - azərbaycan</option>
+						<option value="eu">Basque - euskara</option>
+						<option value="be">Belarusian - беларуская</option>
+						<option value="bn">Bengali - বাংলা</option>
+						<option value="bh">Bihari</option>
+						<option value="bs">Bosnian - bosanski</option>
+						<option value="br">Breton - brezhoneg</option>
+						<option value="bg">Bulgarian - български</option>
+						<option value="ca">Catalan - català</option>
+						<option value="zh">Chinese - 中文</option>
+						<option value="zh-CN">Chinese (Simplified) - 中文（简体中文）</option>
+						<option value="zh-TW">Chinese (Traditional) - 中文（繁體字）</option>
+						<option value="co">Corsican</option>
+						<option value="hr">Croatian - hrvatski</option>
+						<option value="cs">Czech - čeština</option>
+						<option value="da">Danish - dansk</option>
+						<option value="nl">Dutch - Nederlands</option>
+						<option value="en" >English</option>
+						<option value="en-AU">English (Australia)</option>
+						<option value="en-CA">English (Canada)</option>
+						<option value="en-NZ">English (New Zealand)</option>
+						<option value="en-ZA">English (South Africa)</option>
+						<option value="en-GB">English (United Kingdom)</option>
+						<option value="en-US" >English (United States)</option>
+						<option value="eo">Esperanto - esperanto</option>
+						<option value="et">Estonian - eesti</option>
+						<option value="fo">Faroese - føroyskt</option>
+						<option value="fil">Filipino</option>
+						<option value="fi">Finnish - suomi</option>
+						<option value="fr">French - français</option>
+						<option value="fr-CA">French (Canada) - français (Canada)</option>
+						<option value="fr-FR">French (France) - français (France)</option>
+						<option value="fr-CH">French (Switzerland) - français (Suisse)</option>
+						<option value="gl">Galician - galego</option>
+						<option value="ka">Georgian - ქართული</option>
+						<option value="de">German - Deutsch</option>
+						<option value="de-AT">German (Austria) - Deutsch (Österreich)</option>
+						<option value="de-DE">German (Germany) - Deutsch (Deutschland)</option>
+						<option value="de-CH">German (Switzerland) - Deutsch (Schweiz)</option>
+						<option value="el">Greek - Ελληνικά</option>
+						<option value="gn">Guarani</option>
+						<option value="gu">Gujarati - ગુજરાતી</option>
+						<option value="ha">Hausa</option>
+						<option value="haw">Hawaiian - ʻŌlelo Hawaiʻi</option>
+						<option value="he" >Hebrew - עברית</option>
+						<option value="hi">Hindi - हिंदी</option>
+						<option value="hu">Hungarian - magyar</option>
+						<option value="is">Icelandic - íslenska</option>
+						<option value="id">Indonesian - Bahasa Indonesia</option>
+						<option value="ia">Interlingua</option>
+						<option value="ga">Irish - Gaeilge</option>
+						<option value="it">Italian - italiano</option>
+						<option value="it-IT">Italian (Italy) - italiano (Italia)</option>
+						<option value="it-CH">Italian (Switzerland) - italiano (Svizzera)</option>
+						<option value="ja">Japanese - 日本語</option>
+						<option value="kn">Kannada - ಕನ್ನಡ</option>
+						<option value="kk">Kazakh - қазақ тілі</option>
+						<option value="km">Khmer - ខ្មែរ</option>
+						<option value="ko">Korean - 한국어</option>
+						<option value="ku">Kurdish</option>
+						<option value="ky">Kyrgyz - кыргызча</option>
+						<option value="lo">Lao - ລາວ</option>
+						<option value="la">Latin</option>
+						<option value="lv">Latvian - latviešu</option>
+						<option value="ln">Lingala - lingála</option>
+						<option value="lt">Lithuanian - lietuvių</option>
+						<option value="mk">Macedonian - македонски</option>
+						<option value="ms">Malay - Bahasa Melayu</option>
+						<option value="ml">Malayalam - മലയാളം</option>
+						<option value="mt">Maltese - Malti</option>
+						<option value="mr">Marathi - मराठी</option>
+						<option value="mo">Moldavian - mo</option>
+						<option value="mn">Mongolian - монгол</option>
+						<option value="ne">Nepali - नेपाली</option>
+						<option value="no">Norwegian - no</option>
+						<option value="nb">Norwegian Bokmål - norsk bokmål</option>
+						<option value="nn">Norwegian Nynorsk - nynorsk</option>
+						<option value="oc">Occitan</option>
+						<option value="or">Oriya - ଓଡ଼ିଆ</option>
+						<option value="om">Oromo - Oromoo</option>
+						<option value="ps">Pashto - پښتو</option>
+						<option value="fa">Persian - فارسی</option>
+						<option value="pl">Polish - polski</option>
+						<option value="pt">Portuguese - português</option>
+						<option value="pt-BR">Portuguese (Brazil) - português (Brasil)</option>
+						<option value="pt-PT">Portuguese (Portugal) - português (Portugal)</option>
+						<option value="pa">Punjabi - ਪੰਜਾਬੀ</option>
+						<option value="qu">Quechua</option>
+						<option value="ro">Romanian - română</option>
+						<option value="rm">Romansh - rumantsch</option>
+						<option value="ru" >Russian - русский</option>
+						<option value="gd">Scottish Gaelic</option>
+						<option value="sr">Serbian - Српски</option>
+						<option value="sh">Serbo-Croatian - sh</option>
+						<option value="sn">Shona - chiShona</option>
+						<option value="sd">Sindhi</option>
+						<option value="si">Sinhala - සිංහල</option>
+						<option value="sk">Slovak - slovenčina</option>
+						<option value="sl">Slovenian - slovenščina</option>
+						<option value="so">Somali - Soomaali</option>
+						<option value="st">Southern Sotho</option>
+						<option value="es">Spanish - español</option>
+						<option value="es-419">Spanish (Latin America) - español (Latinoamérica)</option>
+						<option value="su">Sundanese</option>
+						<option value="sw">Swahili - Kiswahili</option>
+						<option value="sv">Swedish - svenska</option>
+						<option value="tg">Tajik - тоҷикӣ</option>
+						<option value="ta">Tamil - தமிழ்</option>
+						<option value="tt">Tatar</option>
+						<option value="te">Telugu - తెలుగు</option>
+						<option value="th">Thai - ไทย</option>
+						<option value="ti">Tigrinya - ትግርኛ</option>
+						<option value="to">Tongan - lea fakatonga</option>
+						<option value="tr">Turkish - Türkçe</option>
+						<option value="tk">Turkmen</option>
+						<option value="tw">Twi</option>
+						<option value="uk">Ukrainian - українська</option>
+						<option value="ur">Urdu - اردو</option>
+						<option value="ug">Uyghur</option>
+						<option value="uz">Uzbek - oʻzbekcha</option>
+						<option value="vi">Vietnamese - Tiếng Việt</option>
+						<option value="cy">Welsh - Cymraeg</option>
+						<option value="fy">Western Frisian</option>
+						<option value="xh">Xhosa</option>
+						<option value="yi">Yiddish</option>
+						<option value="yo">Yoruba - Èdè Yorùbá</option>
+						<option value="zu">Zulu - isiZulu</option>
+					</select>
+				</div>
+	          </li>
 			  	         
 	        </ul>
 	        </form>
        
-       		<a class="button buttonsbar inline" id="button_save" data-translate="settings_save_changes" style="margin-top: 30px;">Send</a>
+       		
+
+       
+       <form action="#" method="get" id="import_secondary_settings" style="display:block; padding-bottom: 7px; display: none;">
+	        <ul class="preview_settings normal_form" id="import_secondary_settings_ul" >
+	          	         
+	        </ul>
+	   </form>
+       
+       		<a class="button buttonsbar inline" id="button_save" data-translate="settings_button_save_next_step" style="margin-top: 30px;">Send</a>
+       		<a class="button buttonsbar inline" id="button_save2" data-translate="settings_save_changes" style="display: none; margin-top: 30px;">Send</a>
        </div>
        
-      
+   </div>   
         
-      </div>
       
       
 	<div class="message" style="display:none;">
