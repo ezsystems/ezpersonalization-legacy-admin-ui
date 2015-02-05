@@ -807,7 +807,9 @@ function showLogFiles(log,appenderId) {
 function showSpecificLog(urlLog){
 	
 	 $.get(urlLog, function( data ) {
-         $('#importJobsHistoryLogTable').html(data.replace("\n","<br/>")) ;
+		 var find = '\n';
+		 var re = new RegExp(find, 'g');
+         $('#importJobsHistoryLogTable').html(data.replace(re,"<br/>")) ;
          $('#itemimportHistoryLogP').show();
  });
 }
