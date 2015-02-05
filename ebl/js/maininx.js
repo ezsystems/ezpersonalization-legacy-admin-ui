@@ -783,7 +783,6 @@ function showImportHistory(jobId) {
 					    htmlToAppend +=' <div class="tc finishTime">'+finishTime+'</div>';
 					    htmlToAppend +=' <div class="tc amount">'+amount+'</div>';
 					    htmlToAppend +=' <div class="tc log" id="logFiles'+i+'"><a  onclick="showLogFiles(\''+log+'\',\'logFiles'+i+'\');">show log </a></div>';
-					    //htmlToAppend +=' <div class="tc log"><a href="/api/v4/'+ encodeURIComponent(customerID) +log+'"> show log </a></div>';
 					    htmlToAppend +='</div>';
 				  } 
 				  htmlToAppend +='<div>';
