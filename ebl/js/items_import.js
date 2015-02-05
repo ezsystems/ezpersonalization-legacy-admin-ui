@@ -230,7 +230,7 @@ function addPrefix(typeId){
 function changeType(typeId){
 	var valType = $("#field"+typeId).val();
 	if(valType == 'id' || valType == 'price'){
-		$("#type_field"+typeId).val("DECIMAL");
+		$("#type_field"+typeId).val("NUMERIC");
 		$("#prefixURL"+typeId).hide();
 	}else{
 		if(valType == 'imgurl' ){
@@ -238,7 +238,7 @@ function changeType(typeId){
 			$("#prefixURL"+typeId).show();
 		}else{
 			if(valType == 'validfrom' || valType == 'validto'){
-				$("#type_field"+typeId).val("YYYYMMDD");
+				$("#type_field"+typeId).val("DATETIME_ISO");
 				$("#prefixURL"+typeId).hide();
 			}
 		}
