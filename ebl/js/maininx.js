@@ -317,8 +317,8 @@ function initialize() {
     	
     	for (var i = 0; i < mandatorList.length; i++) {
     		var mandatorInfo = mandatorList[i];
-    		var id = mandatorList[i].baseInformation.id;
-    		var web = mandatorList[i].baseInformation.website;
+    		var id = mandatorInfo.baseInformation.id;
+    		var web = mandatorInfo.baseInformation.website;
     		
     		$('#choose_mandant').append('<option value="' + id + '">' + id + ': ' + web + '</option>');
     	}
@@ -727,6 +727,7 @@ function readImportJobs(){
 					    }
 					    var enabled = obj.enabled;
 					    var id=obj.id;
+					    var runURL = 'img/clock.png';
 					    var statusURL = 'img/red.png';
 					    if(enabled){
 					    	statusURL = 'img/blue.png';
@@ -738,7 +739,8 @@ function readImportJobs(){
 					    htmlToAppend +=' <div class="tc lastimport">'+lastRun+'</div>';
 					    htmlToAppend +=' <div class="tc showHistory"><a onclick="showImportHistory('+obj.id+')">Show History</a> </div>';
 					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+'\');$(\'#itemimportP\').show();">Edit</a> </div>';
-					    htmlToAppend +=' <div class="tc jobstatus"><img src="'+statusURL+'" /></div>';
+					    htmlToAppend +=' <div class="tc jobstatus"><img style="vertical-align: middle;" src="'+statusURL+'" /></div>';
+					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="runJobNow('+obj.id+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
 					    htmlToAppend +='</div>';
 				  } 
 				  htmlToAppend +='<div>';
@@ -749,6 +751,20 @@ function readImportJobs(){
           	$('#importJobsTable').append(htmlToAppend);
           	$('#importJobsTable').show();
 			  
+		  },
+		  error: mainErrorHandler
+	  });
+}
+
+function runJobNow(jobId) {
+	$.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/import/start_importjob/"+jobId,
+		  success: function(json) {
+			  showImportHistory(jobId);
 		  },
 		  error: mainErrorHandler
 	  });
