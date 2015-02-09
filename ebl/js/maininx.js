@@ -763,7 +763,7 @@ function readImportJobs(){
           	$('#importJobsTable').append(htmlToAppend);
           	$('#importJobsTable').show();
           	for(var i = 0; i < json.length; i++) {
-          		$('#toggle'+i).toggles();
+          		$('#toggle'+i).Toggles();
           		$('.toggle').off('toggle').on('toggle', function (e, active) {
           			var statusURL = 'img/blue.png';
           			if (active) {
