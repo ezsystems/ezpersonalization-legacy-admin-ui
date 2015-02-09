@@ -734,6 +734,7 @@ function readImportJobs(){
 					    	if(lastRun != 'nope'){
 					    		var diff = Math.abs( new Date() - new Date(lastRun) );
 					    		var days = diff/(24*60*60*1000);
+					    		console.log(diff+ " "+days+" "+new Date(lastRun));
 					    		if(interval == 'DAILY' && days > 0){
 					    			statusURL = 'img/yellow.png';
 					    		}
@@ -749,8 +750,9 @@ function readImportJobs(){
 					    htmlToAppend +=' <div class="tc lastimport">'+lastRun+'</div>';
 					    htmlToAppend +=' <div class="tc showHistory"><a onclick="showImportHistory('+obj.id+')">Show History</a> </div>';
 					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+'\');$(\'#itemimportP\').show();">Edit</a> </div>';
-					    htmlToAppend +=' <div class="tc jobstatus"><img style="vertical-align: middle;" src="'+statusURL+'" /></div>';
+					    htmlToAppend +=' <div class="tc jobstatus"><img id="statusImage'+i+'" style="vertical-align: middle;" src="'+statusURL+'" /></div>';
 					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="runJobNow('+obj.id+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
+					    htmlToAppend +=' <div class="tc jobon"><div class="toggle toggle-light" id="toggle'+i+'"/></div>';
 					    htmlToAppend +='</div>';
 				  } 
 				  htmlToAppend +='<div>';
@@ -760,10 +762,41 @@ function readImportJobs(){
 			$('#importJobsTable').append(header);
           	$('#importJobsTable').append(htmlToAppend);
           	$('#importJobsTable').show();
+          	for(var i = 0; i < json.length; i++) {
+          		$('#toggle'+i).toggles();
+          		$('.toggle').off('toggle').on('toggle', function (e, active) {
+          			var statusURL = 'img/blue.png';
+          			if (active) {
+          				var lastRun = json[i].lastRun;
+          				if(lastRun){
+          					var interval = json[i].interval;
+          					var diff = Math.abs( new Date() - new Date(lastRun) );
+				    		var days = diff/(24*60*60*1000);
+				    		console.log(diff+ " "+days+" "+new Date(lastRun));
+				    		if(interval == 'DAILY' && days > 0){
+				    			statusURL = 'img/yellow.png';
+				    		}
+				    		if(interval == 'WEEKLY' && days > 6){
+				    			statusURL = 'img/yellow.png';
+				    		}
+          				}
+                	} else {
+                		statusURL = 'img/red.png';
+                	}
+          			$('#statusImage'+i).src = statusURL;
+          			updateStatus(json[i].id,active) ;
+                });
+          	}
+          	
+          	
 			  
 		  },
 		  error: mainErrorHandler
 	  });
+}
+
+function updateStatus(jobId, status){
+	console.log(jobId+" "+status);
 }
 
 function runJobNow(jobId) {
