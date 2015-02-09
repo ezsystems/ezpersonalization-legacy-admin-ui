@@ -731,6 +731,16 @@ function readImportJobs(){
 					    var statusURL = 'img/red.png';
 					    if(enabled){
 					    	statusURL = 'img/blue.png';
+					    	if(lastRun != 'nope'){
+					    		var diff = Math.abs( new Date() - new Date(lastRun) );
+					    		var days = diff/(24*60*60*1000);
+					    		if(interval == 'DAILY' && days > 0){
+					    			statusURL = 'img/yellow.png';
+					    		}
+					    		if(interval == 'WEEKLY' && days > 6){
+					    			statusURL = 'img/yellow.png';
+					    		}
+					    	}
 					    }
 					    htmlToAppend +='<div class="tr test">\n';
 					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
