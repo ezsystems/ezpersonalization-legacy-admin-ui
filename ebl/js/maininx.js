@@ -729,16 +729,22 @@ function readImportJobs(){
 					    var id=obj.id;
 					    var runURL = 'img/clock.png';
 					    var statusURL = 'img/red.png';
+					    var margin = -75;
+					    var off =  'active';
+					    var on =  '';
 					    if(enabled){
+					    	on =  'active';
+					    	off =  '';
+					    	margin = 0;
 					    	statusURL = 'img/blue.png';
 					    	if(lastRun != 'nope'){
 					    		var diff = Math.abs( new Date() - new Date(lastRun) );
 					    		var days = diff/(24*60*60*1000);
 					    		console.log(diff+ " "+days+" "+new Date(lastRun));
-					    		if(interval == 'DAILY' && days > 0){
+					    		if(interval == 'DAILY' && days >= 1){
 					    			statusURL = 'img/yellow.png';
 					    		}
-					    		if(interval == 'WEEKLY' && days > 6){
+					    		if(interval == 'WEEKLY' && days >= 7){
 					    			statusURL = 'img/yellow.png';
 					    		}
 					    	}
@@ -752,7 +758,15 @@ function readImportJobs(){
 					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+'\');$(\'#itemimportP\').show();">Edit</a> </div>';
 					    htmlToAppend +=' <div class="tc jobstatus"><img id="statusImage'+i+'" style="vertical-align: middle;" src="'+statusURL+'" /></div>';
 					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="runJobNow('+obj.id+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
-					    htmlToAppend +=' <div class="tc jobon"><div class="toggle toggle-light" id="toggle'+i+'"/></div>';
+					    htmlToAppend +=' <div class="tc jobon">'	
+					    	+'<div class="toggle-slide" onclick="updateStatus('+json[i]+','+i+');">'
+						    	+'<div class="toggle-inner '+on+'" style="width: 185px; margin-left: '+margin+'px;">'
+						    		+'<div id="toggle-on'+i+'" class="toggle-on" style="height: 35px; width: 92.5px; text-indent: -17.5px; line-height: 35px;">ON</div>'
+						    		+'<div class="toggle-blob" style="height: 35px; width: 35px; margin-left: -17.5px;"></div>'
+						    		+'<div class="toggle-off '+off+'" style="height: 35px; width: 92.5px; margin-left: -17.5px; text-indent: 17.5px; line-height: 35px;">OFF</div>'
+						    	 +'</div>'
+						    +'</div></div>';
+					    	
 					    htmlToAppend +='</div>';
 				  } 
 				  htmlToAppend +='<div>';
@@ -795,8 +809,38 @@ function readImportJobs(){
 	  });
 }
 
-function updateStatus(jobId, status){
-	console.log(jobId+" "+status);
+function updateStatus(job, activeId){
+	var classList =$('#toggle-on'+activeId).attr('class').split(/\s+/);
+	var status = 1;
+	$.each( classList, function(index, item){
+	    if (item === 'active') {
+	    	status = 0;
+	    }
+	});
+	var statusURL = 'img/blue.png';
+	if(status == 1){
+		$('.toggle-inner').css('margin-left','0px');
+		$('.toggle-on').addClass('active'); 
+		$('.toggle-off').removeClass('active');
+		var lastRun = job.lastRun;
+		if(lastRun){
+			var interval = job.interval;
+			var diff = Math.abs( new Date() - new Date(lastRun) );
+    		var days = diff/(24*60*60*1000);
+    		if(interval == 'DAILY' && days >= 1){
+    			statusURL = 'img/yellow.png';
+    		}
+    		if(interval == 'WEEKLY' && days >= 7){
+    			statusURL = 'img/yellow.png';
+    		}
+		}
+	}else{
+		$('.toggle-inner').css('margin-left','-75px');
+		$('.toggle-on').removeClass('active'); 
+		$('.toggle-off').addClass('active'); 
+		statusURL = 'img/red.png';
+	}
+	$('#statusImage'+activeId).src = statusURL;
 }
 
 function runJobNow(jobId) {
