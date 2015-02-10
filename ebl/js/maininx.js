@@ -730,7 +730,7 @@ function readImportJobs(){
 					    var id=obj.id;
 					    var runURL = 'img/clock.png';
 					    var statusURL = 'img/red.png';
-					    var margin = -75;
+					    var margin = -48;
 					    var off =  'active';
 					    var on =  '';
 					    if(enabled){
@@ -760,12 +760,12 @@ function readImportJobs(){
 					    htmlToAppend +=' <div class="tc jobstatus"><img id="statusImage'+i+'" style="vertical-align: middle;" src="'+statusURL+'" /></div>';
 					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="runJobNow('+obj.id+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
 					    htmlToAppend +=' <div class="tc jobon toggle-light">'
-					    	+'<div class="toggle on" style=" margin-bottom: -10px;  height: 35px;  width: 110px;">'
+					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
 					    	+'<div class="toggle-slide" onclick="updateStatus('+i+');">'
-						    	+'<div id="toggle-inner'+i+'" class="toggle-inner" style="width: 185px; margin-left: '+margin+'px;">'
-						    		+'<div id="toggle-on'+i+'" class="toggle-on '+on+'" style="height: 35px; width: 92.5px; text-indent: -17.5px; line-height: 35px;">ON</div>'
-						    		+'<div class="toggle-blob" style="height: 35px; width: 35px; margin-left: -17.5px;"></div>'
-						    		+'<div id="toggle-off'+i+'" class="toggle-off '+off+'" style="height: 35px; width: 92.5px; margin-left: -17.5px; text-indent: 17.5px; line-height: 35px;">OFF</div>'
+						    	+'<div id="toggle-inner'+i+'" class="toggle-inner" style="width: 118px; margin-left: '+margin+'px;">'
+						    		+'<div id="toggle-on'+i+'" class="toggle-on '+on+'" style="height: 22px; width: 59px; text-indent: -11px; line-height: 22px;">ON</div>'
+						    		+'<div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>'
+						    		+'<div id="toggle-off'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
 						    	 +'</div>'
 						    +'</div></div></div>';
 					    	
