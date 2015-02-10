@@ -815,7 +815,7 @@ function updateStatus(activeId){
 		}
 		job.enabled = true;
 	}else{
-		$('#toggle-inner'+activeId).css('margin-left','-75px');
+		$('#toggle-inner'+activeId).css('margin-left','-48px');
 		$('#toggle-on'+activeId).removeClass('active'); 
 		$('#toggle-off'+activeId).addClass('active'); 
 		statusURL = 'img/red.png';
