@@ -761,8 +761,8 @@ function readImportJobs(){
 					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="runJobNow('+obj.id+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
 					    htmlToAppend +=' <div class="tc jobon toggle-light">'
 					    	+'<div class="toggle on" style=" margin-bottom: -10px;  height: 35px;  width: 110px;">'
-					    	+'<div class="toggle-slide" onclick="updateStatus('+json[i]+','+i+');">'
-						    	+'<div class="toggle-inner" style="width: 185px; margin-left: '+margin+'px;">'
+					    	+'<div class="toggle-slide" onclick="updateStatus('+i+');">'
+						    	+'<div id="toggle-inner'+i+'" class="toggle-inner" style="width: 185px; margin-left: '+margin+'px;">'
 						    		+'<div id="toggle-on'+i+'" class="toggle-on '+on+'" style="height: 35px; width: 92.5px; text-indent: -17.5px; line-height: 35px;">ON</div>'
 						    		+'<div class="toggle-blob" style="height: 35px; width: 35px; margin-left: -17.5px;"></div>'
 						    		+'<div id="toggle-off'+i+'" class="toggle-off '+off+'" style="height: 35px; width: 92.5px; margin-left: -17.5px; text-indent: 17.5px; line-height: 35px;">OFF</div>'
@@ -798,7 +798,7 @@ function updateStatus(activeId){
 	});
 	var statusURL = 'img/blue.png';
 	if(status == 1){
-		$('.toggle-inner').css('margin-left','0px');
+		$('#toggle-inner'+activeId).css('margin-left','0px');
 		$('#toggle-on'+activeId).addClass('active'); 
 		$('#toggle-off'+activeId).removeClass('active');
 		var lastRun = job.lastRun;
@@ -815,7 +815,7 @@ function updateStatus(activeId){
 		}
 		job.enabled = true;
 	}else{
-		$('.toggle-inner').css('margin-left','-75px');
+		$('#toggle-inner'+activeId).css('margin-left','-75px');
 		$('#toggle-on'+activeId).removeClass('active'); 
 		$('#toggle-off'+activeId).addClass('active'); 
 		statusURL = 'img/red.png';
