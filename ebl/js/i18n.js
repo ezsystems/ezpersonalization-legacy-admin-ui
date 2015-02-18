@@ -68,6 +68,14 @@ function init_i18n(filenames) {
 }
 
 
+var changeLangListeners = [];
+
+
+function addChangeLangListener(listener) {
+	changeLangListeners.push(listener);
+}
+
+
 function changeLang(newLang, updateProfile) {
 	if (in_to_language == newLang) {
 		return;
@@ -77,6 +85,11 @@ function changeLang(newLang, updateProfile) {
 	$.cookie('language', in_to_language);
 	
 	apply_i18n(i18n_files());
+	
+	for (var i = 0; i < changeLangListeners.length; i++) {
+		 var listener = changeLangListeners[i];
+		 listener(newLang);
+	}
 	
 	if (updateProfile) {
 		yooAjax(null, {
