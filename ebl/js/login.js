@@ -149,6 +149,13 @@ $(document).ready(function () {
 			url = url + (currency ? ("/" + encodeURIComponent(currency)) : "");
 		}
 		
+		var changeLangListener = function(newLang) {
+			$('#product_iframe iframe').attr('src', "https://www.yoochoose.com/product-iframe/" + 
+					encodeURIComponent(newLang) + "/" + encodeURIComponent(product));
+		}
+		
+		addChangeLangListener(changeLangListener);
+		
 		yooAjax(null, {
 			url: url,
 			success: function (json) {
@@ -163,8 +170,8 @@ $(document).ready(function () {
 						magicMessage("info", "login_info_bookig_product_step_1", json.name || json.id);
 					}
 					
-					$('#product_iframe iframe').attr('src', "https://www.yoochoose.com/product-iframe/" + 
-							encodeURIComponent(in_to_language) + "/" + encodeURIComponent(product));
+					changeLangListener(in_to_language);
+
 					$('#product_iframe').show();
 					$('footer').css("margin-top", "0");
 				}
