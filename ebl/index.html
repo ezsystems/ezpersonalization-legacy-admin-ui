@@ -326,14 +326,13 @@
     <section class="scenarios"  style="margin: 20px 20px 0 20px;">
       <header class="clearfix" style="padding: 0; background: transparent;">
 		  <ul class="options_menu">
-			  <li class="tab"  data-target="#available_scenarios" data-controls="#scenarioControls"><label data-translate="index_your_scenarios"></label></li>
+			  <li class="tab tabScenarios" d= data-target="#available_scenarios" data-controls="#scenarioControls"><label data-translate="index_your_scenarios"></label></li>
 			  
-			  <li class="tab" id="addedRevenueTab"  data-target="#addedRevenue" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
-			  <li class="tab" id="ABTestTab"        data-target="#ABTests"      style="display: none;" data-controls="#abControls"><label data-translate="ab_test_ab_tests"></label></li>
-			  <li class="tab" id="itemImortTab"     data-target="#importJobs"   style="display: none;" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
+			  <li class="tab tabRevenue" id="addedRevenueTab"  data-target="#addedRevenue" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
+			  <li class="tab tabAbTests" id="ABTestTab"        data-target="#ABTests"      style="display: none;" data-controls="#abControls"><label data-translate="ab_test_ab_tests"></label></li>
+			  <li class="tab tabImports" id="itemImortTab"     data-target="#importJobs"   style="display: none;" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
 		  </ul>
-        <!--<h3 class="tab" data-translate="index_your_scenarios" data-target="#available_scenarios" data-controls="#scenarioControls"></h3>-->
-		<!--<h3 class="tab" data-translate="ab_test_ab_tests" data-target="#ABTests" data-controls="#abControls"></h3>-->
+
         <div id="scenarioControls" class="controls">
 			<a id="createNewScenario"  class="create_new" data-translate="index_create_a_new_scenario">Create a new scenario</a>
 			<a class="helpLink" data-target="#scenarioHelp"></a>
@@ -345,8 +344,8 @@
 		<div id="itemImortControls" class="controls" style="display: none;">
 			<a id="createNewImport" class="create_new" data-translate="item_import_create_new_job"></a>
 		</div>
-		
       </header>
+      
       <ul id="available_scenarios" class="available_scenarios clearfix tabContent" style="min-height: 150px;">
         <li class="dummy_scenario" style="display:none; heigth: 100ex;">
           <div class="scenario activated" style="minHeight:250px;">
@@ -359,7 +358,6 @@
             </h4>
             <p class="data" style="padding-right: 5px;"><span class="delivered_recommendations"><strong>0</strong> <span data-translate="index_delivered_recommendations_scenario">Delivered recommendations</span></span></p>
             <p class="description">Some brief description of the scenario, that can be edited together with other parameters</p>
-            
           </div>
         </li>
       </ul>
