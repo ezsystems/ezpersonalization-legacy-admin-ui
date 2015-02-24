@@ -7,7 +7,7 @@ var scenarioInfoList; // loaded by ajaxScenarioList()
 
 var statistic;
 
-var period;
+var period = sessionStorage.getItem("period") || '24H';
 
 var mandatorList;
 
@@ -110,7 +110,7 @@ $(document).ready(function() {
 	showEmptyEventChart();
 
 	
-	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js"], function() {
+	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js", "/js/added_revenue.js"], function() {
 		
 		setLoadingDiv('section.mandant > header');
 		
@@ -139,7 +139,7 @@ $(document).ready(function() {
 				
 				$.when(
 					mandatorDao.init(customerID),
-					ajaxScenarioList('24H')
+					ajaxScenarioList(period) // do not changing the period. It was just loaded from the session storage
 			    ).always(function() {
 			    	initialize().always(function() {
 		    			unsetLoadingDiv('section.mandant > header');		
@@ -153,8 +153,55 @@ $(document).ready(function() {
 });
 
 
+function currentPeriodFromTime() { // <-- "period" is a global variable
+	if (period == 'WEEK') {
+	    //calculate the from_date_time and to_date_time
+	    var currentDate = getCurrentDateMinusDays(7);
+	    return getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+	    
+	} else if (period == 'MONTH') {
+        var currentDate = getCurrentDateMinusDays(30);
+        return getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+        
+	} else if (period == 'DAY') {
+	    var yesterday = getCurrentDateMinusDays(1);
+	    return getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
+	    
+	} else { // 24H
+	    var yesterday = new Date(Date.now() - 24*3600000);
+	    return getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
+	}
+}
 
+ 
+function currentPeriodToTime() { // <-- "period" is a global variable
+	if (period == 'WEEK') { 
+	    var currentDate = getCurrentDateMinusDays(0);
+	    return getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+	    
+	} else if (period == 'MONTH') {
+        var currentDate = getCurrentDateMinusDays(0);
+        return getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
+        
+	} else if (period == 'DAY') {
+	    var currentDate = getCurrentDateMinusDays(0);
+	    return getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
+	    
+	} else { // 24H
+	    var currentDate = new Date();
+	    return getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
+	}
+}
+
+
+/** Called, if the time period (MONTH, WEEK, DAY etc.) was changed
+ * 
+ */
 var ajaxScenarioList = function(new_period, callback) {
+	
+	
+	sessionStorage.setItem("name", "Nicholas");
+	
 	
 	if (!customerID) {
 		return;
@@ -165,39 +212,40 @@ var ajaxScenarioList = function(new_period, callback) {
 	setLoadingDiv($('#statistic_charts'));
 	setLoadingDiv($('.available_scenarios'));
 	
-	period = new_period;
+	period = new_period; // <-- "period" is a global variable
+	sessionStorage.setItem("period", period);
 	
-	var from_date_time, to_date_time, granularity;
+	
+	// redecorating menu
+	
+	$("fieldset.time_settings li.current").removeClass("current");
+	$("fieldset.time_settings .custom_range_settings").hide();
+	
+	var from_date_time = currentPeriodFromTime();
+	var to_date_time = currentPeriodToTime();
+	var granularity;
+	
+	var $current;
 	
 	if (period == 'WEEK') {
-	    //calculate the from_date_time and to_date_time
-	    var currentDate = getCurrentDateMinusDays(7);
-	    from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-	    currentDate = getCurrentDateMinusDays(0);
-	    to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
 	    granularity = "PT12H";
+	    $current = $("fieldset.time_settings li.view_option_week");
 	    
 	} else if (period == 'MONTH') {
-        var currentDate = getCurrentDateMinusDays(30);
-        from_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-        currentDate = getCurrentDateMinusDays(0);
-        to_date_time = getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
         granularity = "P1D";
+        $current = $("fieldset.time_settings li.view_option_month");
         
 	} else if (period == 'DAY') {
-	    var yesterday = getCurrentDateMinusDays(1);
-	    from_date_time = getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
-	    var currentDate = getCurrentDateMinusDays(0);
-	    to_date_time = getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
 	    granularity = "PT1H";
+	    $current = $("fieldset.time_settings li.view_option_day");
 	    
 	} else { // 24H
-	    var yesterday = new Date(Date.now() - 24*3600000);
-	    from_date_time = getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
-	    var currentDate = new Date();
-	    to_date_time = getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
 	    granularity = "PT1H";
+	    $current = $("fieldset.time_settings li.view_option_day");
 	}
+	
+	$current.addClass("current");
+	$current.find(".custom_range_settings").show();
 	
 	var result1 = $.ajax({
         dataType: "json",
@@ -216,6 +264,10 @@ var ajaxScenarioList = function(new_period, callback) {
 	    },
 	    error: mainErrorHandler
 	});
+	
+	
+	loadAddedRevenue(); // <-- this function is in "added_revenue.js"
+	
 	
 	return $.when(result1, result2).done(function() {
 		
@@ -271,7 +323,9 @@ function piwikCaller(name){
 
 
 /** Called only once, when the page is loaded.
- *  User related GUI emements must be configured here. 
+ *  User related GUI elements must be configured here. 
+ *  
+ *  Use the global variable "customerID" to have the current mandator ID. 
  *  
  *  @see #initialLoadData()
  */
@@ -290,12 +344,6 @@ function initialize() {
 		
 		$('.account_data').children('li').first().find('strong').text(name);
 		piwikCaller(name);
-		
-	    if (loginInfo.provider == "ibs") {
-	    	$('.ibs_item').show();
-	    } else {
-	    	$('.ibs_item').hide();
-	    }
 	    
 	    // updating interface language
 	    if (loginInfo.lang && in_to_language != loginInfo.lang) { // "in_to_language" is a global variable defined in "i18n.js"
@@ -609,7 +657,9 @@ function formatInteger(v) {
 
 
 
-/** This function is called, after the mandator was  sucessfully loaded
+/** This function is called, after the mandator was sucessfully loaded
+ * 
+ *  Use the global variable "customerID" to have the current mandator ID. 
  * */ 
 function initialLoadData() {
 	
@@ -698,8 +748,8 @@ function initialLoadData() {
 	$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
 	$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
  
-	
 }
+
 
 var imports = new Array();
 var  allJobsI;
