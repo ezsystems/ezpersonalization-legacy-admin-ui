@@ -79,36 +79,6 @@ var setTimeRanges = function () {
 
 };
 
-var setOptionsBar = function () {
-	var radioButtons = $('.options_menu > li > .option > input[type=radio]');
-	if (radioButtons.length) {
-
-		radioButtons.each(function (index) {
-			$(this).change(function () {
-
-				$(this).parents(".options_menu").find("> li.current").removeClass("current");
-				$(this).parents(".options_menu").find("> li > .option > input[type=radio]").removeAttr("checked");
-				$(this).attr('checked', 'checked');
-				$(this).closest("li").addClass("current");
-				if ($(this).closest("li").hasClass("view_option_custom")) {
-					$(this).closest("label").animate({
-						paddingRight: "350px"
-					}, 300, function () {
-						$(this).closest("li").find(".custom_range_settings").fadeIn();
-					});
-				} else {
-					$(this).closest(".options_menu").find(".view_option_custom .custom_range_settings").hide();
-					$(this).closest(".options_menu").find(".view_option_custom label").animate({
-							paddingRight: "9px"
-						}, 300
-					);
-					// $(this).closest("form").submit();
-				}
-			});
-		});
-
-	}
-};
 
 var openLayer = function (overlay, layer, layerBody) {
 	layer.remove();
@@ -508,7 +478,6 @@ $(document).ready(function () {
 //	setAccordions();
 //	setSortable();
 	setMessages();
-	setOptionsBar();
 //	setFilterGroups();
 	destroyGroup();
 	initRemoveAttributeValue();
