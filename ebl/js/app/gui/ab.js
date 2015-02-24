@@ -827,50 +827,6 @@ define([
 		}
 	};
 
-	/**
-	 * initializes all elements related to tabs and controls
-	 */
-	gui.initTabs = function(){
-		//add the check whether there is already at least one test.
-		$('#ABTestTab')
-			.on('click', function(){
-				var $this = $(this);
-				if($this.hasClass('active')){
-					return;
-				}else if(!$('#testList').data('tests').length){
-					$('#abControls').find('.helpLink').trigger('click');
-				}
-			});
-		//init the tab behaviour
-		$('.tab')
-		.on('click', function(){
-			var $this = $(this);
-			if($this.hasClass('active')){
-				return;
-			}
-			$this.addClass('active current')
-				.siblings('.tab')
-				.removeClass('active current');
-			$($this.data('target'))
-				.show()
-				.siblings('.tabContent')
-					.hide();
-			$($this.data('controls'))
-				.show()
-				.siblings('.controls')
-					.hide();
-		})
-			.removeClass('active')
-			.first().trigger('click');
-		//init the create new Test Button
-		$('#createNewTest')
-			.off('click')
-			.on('click', function(){
-			gui.editTest(new Test(emptyTest));
-		});
-
-
-	};
 
 	gui.initHelp = function(){
 		$('.helpLink').on('click', function(){
