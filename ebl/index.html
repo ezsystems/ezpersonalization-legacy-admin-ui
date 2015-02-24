@@ -169,24 +169,12 @@
 	        	</table> 
 	        </div>
         </div>
-        
-        <div class="ibs_item" style="float: right; margin: 10px 10px 0 25px;">
-          <p>
-          	<a href="/api/v4/registration/selfcare/payments" data-translate="index_menu_customer">Customer</a>
-          </p>
-        </div>
-        
-        <div class="ibs_item" style="float: right; margin: 10px 10px 0 25px;">
-          <p>
-          	<a href="/api/v4/registration/selfcare/" data-translate="index_menu_self_care">Self Care</a>
-          </p>
-        </div>        
-        
       </header>
+      
       <form class="clearfix" method="get" action="#">
         <fieldset class="time_settings">
           <ul class="available_view_options options_menu clearfix">
-            <li class="view_option_day current">
+            <li class="view_option_day">
               <label for="view_option_day" class="option">
                 <input type="radio" id="view_option_day" name="view_option" value="day" checked="checked" />
                 <span data-translate="index_last_day">Last day</span>
@@ -339,8 +327,10 @@
       <header class="clearfix" style="padding: 0; background: transparent;">
 		  <ul class="options_menu">
 			  <li class="tab"  data-target="#available_scenarios" data-controls="#scenarioControls"><label data-translate="index_your_scenarios"></label></li>
-			  <li class="tab" id="ABTestTab" data-target="#ABTests" data-controls="#abControls" style="display: none;"><label  data-translate="ab_test_ab_tests"></label></li>
-			  <li class="tab" id="itemImortTab"  data-target="#importJobs" style="display: none;" data-controls="#itemImortControls" ><label  data-translate="item_import"></label></li>
+			  
+			  <li class="tab" id="addedRevenueTab"  data-target="#addedRevenue" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
+			  <li class="tab" id="ABTestTab"        data-target="#ABTests"      style="display: none;" data-controls="#abControls"><label data-translate="ab_test_ab_tests"></label></li>
+			  <li class="tab" id="itemImortTab"     data-target="#importJobs"   style="display: none;" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
 		  </ul>
         <!--<h3 class="tab" data-translate="index_your_scenarios" data-target="#available_scenarios" data-controls="#scenarioControls"></h3>-->
 		<!--<h3 class="tab" data-translate="ab_test_ab_tests" data-target="#ABTests" data-controls="#abControls"></h3>-->
@@ -373,7 +363,38 @@
           </div>
         </li>
       </ul>
-		<div id="importJobs" class="importItems tabContent" style="display: none;">
+      
+      <div id="addedRevenue" class="tabContent" style="display: none; border-radius: 5px; border: 1px solid rgb(238, 236, 225);">
+			<table>
+				<tr>
+				    <th>Recommendation accepted</th>
+				    <th>Item boungt</th>
+				    <th>Price</th>
+				</tr>
+				<tr>
+				    <td class="reco_accepted"></td>
+				    <td class="item_bought"></td>
+				    <td class="item_price"></td>
+				</tr>
+				<tr>
+				    <td class="reco_accepted">2015-02-20T14:40:00.000-&gt;2015-02-20T14:42:00.000</td>
+				    <td class="item_bought">2:Enders Cosy Polo 2.0 Edelstahl Gas-Heizstrahler</td>
+				    <td class="item_price">159,95EUR</td>
+				</tr>
+				<tr>
+				    <td class="reco_accepted">2015-02-20T14:40:00.000-&gt;2015-02-20T14:42:00.000</td>
+				    <td class="item_bought">2:Haushalt International Balkonklapptisch</td>
+				    <td class="item_price">4x12.95EUR</td>
+				</tr>
+				<tr>
+				    <td class="reco_accepted">2015-02-20T14:40:00.000-&gt;2015-02-20T14:42:00.000</td>
+				    <td class="item_bought">2:Merxx Eckbank mit Klapptisch aus Eukalyptusholz</td>
+				    <td class="item_price">239.95EUR</td>
+				</tr>				
+			</table>
+		</div>
+      
+	   <div id="importJobs" class="importItems tabContent" style="display: none;">
 			<div class="table" id="importJobsTable" style="width: 100%;display: none;">
 				<div class="tr head" id = "import_head">
 					<div class="tc" data-translate="item_import_name_of_job">Name of Import Job</div>
