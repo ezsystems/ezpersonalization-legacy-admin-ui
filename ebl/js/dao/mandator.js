@@ -11,7 +11,6 @@ var mandatorDao = {
 
 
 mandatorDao.getId = function() {
-	
 	if (this.mandator) {
 		return this.mandator.baseInformation.id;
 	} else {
@@ -21,9 +20,17 @@ mandatorDao.getId = function() {
 
 
 mandatorDao.getVersion = function() {
-	
 	if (this.mandator) {
 		return this.mandator.baseInformation.version;
+	} else {
+		return null;
+	}
+};
+
+
+mandatorDao.getCurrency = function() {
+	if (this.mandator) {
+		return this.mandator.advancedOptions.currency;
 	} else {
 		return null;
 	}
@@ -92,7 +99,6 @@ mandatorDao.getItemTypeDescription = function(id) {
 
 
 mandatorDao.init = function(mandatorId, callback) {
-	
 	if (!mandatorId) {
 		return;
 	}

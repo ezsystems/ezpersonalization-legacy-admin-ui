@@ -49,15 +49,36 @@
 /* ---------------------------------- ADDED REVENUE ---------------------------------- */
 
 
-#addedRevenue table tr > * {
-	padding: 0.5em;
+#addedRevenue {
+	width: 60em;
+	border-radius: 5px; border: 1px solid rgb(238, 236, 225);
+	margin: 0 auto;
 }
 
+#addedRevenue table tr > *.item_price {
+	text-align: right;
+	width: 20em;
+}
 
+#addedRevenue table tr > *.reco_accepted {
+	width: 20em;
+}
 
+#addedRevenue table tr > td {
+	padding: 0.5em;
+	width: 60em;
+}
 
+#addedRevenue table tr > th {
+	padding: 0.5em 0;
+}
 
-
+#addedRevenue table tr > th > span {
+    background-color: rgba(238, 236, 225, 1);
+    padding: 0.5em;
+    margin: 0 0;
+    display: block;
+}
 
 
 /* ---------------------------------- PACTAS POPUP ---------------------------------- */
