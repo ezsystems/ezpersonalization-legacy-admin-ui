@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-US" style="height: 100%;">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Configurator | Step 1</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width:device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="css/prettify.css"/>
+    <link rel="stylesheet" href="css/styles_new.css"/>
+    <link rel="stylesheet" href="css/configurator.css">
+    
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
+    <script src="js/lib/jquery.cookie.js"></script>
+    <script src="js/lib/jquery.i18n.properties.js"></script>
+    
+    <script src="js/form_submit_trigger.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    
+    <script src="js/i18n.js" data-i18n-files="scenario,common"></script>
+    
+	<script src="js/piwik.js"></script>
+  </head>
+  <body id="settings" class="scenario_configuration_steps" style="height: 100%; overflow-x: hidden; min-width: 0px;
+  background-repeat: no-repeat; background-position: 100% 100%;">
+  
+    <h2 data-translate="item_import">Item Import</h2>
+     
+  
+  	
+       
+    <div class="preview" style=" top: 80px;">
+
+       <div class="models_base" style="width: 400px; position: absolute; overflow: hidden; bottom:0; top:0; left:0;">
+       
+	       <form action="#" method="get" id="import_primary_settings" style="display:block; padding-bottom: 7px;">
+	        <ul class="preview_settings normal_form">
+	          
+	          <li class="scenario_id text_field clearfix">
+				<div class="basis tooltip_trigger" >
+					<label for="url" data-translate="mail_logo_url" style="text-align: left;">LOGO URL:</label>
+			        <span class="tooltip">
+			          <span data-translate="index_objects_tooltip">Some content.</span>
+			        </span>
+				</div>
+				<div class="value">
+					<input type="url" id="url" required="required" name="url" placeholder="URL" value="" />
+				</div>
+	          </li>
+	          
+	          <li class="types_base select_field clearfix">
+				<div class="basis" >
+					<label for="import_schedule" class="input_label" data-translate="import_schedule" style="text-align: left;">Schedule Import</label>
+	            </div>
+				<div class="value">
+					<select id="import_schedule" name="import_schedule">
+					    <option value="ONCE" data-translate="import_now" selected="selected" >Import Now</option>
+						<option value="DAILY" data-translate="import_daily">Daily</option>
+						<option value="WEEKLY" data-translate="import_weekly">Weekly</option>
+					</select>
+					<select id="dayOfweek" name="dayOfweek" style="display: none;"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="7">Sunday</option></select>
+					<select id="hourOfday" name="hourOfday" style="display: none;"><option value="0">00:00</option><option value="1">01:00</option><option value="2">02:00</option><option value="3">03:00</option><option value="4">04:00</option><option value="5">05:00</option><option value="6">06:00</option><option value="7">07:00</option><option value="8">08:00</option><option value="9">09:00</option><option value="10">10:00</option><option value="11">11:00</option><option value="12">12:00</option><option value="13">13:00</option><option value="14">14:00</option><option value="15">15:00</option><option value="16">16:00</option><option value="17">17:00</option><option value="18">18:00</option><option value="19">19:00</option><option value="20">20:00</option><option value="21">21:00</option><option value="22">22:00</option><option value="23">23:00</option></select>
+				</div>
+	          </li>
+	         
+	          
+	          <li class="scenario_id text_field clearfix">
+				<div class="basis tooltip_trigger" >
+					<label for="delimiter" data-translate="item_import_delimiter" style="text-align: left;">Data delimiter:</label>
+			        <span class="tooltip">
+			          <span data-translate="index_objects_tooltip">Some content.</span>
+			        </span>
+				</div>
+				<div class="value">
+					<input type="text" id="delimiter" required="required" name="delimiter" maxlength="3" placeholder="Data delimiter" value="" />
+				</div>
+	          </li>
+	          <li class="types_base select_field clearfix" id="input_type_block">
+				<div class="basis">
+					<label for="input_type" class="input_label" data-translate="settings_input_type" style="text-align: left;">Input type:</label>
+	            </div>
+				<div class="value">
+					<select id="input_type" name="input_type">
+						<option value="1" data-translate="settings_product">Product</option>
+						<option value="2" data-translate="settings_article">Article</option>
+					</select>
+				</div>
+	          </li>
+			  
+			  	         
+	        </ul>
+	        </form>
+       
+       		<a class="button buttonsbar inline" id="button_save" data-translate="settings_save_changes" style="margin-top: 30px;">Send</a>
+       		
+       </div>
+       <div class="storyboards_base" style="position: absolute; overflow: hidden; left: 400px; bottom:0; top:0; right:0; border-left: 1px solid rgba(217, 226, 216, 1);border: 2px solid;      border-radius: 25px;margin-left: 50px;">
+       
+       		<iframe style="bottom:0; top:0px; left:0; right: 0px; width: 100%;height: 98%;overflow-y: auto;" src="http://localhost:8081/restfrontend/api/v4/362/nl2go/get_preview"></iframe>
+        	
+       </div>
+   </div>   
+        
+      
+      
+	<div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text"></span>
+      </p>
+    </div>
+    
+    <a id="link-recocontroller" href="https://reco.yoochoose.net" style="display:none">&nbsp;</a>
+    
+  </body>
+</html>
