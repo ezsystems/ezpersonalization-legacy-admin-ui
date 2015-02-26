@@ -362,14 +362,14 @@
         </li>
       </ul>
       
-      <div id="addedRevenue" class="tabContent" style="display: none; border-radius: 5px; border: 1px solid rgb(238, 236, 225);">
+      <div id="addedRevenue" class="tabContent" style="display: none;">
 			<table>
-				<tr>
-				    <th>Recommendation accepted</th>
-				    <th>Item boungt</th>
-				    <th>Price</th>
+				<tr class="fixed">
+				    <th class="reco_accepted"><span>Recommendation accepted</span></th>
+				    <th class="item_bought"><span>Item boungt</span></th>
+				    <th class="item_price"><span>Price <span class="currency">(EUR)</span></span></th>
 				</tr>
-				<tr>
+				<tr style="display: none;"> <!-- it is a template to copym when new records added -->
 				    <td class="reco_accepted"></td>
 				    <td class="item_bought"></td>
 				    <td class="item_price"></td>
@@ -388,7 +388,10 @@
 				    <td class="reco_accepted">2015-02-20T14:40:00.000-&gt;2015-02-20T14:42:00.000</td>
 				    <td class="item_bought">2:Merxx Eckbank mit Klapptisch aus Eukalyptusholz</td>
 				    <td class="item_price">239.95EUR</td>
-				</tr>				
+				</tr>
+				<tr class="fixed overflow">
+					More than <span class="limit">100</span> found. Use excel export to get all the whole list.
+				</tr>
 			</table>
 		</div>
       
