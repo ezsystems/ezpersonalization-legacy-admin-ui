@@ -367,9 +367,9 @@
       <div id="addedRevenue" class="tabContent" style="display: none;">
 			<table>
 				<tr class="fixed">
-				    <th class="reco_accepted"><span>Recommendation accepted</span></th>
-				    <th class="item_bought"><span>Item boungt</span></th>
-				    <th class="item_price"><span>Price <span class="currency">(EUR)</span></span></th>
+				    <th class="reco_accepted"><span  data-translate="added_revenue_table_time">Recommendation accepted</span></th>
+				    <th class="item_bought"><span  data-translate="added_revenue_table_item">Item bought</span></th>
+				    <th class="item_price"><span data-translate="added_revenue_table_price">Price (<span data-param="0" class="currency">EUR</span>)</span></th>
 				</tr>
 				<tr style="display: none;"> <!-- it is a template to copym when new records added -->
 				    <td class="reco_accepted"></td>
@@ -382,10 +382,10 @@
 				    <td class="item_price">159,95EUR</td>
 				</tr>
 				<tr class="fixed nothing">
-					<td colspan="3">No items where consumed in the selected period.</td>
+					<td colspan="3" data-translate="added_revenue_message_norecords">No items where consumed in the selected period (<span data-param="0" class="period">20.2.2015 15:43 - 20.2.2015 15:43</span>).</td>
 				</tr>				
 				<tr class="fixed overflow">
-					<td colspan="3">More than <span class="limit">100</span> found. Use excel export to get all the whole list.</td>
+					<td colspan="3" data-translate="added_revenue_message_overflow">More than <span data-param="0" class="limit">100</span> found. Use excel export to get all the records.</td>
 				</tr>
 			</table>
 		</div>
