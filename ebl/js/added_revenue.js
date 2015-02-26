@@ -5,15 +5,14 @@
 
 function loadAddedRevenue() {
 	
-	
-	
 	var from_date_time = currentPeriodFromTime();
 	var to_date_time = currentPeriodToTime();
 	
 	var mandator = mandatorDao.mandator; // mandatorDao is global
 	
-	$('#addedRevenue tr:not(fixed)').remove();
+	$('#addedRevenue tr:not(.fixed)').slice(1).remove();
 	$('#addedRevenue tr.overflow').hide();
+	$('#addedRevenue tr.nothing').hide();
 	
 	if (! mandator) {
 		return; // something went wrong
@@ -23,7 +22,7 @@ function loadAddedRevenue() {
 	
 	setLoadingDiv('#addedRevenue');
 	
-	var limit = 3;
+	var limit = 5;
 
 	yooAjax(null, {
 		url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue?limit="+(limit + 1)+"&from_date_time=" + from_date_time + "&to_date_time=" + to_date_time,
@@ -34,6 +33,7 @@ function loadAddedRevenue() {
 			for (var i in json) {
 				
 				if (index >= limit) {
+					$('#addedRevenue tr.overflow').show();
 					$('#addedRevenue span.limit').text(limit);
 					break;
 				}
@@ -55,9 +55,17 @@ function loadAddedRevenue() {
 				}
 				
 				var content = $('#addedRevenue tr:nth-child(2)').html();
-				$('#addedRevenue table').append("<tr>" + content + "</tr>");
+				$('#addedRevenue table').append("<tr>" + content + "</tr>").show();
 				
 				index++;
+			}
+			
+			if (index == 0) {
+				$('#addedRevenue tr.nothing').show();
+				$('#addedRevenue a.create_csv').hide();
+			} else {
+				$('#addedRevenue a.create_csv').show();
+				$('section.scenarios a.create_csv').attr('href',"/api/" + encodeURIComponent(customerID) + "/statistic/added_revenue.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time);
 			}
 			
 			i18n($('#addedRevenue'));

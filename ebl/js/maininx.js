@@ -183,26 +183,34 @@ function switchTab(newTab) {
 	
 	if (newTab == "SCENARIOS") {
 		$("#available_scenarios").show();
+		$("#scenarioControls").show();
 		$("section.scenarios li.tabScenarios").addClass("current");	
-	}
-	
-	if (newTab == "REVENUE") {
+		
+		
+	} else if (newTab == "REVENUE") {
 		$("#addedRevenue").show();
+		$("#addedRevenueControls").show();
 		$("section.scenarios li.tabRevenue").addClass("current");
-	}
-	
-	if (newTab == "ABTESTS") {
+		
+		
+	} else if (newTab == "ABTESTS") {
 		$("#ABTests").show();
+		$("#abControls").show();
 		$("section.scenarios li.tabAbTests").addClass("current");
 		
 		if(!$('#testList').data('tests').length){
 			$('#abControls').find('.helpLink').trigger('click');
 		}
-	}
-	
-	if (newTab == "IMPORT") {
+		
+		
+	} else if (newTab == "IMPORT") {
 		$("#importJobs").show();
+		$("#itemImortControls").show();
 		$("section.scenarios li.tabImports").addClass("current");
+		
+		
+	} else {
+		switchTab("SCENARIOS");
 	}
 }
 

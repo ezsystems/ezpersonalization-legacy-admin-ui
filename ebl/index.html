@@ -326,17 +326,19 @@
     <section class="scenarios"  style="margin: 20px 20px 0 20px;">
       <header class="clearfix" style="padding: 0; background: transparent;">
 		  <ul class="options_menu">
-			  <li class="tab tabScenarios" d= data-target="#available_scenarios" data-controls="#scenarioControls"><label data-translate="index_your_scenarios"></label></li>
-			  
-			  <li class="tab tabRevenue" id="addedRevenueTab"  data-target="#addedRevenue" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
+			  <li class="tab tabScenarios" data-target="#available_scenarios" data-controls="#scenarioControls"><label data-translate="index_your_scenarios"></label></li>
+			  <li class="tab tabRevenue" id="addedRevenueTab"  data-target="#addedRevenue" data-controls="#itemImortControls"><label  data-translate="added_revenue_tab">Added Revenue</label></li>
 			  <li class="tab tabAbTests" id="ABTestTab"        data-target="#ABTests"      style="display: none;" data-controls="#abControls"><label data-translate="ab_test_ab_tests"></label></li>
 			  <li class="tab tabImports" id="itemImortTab"     data-target="#importJobs"   style="display: none;" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
 		  </ul>
 
-        <div id="scenarioControls" class="controls">
+        <div id="scenarioControls" class="controls" style="display: none;">
 			<a id="createNewScenario"  class="create_new" data-translate="index_create_a_new_scenario">Create a new scenario</a>
 			<a class="helpLink" data-target="#scenarioHelp"></a>
 		</div>
+        <div id="addedRevenueControls" class="controls" style="display: none;">
+			<a class="create_csv" data-translate="added_revenue_create_excel">Download added revenue report</a>
+		</div>		
 		<div id="abControls" class="controls" style="display: none;">
 			<a id="createNewTest" class="create_new" data-translate="ab_test_create_new_test"></a>
 			<a class="helpLink" data-target="#ABHelp"></a>
@@ -376,21 +378,14 @@
 				</tr>
 				<tr>
 				    <td class="reco_accepted">2015-02-20T14:40:00.000-&gt;2015-02-20T14:42:00.000</td>
-				    <td class="item_bought">2:Enders Cosy Polo 2.0 Edelstahl Gas-Heizstrahler</td>
+				    <td class="item_bought">Example product</td>
 				    <td class="item_price">159,95EUR</td>
 				</tr>
-				<tr>
-				    <td class="reco_accepted">2015-02-20T14:40:00.000-&gt;2015-02-20T14:42:00.000</td>
-				    <td class="item_bought">2:Haushalt International Balkonklapptisch</td>
-				    <td class="item_price">4x12.95EUR</td>
-				</tr>
-				<tr>
-				    <td class="reco_accepted">2015-02-20T14:40:00.000-&gt;2015-02-20T14:42:00.000</td>
-				    <td class="item_bought">2:Merxx Eckbank mit Klapptisch aus Eukalyptusholz</td>
-				    <td class="item_price">239.95EUR</td>
-				</tr>
+				<tr class="fixed nothing">
+					<td colspan="3">No items where consumed in the selected period.</td>
+				</tr>				
 				<tr class="fixed overflow">
-					More than <span class="limit">100</span> found. Use excel export to get all the whole list.
+					<td colspan="3">More than <span class="limit">100</span> found. Use excel export to get all the whole list.</td>
 				</tr>
 			</table>
 		</div>
