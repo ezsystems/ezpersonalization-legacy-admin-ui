@@ -167,7 +167,6 @@ $(document).ready(function() {
 
 
 /** There are following tabs: SCENARIOS, REVENUE, ABTESTS, IMPORT
- * 
  */
 function switchTab(newTab) {
 	
@@ -289,9 +288,13 @@ var ajaxScenarioList = function(new_period, callback) {
 	    granularity = "PT12H";
 	    $current = $("fieldset.time_settings li.view_option_week");
 	    
+	    $("fieldset.time_settings li.view_option_week span.info").text(dateTimeFormat(from_date_time) + " - " + dateTimeFormat(to_date_time));
+	    
 	} else if (period == 'MONTH') {
         granularity = "P1D";
         $current = $("fieldset.time_settings li.view_option_month");
+        
+        $("fieldset.time_settings li.view_option_month span.info").text(dateTimeFormat(from_date_time) + " - " + dateTimeFormat(to_date_time));
         
 	} else if (period == 'DAY') {
 	    granularity = "PT1H";

@@ -18,11 +18,11 @@ function loadAddedRevenue() {
 		return; // something went wrong
 	}
 	
-	$('#addedRevenue span.currency').text("(" + mandator.advancedOptions.currency + ")");
+	$('#addedRevenue span.currency').text(mandator.advancedOptions.currency);
 	
 	setLoadingDiv('#addedRevenue');
 	
-	var limit = 5;
+	var limit = 100;
 
 	yooAjax(null, {
 		url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue?limit="+(limit + 1)+"&from_date_time=" + from_date_time + "&to_date_time=" + to_date_time,
@@ -40,10 +40,15 @@ function loadAddedRevenue() {
 				
 				var e = json[i];
 				
-				var date = dateFormat(e.timeConsumed) + " [" + dateDiffMinutes(e.timeRecommended, e.timeConsumed) + " minutes]";
+				var date = dateTimeFormat(e.timeConsumed) + " [" + dateDiffMinutes(e.timeRecommended, e.timeConsumed) + " minutes]";
 			
 				$('#addedRevenue tr:nth-child(2) td.reco_accepted').text(date);
-				$('#addedRevenue tr:nth-child(2) td.item_bought').text(e.item.id + ":" + e.item.title);
+				if (e.item.title) {
+					$('#addedRevenue tr:nth-child(2) td.item_bought').text(e.item.title + " ["+e.item.id+"]");	
+				} else {
+					$('#addedRevenue tr:nth-child(2) td.item_bought').text(e.item.id);
+				}
+				
 				if (e.price) {
 					var price = e.price.toFixed(mandator.advancedOptions.currencyFractionDigits);
 					
@@ -62,10 +67,11 @@ function loadAddedRevenue() {
 			
 			if (index == 0) {
 				$('#addedRevenue tr.nothing').show();
-				$('#addedRevenue a.create_csv').hide();
+				$('section.scenarios a.create_csv').hide();
+				$('#addedRevenue span.period').text(dateTimeFormat(from_date_time) + " - " + dateTimeFormat(to_date_time));
 			} else {
-				$('#addedRevenue a.create_csv').show();
-				$('section.scenarios a.create_csv').attr('href',"/api/" + encodeURIComponent(customerID) + "/statistic/added_revenue.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time);
+				$('section.scenarios a.create_csv').show();
+				$('section.scenarios a.create_csv').attr('href',"/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time);
 			}
 			
 			i18n($('#addedRevenue'));
@@ -94,11 +100,3 @@ function dateDiffMinutes(a, b) {
 	  }
 }
 
-
-function dateFormat(date) {
-  if (! (date instanceof Date)) {
-	  date = new Date(date);
-  }
-
-  return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
-}
