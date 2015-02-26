@@ -76,6 +76,32 @@ $(document).ready(function() {
 	    ajaxScenarioList('MONTH');
 	});
 	
+	
+	// SCENARIOS, REVENUE, ABTESTS, IMPORT
+	
+	$('section.scenarios li.tabScenarios').click(function() {
+		switchTab("SCENARIOS");
+	});
+	
+	
+	$('section.scenarios li.tabRevenue').click(function() {
+		switchTab("REVENUE");
+	});
+	
+	$('section.scenarios li.tabAbTests').click(function() {
+		switchTab("ABTESTS");
+	});
+	
+	$('section.scenarios li.tabImports').click(function() {
+		switchTab("IMPORT");
+	});
+	
+	
+	$('#createNewTest').click(function(){
+		gui.editTest(new Test(emptyTest));
+	});
+
+	
 	// is called if right converison unit is changed from relative -> absolute and vice versa
 	$('#conversion_units').change(function () {
 		renderConversionRate();
@@ -153,6 +179,41 @@ $(document).ready(function() {
 });
 
 
+/** There are following tabs: SCENARIOS, REVENUE, ABTESTS, IMPORT
+ * 
+ */
+function switchTab(newTab) {
+	
+	if (newTab) {
+		sessionStorage.setItem("active_tab", newTab);
+	} else {
+		newTab = sessionStorage.getItem("active_tab");
+	}
+	
+	$("section.scenarios div.tabContent, section.scenarios div.controls").hide();
+	
+	if (newTab == "SCENARIOS") {
+		$("#available_scenarios").show();
+	}
+	
+	if (newTab == "REVENUE") {
+		$("#addedRevenue").show();
+	}
+	
+	if (newTab == "ABTESTS") {
+		$("#ABTests").show();
+		
+		if(!$('#testList').data('tests').length){
+			$('#abControls').find('.helpLink').trigger('click');
+		}
+	}
+	
+	if (newTab == "IMPORT") {
+		$("#importJobs").show();
+	}
+}
+
+
 function currentPeriodFromTime() { // <-- "period" is a global variable
 	if (period == 'WEEK') {
 	    //calculate the from_date_time and to_date_time
@@ -198,10 +259,6 @@ function currentPeriodToTime() { // <-- "period" is a global variable
  * 
  */
 var ajaxScenarioList = function(new_period, callback) {
-	
-	
-	sessionStorage.setItem("name", "Nicholas");
-	
 	
 	if (!customerID) {
 		return;
@@ -732,8 +789,8 @@ function initialLoadData() {
     });
     
 	if(mandatorDao.getVersion() == 'EXTENDED'){
-		$('#ABTestTab').show();
-		$('#itemImortTab').show();
+		$('section.scenarios li.tabAbTests').show();
+		$('section.scenarios li.tabImports').show();
 		$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
 		$('#createNewImport').off('click').click(function() {
 			$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
@@ -742,8 +799,8 @@ function initialLoadData() {
 		readImportJobs();
 		
 	}else{
-		$('#ABTestTab').hide();
-		$('#itemImortTab').hide();
+		$('section.scenarios li.tabAbTests').hide();
+		$('section.scenarios li.tabImports').hide();
 	}
 	$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
 	$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
