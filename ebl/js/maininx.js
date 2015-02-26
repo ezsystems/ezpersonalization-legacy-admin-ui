@@ -63,18 +63,6 @@ $(document).ready(function() {
 	    renderRecommendationChart();
 	});
 	
-	//Last day click event
-	$('#view_option_day').click(function () {
-	    ajaxScenarioList("24H");
-	});
-	
-	$('#view_option_week').click(function () {
-		ajaxScenarioList("WEEK");
-	});
-	
-	$('#view_option_month').click(function () {
-	    ajaxScenarioList('MONTH');
-	});
 	
 	
 	// SCENARIOS, REVENUE, ABTESTS, IMPORT
@@ -163,14 +151,13 @@ $(document).ready(function() {
 					return;
 				}
 				
-				$.when(
-					mandatorDao.init(customerID),
-					ajaxScenarioList(period) // do not changing the period. It was just loaded from the session storage
-			    ).always(function() {
-			    	initialize().always(function() {
-		    			unsetLoadingDiv('section.mandant > header');		
+				mandatorDao.init(customerID).always(function() {
+					ajaxScenarioList(period).always(function() {
+						initialize().always(function() {
+							unsetLoadingDiv('section.mandant > header');
+						});
 			    	});
-			    });		
+				});
 			}
 		}).always(function() {
 			unsetLoadingDiv('section.mandant > header');		
@@ -190,26 +177,40 @@ function switchTab(newTab) {
 		newTab = sessionStorage.getItem("active_tab");
 	}
 	
-	$("section.scenarios div.tabContent, section.scenarios div.controls").hide();
+	$("section.scenarios ul.options_menu li").removeClass("current");
+	$("section.scenarios .tabContent").hide();
+	$("section.scenarios div.controls").hide();
 	
 	if (newTab == "SCENARIOS") {
 		$("#available_scenarios").show();
-	}
-	
-	if (newTab == "REVENUE") {
+		$("#scenarioControls").show();
+		$("section.scenarios li.tabScenarios").addClass("current");	
+		
+		
+	} else if (newTab == "REVENUE") {
 		$("#addedRevenue").show();
-	}
-	
-	if (newTab == "ABTESTS") {
+		$("#addedRevenueControls").show();
+		$("section.scenarios li.tabRevenue").addClass("current");
+		
+		
+	} else if (newTab == "ABTESTS") {
 		$("#ABTests").show();
+		$("#abControls").show();
+		$("section.scenarios li.tabAbTests").addClass("current");
 		
 		if(!$('#testList').data('tests').length){
 			$('#abControls').find('.helpLink').trigger('click');
 		}
-	}
-	
-	if (newTab == "IMPORT") {
+		
+		
+	} else if (newTab == "IMPORT") {
 		$("#importJobs").show();
+		$("#itemImortControls").show();
+		$("section.scenarios li.tabImports").addClass("current");
+		
+		
+	} else {
+		switchTab("SCENARIOS");
 	}
 }
 
@@ -387,6 +388,45 @@ function piwikCaller(name){
  *  @see #initialLoadData()
  */
 function initialize() {
+	
+	
+	//Last day click event
+	$('#view_option_day').click(function () {
+	    ajaxScenarioList("24H");
+	});
+	
+	$('#view_option_week').click(function () {
+		ajaxScenarioList("WEEK");
+	});
+	
+	$('#view_option_month').click(function () {
+	    ajaxScenarioList('MONTH');
+	});
+	
+	
+	// SCENARIOS, REVENUE, ABTESTS, IMPORT
+	$('section.scenarios li.tabScenarios').click(function() {
+		switchTab("SCENARIOS");
+	});
+	
+	
+	$('section.scenarios li.tabRevenue').click(function() {
+		switchTab("REVENUE");
+	});
+	
+	$('section.scenarios li.tabAbTests').click(function() {
+		switchTab("ABTESTS");
+	});
+	
+	$('section.scenarios li.tabImports').click(function() {
+		switchTab("IMPORT");
+	});
+	
+	
+	$('#createNewTest').click(function(){
+		gui.editTest(new Test(emptyTest));
+	});
+
 
 	var userLoadingPromise = getCurrentUser(function(loginInfo) {
 		
@@ -805,6 +845,7 @@ function initialLoadData() {
 	$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
 	$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
  
+	switchTab(false); // switching tab loading the last tab from session storage
 }
 
 
