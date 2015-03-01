@@ -623,6 +623,35 @@ function yooAjax(blurSelector, options) {
 var magicCountdown;
 
 
+
+/** Formats an XSD dateTime into a German form DD.MM.YYYY HH:MM 
+ */
+function dateTimeFormat(date) {
+
+	var re = new RegExp("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d+))?");
+	var match = re.exec(date);
+	
+	date = {
+		"date" : match[3],
+		"month" : match[2],
+		"year" : match[1],
+		"hours" : match[4],
+		"minutes" : match[5],
+		"seconds" : match[6],
+	};
+
+	return pad(date.date, 2) + "." + pad(date.month, 2) + "." + pad(date.year, 4) + " " + pad(date.hours, 2) + ":" + pad(date.minutes, 2);
+}
+
+
+function pad(num, size) {
+    var s = num + "";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+
+
+
 /** Shows a magic message.
  *  
  *  It makes the DIV#magic_message visible. If no magic DIV exists,
