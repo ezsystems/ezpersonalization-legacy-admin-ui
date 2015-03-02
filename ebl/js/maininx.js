@@ -1271,7 +1271,6 @@ function renderConversionRate() {
 		} else {
 			var currencyCode = mandatorDao.mandator.advancedOptions.currency;
 			var param = $(".conversion_rate_chart span[data-param='0']");
-			param.attr('data-translate', "currency_" + currencyCode);
 			param.text(currencyCode);
 			i18n(param);
 			
