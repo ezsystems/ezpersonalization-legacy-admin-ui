@@ -53,7 +53,7 @@ function savePreferences() {
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
 		  data: JSON.stringify(retObj),
-		  url: "/restfrontend/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/savePreferences",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/savePreferences",
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
 			  setMessagePopUp("positive", "message_data_saved_successfully");
