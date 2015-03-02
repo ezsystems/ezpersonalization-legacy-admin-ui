@@ -2,11 +2,20 @@ var customerID = gup('customer_id');
 var currentbg = "#cccccc";
 $(document).ready(function () {
 	inlineSpectrumBodyBackground();
+	
 	$('#import_primary_settings').submit(function () {
 		savePreferences();
 		return false;
     });
+	var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview";
+	$('#previewFrame').attr('src',isrc);   
+	
+	$("#button_save").click(submitImport);
 });
+
+function submitImport() {
+	$('<input type="submit">').hide().appendTo($('#import_primary_settings')).click().remove();
+}
 
 function inlineSpectrumBodyBackground(){
 	$("#Inline").spectrum({
@@ -29,11 +38,10 @@ function inlineSpectrumBodyBackground(){
 }
 
 function savePreferences() {
-	 setLoadingDiv($('body'));
+	alert('hehe');
+	setLoadingDiv($('body'));
 	 retObj = new Object();
-	 if(retObjOld){
-		 retObj = retObjOld;
-	 }
+	 retObj.mandatorName = customerID;
 	 retObj.logo = $("#logo").val();
 	 retObj.background = currentbg;
 	 retObj.facebook = $("#facebook").val();
@@ -45,7 +53,7 @@ function savePreferences() {
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
 		  data: JSON.stringify(retObj),
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/savePreferences",
+		  url: "/restfrontend/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/savePreferences",
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
 			  setMessagePopUp("positive", "message_data_saved_successfully");
@@ -55,6 +63,7 @@ function savePreferences() {
 			  stdAjaxErrorHandler();
 		  }
 	  });	
+	alert('hehe');
 }
 
 
