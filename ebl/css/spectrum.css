@@ -375,7 +375,7 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
     color: #333;
     vertical-align: middle;
     display: block;
-	width: 89%;
+	/* width: 89%; */
 }
 .sp-replacer:hover, .sp-replacer.sp-active {
     border-color: #F0C49B;

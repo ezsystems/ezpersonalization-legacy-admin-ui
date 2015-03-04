@@ -11,6 +11,9 @@ $(document).ready(function () {
 	$('#previewFrame').attr('src',isrc);   
 	
 	$("#button_save").click(submitImport);
+	$(function() {
+	    $( "#accordion" ).accordion();
+	});
 });
 
 function submitImport() {
