@@ -7,6 +7,7 @@
     <meta name="description" content="YooChoose recommendation engine configurator">
     <meta name="author" content="Jurij Burkanov">
     <meta name="viewport" content="width:device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/jqueryui.css">
     <link rel="stylesheet" href="css/reset.css">
     <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
     <link rel="stylesheet" href="css/spectrum.css">
@@ -43,72 +44,83 @@
        <div class="models_base" style="width: 400px; position: absolute; overflow: hidden; bottom:0; top:0; left:0;">
        
 	       <form action="#" method="get" id="import_primary_settings" style="display:block; padding-bottom: 7px;">
-	        <ul class="preview_settings normal_form">
-	          
-	          <li class="scenario_id text_field clearfix">
-				<div class="basis tooltip_trigger" >
-					<label for="logo" data-translate="mail_logo_url" style="text-align: left;">LOGO URL:</label>
-			        <span class="tooltip">
-			          <span data-translate="index_objects_tooltip">Some content.</span>
-			        </span>
-				</div>
-				<div class="value">
-					<input type="url" id="logo" required="required" name="logo" placeholder="LOGO URL" value="" />
-				</div>
-	          </li>
-	          
-	          <li class="scenario_id text_field clearfix">
-				<div class="basis tooltip_trigger" >
-					<label for="Inline" data-translate="mail_background_color" style="text-align: left;">Background color:</label>
-			        <span class="tooltip">
-			          <span data-translate="index_objects_tooltip">Some content.</span>
-			        </span>
-				</div>
-				<div class="value">
-					<input type='text' id="Inline" />
-				</div>
-	          </li>
-	         
-	          <li class="scenario_id text_field clearfix">
-				<div class="basis tooltip_trigger" >
-					<label for="facebook" data-translate="mail_facebook_url" style="text-align: left;">FACEBOOK URL:</label>
-			        <span class="tooltip">
-			          <span data-translate="index_objects_tooltip">Some content.</span>
-			        </span>
-				</div>
-				<div class="value">
-					<input type="url" id="facebook" required="required" name="facebook" placeholder="FACEBOOK URL" value="" />
-				</div>
-	          </li>
-	          
-	          <li class="scenario_id text_field clearfix">
-				<div class="basis tooltip_trigger" >
-					<label for="googleplus" data-translate="mail_googleplus_url" style="text-align: left;">Google Plus URL:</label>
-			        <span class="tooltip">
-			          <span data-translate="index_objects_tooltip">Some content.</span>
-			        </span>
-				</div>
-				<div class="value">
-					<input type="url" id="googleplus" required="required" name="googleplus" placeholder="GOOGLE+ URL" value="" />
-				</div>
-	          </li>
-	          
-	          <li class="scenario_id text_field clearfix">
-				<div class="basis tooltip_trigger" >
-					<label for="tweeter" data-translate="mail_twitter_url" style="text-align: left;">twitter URL:</label>
-			        <span class="tooltip">
-			          <span data-translate="index_objects_tooltip">Some content.</span>
-			        </span>
-				</div>
-				<div class="value">
-					<input type="url" id="twitter" required="required" name="twitter" placeholder="twitter URL" value="" />
-				</div>
-	          </li>
+	       <div id="accordion">
+	        <h3>Section 1</h3>
+	        	<div>
+			        <ul class="preview_settings normal_form">
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="logo" data-translate="mail_logo_url" style="text-align: left;">LOGO URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="logo" required="required" name="logo" placeholder="LOGO URL" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="Inline" data-translate="mail_background_color" style="text-align: left;">Background color:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type='text' id="Inline" />
+						</div>
+			          </li>
+			          </ul>
+			          </div>
+	          <h3>Section 2</h3>
+	          <div>
+			        <ul class="preview_settings normal_form">
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="facebook" data-translate="mail_facebook_url" style="text-align: left;">FACEBOOK URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="facebook" required="required" name="facebook" placeholder="FACEBOOK URL" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="googleplus" data-translate="mail_googleplus_url" style="text-align: left;">Google Plus URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="googleplus" required="required" name="googleplus" placeholder="GOOGLE+ URL" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="tweeter" data-translate="mail_twitter_url" style="text-align: left;">twitter URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="twitter" required="required" name="twitter" placeholder="twitter URL" value="" />
+						</div>
+			          </li>
+			          
+			          
 	        
 	        
 			  
 			  	         
-	        </ul>
+	        	</ul>
+	        	</div>
+	        	</div>
 	        </form>
        
        		<a class="button buttonsbar inline" id="button_save" data-translate="settings_save_changes" style="margin-top: 30px;">Send</a>
