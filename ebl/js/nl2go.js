@@ -26,11 +26,11 @@ function inlineSpectrumBodyBackground(){
 	    showAlpha: true,
 	    color: currentbg,
 	    move: function(color) {
-	        var bgcolorPrev = color.toRgbString(); 
+	        var bgcolorPrev = color.toHexString(); 
 	        $('.recUnit').css("background-color",bgcolorPrev);
 	    },
 	    change: function(color) {
-	    	var bgcolorPrev = color.toRgbString(); 
+	    	var bgcolorPrev = color.toHexString(); 
 	    	currentbg = bgcolorPrev;
 	    },
 	    hide: function(color) {
