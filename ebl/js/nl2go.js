@@ -38,15 +38,17 @@ function spectrumBackground(elementId, colorVariable){
 	    showAlpha: true,
 	    color: colorVariable,
 	    move: function(color) {
-	        var bgcolorPrev = color.toHexString(); 
-	        $('.recUnit').css("background-color",bgcolorPrev);
 	    },
 	    change: function(color) {
 	    	var bgcolorPrev = color.toHexString(); 
-	    	colorVariable = bgcolorPrev;
+	    	if('mailBackground' === elementId ){
+	    		currentbg = bgcolorPrev;
+	    	}else if('menuBackground'  === elementId){
+	    		menuCurrentbg = bgcolorPrev;
+	    	}
+	    		
 	    },
 	    hide: function(color) {
-	    	$('.recUnit').css("background-color",colorVariable);
 	    }
 		
 	});
