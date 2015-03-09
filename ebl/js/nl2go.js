@@ -1,5 +1,10 @@
 var customerID = gup('customer_id');
 var currentbg = "#cccccc";
+var menuCurrentbg = "#003300";
+var ctaCurrentbg = "#123456";
+var topicCurrentbg = "#cccccc";
+var footerCurrentbg = "#111111";
+
 $(document).ready(function () {
 	inlineSpectrumBodyBackground();
 	
@@ -21,23 +26,43 @@ function submitImport() {
 }
 
 function inlineSpectrumBodyBackground(){
-	$("#Inline").spectrum({
+	spectrumBackground('mailBackground',currentbg);
+	spectrumBackground('menuBackground',menuCurrentbg);
+	
+	
+}
+
+function spectrumBackground(elementId, colorVariable){
+	$("#"+elementId).spectrum({
 	    showInput: true,
 	    showAlpha: true,
-	    color: currentbg,
+	    color: colorVariable,
 	    move: function(color) {
 	        var bgcolorPrev = color.toHexString(); 
 	        $('.recUnit').css("background-color",bgcolorPrev);
 	    },
 	    change: function(color) {
 	    	var bgcolorPrev = color.toHexString(); 
-	    	currentbg = bgcolorPrev;
+	    	colorVariable = bgcolorPrev;
 	    },
 	    hide: function(color) {
-	    	$('.recUnit').css("background-color",currentbg);
+	    	$('.recUnit').css("background-color",colorVariable);
 	    }
 		
 	});
+}
+
+function addMenuElement(menuLinksArray){
+	for (var i=1; i < 5; i++) {
+		var name = $("#menu_elment_name"+i).val();
+		var url  = $("#menu_elment_url"+i).val();
+		if(name != null && name != ''){
+			var menuLink = new Object();
+			menuLink.caption = name;
+			menuLink.url = url;
+			menuLinksArray.push(menuLink);
+		}
+	}
 }
 
 function savePreferences() {
@@ -46,6 +71,10 @@ function savePreferences() {
 	 retObj.mandatorName = customerID;
 	 retObj.logo = $("#logo").val();
 	 retObj.background = currentbg;
+	 retObj.menuBackground = menuCurrentbg;
+	 retObj.menuLinks = new Array();
+	 addMenuElement(retObj.menuLinks);
+	 
 	 retObj.facebook = $("#facebook").val();
 	 retObj.googleplus = $("#googleplus").val();
 	 retObj.twitter = $("#twitter").val();
