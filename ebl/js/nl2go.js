@@ -54,14 +54,17 @@ function inlineSpectrumBodyBackground(){
 			  $("#facebook").val(retObj.facebook);
 			  $("#googleplus").val(retObj.googleplus);
 			  $("#twitter").val(retObj.twitter);
+			  spectrumBackground('mailBackground',currentbg);
+			  spectrumBackground('menuBackground',menuCurrentbg);
 		  },
 		  error: function() {
 			  unsetLoadingDiv($('body'));
+			  spectrumBackground('mailBackground',currentbg);
+			  spectrumBackground('menuBackground',menuCurrentbg);
 			  stdAjaxErrorHandler();
 		  }
 	  });	
-	spectrumBackground('mailBackground',currentbg);
-	spectrumBackground('menuBackground',menuCurrentbg);
+	
 	
 	
 }
@@ -185,6 +188,8 @@ function savePreferences2() {
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/savePreferences",
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
+			  var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview";
+			  $('#previewFrame').attr('src',isrc);   
 			  setMessagePopUp("positive", "message_data_saved_successfully");
 		  },
 		  error: function() {
