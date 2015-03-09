@@ -9,7 +9,7 @@ $(document).ready(function () {
 	inlineSpectrumBodyBackground();
 	
 	$('#import_primary_settings').submit(function () {
-		savePreferences();
+		savePreferences2();
 		return false;
     });
 	var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview";
@@ -26,6 +26,40 @@ function submitImport() {
 }
 
 function inlineSpectrumBodyBackground(){
+	 $.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/getMailPreferences",
+		  success: function(retObj) {
+			  unsetLoadingDiv($('body'));
+			  $("#logo").val(retObj.logo);
+			  $("#menu_elment_hotline_name").val(retObj.holineName);
+			  $("#menu_elment_hotline_number").val(retObj.holineNumber);
+			  if(retObj.background != null){
+				  currentbg = retObj.background;
+			  }
+			  if(retObj.menuBackground != null){
+				  menuCurrentbg = retObj.menuBackground;
+			  }
+			  if(retObj.menuLinks != null){
+				  var kk = 1;
+				  for(var menuLink in retObj.menuLinks){
+					  $("#menu_elment_name"+kk).val(menuLink.caption);
+					  $("#menu_elment_url"+kk).val(menuLink.url);
+					  kk++;
+				  }
+			  }
+			  $("#facebook").val(retObj.facebook);
+			  $("#googleplus").val(retObj.googleplus);
+			  $("#twitter").val(retObj.twitter);
+		  },
+		  error: function() {
+			  unsetLoadingDiv($('body'));
+			  stdAjaxErrorHandler();
+		  }
+	  });	
 	spectrumBackground('mailBackground',currentbg);
 	spectrumBackground('menuBackground',menuCurrentbg);
 	
@@ -131,7 +165,14 @@ function savePreferences2() {
 	 retObj = new Object();
 	 retObj.mandatorName = customerID;
 	 retObj.logo = $("#logo").val();
+	 retObj.holineName = $("#menu_elment_hotline_name").val();
+	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
+	 
 	 retObj.background = currentbg;
+	 retObj.menuBackground = menuCurrentbg;
+	 retObj.menuLinks = new Array();
+	 addMenuElement(retObj.menuLinks);
+	 
 	 retObj.facebook = $("#facebook").val();
 	 retObj.googleplus = $("#googleplus").val();
 	 retObj.twitter = $("#twitter").val();
