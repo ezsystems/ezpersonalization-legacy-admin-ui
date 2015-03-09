@@ -70,6 +70,9 @@ function savePreferences() {
 	 retObj = new Object();
 	 retObj.mandatorName = customerID;
 	 retObj.logo = $("#logo").val();
+	 retObj.holineName = $("#menu_elment_hotline_name").val();
+	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
+	 
 	 retObj.background = currentbg;
 	 retObj.menuBackground = menuCurrentbg;
 	 retObj.menuLinks = new Array();
