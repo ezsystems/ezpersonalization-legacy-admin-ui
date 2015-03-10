@@ -37,6 +37,9 @@ function inlineSpectrumBodyBackground(){
 			  $("#logo").val(retObj.logo);
 			  $("#menu_elment_hotline_name").val(retObj.holineName);
 			  $("#menu_elment_hotline_number").val(retObj.holineNumber);
+			  $("#cta").val(retObj.cta);
+			  $("#topic").val(retObj.topic);
+			  
 			  if(retObj.background != null){
 				  currentbg = retObj.background;
 			  }
@@ -164,13 +167,14 @@ function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
 
 
 function savePreferences2() {
-	alert('hehe');
 	setLoadingDiv($('body'));
 	 retObj = new Object();
 	 retObj.mandatorName = customerID;
 	 retObj.logo = $("#logo").val();
 	 retObj.holineName = $("#menu_elment_hotline_name").val();
 	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
+	 retObj.cta = $("#cta").val();
+	 retObj.topic = $("#topic").val();
 	 
 	 retObj.background = currentbg;
 	 retObj.menuBackground = menuCurrentbg;
@@ -180,6 +184,8 @@ function savePreferences2() {
 	 retObj.facebook = $("#facebook").val();
 	 retObj.googleplus = $("#googleplus").val();
 	 retObj.twitter = $("#twitter").val();
+	 
+	 
 	 $.ajax({
 		  type: "POST",
 		  mimeType: "application/json",
@@ -198,7 +204,6 @@ function savePreferences2() {
 			  stdAjaxErrorHandler();
 		  }
 	  });	
-	alert('hehe');
 }
 
 
