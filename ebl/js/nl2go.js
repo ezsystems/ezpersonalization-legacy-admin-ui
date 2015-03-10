@@ -45,9 +45,10 @@ function inlineSpectrumBodyBackground(){
 			  }
 			  if(retObj.menuLinks != null){
 				  var kk = 1;
-				  for(var menuLink in retObj.menuLinks){
-					  $("#menu_elment_name"+kk).val(menuLink.caption);
-					  $("#menu_elment_url"+kk).val(menuLink.url);
+				  var menuLinks = retObj.menuLinks;
+				  for(var menuLink in menuLinks){
+					  $("#menu_elment_name"+kk).val(menuLinks[menuLink].caption);
+					  $("#menu_elment_url"+kk).val(menuLinks[menuLink].url);
 					  kk++;
 				  }
 			  }
