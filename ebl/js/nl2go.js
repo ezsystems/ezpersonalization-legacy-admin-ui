@@ -49,6 +49,10 @@ function inlineSpectrumBodyBackground(){
 			  if(retObj.ctaBackground != null){
 				  ctaCurrentbg = retObj.ctaBackground;
 			  }
+			  if(retObj.footerBackground != null){
+				  footerCurrentbg = retObj.footerBackground;
+			  }
+			  
 			  if(retObj.menuLinks != null){
 				  var kk = 1;
 				  var menuLinks = retObj.menuLinks;
@@ -64,12 +68,14 @@ function inlineSpectrumBodyBackground(){
 			  spectrumBackground('mailBackground',currentbg);
 			  spectrumBackground('menuBackground',menuCurrentbg);
 			  spectrumBackground('ctaBackground',ctaCurrentbg);
+			  spectrumBackground('"footerBackground"',footerCurrentbg);
 		  },
 		  error: function() {
 			  unsetLoadingDiv($('body'));
 			  spectrumBackground('mailBackground',currentbg);
 			  spectrumBackground('menuBackground',menuCurrentbg);
 			  spectrumBackground('ctaBackground',ctaCurrentbg);
+			  spectrumBackground('"footerBackground"',footerCurrentbg);
 			  stdAjaxErrorHandler();
 		  }
 	  });	
@@ -93,6 +99,8 @@ function spectrumBackground(elementId, colorVariable){
 	    		menuCurrentbg = bgcolorPrev;
 	    	}else if('ctaBackground'  === elementId){
 	    		ctaCurrentbg = bgcolorPrev;
+	    	}else if('footerBackground'  === elementId){
+	    		footerCurrentbg = bgcolorPrev;
 	    	}
 	    		
 	    },
@@ -122,18 +130,21 @@ function savePreferences() {
 	 retObj.logo = $("#logo").val();
 	 retObj.holineName = $("#menu_elment_hotline_name").val();
 	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
-	 
 	 retObj.background = currentbg;
-	 retObj.menuBackground = menuCurrentbg;
 	 retObj.ctaBackground = ctaCurrentbg;
 	 retObj.cta = $("#cta").val();
 	 retObj.topic = $("#topic").val();
+	 
+	 
+	 retObj.menuBackground = menuCurrentbg;
 	 retObj.menuLinks = new Array();
 	 addMenuElement(retObj.menuLinks);
 	 
+	 retObj.footerBackground = footerCurrentbg;
 	 retObj.facebook = $("#facebook").val();
 	 retObj.googleplus = $("#googleplus").val();
 	 retObj.twitter = $("#twitter").val();
+	 
 	 $.ajax({
 		  type: "POST",
 		  mimeType: "application/json",
