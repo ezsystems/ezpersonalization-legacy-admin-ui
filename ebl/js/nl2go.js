@@ -46,6 +46,9 @@ function inlineSpectrumBodyBackground(){
 			  if(retObj.menuBackground != null){
 				  menuCurrentbg = retObj.menuBackground;
 			  }
+			  if(retObj.ctaBackground != null){
+				  ctaCurrentbg = retObj.ctaBackground;
+			  }
 			  if(retObj.menuLinks != null){
 				  var kk = 1;
 				  var menuLinks = retObj.menuLinks;
@@ -60,11 +63,13 @@ function inlineSpectrumBodyBackground(){
 			  $("#twitter").val(retObj.twitter);
 			  spectrumBackground('mailBackground',currentbg);
 			  spectrumBackground('menuBackground',menuCurrentbg);
+			  spectrumBackground('ctaBackground',ctaCurrentbg);
 		  },
 		  error: function() {
 			  unsetLoadingDiv($('body'));
 			  spectrumBackground('mailBackground',currentbg);
 			  spectrumBackground('menuBackground',menuCurrentbg);
+			  spectrumBackground('ctaBackground',ctaCurrentbg);
 			  stdAjaxErrorHandler();
 		  }
 	  });	
@@ -86,6 +91,8 @@ function spectrumBackground(elementId, colorVariable){
 	    		currentbg = bgcolorPrev;
 	    	}else if('menuBackground'  === elementId){
 	    		menuCurrentbg = bgcolorPrev;
+	    	}else if('ctaBackground'  === elementId){
+	    		ctaCurrentbg = bgcolorPrev;
 	    	}
 	    		
 	    },
@@ -118,6 +125,9 @@ function savePreferences() {
 	 
 	 retObj.background = currentbg;
 	 retObj.menuBackground = menuCurrentbg;
+	 retObj.ctaBackground = ctaCurrentbg;
+	 retObj.cta = $("#cta").val();
+	 retObj.topic = $("#topic").val();
 	 retObj.menuLinks = new Array();
 	 addMenuElement(retObj.menuLinks);
 	 
