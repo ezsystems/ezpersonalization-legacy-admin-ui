@@ -84,6 +84,11 @@ $(document).ready(function() {
 		switchTab("IMPORT");
 	});
 	
+	$('section.scenarios li.tabMail').click(function() {
+		switchTab("MAIL");
+	});
+	
+	
 	
 	$('#createNewTest').click(function(){
 		gui.editTest(new Test(emptyTest));
@@ -206,8 +211,12 @@ function switchTab(newTab) {
 		$("#importJobs").show();
 		$("#itemImortControls").show();
 		$("section.scenarios li.tabImports").addClass("current");
-		
-		
+	
+	} else if (newTab == "MAIL") {
+		$("#mailJobs").show();
+		$("#mailControls").show();
+		$("section.scenarios li.tabMail").addClass("current");
+	
 	} else {
 		switchTab("SCENARIOS");
 	}
@@ -424,6 +433,11 @@ function initialize() {
 	$('section.scenarios li.tabImports').click(function() {
 		switchTab("IMPORT");
 	});
+	
+	$('section.scenarios li.tabMail').click(function() {
+		switchTab("MAIL");
+	});
+	
 	
 	
 	$('#createNewTest').click(function(){
@@ -834,6 +848,12 @@ function initialLoadData() {
 	if(mandatorDao.getVersion() == 'EXTENDED'){
 		$('section.scenarios li.tabAbTests').show();
 		$('section.scenarios li.tabImports').show();
+		$('section.scenarios li.tabMail').show();
+		$('#mailF').attr('src', 'mailconfig.html?customer_id=' +  encodeURIComponent(customerID));
+		$('#createNewMail').off('click').click(function() {
+			$('#mailF').attr('src', 'mailconfig.html?customer_id=' +  encodeURIComponent(customerID));
+			$('#mailP').show();
+		});
 		$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
 		$('#createNewImport').off('click').click(function() {
 			$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
@@ -844,6 +864,7 @@ function initialLoadData() {
 	}else{
 		$('section.scenarios li.tabAbTests').hide();
 		$('section.scenarios li.tabImports').hide();
+		$('section.scenarios li.tabMail').hide();
 	}
 	$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
 	$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');

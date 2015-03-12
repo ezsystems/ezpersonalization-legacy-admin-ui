@@ -330,6 +330,7 @@
 			  <li class="tab tabRevenue" id="addedRevenueTab"  data-target="#addedRevenue" data-controls="#itemImortControls"><label  data-translate="added_revenue_tab">Added Revenue</label></li>
 			  <li class="tab tabAbTests" id="ABTestTab"        data-target="#ABTests"      style="display: none;" data-controls="#abControls"><label data-translate="ab_test_ab_tests"></label></li>
 			  <li class="tab tabImports" id="itemImortTab"     data-target="#importJobs"   style="display: none;" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
+			  <li class="tab tabMail" id="mailTab"     data-target="#mailJobs"   style="display: none;" data-controls="#mailControls"><label  data-translate="mail_newsletter"></label></li>
 		  </ul>
 
         <div id="scenarioControls" class="controls" style="display: none;">
@@ -346,6 +347,11 @@
 		<div id="itemImortControls" class="controls" style="display: none;">
 			<a id="createNewImport" class="create_new" data-translate="item_import_create_new_job"></a>
 		</div>
+		
+		<div id="mailControls" class="controls" style="display: none;">
+			<a id="createNewMail" class="create_new" data-translate="mail_create_new_job"></a>
+		</div>
+		
       </header>
       
       <ul id="available_scenarios" class="available_scenarios clearfix tabContent" style="min-height: 150px;">
@@ -403,6 +409,12 @@
 				    <div class="tc" data-translate="item_import_run">Run Now</div>
 				    <div class="tc" data-translate="item_import_on">ON/OFF</div>
 				</div>
+			</div>
+		</div>
+		
+		<div id="mailJobs" class="newsletters tabContent" style="display: none;">
+			<div class="table" id="mailTable" style="width: 100%;display: none;">
+				
 			</div>
 		</div>
 		<div id="ABTests" class="abView tabContent" style="display: none">
@@ -708,6 +720,15 @@
 			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
 				<a class="closeOverlay" style="position:absolute; top:-1em; right:-1em;">X</a>
 				<iframe id ='itemimportF' style="width: 100%; height: 100%;"></iframe>
+			</div>
+		</div>
+	</div>
+	
+	<div id="mailP" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
+		<div class="content" id="contentFrame" style="width: 1320x; height: 760px; min-height: 45%; position: relative;">
+			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
+				<a class="closeOverlay" style="position:absolute; top:-1em; right:-1em;">X</a>
+				<iframe id ='mailF' style="width: 100%; height: 100%;"></iframe>
 			</div>
 		</div>
 	</div>
