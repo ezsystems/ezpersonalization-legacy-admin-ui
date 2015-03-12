@@ -68,14 +68,14 @@ function inlineSpectrumBodyBackground(){
 			  spectrumBackground('mailBackground',currentbg);
 			  spectrumBackground('menuBackground',menuCurrentbg);
 			  spectrumBackground('ctaBackground',ctaCurrentbg);
-			  spectrumBackground('"footerBackground"',footerCurrentbg);
+			  spectrumBackground('footerBackground',footerCurrentbg);
 		  },
 		  error: function() {
 			  unsetLoadingDiv($('body'));
 			  spectrumBackground('mailBackground',currentbg);
 			  spectrumBackground('menuBackground',menuCurrentbg);
 			  spectrumBackground('ctaBackground',ctaCurrentbg);
-			  spectrumBackground('"footerBackground"',footerCurrentbg);
+			  spectrumBackground('footerBackground',footerCurrentbg);
 			  stdAjaxErrorHandler();
 		  }
 	  });	
