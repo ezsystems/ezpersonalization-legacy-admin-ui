@@ -847,13 +847,17 @@ function initialLoadData() {
     
 	if(mandatorDao.getVersion() == 'EXTENDED'){
 		$('section.scenarios li.tabAbTests').show();
-		$('section.scenarios li.tabImports').show();
-		$('section.scenarios li.tabMail').show();
-		$('#mailF').attr('src', 'mailconfig.html?customer_id=' +  encodeURIComponent(customerID));
-		$('#createNewMail').off('click').click(function() {
+		$('section.scenarios li.tabImports').show();	
+		if('321' === customerID || '1221'  === customerID || '1780'  === customerID ){
+			$('section.scenarios li.tabMail').show();
 			$('#mailF').attr('src', 'mailconfig.html?customer_id=' +  encodeURIComponent(customerID));
-			$('#mailP').show();
-		});
+			$('#createNewMail').off('click').click(function() {
+				$('#mailF').attr('src', 'mailconfig.html?customer_id=' +  encodeURIComponent(customerID));
+				$('#mailP').show();
+			});
+		}else{
+			$('section.scenarios li.tabMail').hide();
+		}
 		$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
 		$('#createNewImport').off('click').click(function() {
 			$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
