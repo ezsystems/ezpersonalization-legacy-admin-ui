@@ -75,9 +75,9 @@ function inlineSpectrumBodyBackground(){
 				  $("#unsubscribeName").val(retObj.unsubscribe.caption);
 				  $("#unsubscribeURL").val(retObj.unsubscribe.url);
 			  }
-			  $("#buscket_subject").val(retObj.hello1);
-			  $("#buscket_note").val(retObj.note1);
-			  $("#buscket_footer").val( retObj.footer1);
+			  $("#basket_subject").val(retObj.hello1);
+			  $("#basket_note").val(retObj.note1);
+			  $("#basket_footer").val( retObj.footer1);
 			  $("#click_subject").val(retObj.hello2);
 			  $("#click_note").val(retObj.note2);
 			  $("#click_footer").val(retObj.footer2);
@@ -225,9 +225,9 @@ function savePreferences2() {
 	 retObj.twitter = $("#twitter").val();
 	 
 	 
-	 retObj.hello1 = $("#buscket_subject").val();
-	 retObj.note1 = $("#buscket_note").val();
-	 retObj.footer1 = $("#buscket_footer").val();
+	 retObj.hello1 = $("#basket_subject").val();
+	 retObj.note1 = $("#basket_note").val();
+	 retObj.footer1 = $("#basket_footer").val();
 	 retObj.hello2 = $("#click_subject").val();
 	 retObj.note2 = $("#click_note").val();
 	 retObj.footer2 = $("#click_footer").val();
