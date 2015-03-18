@@ -215,6 +215,7 @@ function savePreferences2() {
 	 retObj.cta = $("#cta").val();
 	 retObj.topic = $("#topic").val();
 	 
+	 retObj.ctaBackground = ctaCurrentbg;
 	 retObj.background = currentbg;
 	 retObj.menuBackground = menuCurrentbg;
 	 retObj.menuLinks = new Array();
