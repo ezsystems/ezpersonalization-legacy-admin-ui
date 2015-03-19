@@ -141,45 +141,7 @@ function addMenuElement(menuLinksArray){
 	}
 }
 
-/*function savePreferences() {
-	setLoadingDiv($('body'));
-	 retObj = new Object();
-	 retObj.mandatorName = customerID;
-	 retObj.logo = $("#logo").val();
-	 retObj.holineName = $("#menu_elment_hotline_name").val();
-	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
-	 retObj.background = currentbg;
-	 retObj.ctaBackground = ctaCurrentbg;
-	 retObj.cta = $("#cta").val();
-	 retObj.topic = $("#topic").val();
-	 
-	 
-	 retObj.menuBackground = menuCurrentbg;
-	 retObj.menuLinks = new Array();
-	 addMenuElement(retObj.menuLinks);
-	 
-	 retObj.footerBackground = footerCurrentbg;
-	 retObj.facebook = $("#facebook").val();
-	 retObj.googleplus = $("#googleplus").val();
-	 retObj.twitter = $("#twitter").val();
-	 
-	 $.ajax({
-		  type: "POST",
-		  mimeType: "application/json",
-		  contentType: "application/json;charset=UTF-8",
-		  dataType: "html",
-		  data: JSON.stringify(retObj),
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview_with_params",
-		  success: function(json) {
-			  unsetLoadingDiv($('body'));
-			  $('#previewFrame').contents().find('html').html(json);
-		  },
-		  error: function() {
-			  unsetLoadingDiv($('body'));
-			  stdAjaxErrorHandler();
-		  }
-	  });	
-}*/
+
 
 function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
 	  if(jqXHR != null && jqXHR.status == 403) {
@@ -221,6 +183,7 @@ function savePreferences2() {
 	 retObj.menuLinks = new Array();
 	 addMenuElement(retObj.menuLinks);
 	 
+	 retObj.footerBackground = footerCurrentbg;
 	 retObj.facebook = $("#facebook").val();
 	 retObj.googleplus = $("#googleplus").val();
 	 retObj.twitter = $("#twitter").val();
