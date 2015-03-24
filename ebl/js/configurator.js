@@ -44,9 +44,9 @@ var initialize = function() {
 		row++;
 	});
 
-	$('.settings_tab').find('a').attr("href", "settingspop.html?reference_code=" + encodeURIComponent(reference_code) + "&customer_id=" + encodeURIComponent(customerID));
+	$('.settings_tab').find('a').attr("href", "settingspop.html?reference_code=" + reference_code + "&customer_id=" + encodeURIComponent(customerID));
 	
-	$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + encodeURIComponent(reference_code) + "&customer_id=" + encodeURIComponent(customerID));
+	$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + encodeURIComponent(customerID));
 			  
 	json = modelDao.getModels(); // must be already loaded at this moment
 
