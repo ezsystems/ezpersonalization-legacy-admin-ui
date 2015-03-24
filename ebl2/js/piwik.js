@@ -4,7 +4,7 @@
   _paq.push(["enableLinkTracking"]);
 
   (function() {
-    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://www.yoochoose.com/piwik/";
+    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://statistic.yoochoose.net/";
     _paq.push(["setTrackerUrl", u+"piwik.php"]);
     _paq.push(["setSiteId", "8"]);
     var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
