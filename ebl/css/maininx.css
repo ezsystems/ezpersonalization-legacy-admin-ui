@@ -46,7 +46,7 @@
 }
 
 
-/* ---------------------------------- ADDED REVENUE ---------------------------------- */
+/* ---------------------------------- ADDED REVENUE TAB ---------------------------------- */
 
 
 #addedRevenue {
@@ -91,6 +91,74 @@ section.scenarios a.create_csv:before {
     height: 16px;
     margin: 0 5px -3px 0;
     background: transparent url("../img/yoosprite.png") no-repeat -172px -38px;
+}
+
+
+/* ---------------------------------- PLUGINS TAB ---------------------------------- */
+
+#pluginPanel .content {
+	width: 60em;
+}
+
+#pluginPanel .close_button {
+    display: block;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+}
+
+#pluginPanel .close_button:hover {
+    color: #ff0000;
+}
+
+#pluginPanel div.type_selector {
+	margin-right: -2em;
+}
+
+#pluginPanel .type_selector div {
+	border-radius: 5px; border: 1px solid rgb(238, 236, 225);
+	height: 7em;
+	width: 17em;
+	position: relative;
+	display: block;
+	float: left;
+	margin-right: 1em;
+	margin-bottom: 1em;
+}
+
+#pluginPanel table.type_selector img {
+	display: inline;
+	margin: 0 auto;
+}
+
+#pluginTab {
+	width: 60em;
+	border-radius: 5px; border: 1px solid rgb(238, 236, 225);
+	margin: 0 auto;
+}
+
+#pluginTab table {
+	width: 100%;
+}
+
+#pluginTab table tr > td {
+	padding: 0.5em;
+	width: 60em;
+}
+
+#pluginTab table tr > th {
+	padding: 0.5em 0;
+}
+
+#pluginTab table tr > th > span {
+    background-color: rgba(238, 236, 225, 1);
+    padding: 0.5em;
+    margin: 0 0;
+    display: block;
 }
 
 

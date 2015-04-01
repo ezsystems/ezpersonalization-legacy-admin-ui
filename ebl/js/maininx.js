@@ -29,6 +29,12 @@ $(document).ready(function() {
 		switchState(state, false);
 	});
 	
+	window.addEventListener('popstate_manual', function(event) {
+		var state = event.detail;
+		switchState(state, false);
+	});
+	
+	
 	var closePopup = function(e) {
 	    if (e.which == 1 || e.which == 27) { // left click or Esc
 	    	if ($("#pactasPopup").is(':visible')) {
@@ -129,7 +135,7 @@ $(document).ready(function() {
 	showEmptyEventChart();
 
 	
-	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js", "/js/added_revenue.js"], function() {
+	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js", "/js/added_revenue.js", "/js/plugin.js"], function() {
 		
 		setLoadingDiv('section.mandant > header');
 		
@@ -206,6 +212,10 @@ function switchTab(newTab) {
 			$('#abControls').find('.helpLink').trigger('click');
 		}
 		
+	} else if (newTab == "PLUGINS") {
+		$("#pluginTab").show();
+		$("#pluginTabControls").show();
+		$("section.scenarios li.tabPlugins").addClass("current");
 		
 	} else if (newTab == "IMPORT") {
 		$("#importJobs").show();
@@ -434,6 +444,10 @@ function initialize() {
 		switchTab("IMPORT");
 	});
 	
+	$('section.scenarios li.tabPlugins').click(function() {
+		switchTab("PLUGINS");
+	});
+	
 	$('section.scenarios li.tabMail').click(function() {
 		switchTab("MAIL");
 	});
@@ -489,7 +503,9 @@ function initialize() {
     		openScenarioDialog(customerID, open_reference_code);
     	} else {
     		var anchor = anchorDecoded();
-    		switchState(anchor, false);
+    		
+    		var event = new CustomEvent('popstate_manual', { 'detail': anchor });
+			window.dispatchEvent(event);
     	}
     });	
 	
@@ -506,8 +522,9 @@ function switchState(state, pushState) {
 	if (state == "personal") {
 		openPersonalDetails(pushState);
 	} else if (state == "license") {
-		openLicenseKey(pushState);		
-	} else {
+		openLicenseKey(pushState);
+		
+	} else if (state.indexOf("plugin") != 0) {
 		switchHistoryState("", pushState);
 		
 		$('#editDataOverlay').hide();
@@ -847,6 +864,7 @@ function initialLoadData() {
     
 	if(mandatorDao.getVersion() == 'EXTENDED'){
 		$('section.scenarios li.tabAbTests').show();
+		$('section.scenarios li.tabPlugins').show();
 		$('section.scenarios li.tabImports').show();	
 		if('321' === customerID || '1221'  === customerID || '1780'  === customerID ){
 			$('section.scenarios li.tabMail').show();
@@ -867,6 +885,7 @@ function initialLoadData() {
 		
 	}else{
 		$('section.scenarios li.tabAbTests').hide();
+		$('section.scenarios li.tabPlugins').hide();
 		$('section.scenarios li.tabImports').hide();
 		$('section.scenarios li.tabMail').hide();
 	}
