@@ -963,6 +963,91 @@ function readImportJobs(){
 	  });
 }
 
+function readMailJobs(){
+	$.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go//get_jobs/",
+		  success: function(json) {
+			  var htmlToAppend ='';
+			  if(json.length == 0){
+				  htmlToAppend = '<div id="noTests" data-translate="mail_no_jobs">you have no newsletters defined</div>';
+			  }else{
+				allJobsI = json;
+				  for(var i = 0; i < json.length; i++) {
+					    var obj = json[i];
+					    var name = obj.name;
+					    var interval = obj.interval;
+					    var startdate = obj.startDate;
+					    var lastRun  = obj.lastRun;
+					    if(!lastRun){
+					    	lastRun = 'nope';
+					    }
+					    var enabled = obj.enabled;
+					    var id=obj.id;
+					    var runURL = 'img/clock.png';
+					    var statusURL = 'img/red.png';
+					    var margin = -48;
+					    var off =  'active';
+					    var on =  '';
+					    if(enabled){
+					    	on =  'active';
+					    	off =  '';
+					    	margin = 0;
+					    	statusURL = 'img/blue.png';
+					    	if(lastRun != 'nope'){
+					    		var diff = Math.abs( new Date() - new Date(lastRun) );
+					    		var days = diff/(24*60*60*1000);
+					    		console.log(diff+ " "+days+" "+new Date(lastRun));
+					    		if(interval == 'DAILY' && days >= 1){
+					    			statusURL = 'img/yellow.png';
+					    		}
+					    		if(interval == 'WEEKLY' && days >= 7){
+					    			statusURL = 'img/yellow.png';
+					    		}
+					    	}
+					    }
+					    htmlToAppend +='<div class="tr test">\n';
+					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
+					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
+					    htmlToAppend +=' <div class="tc startdate">'+startdate+'</div>';
+					    htmlToAppend +=' <div class="tc lastimport">'+lastRun+'</div>';
+					    htmlToAppend +=' <div class="tc showHistory"><a onclick="showMailHistory('+obj.id+')">Show History</a> </div>';
+					    
+					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#mailF\').attr(\'src\', \'mailconfig.html?customer_id=' +  encodeURIComponent(customerID)+'&nlid='+id+'\');$(\'#mailP\').show();">Edit</a> </div>';
+					    
+					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="sendMailNow('+id+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
+					    htmlToAppend +=' <div class="tc jobon toggle-light">'
+					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
+					    	+'<div class="toggle-slide" onclick="updateMailStatus('+i+');">'
+						    	+'<div id="toggle-inner'+i+'" class="toggle-inner" style="width: 118px; margin-left: '+margin+'px;">'
+						    		+'<div id="toggle-on'+i+'" class="toggle-on '+on+'" style="height: 22px; width: 59px; text-indent: -11px; line-height: 22px;">ON</div>'
+						    		+'<div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>'
+						    		+'<div id="toggle-off'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
+						    	 +'</div>'
+						    +'</div></div></div>';
+					    	
+					    htmlToAppend +='</div>';
+				  } 
+				  htmlToAppend +='<div>';
+			  }
+			var header = $('#import_head').clone();
+			$('#importJobsTable').empty(); 
+			$('#importJobsTable').append(header);
+          	$('#importJobsTable').append(htmlToAppend);
+          	$('#importJobsTable').show();
+          	
+          	
+          	
+			  
+		  },
+		  error: mainErrorHandler
+	  });
+}
+
+
 function updateStatus(activeId){
 	var classList =$('#toggle-on'+activeId).attr('class').split(/\s+/);
 	var status = 1;
