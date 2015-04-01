@@ -44,7 +44,7 @@ define(['app/api/ab', 'app/tools/helper', 'app/gui/ab', 'app/models/Test', 'jque
 						wasload = true;
 					}
 					//init the tabs to show the Tests
-//					gui.initTabs();
+					gui.initTabs();
 					gui.initHelp();
 					gui.initResultView();
 					gui.initTooltips();
