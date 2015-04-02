@@ -1,0 +1,211 @@
+
+
+#editDataOverlay h2 {
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
+
+#personal_details img.sso-icon {
+	position: absolute; left: 0; top: 0; width: 50px; height: 50px; border-radius: 5px;
+}
+
+
+#licenceKeyId {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+
+#licenceKeyId > .content{
+	position: absolute;
+    display: inline-block;
+    top: 20em;
+    padding: 2em;
+    width: 20em;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background: #FFF;
+    box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+    border: 1px solid #000000;
+    border-radius: 6px;
+}
+
+
+#licenceKeyId h2{
+    margin-bottom: 1em;
+    border-bottom: 2px solid gray;
+    text-align: left;
+    font-weight: 700;
+    font-size: 1.3em;
+}
+
+
+/* ---------------------------------- ADDED REVENUE TAB ---------------------------------- */
+
+
+#addedRevenue {
+	width: 60em;
+	border-radius: 5px; border: 1px solid rgb(238, 236, 225);
+	margin: 0 auto;
+}
+
+#addedRevenue table {
+	width: 100%;
+}
+
+#addedRevenue table tr > *.item_price {
+	text-align: right;
+	width: 20em;
+}
+
+#addedRevenue table tr > *.reco_accepted {
+	width: 24em;
+}
+
+#addedRevenue table tr > td {
+	padding: 0.5em;
+	width: 60em;
+}
+
+#addedRevenue table tr > th {
+	padding: 0.5em 0;
+}
+
+#addedRevenue table tr > th > span {
+    background-color: rgba(238, 236, 225, 1);
+    padding: 0.5em;
+    margin: 0 0;
+    display: block;
+}
+
+section.scenarios a.create_csv:before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0 5px -3px 0;
+    background: transparent url("../img/yoosprite.png") no-repeat -172px -38px;
+}
+
+
+/* ---------------------------------- PLUGINS TAB ---------------------------------- */
+
+#pluginPanel .content {
+	width: 60em;
+}
+
+#pluginPanel .close_button {
+    display: block;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+}
+
+#pluginPanel .close_button:hover {
+    color: #ff0000;
+}
+
+#pluginPanel div.type_selector {
+	margin-right: -2em;
+}
+
+#pluginPanel .type_selector div {
+	border-radius: 5px; border: 1px solid rgb(238, 236, 225);
+	height: 7em;
+	width: 17em;
+	position: relative;
+	display: block;
+	float: left;
+	margin-right: 1em;
+	margin-bottom: 1em;
+}
+
+#pluginPanel table.type_selector img {
+	display: inline;
+	margin: 0 auto;
+}
+
+#pluginTab {
+	width: 60em;
+	border-radius: 5px; border: 1px solid rgb(238, 236, 225);
+	margin: 0 auto;
+}
+
+#pluginTab table {
+	width: 100%;
+}
+
+#pluginTab table tr > td {
+	padding: 0.5em;
+	width: 60em;
+}
+
+#pluginTab table tr > th {
+	padding: 0.5em 0;
+}
+
+#pluginTab table tr > th > span {
+    background-color: rgba(238, 236, 225, 1);
+    padding: 0.5em;
+    margin: 0 0;
+    display: block;
+}
+
+
+/* ---------------------------------- PACTAS POPUP ---------------------------------- */
+
+
+#pactasPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+
+#pactasPopup > .content{
+	position: absolute;
+    display: inline-block;
+    top: 20px;
+    bottom: 20px;
+    left: 5em;
+    right: 5em;
+    overflow: auto;
+    background: #FFF;
+    box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+    border: 1px solid #000000;
+    border-radius: 6px;
+    overflow-y:hidden; 
+    overflow-x:hidden;
+}
+
+
+#pactasPopup a.closeOverlay {
+	display: block;
+	padding: 10px;
+	z-index: 11;
+	
+	position:absolute;
+	right: 1em;
+	top: 20px;
+	width: 1.3em;
+
+    background: #FFF;
+    box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
+    
+    border: 1px solid #000000;
+    border-radius: 6px;
+}
