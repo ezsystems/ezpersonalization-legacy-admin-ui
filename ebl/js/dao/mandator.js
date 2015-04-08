@@ -111,6 +111,9 @@ mandatorDao.init = function(mandatorId, callback) {
 			if (callback) {
 				callback(json);
 			}
+			
+			var event = new CustomEvent('mandator_loaded', { 'detail': mandatorDao.mandator });
+			document.dispatchEvent(event);
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			mandatorDao.error = {

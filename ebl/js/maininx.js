@@ -29,6 +29,12 @@ $(document).ready(function() {
 		switchState(state, false);
 	});
 	
+	window.addEventListener('popstate_manual', function(event) {
+		var state = event.detail;
+		switchState(state, false);
+	});
+	
+	
 	var closePopup = function(e) {
 	    if (e.which == 1 || e.which == 27) { // left click or Esc
 	    	if ($("#pactasPopup").is(':visible')) {
@@ -129,7 +135,7 @@ $(document).ready(function() {
 	showEmptyEventChart();
 
 	
-	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js", "/js/added_revenue.js"], function() {
+	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js", "/js/added_revenue.js", "/js/plugin.js"], function() {
 		
 		setLoadingDiv('section.mandant > header');
 		
@@ -207,6 +213,10 @@ function switchTab(newTab) {
 			$('#abControls').find('.helpLink').trigger('click');
 		}
 		
+	} else if (newTab == "PLUGINS") {
+		$("#pluginTab").show();
+		$("#pluginTabControls").show();
+		$("section.scenarios li.tabPlugins").addClass("current");
 		
 	} else if (newTab == "IMPORT") {
 		$("#importJobs").show();
@@ -439,6 +449,10 @@ function initialize() {
 		switchTab("IMPORT");
 	});
 	
+	$('section.scenarios li.tabPlugins').click(function() {
+		switchTab("PLUGINS");
+	});
+	
 	$('section.scenarios li.tabMail').click(function() {
 		switchTab("MAIL");
 	});
@@ -494,7 +508,9 @@ function initialize() {
     		openScenarioDialog(customerID, open_reference_code);
     	} else {
     		var anchor = anchorDecoded();
-    		switchState(anchor, false);
+    		
+    		var event = new CustomEvent('popstate_manual', { 'detail': anchor });
+			window.dispatchEvent(event);
     	}
     });	
 	
@@ -511,8 +527,9 @@ function switchState(state, pushState) {
 	if (state == "personal") {
 		openPersonalDetails(pushState);
 	} else if (state == "license") {
-		openLicenseKey(pushState);		
-	} else {
+		openLicenseKey(pushState);
+		
+	} else if (state.indexOf("plugin") != 0) {
 		switchHistoryState("", pushState);
 		
 		$('#editDataOverlay').hide();
@@ -852,6 +869,7 @@ function initialLoadData() {
     
 	if(mandatorDao.getVersion() == 'EXTENDED'){
 		$('section.scenarios li.tabAbTests').show();
+		$('section.scenarios li.tabPlugins').show();
 		$('section.scenarios li.tabImports').show();	
 		if('321' === customerID || '1221'  === customerID || '1780'  === customerID ){
 			$('section.scenarios li.tabMail').show();
@@ -872,6 +890,7 @@ function initialLoadData() {
 		
 	}else{
 		$('section.scenarios li.tabAbTests').hide();
+		$('section.scenarios li.tabPlugins').hide();
 		$('section.scenarios li.tabImports').hide();
 		$('section.scenarios li.tabMail').hide();
 	}
@@ -967,6 +986,86 @@ function readImportJobs(){
 		  error: mainErrorHandler
 	  });
 }
+
+function readMailJobs(){
+	$.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_jobs/",
+		  success: function(json) {
+			  var htmlToAppend ='';
+			  if(json.length == 0){
+				  htmlToAppend = '<div id="noTests" data-translate="mail_no_jobs">you have no newsletters defined</div>';
+			  }else{
+				allJobsI = json;
+				  for(var i = 0; i < json.length; i++) {
+					    var obj = json[i];
+					    var name = obj.scenario;
+					    var nlid = obj.nlid;
+					    var interval = obj.interval;
+					    var enabled = obj.enabled;
+					    var runURL = 'img/clock.png';
+					    var statusURL = 'img/red.png';
+					    var margin = -48;
+					    var off =  'active';
+					    var on =  '';
+					    if(enabled){
+					    	on =  'active';
+					    	off =  '';
+					    	margin = 0;
+					    	statusURL = 'img/blue.png';
+					    	if(lastRun != 'nope'){
+					    		var diff = Math.abs( new Date() - new Date(lastRun) );
+					    		var days = diff/(24*60*60*1000);
+					    		console.log(diff+ " "+days+" "+new Date(lastRun));
+					    		if(interval == 'DAILY' && days >= 1){
+					    			statusURL = 'img/yellow.png';
+					    		}
+					    		if(interval == 'WEEKLY' && days >= 7){
+					    			statusURL = 'img/yellow.png';
+					    		}
+					    	}
+					    }
+					    htmlToAppend +='<div class="tr test">\n';
+					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
+					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
+					  
+		
+					    htmlToAppend +=' <div class="tc showHistory"><a onclick="showMailHistory('+nlid+')">Show History</a> </div>';
+					    
+					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#mailF\').attr(\'src\', \'mailconfig.html?customer_id=' +  encodeURIComponent(customerID)+'&nlid='+nlid+'\');$(\'#mailP\').show();">Edit</a> </div>';
+					    
+					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="sendMailNow('+nlid+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
+					    htmlToAppend +=' <div class="tc jobon toggle-light">'
+					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
+					    	+'<div class="toggle-slide" onclick="updateMailStatus('+i+');">'
+						    	+'<div id="toggle-inner'+i+'" class="toggle-inner" style="width: 118px; margin-left: '+margin+'px;">'
+						    		+'<div id="toggle-on'+i+'" class="toggle-on '+on+'" style="height: 22px; width: 59px; text-indent: -11px; line-height: 22px;">ON</div>'
+						    		+'<div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>'
+						    		+'<div id="toggle-off'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
+						    	 +'</div>'
+						    +'</div></div></div>';
+					    	
+					    htmlToAppend +='</div>';
+				  } 
+				  htmlToAppend +='<div>';
+			  }
+			var header = $('#import_head').clone();
+			$('#importJobsTable').empty(); 
+			$('#importJobsTable').append(header);
+          	$('#importJobsTable').append(htmlToAppend);
+          	$('#importJobsTable').show();
+          	
+          	
+          	
+			  
+		  },
+		  error: mainErrorHandler
+	  });
+}
+
 
 function updateStatus(activeId){
 	var classList =$('#toggle-on'+activeId).attr('class').split(/\s+/);

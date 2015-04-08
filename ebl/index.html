@@ -324,26 +324,46 @@
       </form>
     </section>
     <section class="scenarios"  style="margin: 20px 20px 0 20px;">
-      <header class="clearfix" style="padding: 0; background: transparent;">
-		  <ul class="options_menu">
-			  <li class="tab tabScenarios" data-target="#available_scenarios" data-controls="#scenarioControls"><label data-translate="index_your_scenarios"></label></li>
-			  <li class="tab tabRevenue" id="addedRevenueTab"  data-target="#addedRevenue" data-controls="#itemImortControls"><label  data-translate="added_revenue_tab">Added Revenue</label></li>
-			  <li class="tab tabAbTests" id="ABTestTab"        data-target="#ABTests"      style="display: none;" data-controls="#abControls"><label data-translate="ab_test_ab_tests"></label></li>
-			  <li class="tab tabImports" id="itemImortTab"     data-target="#importJobs"   style="display: none;" data-controls="#itemImortControls"><label  data-translate="item_import"></label></li>
-			  <li class="tab tabMail" id="mailTab"     data-target="#mailJobs"   style="display: none;" data-controls="#mailControls"><label  data-translate="mail_newsletter"></label></li>
-		  </ul>
+		<header class="clearfix" style="padding: 0; background: transparent;">
+			<ul class="options_menu">
+				<li class="tab tabScenarios" data-target="#available_scenarios" data-controls="#scenarioControls">
+					<label data-translate="index_your_scenarios"></label>
+				</li>
+		  		<li class="tab tabRevenue" id="addedRevenueTab" data-target="#addedRevenue" data-controls="#itemImortControls">
+		  			<label  data-translate="added_revenue_tab">Added Revenue</label>
+	  			</li>
+			  	<li class="tab tabAbTests" id="ABTestTab" data-target="#ABTests" style="display: none;" data-controls="#abControls">
+			  		<label data-translate="ab_test_ab_tests"></label>
+		  		</li>
+			  	<li class="tab tabPlugins" data-target="#pluginTab" style="display: none;" data-controls="#pluginTabControls">
+			  		<label data-translate="plugin_tab">Plugins</label>
+		  		</li>
+			  	<li class="tab tabImports" id="itemImortTab" data-target="#importJobs" style="display: none;" data-controls="#itemImortControls">
+			  		<label data-translate="item_import"></label>
+		  		</li>
+			  	<li class="tab tabMail" id="mailTab" data-target="#mailJobs" style="display: none;" data-controls="#mailControls">
+			  		<label  data-translate="mail_newsletter"></label>
+		  		</li>
+		 	</ul>
 
         <div id="scenarioControls" class="controls" style="display: none;">
 			<a id="createNewScenario"  class="create_new" data-translate="index_create_a_new_scenario">Create a new scenario</a>
 			<a class="helpLink" data-target="#scenarioHelp"></a>
 		</div>
+		
         <div id="addedRevenueControls" class="controls" style="display: none;">
 			<a class="create_csv" data-translate="added_revenue_create_excel">Download added revenue report</a>
-		</div>		
+		</div>	
+			
 		<div id="abControls" class="controls" style="display: none;">
 			<a id="createNewTest" class="create_new" data-translate="ab_test_create_new_test"></a>
 			<a class="helpLink" data-target="#ABHelp"></a>
 		</div>
+		
+		<div id="pluginTabControls" class="controls" style="display: none;">
+			<a id="createNewPlugin" class="create_new" data-translate="create_new_plugin_button">Install new plugin</a>
+		</div>
+		
 		<div id="itemImortControls" class="controls" style="display: none;">
 			<a id="createNewImport" class="create_new" data-translate="item_import_create_new_job"></a>
 		</div>
@@ -389,13 +409,35 @@
 				</tr>
 				<tr class="fixed nothing">
 					<td colspan="3" data-translate="added_revenue_message_norecords">No items where consumed in the selected period (<span data-param="0" class="period">20.2.2015 15:43 - 20.2.2015 15:43</span>).</td>
-				</tr>				
+				</tr>
 				<tr class="fixed overflow">
 					<td colspan="3" data-translate="added_revenue_message_overflow">More than <span data-param="0" class="limit">100</span> found. Use excel export to get all the records.</td>
 				</tr>
 			</table>
 		</div>
-      
+		
+		<div id="pluginTab" class="tabContent" style="display: none;">
+			<table>
+				<tr class="fixed">
+				    <th><span data-translate="plugin_panel_type">Type</span></th>
+				    <th><span data-translate="plugin_panel_import_jobs">Import jobs</span></th>
+				</tr>
+				<tr style="display: none;"> <!-- it is a template to copym when new records added -->
+				    <td></td>
+				    <td></td>
+				</tr>
+				<tr style="display: none;"> <!-- it is a template to copym when new records added -->
+				    <td data-translate="plugin_panel_type_GAMBIO">Gambio</td>
+				    <td>1(en)</td>
+				</tr>
+				<tr class="fixed nothing">
+					<td colspan="3" data-translate="plugin_tab_norecords">
+						No plugins were created for you installation.
+					</td>
+				</tr>				
+			</table>
+		</div>
+		      
 	   <div id="importJobs" class="importItems tabContent" style="display: none;">
 			<div class="table" id="importJobsTable" style="width: 100%;display: none;">
 				<div class="tr head" id = "import_head">
@@ -414,7 +456,14 @@
 		
 		<div id="mailJobs" class="newsletters tabContent" style="display: none;">
 			<div class="table" id="mailTable" style="width: 100%;display: none;">
-				
+				<div class="tr head" id = "import_head">
+					<div class="tc" data-translate="mail_scenario_title">newsletter title</div>
+				    <div class="tc" data-translate="mail_scedule">Scedule</div>
+				    <div class="tc" data-translate="item_import_history">View History</div>
+				    <div class="tc" data-translate="mail_configuration">View Config</div>
+				    <div class="tc" data-translate="item_import_run">Run Now</div>
+				    <div class="tc" data-translate="item_import_on">ON/OFF</div>
+				</div>
 			</div>
 		</div>
 		<div id="ABTests" class="abView tabContent" style="display: none">
@@ -454,6 +503,7 @@
         <li><a id="contact"   data-translate="common_contact" 
                               href="https://www.yoochoose.com/en/contact/">Contact</a></li>
       </ul>
+      
     </footer>
     
     <div id="switch_mandator_popup" class="overlay">

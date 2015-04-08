@@ -63,6 +63,10 @@ function gup(name) {
     else return results[1];
 }
 
+
+/** Returns the anchor (a string behind a # in a URL), decoding the URL. 
+ *  Returns <code>null</code>, if no anchor set (no # found in the URL).
+ */
 function anchorDecoded(name) {
 	var url = window.location.href;
 	var i = url.indexOf("#")
