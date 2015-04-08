@@ -152,6 +152,7 @@ $(document).ready(function() {
 						$.cookie('customerID', customerID, { expires: 365 });
 					}
 				} else {
+					piwikCallerInternal();
 					showNoAvailableMandatorPopup();
 					return;
 				}
@@ -379,6 +380,10 @@ var ajaxScenarioList = function(new_period, callback) {
 var _paq = _paq || [];
 function piwikCaller(name){
 	 _paq.push(['setCustomVariable',1,'mandator name', name, "visit"]);
+	 piwikCallerInternal();
+}
+
+function piwikCallerInternal(){
 	 _paq.push(["trackPageView"]);
 	 _paq.push(["enableLinkTracking"]);
 
