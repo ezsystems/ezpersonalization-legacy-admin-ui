@@ -251,12 +251,15 @@ function i18n() {
 	
 
 	var translation;
+	var translation_found;
 	
 	if (typeof(jQuery.i18n.map[term]) != "undefined") {
 		translation = jQuery.i18n.prop.apply(null, [term].concat(asHtml));
+		translation_found = true;
 	} else {
 		console.warn("Translation not found [" + term + "]");
 		translation = '[' + term + ']';
+		translation_found = false;
 	}
 	$(element).html(translation);
 	
@@ -268,18 +271,24 @@ function i18n() {
 		var found = $(element).children("[data-param=" + key + "]");
 		
 		if (found.length == 0) {
-			missed[key] = asHtml[key];
+			if (translation_found) {
+				missed[key] = asHtml[key];
+			} else {
+				missed[key] = "[" + key + ":" + asHtml[key] + "]";
+			}
 		}
 	};
 	
-	if (missed.length) {
+	if (missed.length) { // hiding only, if the translation was found.
 		var translation = [translation].concat(missed).join("");
 		$(element).html(translation);
 		
-		for (var key in missed) {
-			$(element).children("[data-param=" + key + "]").each(function(){
-			    $(this).hide();
-			});
+		if (translation_found) { 
+			for (var key in missed) {
+				$(element).children("[data-param=" + key + "]").each(function(){
+				    $(this).hide();
+				});
+			}
 		}
 	}
 }

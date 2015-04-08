@@ -6,26 +6,39 @@ var pluginPanel = {
 		
 	mandator: null,
 	manuallyTriggeredAtLeastOnce : false, // if triggered by event, or 
+	selectedPluginType : null, 
 	
 	
 	'preInit' : function() {
 		var self = this;
-		
-		$.get("/includes/plugin_panel.html", '', function(data) {
-			$("body").append(data);
-			self._htmlReady();
-		});
+		var html, css;
+		$.when(
+			$.get("/plugin/plugin_panel.html", '', function(data) { html = data; }),
+			$.get("/plugin/plugin.css", '', function(data) { css = data; })
+	    ).always(function() {
+	    	$("head").append($("<style type='text/css'>").html(css));
+	    	$("body").append(html);
+	    	self._htmlReady();
+	    });
 	},
 	
 	
+	/** Called by "preInit", when HTML for plugins is loaded and attached to the DOM. 
+	 **/
 	'_htmlReady' : function() {
 		var self = this;
 		
-		$('#pluginPanel .close_button').click(function () {
+		$('#pluginPanel .close_button').click(function() {
 			self._back();
 		});
-		$('#pluginTabControls .create_new').click(function () {
+		
+		$('#pluginTabControls .create_new').click(function() {
 			self.show(true, "");
+		});
+		
+		$('#pluginPanel .type_selector div.type_button').click(function() {
+			selectedPluginType = $(this).data("plugin-type");
+			self._switchView(2);
 		});
 	},
 	
@@ -41,11 +54,29 @@ var pluginPanel = {
 	},
 	
 	
+	'_switchView' : function(step) {
+		if (step == 1) {
+			$('#pluginPanel .type_selector').show();
+			$('#pluginPanel .plugin_configuration').hide();
+		} else {
+			$('#pluginPanel .type_selector').hide();
+			$('#pluginPanel .plugin_configuration').show();
+		}
+	},
+	
+	
 	'_show' : function(newPlugin, pluginCode, pushState) {
 		if (this.mandator) {
 			console.error("Unable to show the plugin panel. Mandator is null.");
 			return;
 		}
+		
+		if (newPlugin) {
+			this._switchView(1);
+		} else {
+			this._switchView(2);
+		}
+		
 		$('#pluginPanel').show();
 		
 		if ( this.manuallyTriggeredAtLeastOnce ) {
