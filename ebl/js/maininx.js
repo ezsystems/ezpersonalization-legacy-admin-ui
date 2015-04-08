@@ -988,7 +988,7 @@ function readMailJobs(){
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go//get_jobs/",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_jobs/",
 		  success: function(json) {
 			  var htmlToAppend ='';
 			  if(json.length == 0){
@@ -997,15 +997,10 @@ function readMailJobs(){
 				allJobsI = json;
 				  for(var i = 0; i < json.length; i++) {
 					    var obj = json[i];
-					    var name = obj.name;
+					    var name = obj.scenario;
+					    var nlid = obj.nlid;
 					    var interval = obj.interval;
-					    var startdate = obj.startDate;
-					    var lastRun  = obj.lastRun;
-					    if(!lastRun){
-					    	lastRun = 'nope';
-					    }
 					    var enabled = obj.enabled;
-					    var id=obj.id;
 					    var runURL = 'img/clock.png';
 					    var statusURL = 'img/red.png';
 					    var margin = -48;
@@ -1031,13 +1026,13 @@ function readMailJobs(){
 					    htmlToAppend +='<div class="tr test">\n';
 					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
 					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
-					    htmlToAppend +=' <div class="tc startdate">'+startdate+'</div>';
-					    htmlToAppend +=' <div class="tc lastimport">'+lastRun+'</div>';
-					    htmlToAppend +=' <div class="tc showHistory"><a onclick="showMailHistory('+obj.id+')">Show History</a> </div>';
+					  
+		
+					    htmlToAppend +=' <div class="tc showHistory"><a onclick="showMailHistory('+nlid+')">Show History</a> </div>';
 					    
-					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#mailF\').attr(\'src\', \'mailconfig.html?customer_id=' +  encodeURIComponent(customerID)+'&nlid='+id+'\');$(\'#mailP\').show();">Edit</a> </div>';
+					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#mailF\').attr(\'src\', \'mailconfig.html?customer_id=' +  encodeURIComponent(customerID)+'&nlid='+nlid+'\');$(\'#mailP\').show();">Edit</a> </div>';
 					    
-					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="sendMailNow('+id+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
+					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="sendMailNow('+nlid+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
 					    htmlToAppend +=' <div class="tc jobon toggle-light">'
 					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
 					    	+'<div class="toggle-slide" onclick="updateMailStatus('+i+');">'
