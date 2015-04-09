@@ -5,6 +5,7 @@
 var pluginPanel = {
 		
 	mandator: null,
+	mname: null,
 	manuallyTriggeredAtLeastOnce : false, // if triggered by event, or 
 	selectedPluginType : null, 
 	
@@ -40,6 +41,41 @@ var pluginPanel = {
 			selectedPluginType = $(this).data("plugin-type");
 			self._switchView(2);
 		});
+	},
+	
+	
+	'_createNewPlugin' : function(pluginType) {
+		
+	    var customerPromise = yooAjax(null, {
+	        url: "/api/v4/" + encodeURIComponent(mname) + "/plugin/" + decodeURIComponent(mandatorDao.getId()),
+	        success: function (json) {
+	            customer = json.profilePack.customer; // <-- "customer" is a global variable
+	            
+	            if (customer.id) {
+		        	$('#eemail').val(ifnull(customer.email, ""));
+		        	$('#ecompany').val(ifnull(customer.company, ""));
+		        	$('#efname').val(ifnull(customer.firstName, ""));
+		        	$('#elname').val(ifnull(customer.lastName, ""));
+		        	$('#ephone').val(ifnull(customer.phone, ""));
+		        	$('#estreet_and_house').val(ifnull(customer.address.street, ""));
+		        	$('#ezip').val(ifnull(customer.address.zip, ""));
+		        	$('#ecity').val(ifnull(customer.address.city, ""));
+		        	$('#ecountry').val(ifnull(customer.address.country, ""));
+		        	
+		        	$('#contract_details').show();
+	            } else {
+	            	$('#contract_details').hide();
+	            }
+	        }
+	    });
+	    
+	    
+		
+	},
+
+
+	'mname' : function() {
+		return this.mandator.baseInformation.id;
 	},
 	
 		
