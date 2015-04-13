@@ -28,7 +28,7 @@
 			
 			<div class="plugin_configuration">
 			    
-			<table id="abTestIndicators">
+			<table>
 				<tr>
 					<td data-translate="plugin_panel_type">Type</td>
 					<td><input name="type" value=""></td>
@@ -50,6 +50,14 @@
                         </select>
                     </td>
                 </tr>
+            </table>
+            <table>
+                <tr>
+                    <td data-translate="plugin_recos_header_box">Recommendation box</td>
+                    <td data-translate="plugin_recos_header_rows">Rows</td>
+                    <td data-translate="plugin_recos_header_columns">Columns</td>
+                    <td data-translate="plugin_recos_header_html">HTML</td>
+                </tr>                
                 <tr>
                     <td data-translate="plugin_recos_bestsellers_amount">Landing page. Amount of bestsellerts.</td>
                     <td><input name="plugin_recos_bestsellers" value="4"></td>
@@ -74,7 +82,8 @@
                     <td data-translate="plugin_recos_crosssell_amount">Basket page. Amount of cross sell products.</td>
                     <td><input name="plugin_recos_basket" value="4"></td>
                 </tr>
-                
+            </table>
+            <table>    	
                 <tr>
                     <td colspan="2" data-translate="plugin_enable_import">
                         <input name="plugin_import" type="checkbox" value="checked" data-param="0">{0} - Enable data import (required for newsletters)

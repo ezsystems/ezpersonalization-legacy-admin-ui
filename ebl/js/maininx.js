@@ -139,7 +139,7 @@ $(document).ready(function() {
 	showEmptyEventChart();
 
 	
-	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js", "/js/added_revenue.js", "/js/plugin.js"], function() {
+	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js", "/js/added_revenue.js", "/plugin/plugin.js"], function() {
 		
 		setLoadingDiv('section.mandant > header');
 		
@@ -461,6 +461,30 @@ function initialize() {
 		switchTab("MAIL");
 	});
 	
+				
+	//init the tab behaviour
+	$('.tab').on('click', function(){
+		var $this = $(this);
+		if($this.hasClass('active')){
+			return;
+		}
+		
+		var targetSelector = $this.data('target'); // for example '#importJobs'
+		
+		$this.addClass('active current').siblings('.tab').removeClass('active current');
+		$(targetSelector).show().siblings('.tabContent').hide();
+		$($this.data('controls')).show().siblings('.controls').hide();
+		
+		var event = new CustomEvent('dashboard_tab_switched', { 'detail': targetSelector });
+		
+		if (mandatorDao.mandator) {
+			window.dispatchEvent(event);
+		} else {
+			window.addEventListener('mandator_loaded', function(event) {
+				window.dispatchEvent(event);
+			});
+		}
+	}).removeClass('active').first().trigger('click');
 	
 	
 	$('#createNewTest').click(function(){
@@ -802,6 +826,9 @@ function formatInteger(v) {
  *  Use the global variable "customerID" to have the current mandator ID. 
  * */ 
 function initialLoadData() {
+	
+	var event = new CustomEvent('mandator_loaded', { 'detail': mandatorDao.mandator });
+	window.dispatchEvent(event);
 	
 	var coma = mandatorDao.getProductComa();
 	
