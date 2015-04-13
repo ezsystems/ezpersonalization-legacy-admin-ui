@@ -1,0 +1,111 @@
+
+<div id="pluginPanel" class="ABOverlay" style="display: none;">
+	<div class="content">
+		<div class="contentWrapper" style="padding-bottom: 2em;">
+			<a class="close_button">X</a>
+			
+			<h2 data-translate="plugin_panel_new_plugin">New Plugin</h2>
+			
+			<div class="type_selector">
+			    <div class="type_button" data-plugin-type="GAMBIO">
+			        <img src="img/plugins/gambio.png" style="height:5.2em; margin-top: 0.8em; margin-left: 2.1em;">
+		        </div>
+                <div class="type_button" data-plugin-type="MAGENTO">
+                    <img src="img/plugins/magento.png" style="height:4.2em; margin-top: 1.2em; margin-left: 1.5em;">
+                </div>
+                <div class="type_button" data-plugin-type="OXID">
+                    <img src="img/plugins/oxid.png" style="height:5.2em; margin-top: 1em; margin-left: 1.8em;">
+                </div>
+                <div class="type_button" data-plugin-type="SHOPWARE">
+                    <img src="img/plugins/shopware.png" style="height:3.2em; margin-top: 1.9em; margin-left: 1.3em;">
+                </div>
+                <div class="type_button" data-plugin-type="BASIC">
+                    <span style="display: block; height:4.2em; margin-top: 2.5em; margin-left: 3em;" data-translate="plugin_custom_button">Custom development</span>
+                </div>
+			</div>
+			
+			<div style="clear:both;"> </div>
+			
+			<div class="plugin_configuration">
+			    
+			<table id="abTestIndicators">
+				<tr>
+					<td data-translate="plugin_panel_type">Type</td>
+					<td><input name="type" value=""></td>
+				</tr>
+                <tr>
+                    <td colspan="2" data-translate="plugin_enable_recos">
+                        <input name="plugin_recos" type="checkbox" value="checked" data-param="0">{0} - Enable website recommendations Type
+                    </td>
+                </tr>
+                <tr>
+                    <td data-translate="plugin_recos_template">Template</td>
+                    <td>
+                        <select name="plugin_recos_template">
+                          <option value="rwd">RWD (default blue template from Magento 1.9)</option>
+                          <option value="orange">Defalt orange template before Magento 1.9</option>
+                          <option value="galaeverbuy">Galaeverbuy</option>
+                          <option value="argento">Argento</option>
+                          <option value="ultimo">Ultimo</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td data-translate="plugin_recos_bestsellers_amount">Landing page. Amount of bestsellerts.</td>
+                    <td><input name="plugin_recos_bestsellers" value="4"></td>
+                </tr>
+                <tr>
+                    <td data-translate="plugin_recos_personal_amount">Landing page. Amount of personal recommendations.</td>
+                    <td><input name="plugin_recos_personal" value="4"></td>
+                </tr>
+                <tr>
+                    <td data-translate="plugin_recos_category_amount">Category page. Amount of category recommendations.</td>
+                    <td><input name="plugin_recos_category" value="4"></td>
+                </tr>                
+                <tr>
+                    <td data-translate="plugin_recos_related_amount">Product page. Amount of related products.</td>
+                    <td><input name="plugin_recos_related" value="4"></td>
+                </tr>
+                <tr>
+                    <td data-translate="plugin_recos_crosssell_amount">Product page. Amount of cross sell products.</td>
+                    <td><input name="plugin_recos_crosssell" value="4"></td>
+                </tr>
+                <tr>
+                    <td data-translate="plugin_recos_crosssell_amount">Basket page. Amount of cross sell products.</td>
+                    <td><input name="plugin_recos_basket" value="4"></td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2" data-translate="plugin_enable_import">
+                        <input name="plugin_import" type="checkbox" value="checked" data-param="0">{0} - Enable data import (required for newsletters)
+                    </td>
+                </tr>
+                
+                <tr>
+					<td data-translate="plugin_panel_endpoint">Endpoint</td>
+					<td><input name="type" value=""><button data-translate="plugin_change_endpoint">Change</button></td>
+				</tr>
+                <tr>
+					<td data-translate="plugin_login">Login</td>
+					<td class="login">
+                           <input name="login" value=""><br>
+                           <span class="help_text">For more information to login and password, click 
+                               <a href="https://doc.yoochoose.net/display/PUBDOC/Magento+Connect.+Extension+Tutorial" data-param="1">here</a>.</span>
+                    </td>
+                </tr>
+                <tr>
+					<td data-translate="plugin_password">Password</td>
+					<td class="password"><input name="password" value=""></td>
+				</tr>
+                <tr>
+					<td></td>
+					<td class="password"><button name="save">Save</button></td>
+				</tr>
+			</table>
+			
+			</div>
+
+		</div>
+	</div>
+
+</div>
