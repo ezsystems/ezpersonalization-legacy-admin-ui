@@ -853,27 +853,7 @@ define([
 					$('#abControls').find('.helpLink').trigger('click');
 				}
 			});
-		//init the tab behaviour
-		$('.tab')
-		.on('click', function(){
-			var $this = $(this);
-			if($this.hasClass('active')){
-				return;
-			}
-			$this.addClass('active current')
-				.siblings('.tab')
-				.removeClass('active current');
-			$($this.data('target'))
-				.show()
-				.siblings('.tabContent')
-					.hide();
-			$($this.data('controls'))
-				.show()
-				.siblings('.controls')
-					.hide();
-		})
-			.removeClass('active')
-			.first().trigger('click');
+			
 		//init the create new Test Button
 		$('#createNewTest')
 			.off('click')

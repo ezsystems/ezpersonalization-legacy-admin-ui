@@ -5,7 +5,6 @@
 var pluginPanel = {
 		
 	mandator: null,
-	mname: null,
 	manuallyTriggeredAtLeastOnce : false, // if triggered by event, or 
 	selectedPluginType : null, 
 	
@@ -29,55 +28,61 @@ var pluginPanel = {
 	'_htmlReady' : function() {
 		var self = this;
 		
+		// user closes the plugin dialog
+		
 		$('#pluginPanel .close_button').click(function() {
 			self._back();
 		});
+		
+		// user clicks the button "create new plugin"
 		
 		$('#pluginTabControls .create_new').click(function() {
 			self.show(true, "");
 		});
 		
+		
+		// user selects a plugin type (for example "MAGENTO") before creating a new plugin
+		
 		$('#pluginPanel .type_selector div.type_button').click(function() {
-			selectedPluginType = $(this).data("plugin-type");
-			self._switchView(2);
+			self.selectedPluginType = $(this).data("plugin-type");
+			
+			self._createNewPlugin(self.selectedPluginType);
+			
+				self._switchView(2);
 		});
 	},
 	
 	
 	'_createNewPlugin' : function(pluginType) {
+		var self = this;
+		var	mname = this.mandator.baseInformation.id;
 		
-	    var customerPromise = yooAjax(null, {
-	        url: "/api/v4/" + encodeURIComponent(mname) + "/plugin/" + decodeURIComponent(mandatorDao.getId()),
+		var designs;
+		
+	    yooAjax("#pluginPanel", {
+	        url: "/api/v4/" + encodeURIComponent(mname) + "/plugin/designs/" + encodeURIComponent(pluginType),
 	        success: function (json) {
-	            customer = json.profilePack.customer; // <-- "customer" is a global variable
-	            
-	            if (customer.id) {
-		        	$('#eemail').val(ifnull(customer.email, ""));
-		        	$('#ecompany').val(ifnull(customer.company, ""));
-		        	$('#efname').val(ifnull(customer.firstName, ""));
-		        	$('#elname').val(ifnull(customer.lastName, ""));
-		        	$('#ephone').val(ifnull(customer.phone, ""));
-		        	$('#estreet_and_house').val(ifnull(customer.address.street, ""));
-		        	$('#ezip').val(ifnull(customer.address.zip, ""));
-		        	$('#ecity').val(ifnull(customer.address.city, ""));
-		        	$('#ecountry').val(ifnull(customer.address.country, ""));
-		        	
-		        	$('#contract_details').show();
-	            } else {
-	            	$('#contract_details').hide();
-	            }
+	        	designs = json;
 	        }
-	    });
-	    
-	    
-		
-	},
-
-
-	'mname' : function() {
-		return this.mandator.baseInformation.id;
+	    }).pipe(function(designs) {
+    		var request = "/api/v4/" + encodeURIComponent(mname) + "/plugin/template/" + encodeURIComponent(pluginType);
+    		
+    		if (designs.length > 0) {
+    			request += "/" + encodeURIComponent(designs[0].id);
+    		}
+	    	
+	    	return yooAjax("#pluginPanel", {url: request});
+		}).done(function(template) {
+			self._populateData(template);
+		});
 	},
 	
+	
+	'_populateData' : function(plugin) {
+		
+		
+	},
+
 		
 	'init' : function(mandator) {
 		this.mandator = mandator;
@@ -102,7 +107,7 @@ var pluginPanel = {
 	
 	
 	'_show' : function(newPlugin, pluginCode, pushState) {
-		if (this.mandator) {
+		if ( ! this.mandator) {
 			console.error("Unable to show the plugin panel. Mandator is null.");
 			return;
 		}
@@ -158,6 +163,30 @@ var pluginPanel = {
 };
 
 
+var pluginTab = {
+	mandator: null,
+	
+	'init' : function(mandator) {
+		this.mandator = mandator;
+	},
+	
+	'loadPluginList' : function(plugin) {
+		
+		yooAjax("#pluginPanel", {
+	        url: "/api/v4/" + encodeURIComponent(mname) + "/plugin/designs/" + encodeURIComponent(pluginType),
+	        success: function (json) {
+	        	designs = json;
+	        }
+	    })
+		
+	},
+	
+	'destroy' : function() {
+		this.mandator = null;
+	}
+};
+
+
 // Attaching HTML and creating event handling
 
 pluginPanel.preInit();
@@ -173,14 +202,21 @@ window.addEventListener('popstate', function(event) {
 });
 
 
+window.addEventListener('dashboard_tab_switched', function(event) {
+	
+		
+});
+
 window.addEventListener('mandator_loaded', function(event) {
 	
 	var mandator = event.detail;
 	
 	if (mandator) {
 		pluginPanel.init(mandator);
+		pluginTab.init(mandator);
 	} else {
 		pluginPanel.destroy();
+		pluginTab.destroy();
 	}
 	
 });
