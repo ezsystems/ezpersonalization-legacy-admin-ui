@@ -998,7 +998,7 @@ function readMailJobs(){
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_jobs/",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/get_jobs/",
 		  success: function(json) {
 			  var htmlToAppend ='';
 			  if(json.length == 0){
