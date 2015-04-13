@@ -112,6 +112,10 @@ $(document).ready(function() {
 	$('#itemimportP .closeOverlay').click(function () {
 		 readImportJobs();
 	});
+	$('#mailP .closeOverlay').click(function () {
+		 readMailJobs();
+	});
+	
 	
 	$('section  div.index_mandator').hover(function() {
 		$(this).find('.index_hover').css('display', 'table-row');
@@ -878,6 +882,7 @@ function initialLoadData() {
 				$('#mailF').attr('src', 'mailconfig.html?customer_id=' +  encodeURIComponent(customerID));
 				$('#mailP').show();
 			});
+			readMailJobs();
 		}else{
 			$('section.scenarios li.tabMail').hide();
 		}
@@ -1005,9 +1010,10 @@ function readMailJobs(){
 					    var name = obj.scenario;
 					    var nlid = obj.nlid;
 					    var interval = obj.interval;
+					    var startdate = obj.startDate;
 					    var enabled = obj.enabled;
 					    var runURL = 'img/clock.png';
-					    var statusURL = 'img/red.png';
+					   
 					    var margin = -48;
 					    var off =  'active';
 					    var on =  '';
@@ -1015,18 +1021,7 @@ function readMailJobs(){
 					    	on =  'active';
 					    	off =  '';
 					    	margin = 0;
-					    	statusURL = 'img/blue.png';
-					    	if(lastRun != 'nope'){
-					    		var diff = Math.abs( new Date() - new Date(lastRun) );
-					    		var days = diff/(24*60*60*1000);
-					    		console.log(diff+ " "+days+" "+new Date(lastRun));
-					    		if(interval == 'DAILY' && days >= 1){
-					    			statusURL = 'img/yellow.png';
-					    		}
-					    		if(interval == 'WEEKLY' && days >= 7){
-					    			statusURL = 'img/yellow.png';
-					    		}
-					    	}
+					    	
 					    }
 					    htmlToAppend +='<div class="tr test">\n';
 					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
@@ -1052,11 +1047,11 @@ function readMailJobs(){
 				  } 
 				  htmlToAppend +='<div>';
 			  }
-			var header = $('#import_head').clone();
-			$('#importJobsTable').empty(); 
-			$('#importJobsTable').append(header);
-          	$('#importJobsTable').append(htmlToAppend);
-          	$('#importJobsTable').show();
+			var header = $('#mail_head').clone();
+			$('#mailTable').empty(); 
+			$('#mailTable').append(header);
+          	$('#mailTable').append(htmlToAppend);
+          	$('#mailTable').show();
           	
           	
           	
