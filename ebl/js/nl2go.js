@@ -38,6 +38,9 @@ function inlineSpectrumBodyBackground(){
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/getMailPreferences?nlid="+nlid,
 		  success: function(retObj) {
 			  unsetLoadingDiv($('body'));
+			  if(retObj.scenario){
+				  $("#mail_scenario").val(retObj.scenario);
+			  }
 			  $("#logo").val(retObj.logo);
 			  $("#menu_elment_hotline_name").val(retObj.holineName);
 			  $("#menu_elment_hotline_number").val(retObj.holineNumber);
@@ -176,6 +179,7 @@ function savePreferences2() {
 	 retObj = new Object();
 	 retObj.newsletterId = nlid;
 	 retObj.mandatorName = customerID;
+	 retObj.scenario = $("#mail_scenario").val();
 	 retObj.logo = $("#logo").val();
 	 retObj.holineName = $("#menu_elment_hotline_name").val();
 	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
@@ -230,7 +234,7 @@ function savePreferences2() {
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
 			  nlid = json.newsletterId;
-			  var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview?nlid="nlid;
+			  var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview?nlid="+nlid;
 			  $('#previewFrame').attr('src',isrc);   
 			  setMessagePopUp("positive", "message_data_saved_successfully");
 		  },
