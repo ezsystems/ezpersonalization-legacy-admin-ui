@@ -1,4 +1,5 @@
 var customerID = gup('customer_id');
+var nlid = gup('nlid');
 var currentbg = "#cccccc";
 var menuCurrentbg = "#003300";
 var ctaCurrentbg = "#123456";
@@ -6,13 +7,16 @@ var topicCurrentbg = "#cccccc";
 var footerCurrentbg = "#111111";
 
 $(document).ready(function () {
+	if(!nlid){
+		nlid = 0;
+	}
 	inlineSpectrumBodyBackground();
 	
 	$('#import_primary_settings').submit(function () {
 		savePreferences2();
 		return false;
     });
-	var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview";
+	var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview?nlid="+nlid;
 	$('#previewFrame').attr('src',isrc);   
 	
 	$("#button_save").click(submitImport);
@@ -31,7 +35,7 @@ function inlineSpectrumBodyBackground(){
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/getMailPreferences",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/getMailPreferences?nlid="+nlid,
 		  success: function(retObj) {
 			  unsetLoadingDiv($('body'));
 			  $("#logo").val(retObj.logo);
@@ -170,6 +174,7 @@ function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
 function savePreferences2() {
 	setLoadingDiv($('body'));
 	 retObj = new Object();
+	 retObj.newsletterId = nlid;
 	 retObj.mandatorName = customerID;
 	 retObj.logo = $("#logo").val();
 	 retObj.holineName = $("#menu_elment_hotline_name").val();
@@ -224,7 +229,8 @@ function savePreferences2() {
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/savePreferences",
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
-			  var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview";
+			  nlid = json.newsletterId;
+			  var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview?nlid="nlid;
 			  $('#previewFrame').attr('src',isrc);   
 			  setMessagePopUp("positive", "message_data_saved_successfully");
 		  },
