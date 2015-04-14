@@ -11,12 +11,10 @@ var pluginPanel = {
 	
 	'preInit' : function() {
 		var self = this;
-		var html, css;
+		var html;
 		$.when(
-			$.get("/plugin/plugin_panel.html", '', function(data) { html = data; }),
-			$.get("/plugin/plugin.css", '', function(data) { css = data; })
+			$.get("/plugin/plugin_panel.html", '', function(data) { html = data; })
 	    ).always(function() {
-	    	$("head").append($("<style type='text/css'>").html(css));
 	    	$("body").append(html);
 	    	self._htmlReady();
 	    });
@@ -33,13 +31,6 @@ var pluginPanel = {
 		$('#pluginPanel .close_button').click(function() {
 			self._back();
 		});
-		
-		// user clicks the button "create new plugin"
-		
-		$('#pluginTabControls .create_new').click(function() {
-			self.show(true, "");
-		});
-		
 		
 		// user selects a plugin type (for example "MAGENTO") before creating a new plugin
 		
@@ -164,23 +155,73 @@ var pluginPanel = {
 
 
 var pluginTab = {
-	mandator: null,
+	mandator: null, // full mandator object (a.k.a. MandatorPack)
+	plugins: null,  // the list of plugins (data)
+	
+	'preInit' : function() {
+		var self = this;
+		var html, css;
+		$.when(
+			$.get("/plugin/plugin_tab.html", '', function(data) { html = data; }),
+			$.get("/plugin/plugin.css", '', function(data) { css = data; })
+	    ).always(function() {
+	    	$("head").append($("<style type='text/css'>").html(css));
+	    	$("section.scenarios").append(html);
+	    	self._htmlReady();
+	    });
+	},
+	
+	/** Called by "preInit", when HTML for plugins is loaded and attached to the DOM. 
+	 **/
+	'_htmlReady' : function() {
+		var self = this;
+		
+		// user clicks the button "create new plugin"
+		
+		$('#pluginTabControls .create_new').click(function() {
+			pluginPanel.show(true, "");
+		});
+	},	
 	
 	'init' : function(mandator) {
 		this.mandator = mandator;
+		this.loadPluginList();
 	},
 	
-	'loadPluginList' : function(plugin) {
+	
+	'loadPluginList' : function() {
+		var self = this;
+		var	mname = this.mandator.baseInformation.id;
 		
-		yooAjax("#pluginPanel", {
-	        url: "/api/v4/" + encodeURIComponent(mname) + "/plugin/designs/" + encodeURIComponent(pluginType),
+		yooAjax("#pluginTab", {
+	        url: "/api/v4/" + encodeURIComponent(mname) + "/plugin/all",
 	        success: function (json) {
-	        	designs = json;
+	        	self.plugins = json;
+	        	self._populateData();
 	        }
-	    })
+	   });
+	},
+	
+	
+	'_populateData' : function() {
+		var template = $("#pluginTab tr.pg_template").clone();
+		template.removeClass("template");
+		template.show();
+		
+		this.plugins.forEach(function(plugin) {
+			
+			var row = template.clone();
+			row.find(".pg_type").text(plugin.base.type);
+			row.find(".pg_recoboxes").text(plugin.frontend.boxes.length);
+			row.find(".pg_search").text("not implemented");
+			row.find(".pg_newsletters").text(plugin.importJobs.length);
+			
+			$("#pluginTab tr.header").after(row);
+		});
 		
 	},
 	
+
 	'destroy' : function() {
 		this.mandator = null;
 	}
@@ -189,6 +230,7 @@ var pluginTab = {
 
 // Attaching HTML and creating event handling
 
+pluginTab.preInit();
 pluginPanel.preInit();
 
 
@@ -206,6 +248,7 @@ window.addEventListener('dashboard_tab_switched', function(event) {
 	
 		
 });
+
 
 window.addEventListener('mandator_loaded', function(event) {
 	
