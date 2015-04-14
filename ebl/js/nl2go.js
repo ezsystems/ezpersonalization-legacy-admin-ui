@@ -10,6 +10,34 @@ $(document).ready(function () {
 	if(!nlid){
 		nlid = 0;
 	}
+	htmlDays = '';
+	for (dm = 1; dm < 31; dm++) { 
+		htmlDays += '<option value="'+dm+'">'+dm+'</option>';
+	}
+	 $("#dayOfmonth").append(htmlDays);
+	$('#mail_schedule').change(function(){
+		var cval = $( this ).val();
+		if(cval  == 'MONTHLY'){
+			$('#dayOfmonthli').show();
+			$('#dayOfweekli').hide();
+			$('#hourOfdayli').show();
+			
+		}else if(cval  == 'WEEKLY'){
+			$('#dayOfmonthli').hide();
+			$('#dayOfweekli').show();
+			$('#hourOfdayli').show();
+		}else if( cval == 'DAILY'){
+			$('#dayOfmonthli').hide();
+			$('#dayOfweekli').hide();
+			$('#hourOfdayli').show();
+		}else if( cval == 'ONCE'){
+			$('#dayOfmonthli').hide();
+			$('#dayOfweekli').hide();
+			$('#hourOfdayli').hide();
+		}
+		
+	});
+	
 	inlineSpectrumBodyBackground();
 	
 	$('#import_primary_settings').submit(function () {
@@ -46,6 +74,19 @@ function inlineSpectrumBodyBackground(){
 			  $("#menu_elment_hotline_number").val(retObj.holineNumber);
 			  $("#cta").val(retObj.cta);
 			  $("#topic").val(retObj.topic);
+			  var startDate = new Date(retObj.startDate);
+			  var importWeek = startDate.getDay();
+			  if(importWeek){
+				  $("#dayOfweek").val(importWeek);
+			  }
+			  var importHour = startDate.getHours();
+			  if(importHour){
+				  $("#hourOfday").val(importHour);
+			  }
+			  var importMonth = startDate.getDate();
+			  if(importMonth){
+				  $("#dayOfmonth").val(importMonth);
+			  }
 			  
 			  if(retObj.background != null){
 				  currentbg = retObj.background;
@@ -180,6 +221,23 @@ function savePreferences2() {
 	 retObj.newsletterId = nlid;
 	 retObj.mandatorName = customerID;
 	 retObj.scenario = $("#mail_scenario").val();
+	 retObj.interval =  $("#mail_schedule").val();
+	 var d = new Date();
+	 if(retObj.interval == 'WEEKLY'){
+		 var currentDay = d.getDay();
+		 var fromDay =  $("#dayOfweek").val();
+		 var diff = fromDay-currentDay;
+		 if(fromDay < currentDay){
+			 diff = 7+diff; 
+		 }
+		 d.setDate(d.getDate()+diff);
+	 }
+	 if(retObj.interval != 'ONCE'){
+		 d.setHours($("#hourOfday").val(), 0, 0);
+	 }
+	 
+	 retObj.startDate = d;
+	 
 	 retObj.logo = $("#logo").val();
 	 retObj.holineName = $("#menu_elment_hotline_name").val();
 	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
