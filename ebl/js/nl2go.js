@@ -73,7 +73,6 @@ function inlineSpectrumBodyBackground(){
 			  $("#menu_elment_hotline_name").val(retObj.holineName);
 			  $("#menu_elment_hotline_number").val(retObj.holineNumber);
 			  $("#cta").val(retObj.cta);
-			  $("#topic").val(retObj.topic);
 			  var startDate = new Date(retObj.startDate);
 			  var importWeek = startDate.getDay();
 			  if(importWeek){
@@ -242,7 +241,6 @@ function savePreferences2() {
 	 retObj.holineName = $("#menu_elment_hotline_name").val();
 	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
 	 retObj.cta = $("#cta").val();
-	 retObj.topic = $("#topic").val();
 	 
 	 retObj.ctaBackground = ctaCurrentbg;
 	 retObj.background = currentbg;
