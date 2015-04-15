@@ -330,7 +330,7 @@ function saveImport() {
 		 d.moveToDayOfWeek(fromDay);
 	 }
 	 if(retObj.interval == 'WEEKLY' || retObj.interval == 'DAILY'){
-		 d.set({ millisecond: 0, second: 0,  minute: 0,hour: $("#hourOfday").val()});
+		 d.set({ millisecond: 0, second: 0,  minute: 0,hour : parseInt($("#hourOfday").val())});
 		 retObj.name = retObj.interval;
 	 }else{
 		 retObj.name = "ONE TIME ";
