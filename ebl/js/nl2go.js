@@ -3,7 +3,6 @@ var nlid = gup('nlid');
 var currentbg = "#cccccc";
 var menuCurrentbg = "#003300";
 var ctaCurrentbg = "#123456";
-var topicCurrentbg = "#cccccc";
 var footerCurrentbg = "#111111";
 
 $(document).ready(function () {
@@ -69,6 +68,9 @@ function inlineSpectrumBodyBackground(){
 			  if(retObj.scenario){
 				  $("#mail_scenario").val(retObj.scenario);
 			  }
+			  if(retObj.title){
+				  $("#mail_title").val(retObj.title);
+			  }
 			  $("#logo").val(retObj.logo);
 			  $("#menu_elment_hotline_name").val(retObj.holineName);
 			  $("#menu_elment_hotline_number").val(retObj.holineNumber);
@@ -125,9 +127,7 @@ function inlineSpectrumBodyBackground(){
 			  $("#basket_subject").val(retObj.hello1);
 			  $("#basket_note").val(retObj.note1);
 			  $("#basket_footer").val( retObj.footer1);
-			  $("#click_subject").val(retObj.hello2);
-			  $("#click_note").val(retObj.note2);
-			  $("#click_footer").val(retObj.footer2);
+			 
 			 
 			  
 			  spectrumBackground('mailBackground',currentbg);
@@ -220,6 +220,7 @@ function savePreferences2() {
 	 retObj.newsletterId = nlid;
 	 retObj.mandatorName = customerID;
 	 retObj.scenario = $("#mail_scenario").val();
+	 retObj.title = $("#mail_title").val();
 	 retObj.interval =  $("#mail_schedule").val();
 	 var d = new Date();
 	 if(retObj.interval == 'WEEKLY'){
@@ -257,9 +258,7 @@ function savePreferences2() {
 	 retObj.hello1 = $("#basket_subject").val();
 	 retObj.note1 = $("#basket_note").val();
 	 retObj.footer1 = $("#basket_footer").val();
-	 retObj.hello2 = $("#click_subject").val();
-	 retObj.note2 = $("#click_note").val();
-	 retObj.footer2 = $("#click_footer").val();
+	 
 	 
 	 
 	 var imprintName = $("#imprintName").val();

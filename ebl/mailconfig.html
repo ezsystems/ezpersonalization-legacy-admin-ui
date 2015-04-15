@@ -49,7 +49,17 @@
 	        	<div>
 			        <ul class="preview_settings normal_form">
 			        
-			        
+			           <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="mail_title" data-translate="mail_title" style="text-align: left;">Newsletter Title</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="mail_title" name="mail_title" placeholder="Newsletter Title" value="" />
+						</div>
+			          </li>
 			          <li class="scenario_id text_field clearfix">
 						<div class="basis tooltip_trigger" >
 							<label for="mail_scenario" data-translate="mail_scenario" style="text-align: left;">Newsletter type:</label>
@@ -70,7 +80,7 @@
 			          
 			          <li class="types_base select_field clearfix">
 						<div class="basis tooltip_trigger" >
-							<label for="mail_schedule" class="input_label" data-translate="import_schedule" style="text-align: left;">Schedule Import</label>
+							<label for="mail_schedule" class="input_label" data-translate="mail_schedule" style="text-align: left;">Schedule Newsletter</label>
 			            </div>
 						<div class="value">
 							<select id="mail_schedule" name="mail_schedule">
@@ -133,52 +143,7 @@
 						</div>
 			          </li>
 			          
-			          <li class="scenario_id text_field clearfix">
-						<div class="basis tooltip_trigger" >
-							<label for="menu_elment_hotline_name" data-translate="mail_menu_hotline_name" style="text-align: left;">Hotline caption</label>
-					        <span class="tooltip">
-					          <span data-translate="index_objects_tooltip">Some content.</span>
-					        </span>
-						</div>
-						<div class="value">
-							<input type="text" id="menu_elment_hotline_name" name="menu_elment_hotline_name" placeholder="HOTLINE caption" value="" />
-						</div>
-			          </li>
 			          
-			          <li class="scenario_id text_field clearfix">
-						<div class="basis tooltip_trigger" >
-							<label for="menu_elment_hotline_number" data-translate="mail_menu_hotline_number" style="text-align: left;">HOTLINE phone</label>
-					        <span class="tooltip">
-					          <span data-translate="index_objects_tooltip">Some content.</span>
-					        </span>
-						</div>
-						<div class="value">
-							<input type="text" id="menu_elment_hotline_number" name="menu_elment_hotline_number" placeholder="HOTLINE NUMBER" value="" />
-						</div>
-			          </li>
-			          
-			          <li class="scenario_id text_field clearfix">
-						<div class="basis tooltip_trigger" >
-							<label for="cta" data-translate="mail_menu_cta" style="text-align: left;">CTA</label>
-					        <span class="tooltip">
-					          <span data-translate="index_objects_tooltip">Some content.</span>
-					        </span>
-						</div>
-						<div class="value">
-							<input type="text" id="cta" name="cta" placeholder="CTA" value="" />
-						</div>
-			          </li>
-			          
-			           <li class="scenario_id text_field clearfix">
-						<div class="basis tooltip_trigger" >
-							<label for="ctaBackground" data-translate="mail_cta_background_color" style="text-align: left;">CTA Background color:</label>
-					        <span class="tooltip">
-					          <span data-translate="index_objects_tooltip">Some content.</span>
-					        </span>
-						</div>
-						<div class="value">
-							<input type='text' id="ctaBackground" />
-						</div>
 			          </li>
 			          
 			      
@@ -424,9 +389,57 @@
 	         	 <div>
 	         	
 	         	  	<ul class="preview_settings normal_form">
+	         	  	
+	         	  		<li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_hotline_name" data-translate="mail_menu_hotline_name" style="text-align: left;">Hotline caption</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="menu_elment_hotline_name" name="menu_elment_hotline_name" placeholder="HOTLINE caption" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_hotline_number" data-translate="mail_menu_hotline_number" style="text-align: left;">HOTLINE phone</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="menu_elment_hotline_number" name="menu_elment_hotline_number" placeholder="HOTLINE NUMBER" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="cta" data-translate="mail_menu_cta" style="text-align: left;">CTA</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="cta" name="cta" placeholder="CTA" value="" />
+						</div>
+			          </li>
+			          
+			           <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="ctaBackground" data-translate="mail_cta_background_color" style="text-align: left;">CTA Background color:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type='text' id="ctaBackground" />
+						</div>
+						
 	        			<li class="scenario_id text_field clearfix">
 						<div class="basis tooltip_trigger" >
-							<label for="basket_subject" data-translate="mail_subject_basket" style="text-align: left;">shopping cart subject</label>
+							<label for="basket_subject" data-translate="mail_subject" style="text-align: left;">mail subject</label>
 					        <span class="tooltip">
 					          <span data-translate="index_objects_tooltip">Some content.</span>
 					        </span>
@@ -438,7 +451,7 @@
 			          
 			           <li class="scenario_id text_field clearfix">
 						<div class="basis tooltip_trigger" >
-							<label for="basket_note" data-translate="mail_note_basket" style="text-align: left;">shopping cart note</label>
+							<label for="basket_note" data-translate="mail_note" style="text-align: left;">mail note </label>
 					        <span class="tooltip">
 					          <span data-translate="index_objects_tooltip">Some content.</span>
 					        </span>
@@ -450,7 +463,7 @@
 			          
 			          <li class="scenario_id text_field clearfix">
 						<div class="basis tooltip_trigger" >
-							<label for="basket_footer" data-translate="mail_footer_basket" style="text-align: left;">shopping cart footer</label>
+							<label for="basket_footer" data-translate="mail_footer" style="text-align: left;">mail footer </label>
 					        <span class="tooltip">
 					          <span data-translate="index_objects_tooltip">Some content.</span>
 					        </span>
@@ -460,42 +473,6 @@
 						</div>
 			          </li>
 			          
-			          
-			          <li class="scenario_id text_field clearfix">
-						<div class="basis tooltip_trigger" >
-							<label for="click_subject" data-translate="mail_subject_click" style="text-align: left;">We miss you subject</label>
-					        <span class="tooltip">
-					          <span data-translate="index_objects_tooltip">Some content.</span>
-					        </span>
-						</div>
-						<div class="value">
-							<input type="text" id="click_subject" name="click_subject" placeholder="subject" value="" />
-						</div>
-			          </li>
-			          
-			           <li class="scenario_id text_field clearfix">
-						<div class="basis tooltip_trigger" >
-							<label for="click_note" data-translate="mail_note_click" style="text-align: left;">We miss you note</label>
-					        <span class="tooltip">
-					          <span data-translate="index_objects_tooltip">Some content.</span>
-					        </span>
-						</div>
-						<div class="value">
-							<input type="text" id="click_note" name="click_note" placeholder="note" value="" />
-						</div>
-			          </li>
-			          
-			          <li class="scenario_id text_field clearfix">
-						<div class="basis tooltip_trigger" >
-							<label for="click_footer" data-translate="mail_footer_click" style="text-align: left;">We miss you footer</label>
-					        <span class="tooltip">
-					          <span data-translate="index_objects_tooltip">Some content.</span>
-					        </span>
-						</div>
-						<div class="value">
-							<input type="text" id="click_footer" name="click_footer" placeholder="footer" value="" />
-						</div>
-			          </li>
 			         </ul>
 			         </div>
 	        	</div>
