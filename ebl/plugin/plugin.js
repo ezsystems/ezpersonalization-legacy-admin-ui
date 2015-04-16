@@ -203,9 +203,20 @@ var pluginTab = {
 			row.find(".pg_image img.pg_type_" + plugin.base.type).show();
 			
 			row.find(".pg_type").text(plugin.base.type);
-			row.find(".pg_recoboxes").text(plugin.frontend.boxes.length);
-			row.find(".pg_search").text("not implemented");
-			row.find(".pg_newsletters").text(plugin.importJobs.length);
+			row.find(".pg_code").text(ifnull(plugin.base.pluginId, " - "));
+			row.find(".pg_design").text(plugin.frontend.design);
+			
+			var $reco = row.find(".pg_recoboxes");
+			plugin.frontend.boxes.forEach(function(box) {
+				var $box = $("<div></div>");
+				$box.text(box.code + " [" + (box.rows * box.columns) + "]");
+				$reco.append($box);
+			});
+
+			row.find(".pg_search").text("not supported by this plugin type");
+			row.find(".pg_newsletters").text("not supported by this plugin type");
+			
+			row.find(".pg_import_jobs").text(plugin.importJobs.length);
 			
 			$("#pluginTab tr.header").after(row);
 		});
