@@ -1,18 +1,49 @@
 var customerID = gup('customer_id');
+var nlid = gup('nlid');
 var currentbg = "#cccccc";
 var menuCurrentbg = "#003300";
 var ctaCurrentbg = "#123456";
-var topicCurrentbg = "#cccccc";
 var footerCurrentbg = "#111111";
 
 $(document).ready(function () {
+	if(!nlid){
+		nlid = 0;
+	}
+	htmlDays = '';
+	for (dm = 1; dm < 31; dm++) { 
+		htmlDays += '<option value="'+dm+'">'+dm+'</option>';
+	}
+	 $("#dayOfmonth").append(htmlDays);
+	$('#mail_schedule').change(function(){
+		var cval = $( this ).val();
+		if(cval  == 'MONTHLY'){
+			$('#dayOfmonthli').show();
+			$('#dayOfweekli').hide();
+			$('#hourOfdayli').show();
+			
+		}else if(cval  == 'WEEKLY'){
+			$('#dayOfmonthli').hide();
+			$('#dayOfweekli').show();
+			$('#hourOfdayli').show();
+		}else if( cval == 'DAILY'){
+			$('#dayOfmonthli').hide();
+			$('#dayOfweekli').hide();
+			$('#hourOfdayli').show();
+		}else if( cval == 'ONCE'){
+			$('#dayOfmonthli').hide();
+			$('#dayOfweekli').hide();
+			$('#hourOfdayli').hide();
+		}
+		
+	});
+	
 	inlineSpectrumBodyBackground();
 	
 	$('#import_primary_settings').submit(function () {
 		savePreferences2();
 		return false;
     });
-	var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview";
+	var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview?nlid="+nlid;
 	$('#previewFrame').attr('src',isrc);   
 	
 	$("#button_save").click(submitImport);
@@ -31,14 +62,32 @@ function inlineSpectrumBodyBackground(){
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/getMailPreferences",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/getMailPreferences?nlid="+nlid,
 		  success: function(retObj) {
 			  unsetLoadingDiv($('body'));
+			  if(retObj.scenario){
+				  $("#mail_scenario").val(retObj.scenario);
+			  }
+			  if(retObj.title){
+				  $("#mail_title").val(retObj.title);
+			  }
 			  $("#logo").val(retObj.logo);
 			  $("#menu_elment_hotline_name").val(retObj.holineName);
 			  $("#menu_elment_hotline_number").val(retObj.holineNumber);
 			  $("#cta").val(retObj.cta);
-			  $("#topic").val(retObj.topic);
+			  var startDate = new Date(retObj.startDate);
+			  var importWeek = startDate.getDay();
+			  if(importWeek){
+				  $("#dayOfweek").val(importWeek);
+			  }
+			  var importHour = startDate.getHours();
+			  if(importHour){
+				  $("#hourOfday").val(importHour);
+			  }
+			  var importMonth = startDate.getDate();
+			  if(importMonth){
+				  $("#dayOfmonth").val(importMonth);
+			  }
 			  
 			  if(retObj.background != null){
 				  currentbg = retObj.background;
@@ -78,9 +127,7 @@ function inlineSpectrumBodyBackground(){
 			  $("#basket_subject").val(retObj.hello1);
 			  $("#basket_note").val(retObj.note1);
 			  $("#basket_footer").val( retObj.footer1);
-			  $("#click_subject").val(retObj.hello2);
-			  $("#click_note").val(retObj.note2);
-			  $("#click_footer").val(retObj.footer2);
+			 
 			 
 			  
 			  spectrumBackground('mailBackground',currentbg);
@@ -170,12 +217,31 @@ function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
 function savePreferences2() {
 	setLoadingDiv($('body'));
 	 retObj = new Object();
+	 retObj.newsletterId = nlid;
 	 retObj.mandatorName = customerID;
+	 retObj.scenario = $("#mail_scenario").val();
+	 retObj.title = $("#mail_title").val();
+	 retObj.interval =  $("#mail_schedule").val();
+	 var d = new Date();
+	 if(retObj.interval == 'WEEKLY'){
+		 var currentDay = d.getDay();
+		 var fromDay =  $("#dayOfweek").val();
+		 var diff = fromDay-currentDay;
+		 if(fromDay < currentDay){
+			 diff = 7+diff; 
+		 }
+		 d.setDate(d.getDate()+diff);
+	 }
+	 if(retObj.interval != 'ONCE'){
+		 d.setHours($("#hourOfday").val(), 0, 0);
+	 }
+	 
+	 retObj.startDate = d;
+	 
 	 retObj.logo = $("#logo").val();
 	 retObj.holineName = $("#menu_elment_hotline_name").val();
 	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
 	 retObj.cta = $("#cta").val();
-	 retObj.topic = $("#topic").val();
 	 
 	 retObj.ctaBackground = ctaCurrentbg;
 	 retObj.background = currentbg;
@@ -192,9 +258,7 @@ function savePreferences2() {
 	 retObj.hello1 = $("#basket_subject").val();
 	 retObj.note1 = $("#basket_note").val();
 	 retObj.footer1 = $("#basket_footer").val();
-	 retObj.hello2 = $("#click_subject").val();
-	 retObj.note2 = $("#click_note").val();
-	 retObj.footer2 = $("#click_footer").val();
+	 
 	 
 	 
 	 var imprintName = $("#imprintName").val();
@@ -224,7 +288,8 @@ function savePreferences2() {
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/savePreferences",
 		  success: function(json) {
 			  unsetLoadingDiv($('body'));
-			  var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview";
+			  nlid = json.newsletterId;
+			  var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview?nlid="+nlid;
 			  $('#previewFrame').attr('src',isrc);   
 			  setMessagePopUp("positive", "message_data_saved_successfully");
 		  },
