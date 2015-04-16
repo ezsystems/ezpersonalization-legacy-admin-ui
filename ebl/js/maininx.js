@@ -1055,8 +1055,7 @@ function readMailJobs(){
 					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
 					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
 					  
-		
-					    htmlToAppend +=' <div class="tc showHistory"><a onclick="showMailHistory('+nlid+')">Show History</a> </div>';
+	
 					    
 					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#mailF\').attr(\'src\', \'mailconfig.html?customer_id=' +  encodeURIComponent(customerID)+'&nlid='+nlid+'\');$(\'#mailP\').show();">Edit</a> </div>';
 					    
