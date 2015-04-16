@@ -324,24 +324,19 @@ function saveImport() {
 	 retObj.delimiter = $("#delimiter").val();
 	 retObj.interval = $("#import_schedule").val();
 	 retObj.enabled = true;
-	 var d = new Date();
+	 var d = Date.today ();
 	 if(retObj.interval == 'WEEKLY'){
-		 var currentDay = d.getDay();
 		 var fromDay =  $("#dayOfweek").val();
-		 var diff = fromDay-currentDay;
-		 if(fromDay < currentDay){
-			 diff = 7+diff; 
-		 }
-		 d.setDate(d.getDate()+diff);
+		 d.moveToDayOfWeek(fromDay);
 	 }
 	 if(retObj.interval == 'WEEKLY' || retObj.interval == 'DAILY'){
-		 d.setHours($("#hourOfday").val(), 0, 0);
+		 d.set({ millisecond: 0, second: 0,  minute: 0,hour : parseInt($("#hourOfday").val())});
 		 retObj.name = retObj.interval;
 	 }else{
 		 retObj.name = "ONE TIME ";
 	 }
 	 retObj.name = retObj.name+ " "+ $("#input_type").find(":selected").text()+" IMPORT ";
-	 retObj.startDate = d;
+	 retObj.startDate = d.toString("yyyy-MM-ddTHH:mm:ss") ;
 	 if($("#input_language").val() != 'notUsed'){
 		 retObj.language = $("#input_language").val();
 		 retObj.name = retObj.name+ " IN "+ $("#input_language").find(":selected").text();

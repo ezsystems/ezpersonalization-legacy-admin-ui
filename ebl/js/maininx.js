@@ -935,6 +935,7 @@ function initialLoadData() {
 
 var imports = new Array();
 var  allJobsI;
+var  allJobsM;
 
 function readImportJobs(){
 	$.ajax({
@@ -1031,7 +1032,7 @@ function readMailJobs(){
 			  if(json.length == 0){
 				  htmlToAppend = '<div id="noTests" data-translate="mail_no_jobs">you have no newsletters defined</div>';
 			  }else{
-				allJobsI = json;
+				allJobsM = json;
 				  for(var i = 0; i < json.length; i++) {
 					    var obj = json[i];
 					    var name = obj.scenario;
@@ -1063,10 +1064,10 @@ function readMailJobs(){
 					    htmlToAppend +=' <div class="tc jobon toggle-light">'
 					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
 					    	+'<div class="toggle-slide" onclick="updateMailStatus('+i+');">'
-						    	+'<div id="toggle-inner'+i+'" class="toggle-inner" style="width: 118px; margin-left: '+margin+'px;">'
-						    		+'<div id="toggle-on'+i+'" class="toggle-on '+on+'" style="height: 22px; width: 59px; text-indent: -11px; line-height: 22px;">ON</div>'
+						    	+'<div id="toggle-innerm'+i+'" class="toggle-inner" style="width: 118px; margin-left: '+margin+'px;">'
+						    		+'<div id="toggle-onm'+i+'" class="toggle-on '+on+'" style="height: 22px; width: 59px; text-indent: -11px; line-height: 22px;">ON</div>'
 						    		+'<div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>'
-						    		+'<div id="toggle-off'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
+						    		+'<div id="toggle-offm'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
 						    	 +'</div>'
 						    +'</div></div></div>';
 					    	
@@ -1085,6 +1086,45 @@ function readMailJobs(){
 			  
 		  },
 		  error: mainErrorHandler
+	  });
+}
+
+function updateMailStatus(activeId){
+	var classList =$('#toggle-onm'+activeId).attr('class').split(/\s+/);
+	var status = 1;
+	var job = allJobsM[activeId];
+	$.each( classList, function(index, item){
+	    if (item === 'active') {
+	    	status = 0;
+	    }
+	});
+
+	if(status == 1){
+		$('#toggle-innerm'+activeId).css('margin-left','0px');
+		$('#toggle-onm'+activeId).addClass('active'); 
+		$('#toggle-offm'+activeId).removeClass('active');
+		job.enabled = true;
+	}else{
+		$('#toggle-innerm'+activeId).css('margin-left','-48px');
+		$('#toggle-onm'+activeId).removeClass('active'); 
+		$('#toggle-offm'+activeId).addClass('active'); 
+		job.enabled = false;
+	}
+	 
+	 
+	 var urlsufix = '/nl2go/pref/updateJob';
+	 $.ajax({
+		  type: "POST",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  data: JSON.stringify(job),
+		  url: "/api/v4/" + encodeURIComponent(customerID) + urlsufix,
+		  success: function(json) { 
+		  },
+		  error: function() {
+			  stdAjaxErrorHandler();
+		  }
 	  });
 }
 
