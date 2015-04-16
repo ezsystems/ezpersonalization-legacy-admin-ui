@@ -137,19 +137,6 @@ var pluginPanel = {
 		this.mandator = null;
 	},
 
-
-	'popstate' : function(event, manualTriggered) {
-		var state = ifnull(event.state, event.detail); // PopStateEvent has 'state' flag, but custom event 'detail'
-		 
-		if (state && state.indexOf("plugin") == 0) {
-			var dot = state.indexOf(".");
-			var code = (dot == -1) ? null : state.substring(dot + 1, state.length);
-			
-			pluginPanel._show(dot == -1, code, manualTriggered);
-		} else {
-			pluginPanel.hide();
-		}
-	}		
 		
 };
 
@@ -211,6 +198,10 @@ var pluginTab = {
 		this.plugins.forEach(function(plugin) {
 			
 			var row = template.clone();
+			
+			row.find(".pg_image img").hide();
+			row.find(".pg_image img.pg_type_" + plugin.base.type).show();
+			
 			row.find(".pg_type").text(plugin.base.type);
 			row.find(".pg_recoboxes").text(plugin.frontend.boxes.length);
 			row.find(".pg_search").text("not implemented");
@@ -234,13 +225,31 @@ pluginTab.preInit();
 pluginPanel.preInit();
 
 
+
+function pluginPopstate(event, manualTriggered) {
+	var state = ifnull(event.state, event.detail); // PopStateEvent has 'state' flag, but custom event 'detail'
+	 
+	if (state && state.indexOf("plugin") == 0) {
+		var dot = state.indexOf(".");
+		var code = (dot == -1) ? null : state.substring(dot + 1, state.length);
+		
+		pluginPanel._show(dot == -1, code, manualTriggered);
+		
+		$("section.scenarios .tabPlugins").trigger("click"); // activating the plugin tab
+		
+	} else {
+		pluginPanel.hide();
+	}
+}	
+
+
 window.addEventListener('popstate_manual', function(event) {
-	pluginPanel.popstate(event, true);
+	pluginPopstate(event, true);
 });
 
 
 window.addEventListener('popstate', function(event) {
-	pluginPanel.popstate(event, false);
+	pluginPopstate(event, false);
 });
 
 
