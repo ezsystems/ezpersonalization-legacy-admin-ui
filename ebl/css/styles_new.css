@@ -507,11 +507,9 @@ input[type="text"].inverted {
   color: rgba(63, 63, 63, 1);
   cursor: pointer;
   line-height: 27px;
-  -webkit-transition: all linear 0.2s;
-  -moz-transition: all linear 0.2s;
-  -ms-transition: all linear 0.2s;
-  -o-transition: all linear 0.2s;
   transition: all linear 0.2s;
+  transition: width 0s;
+  transition: height 0s;
   text-decoration: underline;
 }
 
