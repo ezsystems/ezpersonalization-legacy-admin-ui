@@ -298,7 +298,12 @@ function to_outer_html(elements) {
 	result = [];
 	
 	$(elements).each(function(){
-	    var outerHtml = $(this).clone().wrap('<p>').parent().html();
+		var outerHtml;
+		if (typeof  marcamillion == 'undefined') { // happens if one has gaps in a numeric array
+	    	outerHtml = $("<span></span>");
+	   } else {
+	   		outerHtml = $(this).clone().wrap('<p>').parent().html();
+	   }
 	    result.push(outerHtml);	
 	});
 

@@ -191,16 +191,28 @@ var pluginTab = {
 	
 	
 	'_populateData' : function() {
+		
+		// filling the table
+		
 		var template = $("#pluginTab tr.pg_template").clone();
 		template.removeClass("template");
 		template.show();
 		
+		var single_type = this.plugins.length > 0 ? this.plugins[0].base.type : null;
+		var row; // we will use it later to fetch the icon
+		
 		this.plugins.forEach(function(plugin) {
 			
-			var row = template.clone();
+			var type = plugin.base.type;
+			
+			row = template.clone();
+			
+			if (type != single_type) {
+				single_type = null;
+			}
 			
 			row.find(".pg_image img").hide();
-			row.find(".pg_image img.pg_type_" + plugin.base.type).show();
+			row.find(".pg_image img.pg_type_" + type).show();
 			
 			row.find(".pg_type").text(plugin.base.type);
 			row.find(".pg_code").text(ifnull(plugin.base.pluginId, " - "));
@@ -218,8 +230,33 @@ var pluginTab = {
 			
 			row.find(".pg_import_jobs").text(plugin.importJobs.length);
 			
+			row.find(".pg_import_settings").on("click", function(event) {
+				
+				pluginPanel.show(false, plugin.base.pluginId);
+				return false; // disabling default redirect
+			});
+			
 			$("#pluginTab tr.header").after(row);
 		});
+		
+		// icon
+		
+		var $tab_button = $("section.scenarios li.tabPlugins");
+		
+		if (single_type) {
+			var $icon = row.find(".pg_image img.pg_type_" + single_type).clone();
+			
+			$icon.css("margin", "0em");
+			$icon.css("vertical-align", "top");
+			
+			$tab_button.find("label span").hide();
+			$tab_button.find("label").css("font-size", "0.4em");
+			$tab_button.find("label").append($icon);
+			
+		} else {
+			$tab_button.find("label span").show();
+			$tab_button.find("label img").hide();
+		}
 		
 	},
 	
