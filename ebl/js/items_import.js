@@ -170,6 +170,7 @@ function getCSVFields(){
 							    '<option value="abstract"  >Abstract</option>\n'+
 							    '<option value="tags"  >Tags</option>\n'+
 							    '<option value="vendor"  >Vendor</option>\n'+
+							    '<option value="deeplinkUrl"  >Deep link URL</option>\n'+
 							'</select>\n'+
 							'<select id="type_field'+i+'" name="type_field'+i+'"  onchange="addPrefix('+i+');">\n'+
 								'<option value="NUMERIC"   >NUMERIC</option>\n'+
