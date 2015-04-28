@@ -327,8 +327,8 @@ var fromTemplate   = gupDecoded('from_template');
 		
 		// USER BOOST FILTER
 
-		var boostChecked = $('#filter_group_user input[name="user_boost_enable"]')[0].checked;
-		var diffChecked = $('#filter_group_user input[name="user_boost_diff"]')[0].checked;
+		var boostChecked = $('#filter_group_user input[name="user_boost_enable"]').is(':checked');
+		var diffChecked = $('#filter_group_user input[name="user_boost_diff"]').is(':checked');
 		
 		var $boostAttr  = $('#filter_group_user input[name="user_boost_attr"]');
 		var $boostValue = $('#filter_group_user input[name="user_boost_value"]');

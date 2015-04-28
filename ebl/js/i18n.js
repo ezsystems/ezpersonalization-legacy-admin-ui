@@ -297,12 +297,13 @@ function i18n() {
 function to_outer_html(elements) {
 	result = [];
 	
-	$(elements).each(function(){
+	$(elements).each(function(index, element){
 		var outerHtml;
-		if (typeof  marcamillion == 'undefined') { // happens if one has gaps in a numeric array
-	    	outerHtml = $("<span></span>");
+		//console.log("aaa " + element + " " + index + " " + (typeof element));
+		if (typeof element == 'undefined') { // happens if one has gaps in a numeric array
+	    	outerHtml = $("<span></span>").html();
 	   } else {
-	   		outerHtml = $(this).clone().wrap('<p>').parent().html();
+	   		outerHtml = $(element).clone().wrap('<p>').parent().html();
 	   }
 	    result.push(outerHtml);	
 	});
