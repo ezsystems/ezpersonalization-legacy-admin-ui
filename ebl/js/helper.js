@@ -24,7 +24,7 @@ var include = function(scripts, callback) {
 
 
 var cachedScript = function(url) {
- 	  options = {
+ 	  var options = {
  			crossDomain: true, // it adds script tag and allows to debug included file 
 		    dataType: "script",
 		    cache: true,
@@ -518,14 +518,24 @@ function initHelpBtn(){
 }
 
 
+function yooJson(blurSelector, options) {
+	var result = $.Deferred();
 
-/** Makes a $.ajax() call setting JSON content type ba default.
+	yooAjax(blurSelector, options).done(function(a,b,c) {
+		result.resolve(a);
+	});
+
+	return result.promise();
+}
+
+
+/** Makes a $.ajax() call setting JSON content type by default.
  *  If non 2xx returned, calls method <code>fault_[json.faultCode]</code> or <code>fault_[statusCode]</code>
  *  or <code>fault</code> instead of <code>error</code>. Calls the method <code>error</code> only, 
  *  if the <code>fault*</code> mehtod was not found.
  * 
  *  @param blurSelector
- *  	selector of the DOM emement to blur during the call. It can be <code>null</code>.
+ *  	selector of the DOM element to blur during the call. It can be <code>null</code>.
  *  @param options
  *  	see <code>$.ajax()</code> for more infromation.
  */
@@ -533,6 +543,20 @@ function yooAjax(blurSelector, options) {
 	
 	if (blurSelector) {
 		setLoadingDiv($(blurSelector));
+	}
+
+	if (Array.isArray(options.url)) {
+		var yooCalls = [];
+
+		options.url.forEach(function(url) {
+			var copy = options.slice();
+			copy.url = url;
+			yooCalls.push(yooAjax(null, copy));
+		});
+
+		return $.when.apply($, yooCalls).always(function () {
+			unsetLoadingDiv($(blurSelector));
+		});
 	}
 	
     var old_success = options.success;
@@ -551,7 +575,7 @@ function yooAjax(blurSelector, options) {
     	if (options.contentType == "application/json" && typeof options.data === 'object') {
     		options.data = JSON.stringify(options.data);
         }
-    };
+    }
     
     if (! options.fault_authenticationFailure) {
 	    options.fault_authenticationFailure = function(json) {
