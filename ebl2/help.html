@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Dashboard</title>
+    <meta name="description" content="YooChoose recommendation help page"/>
+    <meta name="author" content="Alexander Tsikinovsky">
+    <meta name="viewport" content="width=1280, initial-scale=1">
+ <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script type="text/javascript">
+    var callback2 = function(){
+    	 $(function() {
+    		    $( "#helptabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+    		    $( "#helptabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+    		  });
+    	 
+    	 var ycjq2 = document.createElement('link'); ycjq2.rel = 'stylesheet';
+     	 ycjq2.href =  'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css';
+     	 var ycs = document.getElementsByTagName('script')[0]; ycs.parentNode.insertBefore(ycjq2, ycs);
+     	$(document).ready(function () {
+     		$('#helptabs-1').css('width','660px');
+     		$('#helptabs-2').css('width','660px');
+     		$('#helptabs-3').css('width','660px');
+     		$('#helptabs-4').css('width','660px');
+     		$('#helptabs-5').css('width','660px');
+     	});
+   }
+    var callback1 = function(){
+    	 var ycjq2 = document.createElement('script'); ycjq2.type = 'text/javascript';
+     	 ycjq2.src =  'http://code.jquery.com/ui/1.10.3/jquery-ui.js';
+         var ycs = document.getElementsByTagName('script')[0]; ycs.parentNode.insertBefore(ycjq2, ycs);
+         ycjq2.onreadystatechange = callback2;
+         ycjq2.onload = callback2;
+    }
+    if(self==top){
+    	var ycjq = document.createElement('script'); ycjq.type = 'text/javascript';
+    	ycjq.src =  'http://code.jquery.com/jquery-1.9.1.js';
+        var ycs = document.getElementsByTagName('script')[0]; ycs.parentNode.insertBefore(ycjq, ycs);
+        ycjq.onreadystatechange = callback1;
+        ycjq.onload = callback1;
+       
+    }else{
+    	 $(function() {
+    		    $( "#helptabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+    		    $( "#helptabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+    		  });
+    }
+    
+	 
+	  </script>
+	  <style>
+	  .ui-tabs-vertical { width: 90em; }
+	  .ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
+	  .ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
+	  .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+	  .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
+	  .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 75em;}
+	  .blue-code {color: blue; font-style:italic}
+	  </style>
+  </head>
+  <body id="dashboard">
+   
+  	 <div id="helptabs" style="border: 0px;width: 1000px;">
+	  <ul>
+	    <li><a href="#helptabs-1" style="white-space: normal;" >How to integrate script in your HTML code</a></li>
+	    <li><a href="#helptabs-2" style="white-space: normal;">If you use an HTML insert editor</a></li>
+	    <li><a href="#helptabs-3" style="white-space: normal;">If you use JOOMLA</a></li>
+	    <li><a href="#helptabs-4" style="white-space: normal;">If you use WORDPRESS</a></li>
+	    <li><a href="#helptabs-5" style="white-space: normal;">If you use DRUPAL</a></li>
+	  </ul>
+	  <div id="helptabs-1"  style="width: 750px; float: left;">
+	     
+	     <br/>
+	     
+	     	<div style="text-align: left;">
+	     		<p>Every HTML document is made up of bracketed tags which tell the web browser how to display the HTML elements. All HTML elements start with an opening tag (&lt; &gt;) and end with a closing tag (&lt;/ &gt;). HTML documents have the following basic structure:</p>
+				<br>
+				<p class="blue-code">&lt;HTML&gt;</p>
+				<br>
+				<p class="blue-code">&lt;HEAD&gt;</p>
+				<p class="blue-code">&lt;/HEAD&gt;</p>
+				<p class="blue-code">&lt;BODY&gt;</p>
+				<br>
+				<br>
+				<br>
+				<p class="blue-code">&lt;/BODY&gt;</p>
+				<p class="blue-code">&lt;/HTML&gt;</p>
+				<br>
+				<p>The opening <font class="blue-code"> &lt;HTML&gt; </font>tag alerts a browser that this is the start of your HTML document.</p>
+				<p>The opening  <font class="blue-code">&lt;HEAD&gt; </font> tag contains your header information and is not visible when you view the page in your browser. Any text displayed between the BODY tags ( <font class="blue-code">&lt;BODY&gt;</font> and  <font class="blue-code">&lt;/BODY&gt;</font>) will be displayed in your browser.</p>
+				<p>The closing  <font class="blue-code">&lt;/HTML&gt;</font> tag alerts your browser that this is the end of your HTML document.<br>
+				  For recommendations to appear properly, you need to place your recommendation code(script) between the opening  <font class="blue-code">&lt;BODY&gt;</font> and closing  <font class="blue-code">&lt;/BODY&gt;</font> tags of your source code.</p>
+				<p>If you're having trouble finding the  <font class="blue-code">&lt;BODY&gt;</font> tags, try pressing the 'CTRL' and 'F' keys on a PC, or 'COMMAND' and 'F' keys on a Mac to open a Find text box. Then type '&lt;BODY' (without the quotes) to find the opening tag or '&lt;/BODY' (without the quotes) to find the closing tag, and click Find next.</p>
+				<p>Finding the  <font class="blue-code">&lt;BODY &gt;</font> tags is important, because you need to paste the Yoochoose recommendations code(script) in between the  <font class="blue-code">&lt;BODY&gt;</font> and the  <font class="blue-code">&lt;/BODY&gt;</font> tags of the document.</p>
+				<p>Position the recommendations on your site with HTML 
+				just like other elements of your website such as images and photos, you can change the position of your Yoochoose recommendations by using HTML tags.</p>
+				<p>For example, if you surround your Yoochoose recommendations code(script) with the tags  <font class="blue-code">&lt;div align="center"&gt;</font> and  <font class="blue-code">&lt;/div&gt;</font>, the recommendations will be centered on your webpage. You can also place the complete content of your page into a HTML table and change the location of the recommendations by positioning it in a specific table cell.</p>
+	     	</div>
+	    
+	    </div>
+     
+     
+     <div id="helptabs-2"  style="width: 750px; float: left;">
+     	<br/>
+     	<div style="text-align: left;">
+
+			<p>If your web editor uses an HTML Insert feature, please follow these instructions for pasting your Yoochoose recommendations.</p>
+			
+			<ol>
+			<li>Using your editor, open the webpage where you'd like to display Yoochoose recommendations. Click the Insert option on the toolbar, then click HTML.<br></li>
+			
+			
+			<li>In the HTML code box that appears, paste your ad code, then click OK.<br>
+			<br>
+			<img src="images/helpeditor.png" width="485" height="461">
+			
+			<br>
+			
+			After doing so, a new HTML box will appear. You can move this box anywhere on your website, but you can't overlap the HTML box with any other text or graphic box on the website. Overlapping will prevent your recommendations from appearing or create errors when you upload the website. Also keep in mind that you can adjust the size of the HTML box to fit your layout. </li>
+			
+			<li>Once you're satisfied with the position of your recommendations, go to <strong>File</strong> in your menu and click <strong>Preview in Browser</strong> to see what your ad will look like.</li>
+			<li>Please be sure to pick an ad size that will fit into a blank space on your site.</li>
+			
+			<li>If you are satisfied with the ad placement, go to File and click <strong>Publish</strong>. 
+			</li>
+			</ol>
+			<p><strong>You're done!</strong> 
+			If this is the first time you implement code and your Yoochoose account status is NEW, your recommendations will remain blank.</p>
+			
+			<p> Once your site is fully inspected(2 or 3 hours) , the recommendations will start showing.</p>
+			<div style="margin-top: 3em;">
+				<iframe width="560" height="315" src="//www.youtube.com/embed/wlG1pt5MKfw/?vq=hd720" frameborder="0" allowfullscreen></iframe>
+			</div>
+		</div>
+     </div>
+    <div id="helptabs-3"  style="width: 750px; float: left;">
+     	<br/>
+     	<div style="text-align: left;">
+    	<iframe width="560" height="315" src="//www.youtube.com/embed/mRmRX8MaeDA/?vq=hd720" frameborder="0" allowfullscreen></iframe>
+    	</div>
+    </div>
+     <div id="helptabs-4"  style="width: 750px; float: left;">
+     	<br/>
+     	<div style="text-align: left;">
+    	<iframe width="560" height="315" src="//www.youtube.com/embed/uGz-weG5rBM/?vq=hd720" frameborder="0" allowfullscreen></iframe>
+    	</div>
+    </div>
+     <div id="helptabs-5" style="width: 750px; float: left;">
+     	<br/>
+     	<div style="text-align: left;">
+    	<iframe width="560" height="315" src="//www.youtube.com/embed/YTO0DZTDxAc/?vq=hd720" frameborder="0" allowfullscreen></iframe>
+    	</div>
+    </div>
+     
+    </div>
+    
+    
+    
+  </body>
+</html>
