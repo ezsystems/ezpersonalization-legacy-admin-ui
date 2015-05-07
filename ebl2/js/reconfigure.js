@@ -319,7 +319,7 @@ function show_recommendationsPreview(positionOfRecs,prtypeOfRecs){
 	previewHtml+='	</a>';
 	
 	previewHtml+='<p style="text-align: left;  margin-top: -'+((positionOfRecs == 2)?'8':'10')+'px; font-style: italic;  font-size: 0.8em; float: left;  text-decoration: none;'+((positionOfRecs == 2)?'width: 159px;':'')+'">Recommendations powered by '+
-    '<a href="http://yoochoose.com/" style="text-decoration: none;">YOOCHOOSE</a></p>	</div>';
+    '<a href="http://www.yoochoose.com/" style="text-decoration: none;">YOOCHOOSE</a></p>	</div>';
 	
    ;
 	element.insertAdjacentHTML('beforeend', previewHtml);

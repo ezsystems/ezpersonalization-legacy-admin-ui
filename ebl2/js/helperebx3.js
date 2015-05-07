@@ -104,7 +104,7 @@ function showPreview2(element){
 	}
 	previewHtml+='	</div>'+
     '<br/><p style="text-align: left;  margin-top: -'+((recSize == 2)?'8':'10')+'px; font-style: italic;  font-size: 0.8em; float: left;  text-decoration: none; '+((recSize == 2)?'width: 159px;':'')+'">Recommendations powered by '+
-    '<a href="https://yoochoose.com/" style="text-decoration: none;">YOOCHOOSE</a></p>';
+    '<a href="https://www.yoochoose.com/" style="text-decoration: none;">YOOCHOOSE</a></p>';
 	element.insertAdjacentHTML('beforeend', previewHtml);
 		
 	window.google_ad_client = "ca-pub-2445550189113422";
