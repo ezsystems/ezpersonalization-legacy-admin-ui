@@ -557,7 +557,7 @@ function switchState(state, pushState) {
 	} else if (state == "license") {
 		openLicenseKey(pushState);
 		
-	} else if (state.indexOf("plugin") != 0) {
+	} else if (state && state.indexOf("plugin") != 0) {
 		switchHistoryState("", pushState);
 		
 		$('#editDataOverlay').hide();

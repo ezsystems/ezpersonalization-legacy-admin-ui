@@ -297,8 +297,14 @@ function i18n() {
 function to_outer_html(elements) {
 	result = [];
 	
-	$(elements).each(function(){
-	    var outerHtml = $(this).clone().wrap('<p>').parent().html();
+	$(elements).each(function(index, element){
+		var outerHtml;
+		//console.log("aaa " + element + " " + index + " " + (typeof element));
+		if (typeof element == 'undefined') { // happens if one has gaps in a numeric array
+	    	outerHtml = $("<span></span>").html();
+	   } else {
+	   		outerHtml = $(element).clone().wrap('<p>').parent().html();
+	   }
 	    result.push(outerHtml);	
 	});
 
