@@ -1,23 +1,25 @@
 
+<base href="/">
+
 <div id="pluginPanel" class="ABOverlay" style="display: none;">
 	<div class="content">
 		<div class="contentWrapper" style="padding-bottom: 2em;">
 			<a class="close_button">X</a>
 			
-			<h2 data-translate="plugin_panel_new_plugin">New Plugin</h2>
+			<h2 data-translate="plugin_panel_new_plugin">Plugin [<span data-param="0">id</span>]</h2>
 			
 			<div class="type_selector">
 			    <div class="type_button" data-plugin-type="GAMBIO">
-			        <img src="img/plugins/gambio.png" style="height:5.2em; margin-top: 0.8em; margin-left: 2.1em;">
+			        <img src="/img/plugins/gambio.png" style="height:5.2em; margin-top: 0.8em; margin-left: 2.1em;">
 		        </div>
                 <div class="type_button" data-plugin-type="MAGENTO">
-                    <img src="img/plugins/magento.png" style="height:4.2em; margin-top: 1.2em; margin-left: 1.5em;">
+                    <img src="/img/plugins/magento.png" style="height:4.2em; margin-top: 1.2em; margin-left: 1.5em;">
                 </div>
                 <div class="type_button" data-plugin-type="OXID">
-                    <img src="img/plugins/oxid.png" style="height:5.2em; margin-top: 1em; margin-left: 1.8em;">
+                    <img src="/img/plugins/oxid.png" style="height:5.2em; margin-top: 1em; margin-left: 1.8em;">
                 </div>
                 <div class="type_button" data-plugin-type="SHOPWARE">
-                    <img src="img/plugins/shopware.png" style="height:3.2em; margin-top: 1.9em; margin-left: 1.3em;">
+                    <img src="/img/plugins/shopware.png" style="height:3.2em; margin-top: 1.9em; margin-left: 1.3em;">
                 </div>
                 <div class="type_button" data-plugin-type="BASIC">
                     <span style="display: block; height:4.2em; margin-top: 2.5em; margin-left: 3em;" data-translate="plugin_custom_button">Custom development</span>
@@ -30,37 +32,34 @@
 			    
 			<table>
 				<tr>
-					<td data-translate="plugin_panel_type">Type</td>
-					<td><input name="type" value=""></td>
+					<td><label for="pg_type" data-translate="plugin_panel_type">Type</label></td>
+					<td><input id="pg_type" value=""></td>
 				</tr>
                 <tr>
                     <th colspan="2" data-translate="plugin_enable_recos"></th>
                 </tr>
                 <tr>
-                    <td data-translate="plugin_recos_design">Template</td>
+                    <td><label for="pg_design" data-translate="plugin_recos_design">Template</label></td>
                     <td>
-                        <select name="plugin_recos_template">
-                          <option value="rwd">RWD (default blue template from Magento 1.9)</option>
-                          <option value="orange">Defalt orange template before Magento 1.9</option>
-                          <option value="galaeverbuy">Galaeverbuy</option>
-                          <option value="argento">Argento</option>
-                          <option value="ultimo">Ultimo</option>
+                        <select id="pg_design" name="plugin_recos_template">
+							<option value="rwd">.... loading ....</option>
                         </select>
                     </td>
                 </tr>
-                <tr>
+                <tr class="pg_recos">
             		<td colspan="2">
 			            <table style="width: 30em;">
-			                <tr>
+			                <tr class="fixed">
 			                    <td data-translate="plugin_recos_header_box">Recommendation box</td>
 			                    <td data-translate="plugin_recos_header_rows">Rows</td>
 			                    <td data-translate="plugin_recos_header_columns">Columns</td>
 			                    <td data-translate="plugin_recos_header_html">HTML</td>
 			                </tr>                
-			                <tr class="pg_template">
-			                    <td data-translate="plugin_recos_box_xxx">Landing page</td>
-			                    <td><input name="rows_xxx" value="4" size="2"></td>
-			                    <td><input name="columns_xxx" value="4" size="2"></td>
+			                <tr class="pg_template" style="display: none">
+			                    <td><label for="rows_xxx" data-translate="plugin_recos_box_xxx">Box [<span data-param="0">xxx</span>]</label></td>
+			                    <td><input id="rows_xxx" value="4" size="2"></td>
+			                    <td><label for="columns_xxx" data-translate="plugin_recos_header_columns" style="display:none">Columns</label>
+									<input id="columns_xxx" value="4" size="2"></td>
 			                    <td><font class="settings" style="float: right;">
 			              			<a href="#"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
 			            		</font></td>
