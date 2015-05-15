@@ -48,7 +48,7 @@ var initialize = function() {
 	
 	$('.preview_tab').find('a').attr("href", "previewpop.html?reference_code=" + reference_code + "&customer_id=" + encodeURIComponent(customerID));
 			  
-	json = modelDao.getModels(); // must be already loaded at this moment
+	var json = modelDao.getModels(); // must be already loaded at this moment
 
 	$('.models_base').children('h3').children('span').first().text(json.length);
 
@@ -1231,7 +1231,7 @@ function fillNumericSubmodelValues(sm) {
 	  var dd = jQuery.i18n.prop("model_duration_days");
 	  var d = jQuery.i18n.prop("model_duration_day");
 	  
-	  result = (duration.getHours() < 48) 
+	  var result = (duration.getHours() < 48)
 			? duration.getHours() + ' ' + (duration.getHours() > 1 ? hh : h)
 			: duration.getDays()  + ' ' + (duration.getDays() > 1 ? dd : d);
 		

@@ -36,15 +36,43 @@
 
 #pluginPanel .type_selector .type_button:hover,
 #pluginPanel .type_selector .type_button:focus {
-  background-color: rgba( 238, 236, 225, 1);
-  border-color: rgba( 216, 216, 216, 1);
-  cursor: pointer;
+	background-color: rgba( 238, 236, 225, 1);
+	border-color: rgba( 216, 216, 216, 1);
+	cursor: pointer;
 }
 
 #pluginPanel table.type_selector img {
 	display: inline;
 	margin: 0 auto;
 }
+
+#pluginPanel table.configuration td {
+	padding-right: 0.5em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+}
+
+#pluginPanel table.configuration th {
+	background-color: rgba(238, 236, 225, 1);
+}
+
+#pluginPanel *[readonly=readonly] {
+	background-color: #dddddd;
+}
+
+#pluginPanel h2 {
+	margin-bottom: 0.7em;
+}
+
+#pluginPanel h3 {
+	margin-top: 1em; margin-bottom: 0.5em;
+}
+
+#plugin_endpoint,
+#plugin_app_secret,
+#plugin_app_key
+{ width: 30em; }
+
 
 #pluginTab {
 	width: 80em;

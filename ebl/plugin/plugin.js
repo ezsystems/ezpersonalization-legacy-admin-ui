@@ -33,6 +33,10 @@
  * @property {PluginFrontend} frontend
  * @property {object[]} importJobs
  */
+
+var PLUGIN_ANCHOR_CREATE = "plugin/create";
+var PLUGIN_ANCHOR_CONFIG = "plugin/configuration";
+
 var pluginPanel = {
 
 	/** @typedef {object} Mandator
@@ -66,13 +70,17 @@ var pluginPanel = {
 	plugin : null,
 
 	/**
-	 *
 	 *  @member {Plugin} */
 	template : null,
 
+	/**
+	 *  @member {boolean} */
+	creating : false,
 
 	/** @member {Object} */
 	$panel : null,
+
+
 
 	'preInit' : function() {
 		var self = this;
@@ -126,6 +134,21 @@ var pluginPanel = {
 				self._showStepTwoFinal(false, self.plugin, template, self.designs);
 			});
 		});
+
+		var $application_key = this.$panel.find("#plugin_app_key");
+		var $save = this.$panel.find(".plugin_save");
+
+		$application_key.on("change", function() {
+			if ($application_key.val()) {
+				$save.attr("data-translate", "plugin_save_oauth");
+			} else {
+				$save.attr("data-translate", "plugin_save");
+			}
+			i18n($save);
+		});
+
+		this.$panel.find("input, textarea, select").on(self._updateJson());
+
 	},
 
 
@@ -154,17 +177,17 @@ var pluginPanel = {
 			return;
 		}
 
-		var $h2 = this.$panel.find('h2');
+		var $header = this.$panel.find('h1');
 
 		if (newPlugin) {
-			$h2.attr("data-translate", "plugin_panel_new_plugin");
+			$header.attr("data-translate", "plugin_panel_new_plugin");
 		} else if (pluginCode) {
-			$h2.attr("data-translate", "plugin_panel_existed_plugin_code");
+			$header.attr("data-translate", "plugin_panel_existed_plugin_code");
 		} else {
-			$h2.attr("data-translate", "plugin_panel_existed_plugin");
-			$h2.find("span").text(pluginCode);
+			$header.attr("data-translate", "plugin_panel_existed_plugin");
+			$header.find("span").text(pluginCode);
 		}
-		i18n($h2);
+		i18n($header);
 
 		if (newPlugin) {
 			this._showStepOne();
@@ -177,7 +200,11 @@ var pluginPanel = {
 		$('#pluginPanel').show();
 
 		if ( this.manuallyTriggeredAtLeastOnce ) {
-			switchHistoryState(newPlugin ? "plugin" : "plugin." + pluginCode, pushState);
+			if (pluginCode) {
+				switchHistoryState(newPlugin ? PLUGIN_ANCHOR_CREATE : PLUGIN_ANCHOR_CONFIG + "/" + encodeURIComponent(pluginCode), pushState);
+			} else {
+				switchHistoryState(newPlugin ? PLUGIN_ANCHOR_CREATE : PLUGIN_ANCHOR_CONFIG, pushState);
+			}
 		}
 	},
 
@@ -192,9 +219,8 @@ var pluginPanel = {
 	 * @param {string|Plugin} plugin
 	 */
 	'_loadPlugin' : function(plugin) {
-		var self = this;
 
-		if (typeof plugin === 'object') {
+		if (typeof plugin === 'object' && plugin !== null) { // null is ID for _default_ plugin
 			return $.Deferred().resolve(plugin).promise();
 		}
 
@@ -276,7 +302,7 @@ var pluginPanel = {
 		var self = this;
 
 		if ( ! pluginType) {
-			if (typeof plugin === "string") {
+			if (typeof plugin === "string" || plugin === null) {
 				this._loadPlugin(plugin).done(function(pluginObj) {
 					self._showStepTwo(false, pluginObj.base.type, pluginObj);
 				});
@@ -303,6 +329,8 @@ var pluginPanel = {
 	/**
 	 * @param {boolean} newPlugin
 	 * @param {Plugin} plugin
+	 * 		Current plugin JSON to be configured.
+	 * 		In case of a new plugin, same instance as template
 	 * @param {Plugin} template
 	 * @param {Design[]} designs
 	 */
@@ -310,12 +338,26 @@ var pluginPanel = {
 
 		this.plugin = plugin;
 		this.template = template;
+		this.creating = newPlugin;
 
 		// Filling plugin type and id
 
 		this.$panel.find("h2 span").text(plugin.base.pluginId);
 
 		$("#pg_type").val(plugin.base.type);
+
+		this.$panel.find("div.plugin_logo div").hide();
+		this.$panel.find("div.plugin_logo div[data-plugin-type='"+plugin.base.type+"']").show();
+
+		var $inputPluginId = $("#plugin_id");
+
+		$inputPluginId.val(plugin.base.pluginId);
+
+		if (newPlugin) {
+			$inputPluginId.removeAttr("readonly");
+		} else {
+			$inputPluginId.attr("readonly", "readonly");
+		}
 
 		// Filling design select box
 
@@ -366,14 +408,12 @@ var pluginPanel = {
 
 		// Filling recommendation box matrix
 
-		$("pg_type").val(plugin.base.type);
-
-
 		var $recosTable = this.$panel.find("tr.pg_recos table");
 
 		$recosTable.find("tr").not(".fixed, .pg_template").remove();
 
 		plugin.frontend.boxes.forEach(/** @param {PluginRecoBox} box */ function(box) {
+
 			var $row = $recosTable.find("tr.pg_template").clone();
 			$row.removeClass("pg_template");
 			$row.show();
@@ -396,6 +436,68 @@ var pluginPanel = {
 
 			$recosTable.append($row);
 		});
+
+		// Filling Product Import Section
+
+		var $endpoint = this.$panel.find("#plugin_endpoint");
+		var $app_key = this.$panel.find("#plugin_app_key");
+		var $app_secret = this.$panel.find("#plugin_app_secret");
+
+		$app_key.val(plugin.base.appKey);
+		$app_secret.val(plugin.base.appSecret);
+
+		var $oauth_section = this.$panel.find(".plugin_oauth");
+
+		if (plugin.base.type == 'MAGENTO') {
+			$oauth_section.show();
+		} else {
+			$oauth_section.hide();
+		}
+
+		$endpoint.val(plugin.base.endpoint);
+		$app_key.val(plugin.base.appKey);
+		$app_secret.val(plugin.base.appSecret);
+
+		$app_key.trigger("change"); // adjusting save button description
+	},
+
+	"_updateJson" : function() {
+
+		var $panel = this.$panel;
+
+		$panel.find("input, select").removeClass("problem");
+		$panel.find("div.plugin_errors div").hide();
+
+		var plugin = this.plugin;
+
+		if (plugin === null) {
+			return false; // not loaded (yet)
+		}
+
+		var $id = $("#plugin_id");
+
+		var id = $id.val();
+
+		if (this.creating) {
+			var found = pluginTab.findPlugin(id);
+
+			if (found) {
+				$id.addClass("problem");
+				$('#plugin_validation_id_already_exists').show();
+			}
+		}
+
+		plugin.frontend.boxes.forEach(/** @param {PluginRecoBox} box */ function(box) {
+
+			var $rows = $panel.find("#rows_" + box.code);
+			var $columns = $panel.find("#columns_" + box.code);
+
+			
+
+		});
+
+
+
 	},
 
 
@@ -430,7 +532,10 @@ var pluginTab = {
 	mandator: null, // full mandator object (a.k.a. MandatorPack)
 
 	/** @member {Plugin[]} */
-	plugins: null,  // the list of plugins (data)
+	plugins: null,  // the list of plugins (data),
+
+	/** @member {jQuery} */
+	$tab: null,
 
 	'preInit' : function() {
 		var self = this;
@@ -453,11 +558,27 @@ var pluginTab = {
 		$('#pluginTabControls').find('.create_new').click(function() {
 			pluginPanel.show(true, "");
 		});
+
+		this.$tab = $("#pluginTab");
 	},
 
 	'init' : function(mandator) {
 		this.mandator = mandator;
 		this.loadPluginList();
+	},
+
+
+	/**
+	 * @param {String} pluginId
+	 * @return {Plugin}
+	 */
+	'findPlugin' : function(pluginId) {
+		for(var i=0; i < this.plugins.length; i++) {
+			if (this.plugins[i].base.pluginId == pluginId) {
+				return this.plugins[i];
+			}
+		}
+		return null;
 	},
 
 
@@ -478,20 +599,21 @@ var pluginTab = {
 	'_populateData' : function() {
 
 		// filling the table
+		var self = this;
 
-		var $template = $("#pluginTab tr.pg_template").clone();
+		var $template = this.$tab.find("tr.pg_template").clone();
 		$template.removeClass("pg_template");
 		$template.show();
 
 		var single_type = this.plugins.length > 0 ? this.plugins[0].base.type : null;
 		var row; // we will use it later to fetch the icon
 
-		$("#pluginTab tr").not(".fixed, .pg_template").remove();
-		$("#pluginTab tr.pg_no_plugins").show();
+		this.$tab.find("tr").not(".fixed, .pg_template").remove();
+		this.$tab.find("tr.pg_no_plugins").show();
 
 		this.plugins.forEach(function(plugin) {
 
-			$("#pluginTab tr.pg_no_plugins").hide();
+			self.$tab.find("tr.pg_no_plugins").hide();
 
 			var type = plugin.base.type;
 
@@ -526,7 +648,7 @@ var pluginTab = {
 				return false; // disabling default redirect
 			});
 
-			$("#pluginTab tr.header").after(row);
+			self.$tab.find("tr.header").after(row);
 		});
 
 		// icon
@@ -569,15 +691,27 @@ pluginPanel.preInit();
 
 function pluginPopstate(event, manualTriggered) {
 	var state = ifnull(event.state, event.detail); // PopStateEvent has 'state' flag, but custom event 'detail'
-	 
-	if (state && state.indexOf("plugin") === 0) {
-		var dot = state.indexOf(".");
-		var code = (dot == -1) ? null : state.substring(dot + 1, state.length);
-		
-		pluginPanel._show(dot == -1, code, manualTriggered);
-		
+
+	if (state && state === PLUGIN_ANCHOR_CREATE) {
+
+		pluginPanel._show(true, null, manualTriggered);
+
 		$("section.scenarios .tabPlugins").trigger("click"); // activating the plugin tab
-		
+
+	} else if (state && state.indexOf(PLUGIN_ANCHOR_CONFIG) === 0) {
+
+		var found_exist = state.substring(PLUGIN_ANCHOR_CONFIG.length, state.length).match(/^(\/(\w*))?$/);
+
+		if (found_exist) {
+			var code = (found_exist.length >= 2 && found_exist[2]) ? decodeURIComponent(found_exist[2]): null;
+
+			pluginPanel._show(false, code, manualTriggered);
+
+			$("section.scenarios .tabPlugins").trigger("click"); // activating the plugin tab
+		} else {
+			pluginPanel.hide();
+		}
+
 	} else {
 		pluginPanel.hide();
 	}
