@@ -551,18 +551,18 @@ function initialize() {
 function switchState(state, pushState) {
 //	if (state == "contract") {
 //		openContractDetails(pushState);
-//	} else 
+//	} else
+//
+
+	$('#editDataOverlay').hide();
+	$('#pactasPopup').hide();
+	$('#licenceKeyId').hide();
+
 	if (state == "personal") {
 		openPersonalDetails(pushState);
 	} else if (state == "license") {
 		openLicenseKey(pushState);
 		
-	} else if (state && state.indexOf("plugin/configuration") !== 0) {
-		switchHistoryState("", pushState);
-		
-		$('#editDataOverlay').hide();
-		$('#pactasPopup').hide();
-		$('#licenceKeyId').hide();
 	}
 }
 
