@@ -85,10 +85,17 @@ var pluginPanel = {
 	'preInit' : function() {
 		var self = this;
 		var html;
+		var html_logos;
 		$.when(
-			$.get("/plugin/plugin_panel.html", '', function(data) { html = data; })
+			$.get("/plugin/plugin_panel.html", '', function(data) { html = data; }),
+			$.get("/plugin/plugin_logos.html", '', function(data) { html_logos = data; })
 	    ).always(function() {
 	    	$("body").append(html);
+			self.$panel = $('#pluginPanel');
+			self.$panel.find('div.plugin_logo_wrapper').each(function(index, value) {
+				$(this).append($(html_logos));
+			});
+
 	    	self._htmlReady();
 	    });
 	},
@@ -100,9 +107,6 @@ var pluginPanel = {
 		var self = this;
 
 		// user closes the plugin dialog
-
-		this.$panel = $('#pluginPanel');
-
 		this.$panel.find('.close_button').click(function() {
 			self._back();
 		});
