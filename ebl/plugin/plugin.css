@@ -93,6 +93,11 @@
 	padding: 0.5em 0;
 }
 
+#pluginPanel .hide_logos .type_button,
+#pluginTab .hide_logos .type_button {
+	display: none;
+}
+
 #pluginTab table tr > th > span {
     background-color: rgba(238, 236, 225, 1);
     padding: 0.5em;
