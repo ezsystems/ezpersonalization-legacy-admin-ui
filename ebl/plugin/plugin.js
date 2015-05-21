@@ -151,6 +151,26 @@ var pluginPanel = {
 			i18n($save);
 		});
 
+
+		this.$panel.find(".plugin_save").on("click", function() {
+			var $application_key = self.$panel.find("#plugin_app_key");
+
+			// TODO Call the update REST method here
+
+			var	mname = self.mandator.baseInformation.id;
+
+			if ($application_key.val()) {
+				var id = self.plugin.base.pluginId;
+				var url = "/api/v4/" + encodeURIComponent(mname) + "/plugin";
+				if (id) {
+					url += "/" + encodeURIComponent(id);
+				}
+				url += "/auth?returnUrl=/";
+
+				window.location = url;
+			}
+		});
+
 		this.$panel.find("input, textarea, select").on(self._updateJson());
 
 	},
