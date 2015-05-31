@@ -88,6 +88,10 @@ function inlineSpectrumBodyBackground(){
 			  if(importMonth){
 				  $("#dayOfmonth").val(importMonth);
 			  }
+			  if(retObj.timeframe){
+				  $("#timeframe").val(retObj.timeframe);
+			  }
+			  
 			  
 			  if(retObj.background != null){
 				  currentbg = retObj.background;
@@ -237,6 +241,8 @@ function savePreferences2() {
 	 }
 	 
 	 retObj.startDate = d;
+	 retObj.timeframe =  $("#timeframe").val();
+	 
 	 
 	 retObj.logo = $("#logo").val();
 	 retObj.holineName = $("#menu_elment_hotline_name").val();
