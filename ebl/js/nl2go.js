@@ -73,7 +73,7 @@ function initializeSolutionAndItemTypes(mandatorInfo) {
   			var t = mandatorInfo.itemTypeConfiguration.types[i];
   			var d = t.description + ' (' + t.id + ')';
   			var selectedTxt = '';
-  			if(t.id == defaultItemType && fromTemplate ){
+  			if(t.id == defaultItemType ){
   				selectedTxt = ' id="defaultInItemType" selected = "selected" ';
   				console.log("defaultItemType="+defaultItemType+".");
   			}
@@ -134,6 +134,9 @@ function inlineSpectrumBodyBackground(){
 			  unsetLoadingDiv($('body'));
 			  if(retObj.scenario){
 				  $("#mail_scenario").val(retObj.scenario);
+			  }
+			  if(retObj.inputType){
+				  $("#input_type").val(retObj.inputType);
 			  }
 			  if(retObj.title){
 				  $("#mail_title").val(retObj.title);
@@ -291,6 +294,7 @@ function savePreferences2() {
 	 retObj.newsletterId = nlid;
 	 retObj.mandatorName = customerID;
 	 retObj.scenario = $("#mail_scenario").val();
+	 retObj.inputType = $("#input_type").val();
 	 retObj.title = $("#mail_title").val();
 	 retObj.interval =  $("#mail_schedule").val();
 	 var d = new Date();
