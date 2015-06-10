@@ -1094,7 +1094,7 @@ function sendMailNow(nlid){
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/ebl/v3/" + encodeURIComponent(customerID) + "/modelbuild/"+nlid,
+		  url: "/ebl/v3/" + encodeURIComponent(customerID) + "/modelbuild/trigger_mail/"+nlid,
 		  success: function(json) {
 			  showMailHistory(jobId);
 		  },
