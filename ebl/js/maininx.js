@@ -1096,7 +1096,7 @@ function sendMailNow(nlid){
 		  dataType: "json",
 		  url: "/ebl/v3/" + encodeURIComponent(customerID) + "/modelbuild/trigger_mail/"+nlid,
 		  success: function(json) {
-			  showMailHistory(jobId);
+			  showMailHistory(nlid);
 		  },
 		  error: mainErrorHandler
 	  });
