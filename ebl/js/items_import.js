@@ -180,6 +180,7 @@ function getCSVFields(){
 								'<option value="URI" >URI</option>\n'+
 								'<option value="CURRENCY">CURRENCY</option>\n'+
 							'</select>\n'+
+							'<input type="text" id="vdelimiter'+i+'"  name="vdelimiter'+i+'" maxlength="3" placeholder="Value delimiter" value="" style=" margin-left: 5px; height: 2em;">\n'+
 							'<input type="url" id="prefixURL'+i+'" name="prefixURL'+i+'" placeholder="Prefix URL" value="" style="display: none;" />'+
 						'</div>\n'+
 			          '</li>\n';
@@ -270,6 +271,9 @@ function saveImport2() {
 				 retObj.mappings[j].valueFormat = $("#"+fidv).val();
 				 if(retObj.mappings[j].valueFormat == 'URI' && $("#prefixURL"+i).val() != null && $("#prefixURL"+i).val() != '' ){
 					 retObj.mappings[j].valuePrefix = $("#prefixURL"+i).val();
+				 }
+				 if($("#vdelimiter"+i).val() != null && $("#vdelimiter"+i).val() != '' ){
+					 retObj.mappings[j].valueDelimiter = $("#vdelimiter"+i).val();
 				 }
 				 j++;
 			 }
