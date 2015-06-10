@@ -205,6 +205,11 @@ function getCSVFields(){
 									  }
 									  $("#prefixURL"+j).show();
 								  }
+								  if(retObj.mappings[i].valueDelimiter && retObj.mappings[i].valueDelimiter != ''){
+									   $("#vdelimiter"+j).val(retObj.mappings[i].valueDelimiter);
+								  }
+								
+								  
 							  }
 						  }
 					  }
