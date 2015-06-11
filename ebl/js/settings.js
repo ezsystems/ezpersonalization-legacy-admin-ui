@@ -40,11 +40,15 @@ var fromTemplate   = gupDecoded('from_template');
 	  			var t = mandatorInfo.itemTypeConfiguration.types[i];
 	  			var open = '';
 	  			var close = '';
-	  			if (t.contentTypes || t.language) {
-	  				open = '(';
-	  				close = ')';
+	  			var pipe = '';
+	  			if ((t.contentTypes && t.contentTypes != '' && t.contentTypes != 'undefined') || (t.language && t.language != '' && t.language != 'undefined')) {
+	  				open = '[';
+	  				close = ']';
+	  				if (t.contentTypes && t.language) {
+	  					pipe = ' | ';
+	  				}
 	  			}
-	  			var d =  t.description + '[' + t.id + '] '  + open + ((t.contentTypes == null) ? t.contentTypes : '') + ','+ ((t.language == null) ? t.language : '') + close;
+	  			var d =  t.description + ' (' + t.id + ') '  + open + ((t.contentTypes != null) ? t.contentTypes : '') + pipe + ((t.language != null) ? t.language : '') + close;
 	  			var selectedTxt = '';
 	  			if(t.id == defaultItemType && fromTemplate ){
 	  				selectedTxt = ' id="defaultInItemType" selected = "selected" ';
@@ -73,7 +77,7 @@ var fromTemplate   = gupDecoded('from_template');
 				}
 			}
 			
-			var d = defaultItemTypeDescription + ' [' + defaultItemType + ']';
+			var d = defaultItemTypeDescription + ' (' + defaultItemType + ')';
 			var l = $('<label></label>').text(d);
 			
 			$('#input_type_block').hide();
