@@ -38,7 +38,17 @@ var fromTemplate   = gupDecoded('from_template');
 			
 	  		for (var i in mandatorInfo.itemTypeConfiguration.types) {
 	  			var t = mandatorInfo.itemTypeConfiguration.types[i];
-	  			var d = t.description + ' (' + t.id + ')';
+	  			var open = '';
+	  			var close = '';
+	  			var pipe = '';
+	  			if ((t.contentTypes && t.contentTypes != '' && t.contentTypes != 'undefined') || (t.language && t.language != '' && t.language != 'undefined')) {
+	  				open = '[';
+	  				close = ']';
+	  				if (t.contentTypes && t.language) {
+	  					pipe = ' | ';
+	  				}
+	  			}
+	  			var d =  t.description + ' (' + t.id + ') '  + open + ((t.contentTypes != null) ? t.contentTypes : '') + pipe + ((t.language != null) ? t.language : '') + close;
 	  			var selectedTxt = '';
 	  			if(t.id == defaultItemType && fromTemplate ){
 	  				selectedTxt = ' id="defaultInItemType" selected = "selected" ';
@@ -63,6 +73,7 @@ var fromTemplate   = gupDecoded('from_template');
 			for (var i in mandatorInfo.itemTypeConfiguration.types) {
 				if (mandatorInfo.itemTypeConfiguration.types[i].id == defaultItemType) {
 					defaultItemTypeDescription = mandatorInfo.itemTypeConfiguration.types[i].description;
+					
 				}
 			}
 			

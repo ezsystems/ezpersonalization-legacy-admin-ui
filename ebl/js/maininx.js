@@ -1088,6 +1088,20 @@ function readMailJobs(){
 	  });
 }
 
+function sendMailNow(nlid){
+	$.ajax({
+		  type: "POST",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/ebl/v3/" + encodeURIComponent(customerID) + "/modelbuild/trigger_mail/"+nlid,
+		  success: function(json) {
+			  showMailHistory(nlid);
+		  },
+		  error: mainErrorHandler
+	  });
+}
+
 function updateMailStatus(activeId){
 	var classList =$('#toggle-onm'+activeId).attr('class').split(/\s+/);
 	var status = 1;
@@ -1238,6 +1252,49 @@ function showImportHistory(jobId) {
 		  error: mainErrorHandler
 	  });
 }
+
+
+function showMailHistory(nlid) {
+	$.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/getMailHistory?nlid="+nlid,
+		  success: function(json) {
+			  var htmlToAppend ='';
+			  if(json.length == 0){
+				  htmlToAppend = '<div id="noTests" data-translate="mail_no_history">no mail history for this job found</div>';
+			  }else{
+				
+				  for(var i = 0; i < json.length; i++) {
+					    var obj = json[i];
+					    var finishTime = obj.lastSend;
+					    var amount = obj.amount;
+					   
+	
+					    if(!finishTime){
+					    	finishTime = 'nope';
+					    }
+					   
+					    htmlToAppend +='<div class="tr test">\n';
+					    htmlToAppend +=' <div class="tc finishTime">'+finishTime+'</div>';
+					    htmlToAppend +=' <div class="tc amount">'+amount+'</div>';
+					    htmlToAppend +='</div>';
+				  } 
+				  htmlToAppend +='<div>';
+			  }
+			var header = $('#mail_history_head').clone();
+			$('#mailJobsHistoryTable').empty(); 
+			$('#mailJobsHistoryTable').append(header);
+        	$('#mailJobsHistoryTable').append(htmlToAppend);
+        	$('#mailHistoryP').show();
+			  
+		  },
+		  error: mainErrorHandler
+	  });
+}
+
 
 function showLogFiles(log,appenderId) {
     $.get( "/api/v4/" + encodeURIComponent(customerID) + log, function( data ) {
