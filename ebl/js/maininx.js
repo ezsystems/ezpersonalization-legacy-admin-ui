@@ -1197,7 +1197,7 @@ function updateStatus(activeId){
 
 function runJobNow(jobId) {
 	$.ajax({
-		  type: "GET",
+		  type: "POST",
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
