@@ -185,23 +185,21 @@ modelDao.updateModelWithSubmodels = function(model, submodels, callback, errorCa
 	
 	var tasks = [];
 	
-	for (var i in submodels) { // we trigger the save for all submodels
-		tasks.push($.ajax({
-			  type: "POST",
-			  mimeType: "application/json",
-			  contentType: "application/json;charset=UTF-8",
-			  dataType: "json",
-			  data: JSON.stringify(submodels[i]),
-			  url: "ebl/v3/" + encodeURIComponent(modelDao.customerID) + "/structure/update_submodel/" + encodeURIComponent(model.referenceCode) + "?no-realm",
-			  success: function(json) {
-				  submodelResults.push(json.submodel);
-			  },
-			  error: function(jqXHR, textStatus, errorThrown) {
-				  errorResult = [jqXHR, textStatus, errorThrown];
-			  }
-		  }));
-	}
-	
+    tasks.push($.ajax({
+          type: "POST",
+          mimeType: "application/json",
+          contentType: "application/json;charset=UTF-8",
+          dataType: "json",
+          data: JSON.stringify(submodels),
+          url: "ebl/v3/" + encodeURIComponent(modelDao.customerID) + "/structure/update_submodels/" + encodeURIComponent(model.referenceCode) + "?no-realm",
+          success: function(json) {
+              submodelResults = json.submodel;
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              errorResult = [jqXHR, textStatus, errorThrown];
+          }
+      }));
+
 	tasks.push(modelDao.updateModel(model, function(m) {
 		modelResult = m;
 	}));
