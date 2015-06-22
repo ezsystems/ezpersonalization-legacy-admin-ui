@@ -535,9 +535,8 @@ function saveScenario() {
 		  }
 		  opt.appendTo(ghostModel.find("select[name=placed_model_context_type]"));
 	  }
-
 	  if(xing && xing.useSubmodels) {
-		  ghostModel.find('input[id="use_submodels_' + j + "_" + k + "_" + modelRefCode + '"]').attr("checked", "checked");
+		  ghostModel.find("input.use_submodels").attr("checked", "checked");
 	  }
 	  
 	  i18n(ghostModel);
@@ -650,7 +649,7 @@ function saveScenario() {
 
 	  var domModel = $("#" + modelNameWithStage);
 
-	  xing.useSubmodels = domModel.find('input[id="use_submodels_' + modelNameWithStage + '"]').is(':checked');
+	  xing.useSubmodels = domModel.find("input.use_submodels").is(':checked');
 
 	  xing.contextFlag = domModel.find('select[name=placed_model_context_type]').val();
 	  
@@ -682,7 +681,7 @@ function saveScenario() {
 			  if((i + "_" + j + "_" + model.modelReferenceCode) == modelName) {
 				  var domModel = $("#" + modelName);
 
-				  model.useSubmodels  = domModel.find('input[id="use_submodels_' + modelName + '"]').is(':checked');
+				  model.useSubmodels  = domModel.find("input.use_submodels").is(':checked');
 				  
 				  model.contextFlag = domModel.find('select[name=placed_model_context_type]').val();
 			  }
