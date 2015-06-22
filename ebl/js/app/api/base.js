@@ -84,23 +84,23 @@ define([
 		});
 	};
 
-	api.saveSubmodel = function saveSubmodel(subModel, subModelRef) {
-		return $.ajax({
-			type: "POST",
-			beforeSend: function(x) {
-				if(x && x.overrideMimeType) {
-					x.overrideMimeType("application/json;charset=UTF-8");
-				}
-				x.setRequestHeader('no-realm', 'realm1');
-			},
-			mimeType: "application/json",
-			contentType: "applicationjson;charset=UTF-8",
-			dataType: "json",
-			data: JSON.stringify(subModel),
-			url: "ebl/v3/" + customerID + "/structure/update_submodel/"
-				+ subModelRef
-		});
-	};
+	//api.saveSubmodel = function saveSubmodel(subModel, subModelRef) {
+	//	return $.ajax({
+	//		type: "POST",
+	//		beforeSend: function(x) {
+	//			if(x && x.overrideMimeType) {
+	//				x.overrideMimeType("application/json;charset=UTF-8");
+	//			}
+	//			x.setRequestHeader('no-realm', 'realm1');
+	//		},
+	//		mimeType: "application/json",
+	//		contentType: "applicationjson;charset=UTF-8",
+	//		dataType: "json",
+	//		data: JSON.stringify(subModel),
+	//		url: "ebl/v3/" + customerID + "/structure/update_submodel/"
+	//			+ subModelRef
+	//	});
+	//};
 
 
 	api.getAttributeValue = function getAttributeValues(attributeKey, type, customerId) {
