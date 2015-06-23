@@ -1,3 +1,42 @@
+/**
+ * @typedef {object} Model
+ * @property {string} modelType
+ * @property {boolean} websiteContextSupported
+ * @property {boolean} profileContextSupported
+ * @property {boolean} submodelsSupported
+ * @property {string} referenceCode
+ * @property {string} maximumItemAge
+ * @property {string} maximumRatingAge
+ * @property {string} listType
+ * @property {CbAttribute[]} attributes
+ *
+ * @typedef {object} Submodel
+ * @property {string} attributeKey
+ * @property {NominalSubmodelItem[]} attributeValues
+ *
+ * @typedef {object} NominalSubmodelItem
+ * @property {string} attributeValue
+ * @property {int} group
+ *
+ * @typedef {object} CbAttribute
+ * @property {string} key
+ * @property {string} type
+ * @property {string} weight
+ *
+ * @typedef {object} AttributePkList
+ * @property {AttributePk[]} attributePkList
+ *
+ * @typedef {object} AttributePk
+ * @property {string} key
+ * @property {string} type
+ *
+ * @typedef {object} Attribute
+ * @property {string} key
+ * @property {string} type
+ * @property {string[]} values
+ */
+
+
   var reference_code = gupDecoded('reference_code');
   var customerID = gupDecoded('customer_id');
   var saved = gupDecoded('saved');
@@ -103,44 +142,59 @@ var initialize = function() {
 	
 	initHelpBtn();
 };
-  
-  
+
+
+/**
+ *
+ * @param {Model} model
+ */
 function renderModel(model) {
 	  
-	  var ghostModel = $('#model_' + model.referenceCode).removeAttr("style");
-	  
-	  var modelNameKey = modelDao.getModelNameKey(model.referenceCode);
+	var ghostModel = $('#model_' + model.referenceCode).removeAttr("style");
 
-	  ghostModel.children("div").children("h5").children("span.mtitle").attr('data-translate', modelNameKey + '_title');
-	  ghostModel.children("div").children("p").children("span").attr('data-translate', modelNameKey + '_description');
-	  //handing the current model to a self executing anonymous function which returns the actual callback function.
-	  //this is necessary, because we are in a loop and have to stay in the right context
-	  ghostModel.find('a.configure_model').on('click', function(model) {
-		  return function(e) {
-			  e.preventDefault;
-			  var str = $(this).closest('li.model').find('h5').children("span").html();
-			  if(startsWith('CB', model.modelType, true)) {
-				  activateCBModelDialog(model, str);
-			  } else if(startsWith('random', model.modelType, true)) {
-				  activateRandomModelDialog(model, str);
-			  } else if(startsWith('EDITOR_BASED', model.modelType, true)) {
-				  app.gui.showEditorialListEditor(model, str);
-			  } else {
-				  activateSubmodelDialog(model.referenceCode);
-			  }
-		  };
-	  }(model));
-	  if(! model.submodelsSupported
-			  && ! startsWith('CB', model.modelType, true)
-			  && ! startsWith('random', model.modelType, true)
-			  && ! startsWith('EDITOR_BASED', model.modelType, true)) {
-		  ghostModel.find('a.configure_model').hide();
-	  }
-	  var addInfo = getModelAdditionalInfo(model);
+    
 
-	  if (addInfo){
-		  ghostModel.find('.info').html(" (" + addInfo + ")");
-	  }
+	ghostModel.find('a.configure_model').on('click', function(e) {
+          e.preventDefault();
+          var str = $(this).closest('li.model').find('h5').children("span").html();
+          if(startsWith('CB', model.modelType, true)) {
+              activateCBModelDialog(model, str);
+          } else if(startsWith('random', model.modelType, true)) {
+              activateRandomModelDialog(model, str);
+          } else if(startsWith('EDITOR_BASED', model.modelType, true)) {
+              app.gui.showEditorialListEditor(model, str);
+          } else {
+              activateSubmodelDialog(model.referenceCode);
+          }
+      });
+
+    renderModelUpdate(model);
+}
+
+
+/**
+ *
+ * @param {Model} model
+ */
+function renderModelUpdate(model) {
+    var ghostModel = $('#model_' + model.referenceCode).removeAttr("style");
+
+    var modelNameKey = modelDao.getModelNameKey(model.referenceCode);
+
+    ghostModel.children("div").children("h5").children("span.mtitle").attr('data-translate', modelNameKey + '_title');
+    ghostModel.children("div").children("p").children("span").attr('data-translate', modelNameKey + '_description');
+
+    if(! model.submodelsSupported
+        && ! startsWith('CB', model.modelType, true)
+        && ! startsWith('random', model.modelType, true)
+        && ! startsWith('EDITOR_BASED', model.modelType, true)) {
+        ghostModel.find('a.configure_model').hide();
+    }
+    var addInfo = getModelAdditionalInfo(model);
+
+    if (addInfo){
+        ghostModel.find('.info').html(" (" + addInfo + ")");
+    }
 }
   
   
@@ -469,9 +523,7 @@ function saveScenario() {
   
   var ifExtended = function() {
 	  var solution = mandatorInfo.baseInformation.version;
-	  var extendedSolution = (solution == 'EXTENDED');
-	  
-	  return extendedSolution;
+	  return (solution == 'EXTENDED');
   };
   
   /**
@@ -545,7 +597,13 @@ function saveScenario() {
   }
   
   
-  /** Returns submodel by attribute. */
+  /** Returns submodel by attribute.
+   *
+   *  @param {String} attributeKey
+   *  @param {String} attributeType
+   *
+   *  @return {Submodel}
+   * */
   function getSubmodel(attributeKey, attributeType) {
 	  
 	  if (arguments.length == 1) {
@@ -567,30 +625,40 @@ function saveScenario() {
 	  current_submodels[current_submodels.length] = newSubmodel;
 	  return newSubmodel;
   }
-  
-  
-  function renderAttributes() {
-	  var list = current_attributes;
-	  
-	  if(list.length > 0) {
-		  
-		  var options = '<option value="" data-translate="configurator_submodel_select_attribute" disabled="disabled" selected="selected">- Select an attribute -</option>';
-		  for(var i = 0; i < list.length; i ++) {
-			  
-			  var sbm = getSubmodel(list[i].key, list[i].type);
 
-			  options = options +
-					  '<option data-type="' + list[i].type + '"value="' + list[i].key + '">'
-					  + (list[i].type === 'NUMERIC' ? '[123] ' : '')
-					  + (list[i].type === 'NOMINAL' ? '[ABC] ' : '')
-					  + list[i].key + ' ';
+
+/**
+ *
+ * @param {AttributePk[]} attributes
+ */
+function renderAttributes(attributes) {
+
+    var $select = $('#submodels_attributes');
+    $select.find("option").remove();
+
+    var defOption = '<option value="" data-translate="configurator_submodel_select_attribute" disabled="disabled" selected="selected">- Select an attribute -</option>';
+
+    $select.append(defOption);
+
+    if(attributes.length > 0) {
+
+		  for(var i = 0; i < attributes.length; i ++) {
 			  
+			  var sbm = getSubmodel(attributes[i].key, attributes[i].type);
+
+			  var $option = $("<option></option>")
+                    .attr("data-type",attributes[i].type )
+                    .val(attributes[i].key)
+                    .text((attributes[i].type === 'NUMERIC' ? '[123] ' : '[ABC] ') + attributes[i].key);
+
+              $select.append($option);
+
 			  if (sbm) {
-				  if (list[i].type === 'NUMERIC') {
+				  if (attributes[i].type === 'NUMERIC') {
 					  if('intervals' in sbm){
-						  options = options + '(' + sbm.intervals.length + ' intervals)';
+                          $option.text( $option.text() + ' (' + sbm.intervals.length + ' intervals)');
 					  }
-				  } else if (list[i].type === 'NOMINAL') {
+				  } else if (attributes[i].type === 'NOMINAL') {
 					  var count = 0;
 					  var keys = {};
 					  var j = sbm.attributeValues.length;
@@ -604,12 +672,11 @@ function saveScenario() {
 							  count ++;
 						  }
 					  }
-					  options = options + '(' + count + ' groups)';
+                      $option.text( $option.text() + ' (' + count + ' groups)');
 				  }
 		  	  }
-			  options = options + '</option>';
 		  }
-		  $('#submodels_attributes').html(options);
+
 	  }
   }
   
@@ -661,7 +728,7 @@ function saveScenario() {
 
 	  var json = $('body').data('scenario');
 
-	  var stage = stage = json.scenario.stages[row];
+	  var stage = json.scenario.stages[row];
 	  
 	  createJsonXingModel(json, stage, row, modelName, column);
   }
@@ -708,19 +775,24 @@ function saveScenario() {
 	  updateJsonValueForModel();
   }
 
-  
+
+ /**
+  * @param {String} modelID
+  */
   function fillSubModels(modelID) {
 	  
-	  current_attributes = [];
 	  current_submodels = [];
 	  current_submodel = null;
-	  
-	  modelDao.loadSubmodelsAndAttributes(model_reference_code, function(submodel, attributes) {
+
+      setLoadingDiv('body');
+
+     console.log("Loading submodels and attributes.");
+
+	  return modelDao.loadSubmodelsAndAttributes(model_reference_code, function(submodels, attributes) {
 		  
-		  current_attributes = attributes; // setting global variables
-		  current_submodels = submodel;
+		  current_submodels = submodels;
 		  
-		  renderAttributes();
+		  renderAttributes(attributes);
 		  
 		  if (current_submodels.length) {
 			  
@@ -738,7 +810,9 @@ function saveScenario() {
 		  
 		  enableSubmodelActions();
 
-	  }, configuratorErrorHandler);
+	  }, configuratorErrorHandler).always(function() {
+          unsetLoadingDiv('body');
+      });
   }
   
 
@@ -803,85 +877,96 @@ function saveScenario() {
 	  });
   }
 
-  
-  function fillSubmodelValues(subModel) {
 
-	  $('.grouping_attributes').children('li').remove();
-	  $('.groups_base').children('li').first().find("ul.user_created_group").children().remove();
-	  $('.groups_base').children('li').slice(1, ($('.groups_base').children('li').length - 1)).remove();
+/**
+ *
+ * @param {Submodel} subModel
+ */
+function fillSubmodelValues(subModel) {
 
-	  $('#nominalSubmodelValues').show().siblings('div').hide();
-	  $('.grouping_attributes').html("");
-	  
+    var $available_attributes =  $('.grouping_attributes');
+
+    $available_attributes.find('li').remove();
+
+    console.log("Attributes:" +  $available_attributes.find('li').size());
+
+    var $groups_base = $('.groups_base');
+
+    $groups_base.children('li').first().find("ul.user_created_group").children().remove();
+    $groups_base.children('li').slice(1, ($groups_base.children('li').length - 1)).remove();
+
+	$('#nominalSubmodelValues').show().siblings('div').hide();
+
 	  if (! subModel) {
 		  return;
 	  }
 	  
 	  getAttributeValues(subModel.attributeKey, subModel.submodelType).then(function(json) {
-		  //console.log(json);
-		  var original;
+
 		  //write all the groups and the according attribute values
 		  for(var i = 0; i < subModel.attributeValues.length; i ++) {
-			  var attributeValue = subModel.attributeValues[i];
-			  if(attributeValue.group === null) {// is handled below
-				  $('.grouping_attributes').append(
-						  '<li data-value="' + attributeValue.attributeValue + '">' + attributeValue.attributeValue + '</li>');
+			  var attribute = subModel.attributeValues[i];
+
+              var $attribute = $("<li/>")
+                  .attr("data-value", attribute.attributeValue)
+                  .text(attribute.attributeValue);
+
+			  if(attribute.group === null) {// is handled below
+                  $available_attributes.append();
 			  } else {
-				  var listStr = '<li data-value="' + attributeValue.attributeValue + '" class="attribute_value">' + attributeValue.attributeValue + ' <a class="remove_attribute_value">x</a></li>';
-				  if(attributeValue.group == 1) {
-					  original = $('.groups_base').children('li').children('ul').first();
-					  original.append(listStr);
-				  } else {
-					  var countGroups = $('.groups_base').children('li').length;
-					  if(attributeValue.group <= countGroups - 1) {
-						  var groupAvailable = $('.groups_base').children(
-										  'li').slice(attributeValue.group - 1,
-										  attributeValue.group);
-						  groupAvailable.children('ul').append(listStr);
-					  } else {
-						  original = $('.groups_base').children('li').first();
-						  
-						  var inlineNumber = parseInt(original.find("h5 > span").text()) + (countGroups - 1);
-						  
-						  $(original).clone().insertBefore(
-								  $('.groups_base').children('li').last());
-						  $('.groups_base').children('li').last().prev()
-								  .find("h5 > span").text(inlineNumber);
-						  $('.groups_base').children('li').last().prev()
-								  .find("ul.user_created_group > li")
-								  .remove();
-						  setSubmodelGroupsSortable();
-						  
-						  $('.groups_base').children('li').last().prev().children('ul').append(listStr);
-					  }
-				  }
+                  $attribute.attr("class", "attribute_value").append("  <a class='remove_attribute_value'>x</a>");
+
+                  var countGroups = $groups_base.children('li').length;
+                  if(attribute.group <= countGroups - 1) {
+                      var groupAvailable = $('.groups_base').children('li').slice(attribute.group - 1, attribute.group);
+                      groupAvailable.children('ul').append($attribute);
+                  } else {
+                      var original = $groups_base.children('li').first();
+
+                      var inlineNumber = parseInt(original.find("h5 > span").text()) + (countGroups - 1);
+
+                      $(original).clone().insertBefore($groups_base.children('li').last());
+
+                      $groups_base.children('li').last().prev()
+                              .find("h5 > span").text(inlineNumber);
+                      $groups_base.children('li').last().prev()
+                              .find("ul.user_created_group > li")
+                              .remove();
+                      setSubmodelGroupsSortable();
+
+                      $groups_base.children('li').last().prev().children('ul').append($attribute);
+                  }
 			  }
 		  }
 		  //fill the available attribute values, which are not yet in groups
-		  var $container = $('.grouping_attributes');
-	
-		  var flag;
+
 		  for(i = 0; i < json.attribute.values.length; i ++) {
-			  flag = true;
-			  for(var l = 0; l < subModel.attributeValues.length; l ++) {
-				  //console.log(json.attribute.values[i] + ' =? ' + subModel.attributeValues[l].attributeValue);
-				  if(json.attribute.values[i] === subModel.attributeValues[l].attributeValue /*|| subModel.attributeValues[l].group === null*/) {
-					  flag = false;
-				  }
-			  }
-			  if(flag) {
-				  //console.log(json.attribute.values[i]);
-				  $container.append('<li data-value="' + json.attribute.values[i] + '">' + json.attribute.values[i] + '</li>');
+
+              var value = json.attribute.values[i];
+
+              var $new_attribute = $("<li/>")
+                  .attr("data-value", value)
+                  .text(value);
+
+              var found = $groups_base.find('li').filter(function() {
+                      //noinspection JSReferencingMutableVariableFromClosure
+                      return value == $(this).data("value");
+              }).size() > 0;
+
+			  if( ! found) {
+                  $available_attributes.append($new_attribute);
 			  }
 		  }
+
+
+          console.log("Attributes:" +  $available_attributes.find('li').size());
 	  });
   }
 
   function getAttributeValues(attributeKey, type) {
-	  return $.ajax({
+	  return yooAjax("body", {
 		  'dataType': "json",
-		  'url': "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey),
-		  'error': stdAjaxErrorHandler
+		  'url': "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey)
 	  });
   }
 
@@ -960,16 +1045,16 @@ function checkRelevantPeriod() {
 /** This method must be called once during the initialisation. */
 function initSubmodelDialog() {
 	
-  	var layer = $('#model_configuration_classic');
-  	var overlay = $('#model_configuration_classic').parent(".model_config_overlay");
+  	var $layer = $('#model_configuration_classic');
+  	var overlay = $layer.parent(".model_config_overlay");
 
-  	$('#model_configuration_classic .destroy_dialog').on('click', function (e) {
+    $layer.find('.destroy_dialog').on('click', function (e) {
   		e.preventDefault();
   		overlay.hide();
   		model_reference_code = null;
   	});
-  	
-  	$('#model_configuration_classic .form_submit_button').on('click', function (e) { // Save button
+
+    $layer.find('.form_submit_button').on('click', function (e) { // Save button
   		e.preventDefault();
   		if (current_submodel) {
   			updateSubModel(); // parse changes and update JSON
@@ -1013,14 +1098,15 @@ function initSubmodelDialog() {
 var model_reference_code;
 var current_submodels = [];
 var current_submodel = null;
-var current_attributes = [];
+//var current_attributes = [];
   
+
 
 function activateSubmodelDialog(modelID) {
 	
 	model_reference_code = modelID;
 
-  	var layer = $('#model_configuration_classic');
+  	var $layer = $('#model_configuration_classic');
   	var overlay = $('#model_configuration_classic').parent(".model_config_overlay");
   	
   	var extendedSolution = ifExtended();
@@ -1037,15 +1123,12 @@ function activateSubmodelDialog(modelID) {
   	var currentModelConf = 	$('#model_configuration_classic h2').find("span[data-param=0]");
   	currentModelConf.attr("data-translate", modelNameKey + '_title');
   	i18n(currentModelConf);
+
   	if ( ! extendedSolution) {
-  		layer.css("height", "auto");
-  		layer.css("width", "30em");
+  		$layer.css("height", "auto");
+  		$layer.css("width", "30em");
   	}
 
-  	if (modelID.length) {
-  		layer.find("h2 .model_name").text(modelID);
-  	} 
-  	
   	if (extendedSolution) {
   		setSubmodelGroupsSortable();
   		fillSubModels(modelID);
@@ -1053,6 +1136,228 @@ function activateSubmodelDialog(modelID) {
 
   	overlay.show();
 }
+
+
+
+/**
+ * show an overlay to configure a cb model
+ *
+ * @param {Model} model
+ * @param {string} title
+ *
+ * @author maik.seyring
+ */
+var activateCBModelDialog = function activateCBModelDialog(model, title) {
+    //console.log(model);
+    var $overlay = $('#CB_model_configuration'),
+        $maxItemAge = $overlay.find('input[name="maxItemAge"]'),
+        $hintSpace = $overlay.find('.hintSpace');
+    $overlay.find('.model_name').html(title);
+    if (model.maximumItemAge) {
+        var maxItemAge = parseDuration(model.maximumItemAge);
+        if (maxItemAge.H) {//there is a period set
+            $maxItemAge.val(maxItemAge.getHours());
+            $overlay.find('select[name="maxItemAgeUnit"]').val('H');
+        } else {
+            $maxItemAge.val(maxItemAge.getDays());
+            $overlay.find('select[name="maxItemAgeUnit"]').val('D');
+        }
+    }
+    $maxItemAge.off('change').on('change', function(){
+        var val = $(this).val();
+        if (val.length) {
+            val = parseInt(val, 10);
+        } else {
+            $('#save_cbmodel').addClass('inactive');
+            $hintSpace
+                .find('#maxItemsAgeMessage')
+                .attr('data-translate', 'configurator_error_invalid_max_item_age');
+            localizer();
+            return false;
+        }
+        if (isNaN(val) || val < 1) {
+            $('#save_cbmodel').addClass('inactive');
+            $hintSpace
+                .find('#maxItemsAgeMessage')
+                .attr('data-translate', 'configurator_message_invalid_max_item_age');
+            localizer();
+            return false;
+        }
+        $('#save_cbmodel').removeClass('inactive');
+        $hintSpace
+            .find('#maxItemsAgeMessage')
+            .attr('data-translate', 'configurator_message_changes_after_model_rebuild');
+        localizer();
+    });
+
+    layerSizing($overlay);
+    //init the click handler for the save button
+    $overlay
+        .find('#save_cbmodel')
+        .off('click')
+        .on('click', function () {
+            if($(this).hasClass('inactive')){
+                return;
+            }
+            saveCBModel(model, $overlay);
+        });
+    //init the click handler for the close button
+    $overlay
+        .find('.destroy_dialog')
+        .off('click')
+        .on('click', function () {
+            $overlay.hide();
+        });
+
+    //fetch the available attributes from server
+    if('attributes' in model ){
+        $('#cb_attributes').show();
+        yooAjax($overlay, {
+            'dataType':   "json",
+            'url':        "api/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_pks",
+            'success': /**
+             *
+             * @param {AttributePkList} json
+             */
+            function (json) {
+                var l = model.attributes.length;
+                //console.log(model);
+                outer:
+                    while(l--){
+                        var i = json.attributePkList.length;
+                        while(i--){
+                            if(model.attributes[l].key === json.attributePkList[i].key && model.attributes[l].type === json.attributePkList[i].type){
+                                continue outer;
+                            }
+                        }
+                        json.attributePkList.push({
+                            'key': model.attributes[l].key,
+                            'type': model.attributes[l].type
+                        });
+                    }
+                json.attributePkList.sort(function (a, b) {
+                    return a.key.toLowerCase() < b.key.toLowerCase() ? -1 : 1;
+                });
+                //clean up prior set of attributes
+                var $attributes = $overlay.
+                    find('select[name^="attr"]')
+                    .find('option')
+                    .remove()
+                    .end();
+
+                var options = '<option value="" data-translate="configurator_select_attribute">select attribute</option>';
+                $attributes.append(options);
+
+                var	length = json.attributePkList.length;
+
+                for (var i = 0; i < length; i++) {
+                    var attr = json.attributePkList[i];
+
+                    var options = $('<option/>')
+                        .attr("data-type", attr.type)
+                        .val(attr.key)
+                        .text(attr.key + (attr.type !== 'NOMINAL' ? ' (' + attr.type.toLowerCase() + ')' : ''));
+                    $attributes.append(options);
+                }
+
+            }
+
+        }).done(function (data) {
+            //init the sliders
+            var $sliders = $overlay.find('div.attr_slider')
+                    .slider({
+                        'min':      0,
+                        'max':      100,
+                        'step':     1,
+                        'value':    0,
+                        'disabled': true
+                    }),
+            //representation of the attributes
+                $selects = $overlay.find('select[name^="attr"]');
+            $selects.off('change')
+                .on('change', function () {
+                    //enable all options for the case one attribute was deselected
+                    $selects.find('option').removeAttr('disabled');
+                    var count = 0,
+                        hasNominal = false,
+                        values = [];
+                    //check if there is more than one selected attribute
+                    //and if at least one of the selected has the type NOMINAL
+                    $selects.each(function (index) {
+                        var $this = $(this),
+                            value = $this.val();
+                        if (value) {
+                            count++;
+                            values.push(value);
+                        }
+                        if ($this.find(':selected').data('type') === 'NOMINAL') {
+                            hasNominal = true;
+                        }
+                    });
+                    $selects.each(function (index) {
+                        var $this = $(this),
+                            name = $this.attr('name'),
+                            value = $this.val();
+                        if (count > 1 && value) {
+                            // we have more than one attribute hence we enable the slider for this attribute
+                            $overlay.find('div#slider_' + name).slider('enable');
+                        } else {
+                            //disable the slider
+                            $overlay.find('div#slider_' + name).slider('disable');
+                        }
+                        if (value) {//disable the options in the other selects
+                            $selects
+                                .not($this)
+                                .find('option[value="' + value + '"]')
+                                .attr('disabled', 'disabled');
+                        }
+                    });
+                    //we have no valid configuration
+                    if (!hasNominal) {
+                        $overlay
+                            .find('#hasNominalMessage')
+                            .attr('data-translate', 'configurator_message_select_nominal_attribute');
+                    }else{
+                        $overlay
+                            .find('#hasNominalMessage')
+                            .html('')
+                            .removeAttr('data-translate');
+                    }
+                    if (count > 2) {
+                        $overlay
+                            .find('#attrCountMessage')
+                            .attr('data-translate', 'configurator_message_not_more_than_two');
+                    }else{
+                        $overlay
+                            .find('#attrCountMessage')
+                            .html('')
+                            .removeAttr('data-translate');
+                    }
+                    localizer();
+                });
+            //sort the attributes according their weight, to display the heaviest on top
+            model.attributes.sort(function (a, b) {
+                return b.weight - a.weight;
+            });
+            //process all attributes
+            for (var i = 0; i < model.attributes.length; i++) {
+                $overlay.find('select[name="attr' + i + '"]').val(model.attributes[i].key);
+                $sliders.filter('#slider_attr' + i).slider('enable').slider('value', model.attributes[i].weight);
+            }
+            //trigger a change event to show all attributes in a valid manner
+            $overlay.find('select[name="attr0"]').trigger('change');
+
+            $maxItemAge.trigger('change');
+            //show the finished overlay
+            $overlay.show();
+        });
+    }else{
+        $('#cb_attributes').hide();
+        $maxItemAge.trigger('change');
+        //show the finished overlay
+        $overlay.show();
+    }
+};
 
   
 /** Saves the currently selected model
@@ -1071,7 +1376,7 @@ function saveModel() {
 			overlay.hide();
 			
 			setMessagePopUp("positive", "message_data_saved_successfully");
-			renderModel(model);
+			renderModelUpdate(model);
 			model_reference_code = null;
 	  	}, 
 	  	configuratorErrorHandler);
@@ -1491,7 +1796,7 @@ var createPlacedModel = function (placed_model, model) {
 				  .attr('data-translate', 'editorial_list_title_' + model.referenceCode)
 				  .html(model.modelType + ' ' + model.referenceCode);
 		  //create the lists for the supported
-		  for(i in types) {
+		  for(var i in types) {
 			  var id = types[i].id;
 			  var desc = types[i].description;
 			    
@@ -1609,7 +1914,7 @@ var createPlacedModel = function (placed_model, model) {
    */
   app.api.getEditorialList = function(refCode) {
 	  return yooAjax(null, {
-		  url: '/api/v4/' + encodeURIComponent(mandatorDao.getId()) + '/elist/get_list/' + encodeURIComponent(refCode),
+		  url: '/api/v4/' + encodeURIComponent(mandatorDao.getId()) + '/elist/get_list/' + encodeURIComponent(refCode)
 	  });
   };
 
