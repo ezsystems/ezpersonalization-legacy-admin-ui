@@ -50,10 +50,77 @@ $(document).ready(function () {
 	$(function() {
 	    $( "#accordion" ).accordion();
 	});
+	loadMandatorInfo(function(json) {
+		initializeSolutionAndItemTypes(json);
+	});
+	
 });
+
+
+/** It must be called as the <code>mandatorInfo</code> is loaded.
+ */
+function initializeSolutionAndItemTypes(mandatorInfo) {
+	var solution = mandatorInfo.baseInformation.version;
+	
+	var defaultItemType = mandatorInfo.itemTypeConfiguration.defaultType;
+			 
+	if (solution == 'EXTENDED') {
+		
+		$("#input_type_block select").html(""); // removing all options
+		$
+		
+  		for (var i in mandatorInfo.itemTypeConfiguration.types) {
+  			var t = mandatorInfo.itemTypeConfiguration.types[i];
+  			var d = t.description + ' (' + t.id + ')';
+  			var selectedTxt = '';
+  			if(t.id == defaultItemType ){
+  				selectedTxt = ' id="defaultInItemType" selected = "selected" ';
+  				console.log("defaultItemType="+defaultItemType+".");
+  			}
+  			$('<option value="' + t.id + '"'+selectedTxt+'></option>').appendTo($("#input_type_block select")).text(d);
+  			
+  		}
+		
+		
+	} else {
+		
+		var defaultItemTypeDescription = "Default";
+		
+		for (var i in mandatorInfo.itemTypeConfiguration.types) {
+			if (mandatorInfo.itemTypeConfiguration.types[i].id == defaultItemType) {
+				defaultItemTypeDescription = mandatorInfo.itemTypeConfiguration.types[i].description;
+			}
+		}
+		
+		var d = defaultItemTypeDescription + ' (' + defaultItemType + ')';
+		var l = $('<label></label>').text(d);
+		
+		$('#input_type_block').hide();
+		
+		
+		$('#input_type_block').css("opacity",'0.50');
+		
+		
+	}
+	
+	$('#input_type_block .value').css('visibility', 'visible');
+}
 
 function submitImport() {
 	$('<input type="submit">').hide().appendTo($('#import_primary_settings')).click().remove();
+}
+
+function loadMandatorInfo(callback) {
+	
+	var result = $.ajax({
+		dataType: "json",
+		url: "/api/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration&no-realm",
+		success: callback,
+		error : function(jqXHR, textStatus, errorThrown) {
+			configuratorErrorHandler(jqXHR, textStatus, errorThrown);
+        }
+	});
+	return result;
 }
 
 function inlineSpectrumBodyBackground(){
@@ -67,6 +134,9 @@ function inlineSpectrumBodyBackground(){
 			  unsetLoadingDiv($('body'));
 			  if(retObj.scenario){
 				  $("#mail_scenario").val(retObj.scenario);
+			  }
+			  if(retObj.inputType){
+				  $("#input_type").val(retObj.inputType);
 			  }
 			  if(retObj.title){
 				  $("#mail_title").val(retObj.title);
@@ -88,6 +158,10 @@ function inlineSpectrumBodyBackground(){
 			  if(importMonth){
 				  $("#dayOfmonth").val(importMonth);
 			  }
+			  if(retObj.timeframe){
+				  $("#timeframe").val(retObj.timeframe);
+			  }
+			  
 			  
 			  if(retObj.background != null){
 				  currentbg = retObj.background;
@@ -220,6 +294,7 @@ function savePreferences2() {
 	 retObj.newsletterId = nlid;
 	 retObj.mandatorName = customerID;
 	 retObj.scenario = $("#mail_scenario").val();
+	 retObj.inputType = $("#input_type").val();
 	 retObj.title = $("#mail_title").val();
 	 retObj.interval =  $("#mail_schedule").val();
 	 var d = new Date();
@@ -237,6 +312,8 @@ function savePreferences2() {
 	 }
 	 
 	 retObj.startDate = d;
+	 retObj.timeframe =  $("#timeframe").val();
+	 
 	 
 	 retObj.logo = $("#logo").val();
 	 retObj.holineName = $("#menu_elment_hotline_name").val();

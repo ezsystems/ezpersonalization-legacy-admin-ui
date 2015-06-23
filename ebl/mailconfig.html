@@ -78,6 +78,18 @@
 						</div>
 			          </li>
 			          
+			          <li class="types_base select_field clearfix" id="input_type_block">
+						<div class="basis">
+							<label for="input_type" class="input_label" data-translate="settings_input_type" style="text-align: left;">Input type:</label>
+			            </div>
+						<div class="value" style="visibility: hidden;">
+							<select id="input_type" name="input_type">
+								<option value="1" data-translate="settings_product">Product</option>
+								<option value="2" data-translate="settings_article">Article</option>
+							</select>
+						</div>
+			          </li>
+			          
 			          <li class="types_base select_field clearfix">
 						<div class="basis tooltip_trigger" >
 							<label for="mail_schedule" class="input_label" data-translate="mail_schedule" style="text-align: left;">Schedule Newsletter</label>
@@ -119,6 +131,15 @@
 						</div>
 			          </li>
 			          
+			          <li class="types_base select_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="timeframe" class="input_label" data-translate="mail_timeframe" style="text-align: left;">Time frame</label>
+			            </div>
+			            <div class="value">
+							<input type="number" id="timeframe" name="timeframe"  min="1" max="365" step="1" value="1" style="width: 70px;" /> <label data-translate="mail_days" >Days</label>
+						</div>
+			          </li>
+			          
 			          <li class="scenario_id text_field clearfix">
 						<div class="basis tooltip_trigger" >
 							<label for="logo" data-translate="mail_logo_url" style="text-align: left;">LOGO URL:</label>
@@ -144,7 +165,7 @@
 			          </li>
 			          
 			          
-			          </li>
+			         
 			          
 			      
 			          
