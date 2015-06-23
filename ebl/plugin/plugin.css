@@ -68,6 +68,11 @@
 	margin-top: 1em; margin-bottom: 0.5em;
 }
 
+#pluginPanel .plugin_save {
+    margin-top: 2em;
+}
+
+
 #plugin_endpoint,
 #plugin_app_secret,
 #plugin_app_key

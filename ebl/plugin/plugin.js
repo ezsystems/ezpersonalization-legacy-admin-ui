@@ -32,6 +32,14 @@
  * @property {PluginBase} base
  * @property {PluginFrontend} frontend
  * @property {object[]} importJobs
+ *
+ * @typedef {object} Mandator
+ * @property {MandatorBaseInformation} baseInformation
+ *
+ * @typedef {object} MandatorBaseInformation
+ * @property {string} id
+ * @property {string} website
+ * @property {string} alphanumericItems
  */
 
 var PLUGIN_ANCHOR_CREATE = "plugin/create";
@@ -39,8 +47,7 @@ var PLUGIN_ANCHOR_CONFIG = "plugin/configuration";
 
 var pluginPanel = {
 
-	/** @typedef {object} Mandator
-	 *  @property {object} baseInformation
+	/**
 	 *
 	 *  @member {Mandator}
 	 **/
@@ -81,9 +88,10 @@ var pluginPanel = {
 	$panel : null,
 
 
-
+    /** Is MUST be called ONCE, after the object is created.
+     */
 	'preInit' : function() {
-		var self = this;
+        var self = this;
 		var html;
 		var html_logos;
 		$.when(
@@ -140,45 +148,78 @@ var pluginPanel = {
 		});
 
 		var $application_key = this.$panel.find("#plugin_app_key");
-		var $save = this.$panel.find(".plugin_save");
+
+		var $saveAndClose = this.$panel.find(".plugin_save_and_quit");
+        var $saveOnly = this.$panel.find(".plugin_save");
 
 		$application_key.on("change", function() {
 			if ($application_key.val()) {
-				$save.attr("data-translate", "plugin_save_oauth");
+                $saveAndClose.attr("data-translate", "plugin_save_oauth");
 			} else {
-				$save.attr("data-translate", "plugin_save");
+                $saveAndClose.attr("data-translate", "plugin_save_quit");
 			}
-			i18n($save);
+			i18n($saveAndClose);
 		});
 
 
-		this.$panel.find(".plugin_save").on("click", function() {
-			var $application_key = self.$panel.find("#plugin_app_key");
+        $saveAndClose.on("click", function() {
+            self._saveAndHide();
+        });
 
-            var plugin = this.plugin;
-
-			// TODO Call the update REST method here
-
-			var	mname = self.mandator.baseInformation.id;
-
-			if ($application_key.val()) {
-				var url = self._pluginUrl + "/auth?returnUrl=/";
-				window.location = url;
-			}
-		});
-
-		this.$panel.find("input, textarea, select").on(self._updateJson());
-
+        $saveOnly.on("click", function() {
+            self._saveOnly();
+        });
 	},
 
+    '_saveAndHide': function() {
 
-    /**
+        var self = this;
+
+        this._saveOnly().done(function() {
+            var $application_key = self.plugin.base.appKey;
+            var $endpoint = ifTrempty(self.plugin.base.endpoint, self.mandator.baseInformation.website);
+
+            if ($application_key && $endpoint) {
+                setMessagePopUp("neutral", "plugin_message_redirecting_to_oauth", $endpoint);
+
+                //var url = self._pluginApiUrl() + "/auth?returnUrl=/";
+                //window.location = url;
+            } else {
+                self.hide();
+            }
+        });
+    },
+
+    '_saveOnly': function() {
+
+        if ( ! this._updateJson()) {
+             return $.Deferred().fail().promise();
+        }
+
+        var plugin = this.plugin;
+
+        var request = {
+            base : plugin.base,
+            frontend : plugin.frontend,
+            search : plugin.search
+        };
+
+        return yooJson(this.$panel.find(".contentWrapper"), {
+            url: this._pluginApiUrl() + "/" + (this.creating ? "create" : "update"),
+            data: request
+        }).done(function() {
+            setMessagePopUp("positive", "message_data_saved_successfully");
+        });
+    },
+
+    /** Returns the URL for the current plugin like
+     *  /api/v4/#mandator-id#/plugin/#plugin-id#
      *
-     * @returns {string}
+     *  @returns {string}
      */
-    '_pluginUrl' : function () {
+    "_pluginApiUrl" : function () {
         var	mandator_id = this.mandator.baseInformation.id;
-        var id = self.plugin.base.pluginId;
+        var id = this.plugin.base.pluginId;
         var url = "/api/v4/" + encodeURIComponent(mandator_id) + "/plugin";
         if (id) {
             url += "/" + encodeURIComponent(id);
@@ -224,15 +265,13 @@ var pluginPanel = {
 		}
 		i18n($header);
 
+        $('#pluginPanel').show(); // <-- SHOW PANEL
+
 		if (newPlugin) {
 			this._showStepOne();
 		} else {
 			this._showStepTwo(false, null, pluginCode);
 		}
-
-		this.$panel.find("input[name='pg_type']").val();
-
-		$('#pluginPanel').show();
 
 		if ( this.manuallyTriggeredAtLeastOnce ) {
 			if (pluginCode) {
@@ -267,11 +306,8 @@ var pluginPanel = {
 		}
 		request = request + "/get";
 
-		return yooJson('#pluginPanel', {url: request});
+		return yooJson(this.$panel.find(".contentWrapper"), {url: request});
 
-		//return yooJson('#pluginPanel', {url: request, success: function(plugin) {
-		//	self.plugin = plugin;
-		//}});
 	},
 
 
@@ -289,7 +325,7 @@ var pluginPanel = {
 			request = request + "/" + encodeURIComponent(pluginDesign);
 		}
 
-		return yooJson('#pluginPanel', {url: request});
+		return yooJson(this.$panel.find(".contentWrapper"), {url: request});
 	},
 
 
@@ -308,7 +344,7 @@ var pluginPanel = {
 
 		var request = "/api/v4/" + encodeURIComponent(mname) + "/plugin/designs/" + encodeURIComponent(pluginType);
 
-		return yooJson('#pluginPanel', {url: request, success: function(designs) {
+		return yooJson(this.$panel.find(".contentWrapper"), {url: request, success: function(designs) {
 			self.designs = designs;
 			self.designsLoadedForPluginTypens = pluginType;
 		}});
@@ -350,12 +386,12 @@ var pluginPanel = {
 		if ( ! newPlugin) {
 			this._loadPluginAndDesigns(pluginType, plugin).done(function(plugin, designs) {
 				self._loadTemplate(pluginType, plugin.frontend.design).done(function(template) {
-					self._showStepTwoFinal(true, plugin, template, designs);
+					self._showStepTwoFinal(false, plugin, template, designs);
 				});
 			});
 		} else {
 			this._loadTemplateAndDesigns(pluginType, null).done(function(template, designs) {
-				self._showStepTwoFinal(false, template, template, designs);
+				self._showStepTwoFinal(true, template, template, designs);
 			});
 		}
 	},
@@ -497,8 +533,10 @@ var pluginPanel = {
 	},
 
 
-    /**
-     * @returns {boolean}
+    /** Updates the field #plugin using the data from the from.
+     *
+     *  @returns {boolean}
+     *      true, if the update was successful.
      */
 	"_updateJson" : function() {
 
@@ -515,17 +553,9 @@ var pluginPanel = {
 
 		var $id = $("#plugin_id");
 
-		var id = $id.val();
+        plugin.base.pluginId = $id.val();
 
-		if (this.creating) {
-			var found = pluginTab.findPlugin(id);
-
-			if (found) {
-				$id.addClass("problem");
-				$('#plugin_validation_id_already_exists').show();
-                return false;
-			}
-		}
+        plugin.frontend.design = $id.val();
 
 		plugin.frontend.boxes.forEach(/** @param {PluginRecoBox} box */ function(box) {
 			var $rows = $panel.find("#rows_" + box.code);
@@ -535,9 +565,9 @@ var pluginPanel = {
             box.columns = $columns.val();
 		});
 
-        plugin.base.endpoint  = $("#plugin_endpoint");
-        plugin.base.appKey    = $("#plugin_app_key");
-        plugin.base.appSecret = $("#plugin_app_secret");
+        plugin.base.endpoint  = $("#plugin_endpoint").val();
+        plugin.base.appKey    = $("#plugin_app_key").val();
+        plugin.base.appSecret = $("#plugin_app_secret").val();
 
         return true;
 	},
@@ -628,7 +658,7 @@ var pluginTab = {
 		var self = this;
 		var	mname = this.mandator.baseInformation.id;
 
-		yooAjax("#pluginTab", {
+        yooJson(this.$tab, {
 	        url: "/api/v4/" + encodeURIComponent(mname) + "/plugin/all",
 	        success: function (json) {
 	        	self.plugins = json;
