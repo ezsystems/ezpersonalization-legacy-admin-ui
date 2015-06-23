@@ -128,6 +128,15 @@ function setMessagePopUpLink(type, link, i18n_id) {
 }
 
 
+/**
+ *
+ * @param type
+ *      "error", "warning" or "info"
+ * @param i18n_id
+ *      i18n code from the property file
+ *
+ * Use additional arguments as i18n parameters
+ */
 function setMessagePopUp(type, i18n_id) {
 	
 	var i18n_params = Array.prototype.slice.call(arguments, 2);

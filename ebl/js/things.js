@@ -48,12 +48,29 @@ var setEquals = function () {
 
 
 /** Returns the first non-null argument */
+var ifTrempty = function() {
+
+    var i18n_params = Array.prototype.slice.call(arguments, 0);
+
+    for (var i = 0; i < arguments.length; i++) {
+        if (typeof arguments[i] === 'undefined' || arguments[i] === null ||  (arguments[i]+"").trim() == "") {
+            continue;
+        }
+
+        return arguments[i];
+    }
+
+    return null;
+};
+
+
+/** Returns the first non-null argument */
 var ifnull = function() {
 	
 	var i18n_params = Array.prototype.slice.call(arguments, 0);
 	
 	for (var i = 0; i < arguments.length; i++) {
-		if (typeof arguments[i] === 'undefined' || arguments[i] == null) {
+		if (typeof arguments[i] === 'undefined' || arguments[i] === null) {
 			continue;
 		}
 		return arguments[i];
