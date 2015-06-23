@@ -92,7 +92,7 @@ var pluginPanel = {
 	    ).always(function() {
 	    	$("body").append(html);
 			self.$panel = $('#pluginPanel');
-			self.$panel.find('div.plugin_logo_wrapper').each(function(index, value) {
+			self.$panel.find('div.plugin_logo_wrapper').each(function() {
 				$(this).append($(html_logos));
 			});
 
@@ -155,18 +155,14 @@ var pluginPanel = {
 		this.$panel.find(".plugin_save").on("click", function() {
 			var $application_key = self.$panel.find("#plugin_app_key");
 
+            var plugin = this.plugin;
+
 			// TODO Call the update REST method here
 
 			var	mname = self.mandator.baseInformation.id;
 
 			if ($application_key.val()) {
-				var id = self.plugin.base.pluginId;
-				var url = "/api/v4/" + encodeURIComponent(mname) + "/plugin";
-				if (id) {
-					url += "/" + encodeURIComponent(id);
-				}
-				url += "/auth?returnUrl=/";
-
+				var url = self._pluginUrl + "/auth?returnUrl=/";
 				window.location = url;
 			}
 		});
@@ -174,6 +170,21 @@ var pluginPanel = {
 		this.$panel.find("input, textarea, select").on(self._updateJson());
 
 	},
+
+
+    /**
+     *
+     * @returns {string}
+     */
+    '_pluginUrl' : function () {
+        var	mandator_id = this.mandator.baseInformation.id;
+        var id = self.plugin.base.pluginId;
+        var url = "/api/v4/" + encodeURIComponent(mandator_id) + "/plugin";
+        if (id) {
+            url += "/" + encodeURIComponent(id);
+        }
+        return url;
+    },
 
 
 	'_createNewPlugin' : function(pluginType) {
@@ -325,7 +336,7 @@ var pluginPanel = {
 
 		var self = this;
 
-		if ( ! pluginType) {
+		if ( ! pluginType) { // <-- loading plugin, if not exists
 			if (typeof plugin === "string" || plugin === null) {
 				this._loadPlugin(plugin).done(function(pluginObj) {
 					self._showStepTwo(false, pluginObj.base.type, pluginObj);
@@ -485,6 +496,10 @@ var pluginPanel = {
 		$app_key.trigger("change"); // adjusting save button description
 	},
 
+
+    /**
+     * @returns {boolean}
+     */
 	"_updateJson" : function() {
 
 		var $panel = this.$panel;
@@ -508,20 +523,23 @@ var pluginPanel = {
 			if (found) {
 				$id.addClass("problem");
 				$('#plugin_validation_id_already_exists').show();
+                return false;
 			}
 		}
 
 		plugin.frontend.boxes.forEach(/** @param {PluginRecoBox} box */ function(box) {
-
 			var $rows = $panel.find("#rows_" + box.code);
 			var $columns = $panel.find("#columns_" + box.code);
 
-			
-
+            box.rows = $rows.val();
+            box.columns = $columns.val();
 		});
 
+        plugin.base.endpoint  = $("#plugin_endpoint");
+        plugin.base.appKey    = $("#plugin_app_key");
+        plugin.base.appSecret = $("#plugin_app_secret");
 
-
+        return true;
 	},
 
 
