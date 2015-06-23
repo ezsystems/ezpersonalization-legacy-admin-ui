@@ -108,7 +108,7 @@ modelDao.updateModel = function(model, callback, errorCallback) {
 modelDao.loadAttributes = function(callBack, callBackError) {
 	  return $.ajax({
 		  dataType: "json",
-		  url: "ebl/v3/" + customerID + "/structure/get_attribute_pks?no-realm",
+		  url: "api/v3/" + customerID + "/structure/get_attribute_pks?no-realm",
 		  success: function(json) {
 			  if (callBack) {
 				  callBack(json.attributePkList);
@@ -123,7 +123,7 @@ modelDao.loadSubmodels = function(modelRefcode, callBack, callBackError) {
 	
 	return $.ajax({
 		  dataType: "json",
-		  url: "ebl/v3/" + encodeURIComponent(customerID) + "/structure/get_submodel_list/" + encodeURIComponent(modelRefcode) + "?no-realm",
+		  url: "api/v3/" + encodeURIComponent(customerID) + "/structure/get_submodel_list/" + encodeURIComponent(modelRefcode),
 		  success: function(json) {
 			  if (callBack) {
 				  callBack(json.submodelList);
@@ -161,14 +161,14 @@ modelDao.loadSubmodelsAndAttributes = function(modelRefcode, callBack, callBackE
 		  		  submodels = json;
 	  		  }, callBackError)
 	).then(function() {
-
-	  for (var j = 0; j < submodels.length; j++) { // append attributes, if they exist only in submodel configuration
-		  var smodel = submodels[j];
-		  
-		  if ( ! modelDao.getAttribute(smodel.attributeKey, smodel.submodelType, attributes)) {
-			  attributes.push({ 'key': smodel.attributeKey, 'type': smodel.submodelType });
-		  }
-	  } 
+      //
+	  //for (var j = 0; j < submodels.length; j++) { // append attributes, if they exist only in submodel configuration
+		//  var smodel = submodels[j];
+		//
+		//  if ( ! modelDao.getAttribute(smodel.attributeKey, smodel.submodelType, attributes)) {
+		//	  attributes.push({ 'key': smodel.attributeKey, 'type': smodel.submodelType });
+		//  }
+	  //}
 		
 	  if (callBack) {
 		  callBack(submodels, attributes);
@@ -191,7 +191,7 @@ modelDao.updateModelWithSubmodels = function(model, submodels, callback, errorCa
           contentType: "application/json;charset=UTF-8",
           dataType: "json",
           data: JSON.stringify(submodels),
-          url: "ebl/v3/" + encodeURIComponent(modelDao.customerID) + "/structure/update_submodels/" + encodeURIComponent(model.referenceCode) + "?no-realm",
+          url: "api/v3/" + encodeURIComponent(modelDao.customerID) + "/structure/update_submodels/" + encodeURIComponent(model.referenceCode) + "?no-realm",
           success: function(json) {
               submodelResults = json.submodel;
           },
