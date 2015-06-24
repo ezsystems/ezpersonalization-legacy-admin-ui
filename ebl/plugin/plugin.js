@@ -253,7 +253,7 @@ var pluginPanel = {
 			return;
 		}
 
-		var $header = this.$panel.find('h1');
+		var $header = this.$panel.find('h2');
 
 		if (newPlugin) {
 			$header.attr("data-translate", "plugin_panel_new_plugin");
@@ -396,6 +396,19 @@ var pluginPanel = {
 		}
 	},
 
+    /**
+     * @param {Design[]} designs
+     * @param {string} designId
+     */
+    '_findDesignDescription': function(designs, designId) {
+        var result = "Custom";
+        designs.forEach(/** @param {Design} design*/ function(design) {
+            if (design.id == designId) {
+                result = design.description;
+            }
+        });
+        return result;
+    },
 
 	/**
 	 * @param {boolean} newPlugin
@@ -434,44 +447,17 @@ var pluginPanel = {
 
 		var $pg_design = $("#pg_design");
 
-		$pg_design.find("optgroup, option").remove();
-
-		var currentGroupLabel;
-		var $currentGroup = $pg_design;
-
-		designs.forEach(/** @param {Design} design*/ function(design) {
-
-			var parts = design.description.split(":");
-
-			var description = (parts.length > 1) ?
-				design.description.substring(parts[0].length + 1, design.description.length) :
-				design.description;
-
-			if (parts.length > 1) {
-				if (currentGroupLabel != parts[0]) {
-					currentGroupLabel = parts[0];
-					$currentGroup = $pg_design.append($('<optgroup>', {label : currentGroupLabel}));
-				}
-			}
-
-			$currentGroup.append($('<option>', {
-				value: design.id,
-				text: description ? design.id + ": " + description  : design.id
-			}));
-		});
-
-		$currentGroup = $pg_design.append($('<optgroup>', {label : "Yoochoose"}));
-		var $lastDesign = $('<option>', { value: "" });
-		$currentGroup.append($lastDesign);
-
-		$lastDesign.attr("data-translate", "plugin_recos_design_custom");
-
-		i18n($currentGroup);
-
 		// Looking for selected design
+        var designDescription = this._findDesignDescription(designs, plugin.frontend.design)
 
-		var design = plugin.frontend.design;
-		$pg_design.val(design);
+        if (designDescription) {
+            $pg_design.val(designDescription);
+            $pg_design.attr("data-translate", "");
+        } else {
+            $pg_design.attr("data-translate", "plugin_recos_design_custom");
+        }
+        i18n($pg_design);
+
 
 		if ( ! $pg_design.val()) {
 			$pg_design.val(""); // last design
