@@ -951,45 +951,51 @@ function readImportJobs(){
 			  }else{
 				allJobsI = json;
 				  for(var i = 0; i < json.length; i++) {
-					    var obj = json[i];
-					    var name = obj.name;
-					    var interval = obj.interval;
-					    var startdate = obj.startDate;
-					    var lastRun  = obj.lastRun;
-					    if(!lastRun){
-					    	lastRun = 'nope';
-					    }
-					    var enabled = obj.enabled;
-					    var id=obj.id;
-					    var runURL = 'img/clock.png';
-					    var statusURL = 'img/red.png';
-					    var margin = -48;
-					    var off =  'active';
-					    var on =  '';
-					    if(enabled){
-					    	on =  'active';
-					    	off =  '';
-					    	margin = 0;
-					    	statusURL = 'img/blue.png';
-					    	if(lastRun != 'nope'){
-					    		var diff = Math.abs( new Date() - new Date(lastRun) );
-					    		var days = diff/(24*60*60*1000);
-					    		console.log(diff+ " "+days+" "+new Date(lastRun));
-					    		if(interval == 'DAILY' && days >= 1){
-					    			statusURL = 'img/yellow.png';
-					    		}
-					    		if(interval == 'WEEKLY' && days >= 7){
-					    			statusURL = 'img/yellow.png';
-					    		}
-					    	}
-					    }
-					    htmlToAppend +='<div class="tr test">\n';
-					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
-					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
-					    htmlToAppend +=' <div class="tc startdate">'+startdate+'</div>';
-					    htmlToAppend +=' <div class="tc lastimport">'+lastRun+'</div>';
-					    htmlToAppend +=' <div class="tc showHistory"><a onclick="showImportHistory('+obj.id+')">Show History</a> </div>';
-					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' +  encodeURIComponent(customerID)+'&importJobId='+id+'\');$(\'#itemimportP\').show();">Edit</a> </div>';
+                      var obj = json[i];
+                      var name = obj.name;
+                      var interval = obj.interval;
+                      var startdate = obj.startDate;
+                      var lastRun = obj.lastRun;
+                      if (!lastRun) {
+                          lastRun = 'nope';
+                      }
+                      var enabled = obj.enabled;
+                      var id = obj.id;
+                      var runURL = 'img/clock.png';
+                      var statusURL = 'img/red.png';
+                      var margin = -48;
+                      var off = 'active';
+                      var on = '';
+                      if (enabled) {
+                          on = 'active';
+                          off = '';
+                          margin = 0;
+                          statusURL = 'img/blue.png';
+                          if (lastRun != 'nope') {
+                              var diff = Math.abs(new Date() - new Date(lastRun));
+                              var days = diff / (24 * 60 * 60 * 1000);
+                              console.log(diff + " " + days + " " + new Date(lastRun));
+                              if (interval == 'DAILY' && days >= 1) {
+                                  statusURL = 'img/yellow.png';
+                              }
+                              if (interval == 'WEEKLY' && days >= 7) {
+                                  statusURL = 'img/yellow.png';
+                              }
+                          }
+                      }
+                      htmlToAppend += '<div class="tr test">\n';
+                      htmlToAppend += ' <div class="tc name">' + name + '</div>';
+                      htmlToAppend += ' <div class="tc interval">' + interval + '</div>';
+                      htmlToAppend += ' <div class="tc startdate">' + startdate + '</div>';
+                      htmlToAppend += ' <div class="tc lastimport">' + lastRun + '</div>';
+                      htmlToAppend += ' <div class="tc showHistory"><a onclick="showImportHistory(' + obj.id + ')">Show History</a> </div>';
+
+                      if (obj.fileFormat == "CSV") {
+                          htmlToAppend += ' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' + encodeURIComponent(customerID) + '&importJobId=' + id + '\');$(\'#itemimportP\').show();">Edit</a> </div>';
+                      } else {
+                          htmlToAppend += ' <div class="tc editimport"></div>'
+                      }
+
 					    htmlToAppend +=' <div class="tc jobstatus"><img id="statusImage'+i+'" style="vertical-align: middle;" src="'+statusURL+'" /></div>';
 					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="runJobNow('+obj.id+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
 					    htmlToAppend +=' <div class="tc jobon toggle-light">'
