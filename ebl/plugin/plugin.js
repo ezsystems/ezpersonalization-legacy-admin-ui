@@ -182,8 +182,8 @@ var pluginPanel = {
             if ($application_key && $endpoint) {
                 setMessagePopUp("neutral", "plugin_message_redirecting_to_oauth", $endpoint);
 
-                //var url = self._pluginApiUrl() + "/auth?returnUrl=/";
-                //window.location = url;
+                var url = self._pluginApiUrl() + "/auth?returnUrl=/";
+                window.location = url;
             } else {
                 self.hide();
             }
