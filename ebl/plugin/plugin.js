@@ -204,8 +204,10 @@ var pluginPanel = {
             search : plugin.search
         };
 
+        var	mandator_id = this.mandator.baseInformation.id;
+
         return yooJson(this.$panel.find(".contentWrapper"), {
-            url: this._pluginApiUrl() + "/" + (this.creating ? "create" : "update"),
+            url: "/api/v4/" + encodeURIComponent(mandator_id) + "/plugin/" + (this.creating ? "create" : "update"),
             data: request
         }).done(function() {
             setMessagePopUp("positive", "message_data_saved_successfully");
