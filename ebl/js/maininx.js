@@ -1221,7 +1221,7 @@ function showImportHistory(jobId) {
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/import/get_importjobHistory/"+jobId,
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/import/get_importjob_history/"+jobId,
 		  success: function(json) {
 			  var htmlToAppend ='';
 			  if(json.length == 0){
@@ -1233,17 +1233,19 @@ function showImportHistory(jobId) {
 					    var startTime = obj.runtime;
 					    var finishTime = obj.finishtime;
 					    var amount = obj.amount;
-					    var log = obj.log;
-	
+
 					    if(!finishTime){
-					    	finishTime = 'nope';
+					    	finishTime = 'still running';
 					    }
 					   
 					    htmlToAppend +='<div class="tr test">\n';
 					    htmlToAppend +=' <div class="tc startTime">'+startTime+'</div>';
 					    htmlToAppend +=' <div class="tc finishTime">'+finishTime+'</div>';
 					    htmlToAppend +=' <div class="tc amount">'+amount+'</div>';
-					    htmlToAppend +=' <div class="tc log" id="logFiles'+i+'"><a  onclick="showLogFiles(\''+log+'\',\'logFiles'+i+'\');">show log </a></div>';
+					    htmlToAppend +=
+							' <div class="tc log" id="logFiles'+i+'">' +
+							'<a target="_blank" href="/api/v4/' + encodeURIComponent(customerID) + '/import/get_log/' + jobId + '/'+ obj.id +'">show log </a>' +
+							'</div>';
 					    htmlToAppend +='</div>';
 				  } 
 				  htmlToAppend +='<div>';
@@ -1301,12 +1303,6 @@ function showMailHistory(nlid) {
 	  });
 }
 
-
-function showLogFiles(log,appenderId) {
-    $.get( "/api/v4/" + encodeURIComponent(customerID) + log, function( data ) {
-            $('#'+appenderId).html(data) ;
-    });
-}
 
 function showSpecificLog(urlLog){
 	
