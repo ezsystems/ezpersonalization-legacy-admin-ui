@@ -22,6 +22,27 @@
  */
 
 /**
+ * @typedef {object} SuggestionBox
+ */
+
+/**
+ * @typedef {object} SuggestionDataset
+ * @property {string} name
+ * @property {int} itemType
+ * @property {string} lang
+ * @property {int} amount
+ * @property {string} template
+ */
+
+/**
+ * @typedef {object} PluginSearch
+ * @property {boolean} enabled
+ * @property {string} css
+ * @property {SuggestionBox[]} searchBoxes
+ * @property {SuggestionDataset[]} datasets
+ */
+
+/**
  * @typedef {object} Design
  * @property {string} id
  * @property {string} description
@@ -31,11 +52,16 @@
  * @typedef {object} Plugin
  * @property {PluginBase} base
  * @property {PluginFrontend} frontend
+ * @property {PluginSearch} search
  * @property {object[]} importJobs
- *
+ */
+
+/**
  * @typedef {object} Mandator
  * @property {MandatorBaseInformation} baseInformation
- *
+ */
+
+/**
  * @typedef {object} MandatorBaseInformation
  * @property {string} id
  * @property {string} website
@@ -450,7 +476,7 @@ var pluginPanel = {
 		var $pg_design = $("#pg_design");
 
 		// Looking for selected design
-        var designDescription = this._findDesignDescription(designs, plugin.frontend.design)
+        var designDescription = this._findDesignDescription(designs, plugin.frontend.design);
 
         if (designDescription) {
             $pg_design.val(designDescription);
@@ -697,7 +723,15 @@ var pluginTab = {
 				$reco.append($box);
 			});
 
-			row.find(".pg_search").text("not supported by this plugin type");
+			var $search = row.find(".pg_search");
+
+			plugin.search.datasets.forEach(function(dataset) {
+				var $box = $("<div></div>");
+				$box.text(dataset.name + " [" + (dataset.amount) + "]");
+				$search.append($box);
+			});
+
+			//row.find(".pg_search").text("not supported by this plugin type");
 			row.find(".pg_newsletters").text("not supported by this plugin type");
 
 			row.find(".pg_import_jobs").text(plugin.importJobs.length);
