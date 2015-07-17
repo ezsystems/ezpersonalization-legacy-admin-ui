@@ -41,7 +41,7 @@ var fromTemplate   = gupDecoded('from_template');
 	  			var open = '';
 	  			var close = '';
 	  			var pipe = '';
-	  			if ((t.contentTypes && t.contentTypes != '' && t.contentTypes != 'undefined') || (t.language && t.language != '' && t.language != 'undefined')) {
+	  			if ((t.contentTypes && t.contentTypes != '' && t.contentTypes != 'undefined' && t.contentTypes != 'null') || (t.language && t.language != '' && t.language != 'undefined' && t.language != 'null')) {
 	  				open = '[';
 	  				close = ']';
 	  				if (t.contentTypes && t.language) {
