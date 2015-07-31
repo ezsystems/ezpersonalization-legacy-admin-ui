@@ -48,7 +48,7 @@ var fromTemplate   = gupDecoded('from_template');
 	  					pipe = ' | ';
 	  				}
 	  			}
-	  			var d =  t.description + ' (' + t.id + ') '  + open + ((t.contentTypes != null) ? t.contentTypes : '') + pipe + ((t.language != null) ? t.language : '') + close;
+	  			 var d =  t.description + ' (' + t.id + ') '  + open + ((t.contentTypes != null && t.contentTypes != 'null') ? t.contentTypes : '') + pipe + ((t.language != null && t.language != 'null') ? t.language : '') + close;
 	  			var selectedTxt = '';
 	  			if(t.id == defaultItemType && fromTemplate ){
 	  				selectedTxt = ' id="defaultInItemType" selected = "selected" ';
