@@ -50,10 +50,18 @@
 
 /**
  * @typedef {object} Plugin
+ * @property {PluginTech} tech
  * @property {PluginBase} base
  * @property {PluginFrontend} frontend
  * @property {PluginSearch} search
  * @property {object[]} importJobs
+ */
+
+/**
+ * @typedef {object} PluginTech
+ * @property {PluginTech} twoLeggedAuthentication
+ * @property {PluginBase} authKeyName
+ * @property {PluginFrontend} authSecretName
  */
 
 /**
@@ -179,7 +187,7 @@ var pluginPanel = {
         var $saveOnly = this.$panel.find(".plugin_save");
 
 		$application_key.on("change", function() {
-			if ($application_key.val()) {
+			if (self.plugin.tech.twoLeggedAuthentication && $application_key.val()) {
                 $saveAndClose.attr("data-translate", "plugin_save_oauth");
 			} else {
                 $saveAndClose.attr("data-translate", "plugin_save_quit");
@@ -203,7 +211,9 @@ var pluginPanel = {
 
         this._saveOnly().done(function() {
             var $application_key = self.plugin.base.appKey;
-            var $endpoint = ifTrempty(self.plugin.base.endpoint, self.mandator.baseInformation.website);
+            var $endpoint = self.plugin.tech.twoLeggedAuthentication
+				? ifTrempty(self.plugin.base.endpoint, self.mandator.baseInformation.website)
+				: false;
 
             if ($application_key && $endpoint) {
                 setMessagePopUp("neutral", "plugin_message_redirecting_to_oauth", $endpoint);
@@ -528,12 +538,17 @@ var pluginPanel = {
 		var $app_key = this.$panel.find("#plugin_app_key");
 		var $app_secret = this.$panel.find("#plugin_app_secret");
 
+		var $app_key_label = this.$panel.find("label[for=plugin_app_key]");
+		var $app_secret_label = this.$panel.find("label[for=plugin_app_secret]");
+
 		$app_key.val(plugin.base.appKey);
 		$app_secret.val(plugin.base.appSecret);
 
 		var $oauth_section = this.$panel.find(".plugin_oauth");
 
-		if (plugin.base.type == 'MAGENTO') {
+		if (plugin.tech.authKeyName) {
+			$app_key_label.text(plugin.tech.authKeyName);
+			$app_secret_label.text(plugin.tech.authSecretName)
 			$oauth_section.show();
 		} else {
 			$oauth_section.hide();
