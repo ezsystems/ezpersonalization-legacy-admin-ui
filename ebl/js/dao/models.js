@@ -108,7 +108,7 @@ modelDao.updateModel = function(model, callback, errorCallback) {
 modelDao.loadAttributes = function(callBack, callBackError) {
 	  return $.ajax({
 		  dataType: "json",
-		  url: "api/v3/" + customerID + "/structure/get_attribute_pks?no-realm",
+		  url: "api/v3/" + customerID + "/structure/get_attribute_pks?forSubmodelsOnly=true",
 		  success: function(json) {
 			  if (callBack) {
 				  callBack(json.attributePkList);
