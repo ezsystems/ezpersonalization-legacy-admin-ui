@@ -1138,7 +1138,7 @@ function activateSubmodelDialog(modelID) {
 	model_reference_code = modelID;
 
   	var $layer = $('#model_configuration_classic');
-  	var overlay = $('#model_configuration_classic').parent(".model_config_overlay");
+  	var overlay = $layer.parent(".model_config_overlay");
   	
   	var extendedSolution = ifExtended();
   	
@@ -1154,11 +1154,12 @@ function activateSubmodelDialog(modelID) {
 		var unit = maxRating.D >= 2 ? 'D' : 'H';
 		$('#relevant_period').val(val);
 		$('#relevant_period_unit').val(unit);
-		var currentModelConf = 	$('#model_configuration_classic h2').find("span[data-param=0]");
-		currentModelConf.attr("data-translate", modelNameKey + '_title');
 	} else {
 		$("div.model_config_overlay .relevance").hide();
 	}
+
+	var currentModelConf = 	$layer.find("h2 span[data-param=0]");
+	currentModelConf.attr("data-translate", modelNameKey + '_title');
 
   	i18n(currentModelConf);
 

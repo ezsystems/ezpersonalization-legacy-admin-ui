@@ -35,6 +35,11 @@ function changePassword() {
 		return;
 	}
 	
+	if (password.length < 8) {
+		magicMessage("warning", "password_too_short");
+		return;
+	}
+	
 	if (password != password.replace(/^\s+|\s+$/g, '')) {
 		magicMessage("warning", "password_no_spaces");
 		return;
