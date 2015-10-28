@@ -902,7 +902,7 @@ function initialLoadData() {
 		$('section.scenarios li.tabAbTests').show();
 		$('section.scenarios li.tabPlugins').show();
 		$('section.scenarios li.tabImports').show();	
-		if('321' === customerID || '1221'  === customerID || '1780'  === customerID ){
+		if('321' === customerID || '1221'  === customerID || '1780'  === customerID  || '1351'  === customerID || '1209'  === customerID ){
 			$('section.scenarios li.tabMail').show();
 			$('#mailF').attr('src', 'mailconfig.html?customer_id=' +  encodeURIComponent(customerID));
 			$('#createNewMail').off('click').click(function() {
