@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>User Migration | YooChoose Recommendation Engine</title>
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styles_new.css">
+    
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
+    <script src="js/lib/jquery.cookie.js"></script>
+    <script src="js/lib/jquery.i18n.properties.js"></script>
+    
+    <script src="js/form_submit_trigger.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    
+    <script src="js/helper.js"></script>
+    
+    <script src="js/i18n.js" data-i18n-files="migration,common"></script>
+    
+	<script>
+	
+	
+	var step1url, step2url, step3url;
+	var step, product, mandator, code, errorCode;
+	
+	$(document).ready(function () {
+		var queryString = getUrlVars();
+		
+		step = queryString["step"];
+		
+		if (! step) step = 1;
+		
+		errorCode = queryString["faultCode"];
+		
+		if (queryString["bookingState"] == "CANCELLED") {
+			errorCode = "CANCELLED";
+		} else if (queryString["bookingState"] == "ERROR") {
+			errorCode = "UNKNOWN";
+		}
+		
+		product  = queryString["product"];
+		mandator = queryString["mandator"];
+		code     = queryString["code"];
+		
+		if (step == 1 || step == 2) {
+			if (! product) {
+				errorCode="product_not_set";
+			}
+			if (! code) {
+				errorCode="code_not_set";
+			}
+		}
+		
+		step1url = "/migration.html?product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+		step2url = "/migration.html?step=2&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+		step3url = "/migration.html?step=3&product=" + encodeURIComponent(product) + "&code=" + encodeURIComponent(code);
+
+		
+		if (step == 1) $("#form-step-1").show();
+		if (step == 2) $("#form-step-2").show();
+		if (step == 3) $("#form-step-3").show();
+		
+		if (errorCode) {
+			var key = "message_error_" + errorCode;
+			
+			if (! jQuery.i18n.map[key]) {
+				key = "message_unexpected_error";
+			}
+			
+			var backLink;
+			
+			if (step == 2) {
+				backLink = step1url;
+			} else if (step == 3) {
+				backLink = step2url;
+			}
+			
+			setMessagePopUpLink("problem", backLink, key, errorCode);
+		}
+		
+		if (step == 1) {
+			step1(product, mandator, code);
+		} else if (step == 2) {
+			step2(product, mandator, code);
+		} else if (step == 3) {
+			step3(product, mandator, code);
+		}
+	});
+		
+		
+	function step1(product, mandator, code) {
+
+		if (errorCode) {
+			$('#cross-1').show();
+			$('#step-1-forward').hide();
+		} else {
+			var userLink = "/api/v4/migration/user/" + encodeURIComponent(product) + 
+					       "/" + encodeURIComponent(code) + "?returnUrl=" + encodeURIComponent(step2url) + 
+			    		   "&cancelUrl=" + encodeURIComponent(step1url);
+			
+			$('#step-1-forward').attr("href", userLink);
+			$('#bird-1').show();
+		}
+	}
+	
+	
+	function step2(product, mandator, code) {
+
+		$('#bird-1').show();
+		
+		if (errorCode) {
+			$('#cross-2').show();
+			$('#step-2-forward').hide();
+		} else {
+			var userLink = "/api/v4/migration/contract/" + encodeURIComponent(product) + 
+					       "/" + encodeURIComponent(code) + "?returnUrl=" + encodeURIComponent(step3url) +
+					       "&cancelUrl=" + encodeURIComponent(step2url);
+			
+			$('#step-2-forward').attr("href", userLink);				
+			$('#bird-2').show();
+		}
+	}
+	
+	
+	function step3(product, mandator, code) {
+		$('#bird-1').show();
+		$('#bird-2').show();
+		if (errorCode) {
+			$('#cross-3').show();	
+		} else {
+			$('#bird-3').show();
+		}
+	}
+
+
+	</script>
+	
+	<style type="text/css">
+	
+		table.steps {
+			margin: 50px auto 0 auto;
+		}
+	
+		table.steps td {
+			padding: 0 10px; vertical-align: middle; color: rgb(140, 150, 138);
+		}
+	
+		div.step {
+			width: 80px; height: 40px; border: 4px solid rgba(140, 150, 138, 0.33); border-radius: 42px; padding-top: 40px; 
+			position: relative; background-color: #EEECE1; color: #000;
+		}
+		
+		div.step div.number {
+			position: absolute; width: 80px; text-align: center; font-size: 42px; top: 1.3ex;
+		}
+		
+		div.step div.bird {
+			position: absolute; width: 80px; font-size: 56px; top: 2.3ex; left: 1.2em;
+			color: rgb(149, 231, 127);
+			display: none;			
+		}
+		
+		div.step div.cross {
+			position: absolute; width: 80px; font-size: 56px; top: 2.3ex; left: 1.2em;
+			color: rgb(192, 80, 77);
+			display: none;			
+		}
+		
+		section.dialog {
+			margin: 70px auto; width: 600px;
+		}
+		
+		div.migration {
+			display: block;
+			border: 1px solid rgba(140, 150, 138, 0.33);
+			border-radius: 10px;
+			background-color: white;
+			text-align: left;
+		}
+		
+		div.migration h3 {
+			display: block;
+			background: rgba(63, 63, 63, 1) url("../img/rauschen.png") repeat left top;
+			color: white;
+			line-height: 40px;
+			margin: 20px 0;
+			text-align: center;
+			text-shadow: -1px -1px 0 rgba(0, 0, 0, 1);
+		}
+		
+		div.migration div {
+			padding: 0 15px;
+		}
+		
+		div.migration div.actions {
+			margin: 20px 0;
+			text-align: right;
+		}
+		
+	</style>
+	
+  </head>
+  <body id="login">
+    <header class="clearfix top_head">
+      <div class="logo_area s1_5">
+        <h1 class="hide" title="YooChoose. We recommend."><span>YooChoose. We recommend.</span></h1>
+      </div>
+      <div class="top_bar clearfix">
+        <ul class="language_selection clearfix">
+          <li class="de" title="Deutsch" lang="de"><a href="#"><span class="hide">Deutsch</span></a></li>
+          <li class="en" title="English" lang="en"><a href="#"><span class="hide">English</span></a></li>
+          <li class="fr" title="Fran&ccedil;ais" lang="fr"><a href="#"><span class="hide">Fran&ccedil;ais</span></a></li>
+        </ul>
+      </div>
+    </header>
+    
+    <table class="steps">
+    	<tr>
+    		<td>
+    			<div class="step"><div class="number">1</div><div id="bird-1" class="bird">✔</div><div id="cross-1" class="cross">✘</div></div>
+    		</td>
+    		<td> • &nbsp; • &nbsp; • &nbsp; • &nbsp; • </td>
+    		<td>
+    			<div class="step"><div class="number">2</div><div id="bird-2" class="bird">✔</div><div id="cross-2" class="cross">✘</div></div>
+    		</td>
+    		<td> • &nbsp; • &nbsp; • &nbsp; • &nbsp; • </td>
+    		<td>
+    			<div class="step"><div class="number">3</div><div id="bird-3" class="bird">✔</div><div id="cross-3" class="cross">✘</div></div>
+    		</td>
+    	</tr>
+    </table>
+    
+    <section class="dialog normal_form">
+    
+      <div id="form-step-1" class="migration" style="display:none;">
+          <h3 data-translate="migration.step_1.header">Migrate user account</h3>
+          <div data-translate="migration.step_1.description">
+          	A user is an agent, either a human agent (end-user) or software agent, who uses a computer or network service. A user often has a user account and is identified by a username (also user name).
+       	  </div> 
+          <div class="actions">
+            <a id="step-1-forward" 
+               class="button inline form_submit_button" 
+               data-translate="migration.step_1.button"
+               href="#to_step_2">Continue</a>
+          </div>
+      </div>
+      
+      <div id="form-step-2" class="migration" style="display:none;">
+          <h3 data-translate="migration.step_2.header">Migrate contract</h3>
+          <div data-translate="migration.step_2.description">
+          	Some text with words <span data-param="0">product</span> and <span data-param="1"><b>market</b></span>.
+       	  </div> 
+          <div class="actions">
+            <a id="step-2-forward" 
+            	class="button inline form_submit_button" 
+            	data-translate="migration.step_2.button"
+              	href="#to_step_3">Continue</a>
+              	
+          </div>
+      </div>
+      
+      <div id="form-step-3" class="migration" style="display:none;">
+          <h3 data-translate="migration.step_3.header">Migrationg finished</h3>
+          <div data-translate="migration.step_3.description">
+          	A user is an agent, either a human agent (end-user) or software agent, who uses a computer or network service. A user often has a user account and is identified by a username (also user name).
+       	  </div> 
+          <div class="actions">
+            <a id="step-3-forward" 
+               class="button inline form_submit_button" 
+               data-translate="migration.step_3.button"
+               href="/index.html">Continue</a>
+          </div>
+      </div>   
+      
+    </section>
+    
+    <!--  still in development 
+    <a id="facebook_login" href="#">Login over facebook</a>
+    <a id="google_login" href="#">Login over google</a>
+    <a id="twitter_login" href="#">Login over twitter</a>
+    -->    
+    <footer>
+      Copyright 2009-<script>document.write(new Date().getFullYear());</script><noscript>2014</noscript> YOOCHOOSE GmbH
+      <ul class="clearfix">
+        <li><a href="corporate_information.html" data-translate="common_corporate_information">Corporate information</a></li>
+        <li><a href="data_privacy.html" data-translate="common_data_privacy">Data privacy</a></li>
+        <li><a href="contact.html" data-translate="common_contact">Contact</a></li>
+      </ul>
+    </footer>
+    <div class="message" style="display:none;">
+      <p>
+        <span id="message_text">Something neutral happened. That's it.</span>
+        <a class="button inline close">OK</a>
+      </p>
+    </div>
+
+  </body>
+</html>
