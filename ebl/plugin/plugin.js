@@ -770,12 +770,15 @@ var pluginTab = {
 
 			var $icon = row.find(".pg_image img.pg_type_" + single_type).filter(":first").clone();
 
-			$icon.css("margin", "0em");
+			//$icon.css("margin", "0em");
 			$icon.css("vertical-align", "top");
+
+			var $div = $("<div style='margin: -1.4em;'></div>");
+			$div.append($icon);
 
 			$tab_button.find("label span").hide();
 			$tab_button.find("label").css("font-size", "0.4em");
-			$tab_button.find("label").append($icon);
+			$tab_button.find("label").append($div);
 
 		} else {
 			$tab_button.find("label span").show();

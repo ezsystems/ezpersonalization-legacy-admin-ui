@@ -484,10 +484,23 @@ input[type="text"].inverted {
 }
 
 .options_menu > li {
-  display: block;
-  float: left;
-  margin-right: 2px;
-  min-width: 90px;
+    display: block;
+    float: left;
+    margin-right: 2px;
+    min-width: 90px;
+    border: 1px solid rgba( 238, 236, 225, 1);
+    height: 2em;
+}
+
+
+.options_menu > li:first-child  {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.options_menu > li:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .options_menu > li:last-child {
@@ -501,7 +514,6 @@ input[type="text"].inverted {
 .options_menu > li > label {
   display: block;
   padding: 1px 9px 0 9px;
-  border: 1px solid rgba( 238, 236, 225, 1);
   background-color: white;
   text-align: center;
   color: rgba(63, 63, 63, 1);
@@ -552,14 +564,14 @@ input[type="text"].inverted {
   box-shadow: none;
 }
 
-.options_menu > li:first-child > label {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+.options_menu > li:first-child > label  {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 
-.options_menu > li:last-child > label, .options_menu > li.last-child > label {
-	border-top-right-radius: 5px;
-	border-bottom-right-radius: 5px;
+.options_menu > li:last-child > label {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .normal_form label {
