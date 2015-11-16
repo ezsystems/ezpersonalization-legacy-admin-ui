@@ -593,7 +593,7 @@ function saveScenario() {
 
 			$ageSelect.find("option").remove();
 
-		  	var ages = ['P1D', 'P7D', 'P14D', 'P30D', 'P90D', 'P180D','P365D'];
+		  	var ages = ['P1D', 'P7D', 'P14D', 'P30D', 'P45D', 'P60D', 'P90D', 'P180D','P365D'];
 
 			for (var i in ages) {
 				var opt = $('<option value="' + ages[i] + '" data-translate="model_configurator_rating_age_' + ages[i] + '">').clone();
