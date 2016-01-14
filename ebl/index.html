@@ -56,6 +56,7 @@
     <script src="js/maininx.js"></script>
     
     <script src="js/i18n.js" data-i18n-files="dashboard,common,plugin"></script>
+    <script src="js/date.js"></script>
 	
 	 <style>
   .custom-combobox {
@@ -188,25 +189,25 @@
             <li class="view_option_week">
               <label for="view_option_week" class="option">
                 <input type="radio" id="view_option_week" name="view_option" value="day" />
-                <span data-translate="index_last_week">Last week</span><span class="info">
-				<script>
-				var lastWeekDay = getCurrentDateMinusDays(7);
-				var lastDay = getCurrentDateMinusDays(1);
-				document.write("(" + lastWeekDay.day + "." + lastWeekDay.month + "." + lastWeekDay.year + ") - ");
-				document.write("(" + lastDay.day + "." + lastDay.month + "." + lastDay.year + ")");
-				</script></span>
+                <span data-translate="index_last_week">Last week</span><span class="info"></span>
               </label>
             </li>
             <li class="view_option_month">
               <label for="view_option_month" class="option">
                 <input type="radio" id="view_option_month" name="view_option" value="month" />
-                <span data-translate="index_last_month">Last month</span><span class="info">
-				<script>
-				var lastMonthDay = getCurrentDateMinusDays(30);
-				var lastDay = getCurrentDateMinusDays(1);
-				document.write("(" + lastMonthDay.day + "." + lastMonthDay.month + "." + lastMonthDay.year + ") - ");
-				document.write("(" + lastDay.day + "." + lastDay.month + "." + lastDay.year + ")");
-				</script></span>
+                <span data-translate="index_last_month">Last month</span><span class="info"></span>
+              </label>
+            </li>
+            <li class="view_option_3months">
+              <label for="view_option_3months" class="option">
+                <input type="radio" id="view_option_3months" name="view_option" value="3months" />
+                <span data-translate="index_last_3months">Last 3 months</span><span class="info"></span>
+              </label>
+            </li>
+            <li class="view_option_year">
+              <label for="view_option_year" class="option">
+                <input type="radio" id="view_option_year" name="view_option" value="year" />
+                <span data-translate="index_last_year">Last year</span><span class="info"></span>
               </label>
             </li>
           </ul>
