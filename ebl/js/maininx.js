@@ -238,49 +238,45 @@ function switchTab(newTab) {
 }
 
 
+/**
+ * @return {Date}
+ */
 function currentPeriodFromTime() { // <-- "period" is a global variable
+
+	var result = Date.today().clone();
+
 	if (period == 'WEEK') {
-	    //calculate the from_date_time and to_date_time
-	    var currentDate = getCurrentDateMinusDays(7);
-	    return getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-	    
+		result = result.clearTime().add({days: -7});
 	} else if (period == 'MONTH') {
-        var currentDate = getCurrentDateMinusDays(30);
-        return getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-        
+		result = result.clearTime().add({days: -30});
+	} else if (period == '3MONTHS') {
+		result = result.clearTime().add({days: -91}); // requirement:  91 % 7 = 0
+	} else if (period == 'YEAR') {
+		result = result.clearTime().add({days: -371}); // requirement:  91 % 7 = 0
 	} else if (period == 'DAY') {
-	    var yesterday = getCurrentDateMinusDays(1);
-	    return getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
-	    
+		result = result.clearTime().add({days: -1});
 	} else { // 24H
-	    var yesterday = new Date(Date.now() - 24*3600000);
-	    return getDateTimeValue(yesterday.getFullYear(), yesterday.getMonth() +1, yesterday.getDate(), yesterday.getHours(), 0, 0, false);
+		result = result.add({hours: -24});
 	}
+
+	return result;
 }
 
- 
+
+/**
+ * @return {Date}
+ */
 function currentPeriodToTime() { // <-- "period" is a global variable
-	if (period == 'WEEK') { 
-	    var currentDate = getCurrentDateMinusDays(0);
-	    return getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-	    
-	} else if (period == 'MONTH') {
-        var currentDate = getCurrentDateMinusDays(0);
-        return getDateTimeValue(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0, false);
-        
-	} else if (period == 'DAY') {
-	    var currentDate = getCurrentDateMinusDays(0);
-	    return getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
-	    
-	} else { // 24H
-	    var currentDate = new Date();
-	    return getDateTimeValue(currentDate.getFullYear(), currentDate.getMonth() +1, currentDate.getDate(), currentDate.getHours(), 0, 0, false);
+	var currentDate = Date.today().clone();
+
+	if (period != '24H' ) {
+		currentDate = currentDate.clearTime();
 	}
+	return currentDate;
 }
 
 
 /** Called, if the time period (MONTH, WEEK, DAY etc.) was changed
- * 
  */
 var ajaxScenarioList = function(new_period, callback) {
 	
@@ -301,25 +297,42 @@ var ajaxScenarioList = function(new_period, callback) {
 	
 	$("fieldset.time_settings li.current").removeClass("current");
 	$("fieldset.time_settings .custom_range_settings").hide();
+
+	var date_from = currentPeriodFromTime();
+	var date_to = currentPeriodToTime();
+
+	var date_to_excluded = date_to.clone().add({"milliseconds": -1});
 	
-	var from_date_time = currentPeriodFromTime();
-	var to_date_time = currentPeriodToTime();
+	var xsd_from = date_from.toString("yyyy-MM-ddTHH:mm:ss");
+	var xsd_to   = date_to.toString("yyyy-MM-ddTHH:mm:ss");
 	var granularity;
-	
+
 	var $current;
 	
 	if (period == 'WEEK') {
 	    granularity = "PT12H";
 	    $current = $("fieldset.time_settings li.view_option_week");
 	    
-	    $("fieldset.time_settings li.view_option_week span.info").text(dateTimeFormat(from_date_time) + " - " + dateTimeFormat(to_date_time));
+	    $("fieldset.time_settings li.view_option_week span.info").text(dateFormat(date_from) + " - " + dateFormat(date_to_excluded));
 	    
 	} else if (period == 'MONTH') {
         granularity = "P1D";
         $current = $("fieldset.time_settings li.view_option_month");
         
-        $("fieldset.time_settings li.view_option_month span.info").text(dateTimeFormat(from_date_time) + " - " + dateTimeFormat(to_date_time));
-        
+        $("fieldset.time_settings li.view_option_month span.info").text(dateFormat(date_from) + " - " + dateFormat(date_to_excluded));
+
+	} else if (period == '3MONTHS') {
+		granularity = "P1W";
+		$current = $("fieldset.time_settings li.view_option_3months");
+
+		$("fieldset.time_settings li.view_option_3months span.info").text(dateFormat(date_from) + " - " + dateFormat(date_to_excluded));
+
+	} else if (period == 'YEAR') {
+		granularity = "P1W";
+		$current = $("fieldset.time_settings li.view_option_year");
+
+		$("fieldset.time_settings li.view_option_year span.info").text(dateFormat(date_from) + " - " + dateFormat(date_to_excluded));
+
 	} else if (period == 'DAY') {
 	    granularity = "PT1H";
 	    $current = $("fieldset.time_settings li.view_option_day");
@@ -334,7 +347,7 @@ var ajaxScenarioList = function(new_period, callback) {
 	
 	var result1 = $.ajax({
         dataType: "json",
-        url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
+        url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + xsd_from + "&to_date_time=" + xsd_to + "&granularity=" + granularity + "&no-realm",
 		success: function (data) {
 			statistic = data;
         },
@@ -343,7 +356,7 @@ var ajaxScenarioList = function(new_period, callback) {
 	
 	var result2 = $.ajax({
 	    dataType: "json",
-	    url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_scenario_list?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm",
+	    url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_scenario_list?from_date_time=" + xsd_from + "&to_date_time=" + xsd_to + "&granularity=" + granularity + "&no-realm",
 	    success: function (json) {
 	    	scenarioInfoList = json.scenarioInfoList;
 	    },
@@ -356,7 +369,7 @@ var ajaxScenarioList = function(new_period, callback) {
 	
 	return $.when(result1, result2).done(function() {
 		
-		$('.export').attr('href', "/api/v3/" + encodeURIComponent(customerID) + "/revenue/statistic.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time + "&granularity=" + granularity + "&no-realm");
+		$('.export').attr('href', "/api/v3/" + encodeURIComponent(customerID) + "/revenue/statistic.xlsx?from_date_time=" + xsd_from + "&to_date_time=" + xsd_to + "&granularity=" + granularity + "&no-realm");
 		
 		if (period == 'WEEK') {
 			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
@@ -367,12 +380,22 @@ var ajaxScenarioList = function(new_period, callback) {
 			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
 			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
 			$('#index_collected_events').attr('data-translate', 'index_collected_events_month');
+
+		} else if (period == '3MONTH') {
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_3month');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_3month');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_3month');
+
+		} else if (period == 'YEAR') {
+			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_year');
+			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_year');
+			$('#index_collected_events').attr('data-translate', 'index_collected_events_year');
 	        
 		} else if (period == 'DAY' || period == '24H') {
 			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
 			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
 			$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
-		} 		
+		}
 		
 		localizer();
 		
@@ -432,6 +455,14 @@ function initialize() {
 	
 	$('#view_option_month').click(function () {
 	    ajaxScenarioList('MONTH');
+	});
+
+	$('#view_option_3months').click(function () {
+		ajaxScenarioList('3MONTHS');
+	});
+
+	$('#view_option_year').click(function () {
+		ajaxScenarioList('YEAR');
 	});
 	
 	
@@ -974,7 +1005,7 @@ function readImportJobs(){
                           if (lastRun != 'nope') {
                               var diff = Math.abs(new Date() - new Date(lastRun));
                               var days = diff / (24 * 60 * 60 * 1000);
-                              console.log(diff + " " + days + " " + new Date(lastRun));
+                              //console.log(diff + " " + days + " " + new Date(lastRun));
                               if (interval == 'DAILY' && days >= 1) {
                                   statusURL = 'img/yellow.png';
                               }
