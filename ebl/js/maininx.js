@@ -11,6 +11,7 @@ var period = sessionStorage.getItem("period") || '24H';
 
 var mandatorList;
 
+/** @member {CustomerV3} */
 var customer; // NOT A MANDATOR, but Customer JSON object
 
 var loginInfo;
@@ -237,22 +238,25 @@ function switchTab(newTab) {
 	}
 }
 
+var DAYS_YEAR = 371;
+var DAYS_3MONTHS = 91;
+var DAYS_MONTH = 30;
 
 /**
  * @return {Date}
  */
 function currentPeriodFromTime() { // <-- "period" is a global variable
 
-	var result = Date.today().clone();
+	var result = currentPeriodToTime();
 
 	if (period == 'WEEK') {
 		result = result.clearTime().add({days: -7});
 	} else if (period == 'MONTH') {
-		result = result.clearTime().add({days: -30});
+		result = result.clearTime().add({days: -DAYS_MONTH});
 	} else if (period == '3MONTHS') {
-		result = result.clearTime().add({days: -91}); // requirement:  91 % 7 = 0
+		result = result.clearTime().add({days: -DAYS_3MONTHS}); // requirement:  91 % 7 = 0
 	} else if (period == 'YEAR') {
-		result = result.clearTime().add({days: -371}); // requirement:  91 % 7 = 0
+		result = result.clearTime().add({days: -DAYS_YEAR}); // requirement:  91 % 7 = 0
 	} else if (period == 'DAY') {
 		result = result.clearTime().add({days: -1});
 	} else { // 24H
@@ -267,12 +271,19 @@ function currentPeriodFromTime() { // <-- "period" is a global variable
  * @return {Date}
  */
 function currentPeriodToTime() { // <-- "period" is a global variable
-	var currentDate = Date.today().clone();
+	var result = Date.today().clone();
 
 	if (period != '24H' ) {
-		currentDate = currentDate.clearTime();
+		result = result.clearTime();
 	}
-	return currentDate;
+
+	if (period == '3MONTHS' || period == 'YEAR') {
+		while (result.getDay() != 1) { // looking for Monday
+			result.add({"day" : -1});
+		}
+	}
+
+	return result;
 }
 
 
@@ -783,7 +794,8 @@ function saveForme() {
 				data: customer,
 				url: "/api/v3/profile/update_customer",
 				success: function (json) {
-					//on success
+					mandatorDao.injectCustomer(json.customer);
+					customer = json.customer;
 				}
 			});
 		} else {
@@ -803,7 +815,7 @@ function saveForme() {
 		$.when(
 			updateContract,
 			updatePersonal
-	    ).success( function() {
+	    ).done( function() {
     		setMessagePopUp("positive", "message_data_saved_successfully");
 	    }).always(function() {
 	    	unsetLoadingDiv("#editDataOverlay");
@@ -1859,27 +1871,34 @@ function renderCollectedEvents() {
 function getGraphDescription() {
 	
 	var resultDates = [];
+
+	var now  = currentPeriodToTime();
+	var date = currentPeriodFromTime();
 	
 	if (period == 'MONTH') {
-	
-	    for (var i = 30; i > 0; i = i - 1) {
-	        if (i % 5 === 0) {
-	            var date = getCurrentDateMinusDays(i);
-	            resultDates.push(date.day + "." + date.month + ".");
-	        } else {
-	            resultDates.push("");
-	        }
-	    }
-	    return resultDates;
-	
+
+		while (date.compareTo(now) < 0) {
+			var day = date.getDate();
+			resultDates.push((day % 2 == 1) ? day : "");
+			date.addDays(1);
+		}
+		resultDates.pop(); resultDates.push(date.getDate());
+
+	} else if (period == '3MONTHS' || period == 'YEAR') {
+
+		while (date.compareTo(now) < 0) {
+			var week = date.getWeekNumber(1);
+			resultDates.push((week % (period == '3MONTHS'?2:5) === 1) ? "W" + week : "");
+			date.addDays(7);
+		}
+		//resultDates.push("W" + date.getWeekOfYear(1));
+
 	} else if (period == 'WEEK') {
 	
 	    for (var i = 7; i > 0; i = i - 1) {
 	        var date = getCurrentDateMinusDays(i);
 	        resultDates.push(date.day + "." + date.month + ".");
 	    }
-	    return resultDates;
-	
 	} else if (period == 'DAY') {
 	
 	    for (var i = 0; i < 25; i++) {
@@ -1893,18 +1912,18 @@ function getGraphDescription() {
 	            }
 	        }
 	    }
-	    return resultDates;
 	} else { // 24H
+		var tempDate = new Date(Date.now() - 24 * 3600 * 1000);
 
-		var tempDate = new Date(Date.now() - 24 * 3600 * 1000),
-			legend = [tempDate.getHours() + ':00'],
-			i = 1;
-		for (; i < 25; i++) {
+		resultDates.push(tempDate.getHours() + ':00');
+
+		for (i = 1; i < 25; i++) {
 			tempDate.setHours(tempDate.getHours()+1);
-			legend[i]= !(i%4) ? (tempDate.getHours() < 10 ? '0': '') + tempDate.getHours() + ':00' : '';
+			resultDates.push(!(i%4) ? (tempDate.getHours() < 10 ? '0': '') + tempDate.getHours() + ':00' : '');
 		}
-		return legend;
 	}
+
+	return resultDates;
 }
 	
 
@@ -2036,70 +2055,59 @@ function showEmptyRecommendationChart() {
     middlebar.Draw();
 }
 
-function updateRightCharts(labels, conversionValues, formatter,precision) {
-//	console.log('updating convRate chart');
-//	console.log(conversionValues);
+function updateRightCharts(labels, conversionValues, formatter, precision) {
     RGraph.Clear(document.getElementById("conversion_rate"));
+	var rightLine = new RGraph.Line('conversion_rate', conversionValues);
 
-    rightLine = new RGraph.Line('conversion_rate', conversionValues);
+	rightLine.Set('chart.numxticks', labels.length - 1);
     rightLine.Set('chart.labels', labels);
-    rightLine.Set('chart.background.barcolor1', 'transparent');
-    rightLine.Set('chart.background.barcolor2', 'transparent');
-    rightLine.Set('chart.background.grid', true);
-    rightLine.Set('chart.linewidth', 3);
-    rightLine.Set('chart.gutter.left', 40);
-    rightLine.Set('chart.scale.formatter', formatter);
-    rightLine.Set('chart.scale.decimals', precision);
-    rightLine.Set('chart.hmargin', 5);
-    rightLine.Set('chart.background.grid.autofit.align', true);
     rightLine.Set('chart.background.grid.color', 'rgba(217, 226, 216, 1)');
     rightLine.Set('chart.colors', ['rgba(81, 142, 19, 1)']);
-    rightLine.Set('chart.text.font', ['Istok Web, sans-serif']);
-    rightLine.Set('chart.text.color', 'rgba(140, 150, 138, 1)');
-    rightLine.Set('chart.text.size', '8');
+
+	commonChart(rightLine);
+
     rightLine.Draw();
 }
 
 function updateMiddleChart(labels, dataArray) {
     RGraph.Clear(document.getElementById('delivered_recommendations'));
-    middlebar = new RGraph.Line('delivered_recommendations', convertDataArray(dataArray));
+	var middlebar = new RGraph.Line('delivered_recommendations', convertDataArray(dataArray));
+
+	middlebar.Set('chart.numxticks', labels.length - 1);
     middlebar.Set('chart.labels', labels);
-    middlebar.Set('chart.background.barcolor1', 'transparent');
-    middlebar.Set('chart.background.barcolor2', 'transparent');
-    middlebar.Set('chart.background.grid', true);
-    middlebar.Set('chart.linewidth', 3);
-    middlebar.Set('chart.gutter.left', 40);
-    middlebar.Set('chart.scale.formatter', myFormatter);
-    middlebar.Set('chart.hmargin', 5);
-    middlebar.Set('chart.background.grid.autofit.align', true);
     middlebar.Set('chart.background.grid.color', 'rgba(217, 226, 216, 1)');
     middlebar.Set('chart.colors', ['rgba(81, 142, 19, 1)', 'rgba(155, 93, 184, 1)', 'rgba(18, 154, 253, 1)']);
-    middlebar.Set('chart.text.font', ['Istok Web, sans-serif']);
-    middlebar.Set('chart.text.color', 'rgba(140, 150, 138, 1)');
-    middlebar.Set('chart.text.size', '8');
+
+	commonChart(middlebar);
     middlebar.Draw();
 }
 
 function updateLeftChart(labels, dataArray) {
+	RGraph.Clear(document.getElementById('collected_events'));
+	var leftbar = new RGraph.Line('collected_events', convertDataArray(dataArray));
 
-    RGraph.Clear(document.getElementById('collected_events'));
-    leftbar = new RGraph.Line('collected_events', convertDataArray(dataArray));
-    leftbar.Set('chart.labels', labels);
-    leftbar.Set('chart.background.barcolor1', 'transparent');
-    leftbar.Set('chart.background.barcolor2', 'transparent');
-    leftbar.Set('chart.background.grid', true);
-    leftbar.Set('chart.linewidth', 3);
-	leftbar.Set('chart.gutter.left', 40);
-    leftbar.Set('chart.scale.formatter', myFormatter);
-    leftbar.Set('chart.hmargin', 5);
-    leftbar.Set('chart.background.grid.autofit.align', true);
-    leftbar.Set('chart.background.grid.color', 'rgba(217, 226, 216, 1)');
-    leftbar.Set('chart.colors', ['rgba(255, 167, 57, 0.9)', 'rgba(98, 184, 188, 0.9)', 'rgba(204, 199, 158, 0.9)']);
-    leftbar.Set('chart.text.font', ['Istok Web, sans-serif']);
-    leftbar.Set('chart.text.color', 'rgba(140, 150, 138, 1)');
-    leftbar.Set('chart.text.size', '8');
-    leftbar.Draw();
+	leftbar.Set('chart.numxticks', labels.length - 1);
+	leftbar.Set('chart.labels', labels);
+	leftbar.Set('chart.background.grid.color', 'rgba(217, 226, 216, 1)');
+	leftbar.Set('chart.colors', ['rgba(255, 167, 57, 0.9)', 'rgba(98, 184, 188, 0.9)', 'rgba(204, 199, 158, 0.9)']);
 
+	commonChart(leftbar);
+	leftbar.Draw();
+}
+
+
+function commonChart(bar) {
+	bar.Set('chart.background.barcolor1', 'transparent');
+	bar.Set('chart.background.barcolor2', 'transparent');
+	bar.Set('chart.background.grid', true);
+	bar.Set('chart.linewidth', 3);
+	bar.Set('chart.gutter.left', 40);
+	bar.Set('chart.scale.formatter', myFormatter);
+	bar.Set('chart.hmargin', 5);
+	bar.Set('chart.background.grid.autofit.align', true);
+	bar.Set('chart.text.font', ['Istok Web, sans-serif']);
+	bar.Set('chart.text.color', 'rgba(140, 150, 138, 1)');
+	bar.Set('chart.text.size', '8');
 }
 
 

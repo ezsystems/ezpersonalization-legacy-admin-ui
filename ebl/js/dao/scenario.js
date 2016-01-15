@@ -1,5 +1,12 @@
 
-
+/**
+ * @typedef {object} StandardFilterSet
+ * @property {number} maximalItemAge
+ * @property {number} minimalItemPrice
+ * @property {boolean} excludeItemsWithoutPrice
+ * @property {string} excludeCheaperItems
+ * @property {boolean} excludeContextItems
+ */
 
 /** Scenario DAO service. It loads and updates single scenarios.<br><br>
  * 
@@ -7,6 +14,8 @@
 var scenarioDao = {
 	customerID: null,
 	scenario: null,
+
+	/** @member {StandardFilterSet} */
 	standardFilterSet: null,
 	profileFilterSet: null,
 	error:null
@@ -42,7 +51,7 @@ scenarioDao.reload  = function() {
 scenarioDao.loadScenarioOnly = function(refcode) {
 	
 	if (!refcode) {
-		var scenario = new Object();
+		var scenario = {};
 		scenario.title = null;
 		scenario.referenceCode = null;
 		scenario.inputItemType = 0;
