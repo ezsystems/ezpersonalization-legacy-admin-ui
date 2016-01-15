@@ -1,4 +1,20 @@
+/**
+ * @typedef {object} CustomerV3
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} company
+ * @property {string} phone
+ * @property {string} email
+ * @property {AddressV3} address
+ */
 
+/**
+ * @typedef {object} AddressV3
+ * @property {string} street
+ * @property {string} zip
+ * @property {string} city
+ * @property {string} country
+ */
 
 
 /** Scenario DAO service. It loads and updates single scenarios.<br><br>
@@ -78,7 +94,7 @@ mandatorDao.getItemTypes = function() {
 	}
 	
 	return result;
-}
+};
 
 
 mandatorDao.getItemTypeDescription = function(id) {
@@ -95,7 +111,7 @@ mandatorDao.getItemTypeDescription = function(id) {
 	});
 	
 	return result;
-}
+};
 
 
 mandatorDao.init = function(mandatorId, callback) {
@@ -135,7 +151,36 @@ mandatorDao.loadRegistrationData = function(blurSelector, callback) {
 			}
 		}
 	});
-}
+};
+
+
+/**
+ * @param {CustomerV3} customer
+ */
+mandatorDao.injectCustomer = function(customer) {
+	if ( ! this.mandator) {
+		return;
+	}
+	if ( ! this.mandator.customer) {
+		this.mandator.customer = {};
+	}
+
+	this.mandator.customer.firstName = customer.firstName;
+	this.mandator.customer.lastName  = customer.lastName;
+	this.mandator.customer.company   = customer.company;
+	this.mandator.customer.phone     = customer.phone;
+	this.mandator.customer.email     = customer.email;
+
+	if (customer.address) {
+		if ( ! this.mandator.customer.address) {
+			this.mandator.customer.address = {};
+		}
+		this.mandator.customer.address.street  = customer.address.street;
+		this.mandator.customer.address.zip     = customer.address.zip;
+		this.mandator.customer.address.city    = customer.address.city;
+		this.mandator.customer.address.country = customer.address.country;
+	}
+};
 
 
 /** Returns the coma code like 'IBS' or 'PACTAS', if the current mandator provides one.
@@ -159,5 +204,5 @@ mandatorDao.getProductComa = function() {
 	}
 	
 	return comaId.coma;
-}
+};
 

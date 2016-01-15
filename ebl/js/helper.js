@@ -23,6 +23,16 @@ var include = function(scripts, callback) {
 };
 
 
+/** http://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
+ */
+Date.prototype.getWeekNumber = function(){
+	var d = new Date(+this);
+	d.setHours(0,0,0);
+	d.setDate(d.getDate()+4-(d.getDay()||7));
+	return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
+};
+
+
 var cachedScript = function(url) {
  	  var options = {
  			crossDomain: true, // it adds script tag and allows to debug included file 
