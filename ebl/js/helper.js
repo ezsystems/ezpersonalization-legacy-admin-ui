@@ -23,6 +23,16 @@ var include = function(scripts, callback) {
 };
 
 
+/** http://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
+ */
+Date.prototype.getWeekNumber = function(){
+	var d = new Date(+this);
+	d.setHours(0,0,0);
+	d.setDate(d.getDate()+4-(d.getDay()||7));
+	return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
+};
+
+
 var cachedScript = function(url) {
  	  var options = {
  			crossDomain: true, // it adds script tag and allows to debug included file 
@@ -172,7 +182,10 @@ var parseDuration = function(str) {
 };
 
 
-//this method generate the date time data for the statistic service
+/** @deprecated use {@link Date#toString("yyyy-MM-ddTHH:mm:ss")} instead.
+ *
+ *  This method generate the date time data for the statistic service
+ *  */
 function getDateTimeValue(year, month, day, hour, minute, second, encode) {
     if (month < 10) {
         month = "0" + month;
@@ -222,7 +235,11 @@ function getManipulatedDate(oldDate, numberOfDays, operation) {
 
 }
 
-//Helper method to get an object with a date from a specific number of days
+
+/** @deprecated use date.js instead.
+ *
+ *  Helper method to get an object with a date from a specific number of days
+ */
 function getCurrentDateMinusDays(days) {
 
     var result = new Object();
@@ -239,6 +256,9 @@ function getCurrentDateMinusDays(days) {
     return result;
 }
 
+
+/** @deprecated use date.js instead.
+ */
 function getCurrentDateTimeMinusDays(days,hour) {
 	var result = new Object();
     var currentTime = getManipulatedDate(new Date(), days, false);
@@ -651,24 +671,33 @@ function yooAjax(blurSelector, options) {
 var magicCountdown;
 
 
+/** Formats an XSD dateTime into a German form DD.MM.YYYY HH:MM
+ *
+ *  @param {Date} date
+ *  @return {String}
+ */
+function dateFormat(date) {
 
-/** Formats an XSD dateTime into a German form DD.MM.YYYY HH:MM 
+	if (date instanceof String) { // backward compatibility
+		date = Date.parse(date);
+	}
+
+	return date.toString("dd.MM.yyyy");
+}
+
+
+/** Formats an XSD dateTime into a German form DD.MM.YYYY HH:MM
+ *
+ *  @param {Date} date
+ *  @return {String}
  */
 function dateTimeFormat(date) {
 
-	var re = new RegExp("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d+))?");
-	var match = re.exec(date);
-	
-	date = {
-		"date" : match[3],
-		"month" : match[2],
-		"year" : match[1],
-		"hours" : match[4],
-		"minutes" : match[5],
-		"seconds" : match[6],
-	};
+	if (date instanceof String) { // backward compatibility
+		date = Date.parse(date);
+	}
 
-	return pad(date.date, 2) + "." + pad(date.month, 2) + "." + pad(date.year, 4) + " " + pad(date.hours, 2) + ":" + pad(date.minutes, 2);
+ 	return date.toString("dd.MM.yyyy HH:mm:ss");
 }
 
 
