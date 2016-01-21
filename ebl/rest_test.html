@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="utf-8" />
+<!-- 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
+	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="js/rest_test.js"></script>
+	<script type="text/javascript" src="js/helper.js"></script>
+	<style type="text/css">
+		#wrapper{
+			position: relative;
+		}
+		#logs {
+			height:50%
+ 			width: 400px; 
+ 			overflow: auto;
+ 			background-color: #ddd;
+		}
+		#debug {
+			position: fixed;
+			top: 0;
+			right: 0;
+			min-width: 800px;
+			max-width: 1600px;
+			max-height: 700px;
+			white-space: nowrap;
+			overflow: scroll;
+			z-index: 100;
+		}
+		#debug_bar {
+			height: 30px;
+		}
+		#debug_content {
+			background-color: #ccc;
+			min-height: 100px;
+		}
+		#toggle_debug{
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+		.varDump{
+			display: inline-block;
+			vertical-align: top;
+		}
+		.caselog{
+			position: relative;
+			margin: 10px;
+			padding: 10px;
+			border: 1px solid #000;
+		}
+		.success{
+			color: green;
+		}
+		.failure, .error{
+			font-weight: 800;
+			color: red;
+		}
+		.warning {
+			color: red;
+		}
+		.request > * {
+			padding: 5px;
+		}
+		.inline{
+			display: inline-block;
+		}
+		.removeCase{
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+		#closer {
+			clear: both;
+		}]
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<h1>Testpage for yoochoose REST API</h1>
+		<div id="debug">
+			<div id="debug_bar">
+				<button id="toggle_debug">Show/Hide Debug Info</button>
+			</div>
+			<div id="debug_content">
+				
+			</div>
+		</div>
+		<div id="tests">
+			
+			<div id="admin_credentials" class="testCase">
+				<h3>Admin Credentials</h3>
+				<form id="admin_login" action="" >
+					<p>Please insert the admin credentials if you have them</p>
+					Login: <input name="login" value="support@yoochoose.com"><br>
+					Password: <input name="password" value="uchuze"><br>
+					<button>Next</button>
+				</form>
+			</div>
+			<div id="user_registration_1" class="testCase">
+				<h3>Create User 1</h3>
+				<form id="registration_form1"action="" >
+					<!-- Template/role:  
+					<input name="template" value="newsh" type="hidden"><br>
+					-->
+					E-Mail: <input name="email" value=""><br>
+					Weburl: <input name="weburl" value="testurl.com"><br>
+					Template: 
+					<select name="template">
+						<option value="">no template</option>
+						<option value="plenty" selected="selected">plenty</option>
+						<option value="magento">magento</option>
+						<option value="gambio">gambio</option>
+					</select><br>
+					Solution: 
+					<select name="solution">
+						<option value="">no solution</option>
+						<option value="ebl">ebl</option>
+						<option value="ebh">ebh</option>
+						<option value="newsh">newsh</option>
+						<option value="newsl">newsl</option>
+					</select><br>
+					<p><img id="captcha_image" alt="captcha" src=""> </p>
+					Captcha: <input name="captcha" value=""><br>
+					<input name="captchascope" type="hidden" value="">
+					<input name="username" type="hidden" value="">
+					<button>Create User</button>
+				</form>
+			</div>
+			
+			<div id="user_create_access_token" class="testCase">
+				<h3>Login</h3>
+				<p>You should recive a confirmation e-mail in the next minutes.<br>
+					insert the code in the form below</p>
+				<form id="login_form" action="">
+					<label for="login">E-mail:</label> <input name="login" type="text" value=""><br>
+					<label for="password">Password:</label> <input name="password" type="text">
+					<input name="set_cookie" type="hidden" value="on">
+					<input name="no-realm" type="hidden" value="on">
+					<button>Login</button>
+				</form>
+			</div>
+			
+<!-- 			<div id="user_registration_2" class="testCase"> -->
+<!-- 				<h3>Create User 2</h3> -->
+<!-- 				<form id="registration_form2"action=""> -->
+<!-- 					Template/role: <input name="template" value=""><br> -->
+<!-- 					E-Mail: <input name="email" value=""><br> -->
+<!-- 					Weburl: <input name="weburl" value=""><br> -->
+<!-- 					Firstname: <input name="firstname" value=""><br> -->
+<!-- 					Lastname: <input name="lastname" value=""><br> -->
+<!-- 					Phone number: <input name="phonenumber" value=""><br> -->
+<!-- 					Address: <input name="address" value=""><br> -->
+<!-- 					City: <input name="city" value=""><br> -->
+<!-- 					ZIP: <input name="zipcode" value=""><br> -->
+<!-- 					Country: <input name="country" value=""><br> -->
+<!-- 					Company: <input name="company" value=""><br> -->
+<!-- 					Language:   <input name="lang" value="en"><br> -->
+<!-- 					<button>Create User</button> -->
+<!-- 				</form> -->
+<!-- 			</div> -->
+			
+			<div id="customer_update" class="testCase">
+				<h3>Create User 2</h3>
+				<form id="customer_update_form" action="">
+					Company: <input name="company" value="Test Company"><br>
+					E-Mail: <input name="email" value=""><br>
+					First Name: <input name="firstName" value="First Name"><br>
+					Last Name: <input name="lastName" value="LAst name"><br>
+					Gender: <input name="gender" value="no-value"><br>
+					Phone Number: <input name="phone" value="1234-234/456"><br>
+					Id: <input name="id" value=""><br>
+					Street: <input name="street" value="My Street 345"><br>
+					City: <input name="city" value="Local City"><br>
+					ZIP: <input name="zip" value="045 - 34 / 34"><br>
+					Country: <input name="country" value="Some Coutry"><br>
+<!-- 					Language:   <input name="lang" value="en"><br> -->
+					<button>Update User</button>
+				</form>
+			</div>
+			
+			<div id="automatic_test" class="testCase">
+				<h3>Automatic Test</h3>
+				<p>Some automatic tests are performend, please stay tuned.</p>
+			</div>
+			<div id="final_message" class="testCase">
+				<h3>Tests finished</h3>
+				<div>All tests have been performed. See the log area for the results of the tests</div>
+			</div>
+			<div id="forgot_password" class="testCase">
+				<h3>Forgot Password</h3>
+				<form action="">
+					User Name: <input name="username" value=""><br>
+					<img id="captchaimage", alt="captchaimage"><br>
+					Captcha: <input name="captcha" value=""><br>
+					<input type="hidden" name="captchascope" value=""><br>
+					<button>Request Reset Link</button>
+				</form>	
+			</div>
+			<div id="reset_password" class="testCase">
+				<h3>Reset Password</h3>
+				<p>
+					Please wait until you get an e-mail with the code to enter below.
+				</p>
+				<form action="">
+					User Name: <input type="text" name="username" value=""><br>
+					E-Mail Code: <input type="text" name="code" value=""><br>
+					New Password: <input type="text" name="password" value="newPassword"><br> 		
+					<button type="submit">Reset Password</button>
+				</form>	
+			</div>
+		</div>
+		<h2>Test Log</h2>
+		<button id="clear_log">Clear Log</button>
+		<div id="logs"></div>
+		<div id="closer"></div>
+	</div>
+</body>
+</html>
