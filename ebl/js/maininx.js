@@ -2062,7 +2062,7 @@ function updateRightCharts(labels, conversionValues, formatter, precision) {
 	rightLine.Set('chart.numxticks', labels.length - 1);
     rightLine.Set('chart.labels', labels);
     rightLine.Set('chart.background.grid.color', 'rgba(217, 226, 216, 1)');
-    rightLine.Set('chart.colors', ['rgba(81, 142, 19, 1)']);
+    rightLine.Set('chart.colors', ['rgba(81, 142, 19, 1)', 'rgba(155, 93, 184, 1)']);
 
 	commonChart(rightLine);
 
