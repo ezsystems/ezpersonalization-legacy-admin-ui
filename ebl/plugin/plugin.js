@@ -64,17 +64,6 @@
  * @property {PluginFrontend} authSecretName
  */
 
-/**
- * @typedef {object} Mandator
- * @property {MandatorBaseInformation} baseInformation
- */
-
-/**
- * @typedef {object} MandatorBaseInformation
- * @property {string} id
- * @property {string} website
- * @property {string} alphanumericItems
- */
 
 var PLUGIN_ANCHOR_CREATE = "plugin/create";
 var PLUGIN_ANCHOR_CONFIG = "plugin/configuration";

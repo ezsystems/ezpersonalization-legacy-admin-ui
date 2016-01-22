@@ -1,4 +1,28 @@
 /**
+ * @typedef {object} Mandator
+ * @property {MandatorBaseInformation} baseInformation
+ * @property {MandatorAdvancedOptions} advancedOptions
+ */
+
+/**
+ * @typedef {object} MandatorBaseInformation
+ * @property {string} id
+ * @property {string} website
+ * @property {string} alphanumericItems
+ */
+
+/**
+ * @typedef {object} MandatorAdvancedOptions
+ * @property {string} adminEmail;
+ * @property {string} website;
+ * @property {string} timeZone;
+ * @property {string} currency;
+ * @property {number} currencyFractionDigits;
+ * @property {boolean} trackerItemUpdate;
+ * @property {number} userSessionMinutes;
+ */
+
+/**
  * @typedef {object} CustomerV3
  * @property {string} firstName
  * @property {string} lastName
@@ -18,7 +42,7 @@
 
 
 /** Scenario DAO service. It loads and updates single scenarios.<br><br>
- * 
+ *  @member {Mandator}
  */
 var mandatorDao = {
 	mandator: null,
