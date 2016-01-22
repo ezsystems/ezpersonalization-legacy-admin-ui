@@ -1980,33 +1980,34 @@ function currencyFormatter(obj, num){
 
 
 function convertDataArray(dataArray){
-    var conArray = [],
-		i,
-		j;
+    var result = [];
+	var	i, j;
     for( i = 0;i<dataArray.length;i++){
-            var currentApoint = dataArray[i];
-            for( j = 0;j<currentApoint.length;j++){
-                    if(conArray.length<(j+1)){
-                            conArray[j] = new Array();
-                    }
-                    conArray[j][i] = currentApoint[j];
-
-            }
+		var currentApoint = dataArray[i];
+		if (! $.isArray(currentApoint)) {
+			currentApoint = [currentApoint];
+		}
+		for( j = 0; j<currentApoint.length; j++){
+			if(result.length < (j+1)) {
+					result[j] = new Array();
+			}
+			result[j][i] = currentApoint[j];
+		}
     }
-    for( i=0;i<conArray.length;i++){
-            var curlineArray = conArray[i];
-            var isZeroLine = true;
-            for( j = 0;j<curlineArray.length;j++){
-                    if(curlineArray[j] != 0){
-                            isZeroLine = false;
-                    }
-            }
-            if(isZeroLine){
-                    conArray[i] = [0];
-            }
-    }
+    //for( i=0;i<result.length;i++){
+    //        var curlineArray = result[i];
+    //        var isZeroLine = true;
+    //        for( j = 0;j<curlineArray.length;j++){
+    //                if(curlineArray[j] != 0){
+    //                        isZeroLine = false;
+    //                }
+    //        }
+    //        if(isZeroLine){
+    //                result[i] = [0];
+    //        }
+    //}
 
-    return conArray;
+    return result;
 }
 
 
