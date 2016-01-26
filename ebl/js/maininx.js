@@ -230,8 +230,7 @@ function switchTab(newTab) {
 		$("#addedRevenue").show();
 		$("#addedRevenueControls").show();
 		$("section.scenarios li.tabRevenue").addClass("current");
-		
-		
+
 	} else if (newTab == "ABTESTS") {
 		$("#ABTests").show();
 		$("#abControls").show();
@@ -538,7 +537,7 @@ function initialize() {
 		
 		$this.addClass('active current').siblings('.tab').removeClass('active current');
 		$(targetSelector).show().siblings('.tabContent').hide();
-		$($this.data('controls')).show().siblings('.controls').hide();
+		//$($this.data('controls')).show().siblings('.controls').hide();
 		
 		var event = new CustomEvent('dashboard_tab_switched', { 'detail': targetSelector });
 		

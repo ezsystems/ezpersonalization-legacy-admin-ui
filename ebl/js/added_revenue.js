@@ -3,13 +3,17 @@
 //
 
 
+/**
+ *
+ */
+
 function loadAddedRevenue() {
 	
 	var from_date_time = currentPeriodFromTime();
 	var to_date_time = currentPeriodToTime();
 
 	var xsd_from = from_date_time.toString("yyyy-MM-ddTHH:mm:ss")
-	var xsd_to = from_date_time.toString("yyyy-MM-ddTHH:mm:ss")
+	var xsd_to = to_date_time.toString("yyyy-MM-ddTHH:mm:ss")
 	
 	var mandator = mandatorDao.mandator; // mandatorDao is global
 	
@@ -28,7 +32,7 @@ function loadAddedRevenue() {
 	var limit = 100;
 
 	yooAjax(null, {
-		url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue?limit="+(limit + 1) +
+		url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue?limit="+(limit + 5) +
 		     "&from_date_time=" + xsd_from + "&to_date_time=" + xsd_to,
 		success: function (json) {
 
@@ -36,15 +40,19 @@ function loadAddedRevenue() {
 			
 			for (var i in json) {
 				
-				if (index >= limit) {
+				if (i >= limit) {
 					$('#addedRevenue tr.overflow').show();
 					$('#addedRevenue span.limit').text(limit);
 					break;
 				}
 				
 				var e = json[i];
-				
-				var date = dateTimeFormat(e.timeConsumed) + " [" + dateDiffMinutes(e.timeRecommended, e.timeConsumed) + " minutes]";
+
+				var time = new Date(e.timeConsumed);
+
+				var timeFormatted = time.toString("dd.MM.yyyy HH:mm");
+
+				var date = timeFormatted + " [" + dateDiffMinutes(e.timeRecommended, e.timeConsumed) + " min]";
 			
 				$('#addedRevenue tr:nth-child(2) td.reco_accepted').text(date);
 				if (e.item.title) {
@@ -75,7 +83,7 @@ function loadAddedRevenue() {
 				$('#addedRevenue span.period').text(dateTimeFormat(from_date_time) + " - " + dateTimeFormat(to_date_time));
 			} else {
 				$('section.scenarios a.create_csv').show();
-				$('section.scenarios a.create_csv').attr('href',"/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue.xlsx?from_date_time=" + from_date_time + "&to_date_time=" + to_date_time);
+				$('section.scenarios a.create_csv').attr('href',"/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue.xlsx?from_date_time=" + xsd_from + "&to_date_time=" + xsd_to);
 			}
 			
 			i18n($('#addedRevenue'));
