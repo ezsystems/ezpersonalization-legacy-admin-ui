@@ -64,17 +64,6 @@
  * @property {PluginFrontend} authSecretName
  */
 
-/**
- * @typedef {object} Mandator
- * @property {MandatorBaseInformation} baseInformation
- */
-
-/**
- * @typedef {object} MandatorBaseInformation
- * @property {string} id
- * @property {string} website
- * @property {string} alphanumericItems
- */
 
 var PLUGIN_ANCHOR_CREATE = "plugin/create";
 var PLUGIN_ANCHOR_CONFIG = "plugin/configuration";
@@ -534,29 +523,37 @@ var pluginPanel = {
 
 		// Filling Product Import Section
 
-		var $endpoint = this.$panel.find("#plugin_endpoint");
-		var $app_key = this.$panel.find("#plugin_app_key");
-		var $app_secret = this.$panel.find("#plugin_app_secret");
+		var import_config = this.$panel.find(".plugin_import");
 
-		var $app_key_label = this.$panel.find("label[for=plugin_app_key]");
-		var $app_secret_label = this.$panel.find("label[for=plugin_app_secret]");
-
-		$app_key.val(plugin.base.appKey);
-		$app_secret.val(plugin.base.appSecret);
-
-		var $oauth_section = this.$panel.find(".plugin_oauth");
-
-		if (plugin.tech.authKeyName) {
-			$app_key_label.text(plugin.tech.authKeyName);
-			$app_secret_label.text(plugin.tech.authSecretName)
-			$oauth_section.show();
+		if ( ! plugin.base.importAvailable) {
+			import_config.hide();
 		} else {
-			$oauth_section.hide();
-		}
+			import_config.show();
 
-		$endpoint.val(plugin.base.endpoint);
-		$app_key.val(plugin.base.appKey);
-		$app_secret.val(plugin.base.appSecret);
+			var $endpoint = this.$panel.find("#plugin_endpoint");
+			var $app_key = this.$panel.find("#plugin_app_key");
+			var $app_secret = this.$panel.find("#plugin_app_secret");
+
+			var $app_key_label = this.$panel.find("label[for=plugin_app_key]");
+			var $app_secret_label = this.$panel.find("label[for=plugin_app_secret]");
+
+			$app_key.val(plugin.base.appKey);
+			$app_secret.val(plugin.base.appSecret);
+
+			var $oauth_section = this.$panel.find(".plugin_oauth");
+
+			if (plugin.tech.authKeyName) {
+				$app_key_label.text(plugin.tech.authKeyName);
+				$app_secret_label.text(plugin.tech.authSecretName)
+				$oauth_section.show();
+			} else {
+				$oauth_section.hide();
+			}
+
+			$endpoint.val(plugin.base.endpoint);
+			$app_key.val(plugin.base.appKey);
+			$app_secret.val(plugin.base.appSecret);
+		}
 
 		$app_key.trigger("change"); // adjusting save button description
 	},

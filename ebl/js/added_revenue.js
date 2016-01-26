@@ -7,6 +7,9 @@ function loadAddedRevenue() {
 	
 	var from_date_time = currentPeriodFromTime();
 	var to_date_time = currentPeriodToTime();
+
+	var xsd_from = from_date_time.toString("yyyy-MM-ddTHH:mm:ss")
+	var xsd_to = from_date_time.toString("yyyy-MM-ddTHH:mm:ss")
 	
 	var mandator = mandatorDao.mandator; // mandatorDao is global
 	
@@ -25,7 +28,8 @@ function loadAddedRevenue() {
 	var limit = 100;
 
 	yooAjax(null, {
-		url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue?limit="+(limit + 1)+"&from_date_time=" + from_date_time + "&to_date_time=" + to_date_time,
+		url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue?limit="+(limit + 1) +
+		     "&from_date_time=" + xsd_from + "&to_date_time=" + xsd_to,
 		success: function (json) {
 
 			var index = 0;
