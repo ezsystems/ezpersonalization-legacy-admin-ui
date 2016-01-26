@@ -87,6 +87,7 @@ var fromTemplate   = gupDecoded('from_template');
 			
 			$('#filter_group_item li:has(#no_cheaper_products)').hide();
 			$('#filter_group_item li:has(#enable_min_price)').hide();
+			$('#filter_group_item li:has(#no_price_hide)').hide();
 
 			$('#filter_group_user').hide();
 			
@@ -281,6 +282,13 @@ var fromTemplate   = gupDecoded('from_template');
 	
 	function updateFilters() {
 
+		var $no_price_hide  = $('#filter_group_item input[name="no_price_hide"]');
+		var $no_cheaper_products  = $('#no_cheaper_products');
+		var $limit_min_price = $('#limit_min_price');
+
+		var no_price_hide_checked = $no_price_hide.prop("checked");
+		var no_cheaper_products_checked = $no_cheaper_products.prop("checked");
+
 		// optimistic defaults
 		var result = true;
 		$('#limit_min_price').removeClass("problem");
@@ -292,7 +300,7 @@ var fromTemplate   = gupDecoded('from_template');
 		var jsonStandard = $('body').data('filters_standard');
 		var jsonProfile = $('body').data('filters_profile');
 		
-		if($('#no_cheaper_products')[0].checked) { 
+		if(no_cheaper_products_checked) {
 			jsonStandard.standardFilterSet.excludeCheaperItems = "YES";
 		} else {
 			jsonStandard.standardFilterSet.excludeCheaperItems = "NO";
@@ -303,6 +311,8 @@ var fromTemplate   = gupDecoded('from_template');
 		jsonStandard.standardFilterSet.excludeContextItems = $('#currently_viewed')[0].checked;
 		
 		jsonProfile.profileFilterSet.excludeAlreadyPurchased = $('#no_already_purchased')[0].checked;
+
+		jsonStandard.standardFilterSet.excludeItemsWithoutPrice = no_price_hide_checked;
 		
 		var maxRecsChecked = $('#enable_limit_max_recs_per_session')[0].checked;
 		$('#limit_max_recs_per_session').prop("disabled", ! maxRecsChecked);
@@ -318,24 +328,25 @@ var fromTemplate   = gupDecoded('from_template');
 		} else {
 			jsonProfile.profileFilterSet.excludeRepeatedRecommendations = null;
 		}
-		
-		var minPriceChecked = $('#enable_min_price')[0].checked;
-		$('#limit_min_price').prop("disabled", ! minPriceChecked);
+
+		var minPriceChecked = $('#enable_min_price').prop("checked");
+		$limit_min_price.prop("disabled", ! minPriceChecked);
 		
 		
 		if(minPriceChecked) {
-			if ($('#limit_min_price')[0].validity.valid) {
+			if ($limit_min_price[0].validity.valid) {
 				jsonStandard.standardFilterSet.minimalItemPrice = $('#limit_min_price').val();
 			} else {
-				$('#limit_min_price').addClass("problem");
+				$limit_min_price.addClass("problem");
 				$('#validation_invalid_min_price').show();
 				result = false;
 			}
 		} else {
 			jsonStandard.standardFilterSet.minimalItemPrice = null;
 		}
-		
-		
+
+		$no_price_hide.prop("disabled", !no_cheaper_products_checked && !minPriceChecked);
+
 		// USER BOOST FILTER
 
 		var boostChecked = $('#filter_group_user input[name="user_boost_enable"]').is(':checked');
@@ -420,27 +431,26 @@ var fromTemplate   = gupDecoded('from_template');
 		$('#sc_description').val(json.scenario.description);
 		$('.go_next').attr("href", "configuratorpop.html" + additionalParameter);
 		
-		
-		// standard filter
-		
-		json = { standardFilterSet : scenarioDao.standardFilterSet }; 
+
+		json = { standardFilterSet : scenarioDao.standardFilterSet };
 		
 		$('body').data('filters_standard', json);
 		
 		var set = json.standardFilterSet;
-		
+
+		// standard filter
+
+		var $no_price_hide  = $('#filter_group_item input[name="no_price_hide"]');
+		$no_price_hide.prop("checked", set.excludeItemsWithoutPrice);
+
 		if (set.excludeCheaperItems == "YES") { 
 			$('#no_cheaper_products').prop("checked", true);
 		}
 		
-		if (set.excludeContextItems == true) { 
-			$('#currently_viewed').prop("checked", true);
-		}
-		
-		if (set.excludeTopSellingResults == true) {
-			$('#no_top_sellings').prop("checked", true);
-		}
-		
+		$('#currently_viewed').prop("checked", set.excludeContextItems);
+
+		$('#no_top_sellings').prop("checked", set.excludeTopSellingResults);
+
 		if (set.minimalItemPrice) {
 			$('#enable_min_price').prop("checked", true);
 			$('#limit_min_price').prop("disabled", false);
