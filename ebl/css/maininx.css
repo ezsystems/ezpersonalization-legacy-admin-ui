@@ -59,6 +59,10 @@
 	width: 100%;
 }
 
+#addedRevenue tr.overflow td {
+    font-weight: bold;
+}
+
 #addedRevenue table tr > *.item_price {
 	text-align: right;
 	width: 20em;
