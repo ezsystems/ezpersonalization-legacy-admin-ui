@@ -20,11 +20,33 @@
  * @property {number} activeUsers;
  */
 
+/**
+ * @typedef {object} ScenarioInfoV3
+ * @property {string} referenceCode;
+ * @property {string} title;
+ * @property {string} description
+ * @property {string} available
+ * @property {int} inputItemType
+ * @property {int[]} outputItemTypes
+ * @property {string} websiteContext
+ * @property {string} profileContext
+ * @property {ScenarioStatisticItemV3[]} statisticItems
+  */
+
+/**
+ *  @typedef {object} ScenarioStatisticItemV3
+ *  @property {string} timespanBegin
+ *  @property {string} timespanDuration
+ *  @property {int} scenarioCalls
+ *  @property {int} deliveredRecommendations
+ */
+
 
 var open_reference_code = gupDecoded('reference_code');
 
 var customerID; // <-- user "mandatorDao.mandator.baseInformation.id" instead
 
+/** @member {ScenarioInfoV3[]} */
 var scenarioInfoList; // loaded by ajaxScenarioList()
 
 /** @member {StatisticV4} */
@@ -293,16 +315,12 @@ function currentPeriodFromTime() { // <-- "period" is a global variable
  * @return {Date}
  */
 function currentPeriodToTime() { // <-- "period" is a global variable
-	var result = Date.today().clone();
-
-	if (period != '24H' ) {
-		result = result.clearTime();
-	}
-
-	if (period == '3MONTHS' || period == 'YEAR') {
-		while (result.getDay() != 1) { // looking for Monday
-			result.add({"day" : -1});
-		}
+	if (period == '24H') {
+		var result =  Date.now().clone();
+		result.setMinutes(0,0,0);
+		result.addHours(-1);
+	} else {
+		result = Date.today().clone();
 	}
 
 	return result;
@@ -1551,48 +1569,59 @@ function renderConversionRate() {
 			conversionRateObject.revenueFresh.push(valueOrDefault(statistic[i].revenueFresh));
 		}
 
-		var $h3 = $(".conversion_rate_chart h3");
+		var $chart = $(".conversion_rate_chart");
+		var $h3 = $chart.find("h3");
+		var $title = $chart.find(".conversion_rate_title");
 
 		if ($("#conversion_units").val() == 'relative') {
 
 			$h3.attr('data-translate', "index_conversion_rate_relative");
+			$title.attr('data-translate', "index_conversion_rate_relative_title");
 			
 			updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);
 
-		} else if ($("#conversion_units").val() == 'relativerecs') {
-
-			$h3.attr('data-translate', "index_conversion_rate_relative_rate");
-			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relativeRecs, percentFormatter);
-
-		} else if ($("#conversion_units").val() == 'relativecb') {
-
-			$h3.attr('data-translate', "index_conversion_rate_relative_cb");
-			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relativeCb, percentFormatter);
+		//} else if ($("#conversion_units").val() == 'relativerecs') {
+        //
+		//	$h3.attr('data-translate', "index_conversion_rate_relative_rate");
+		//
+		//	updateRightCharts(getGraphDescription(), conversionRateObject.relativeRecs, percentFormatter);
+        //
+		//} else if ($("#conversion_units").val() == 'relativecb') {
+        //
+		//	$h3.attr('data-translate', "index_conversion_rate_relative_cb");
+		//
+		//	updateRightCharts(getGraphDescription(), conversionRateObject.relativeCb, percentFormatter);
 
 		} else if ($("#conversion_units").val() == 'relativepr') {
 
 			$h3.attr('data-translate', "index_conversion_rate_relative_pr");
+			$title.attr('data-translate', "index_conversion_rate_relative_pr_title");
+
+			var data = [];
+			for(i=0; i < conversionRateObject.revenue.length; i++) {
+				data.push([conversionRateObject.relativePr[i], conversionRateObject.relativePrFresh[i]]);
+			}
 			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relativePr, currencyFormatter);
+			updateRightCharts(getGraphDescription(), data, currencyFormatter);
 
 		} else {
 			var currencyCode = mandatorDao.mandator.advancedOptions.currency;
 			var param = $(".conversion_rate_chart span[data-param='0']");
 			param.text(currencyCode);
 			i18n(param);
-			
-			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_revenue");
 
-			var data = [];
-			for(var i=0; i < conversionRateObject.revenue.length; i++) {
+			$h3.attr('data-translate', "index_conversion_rate_revenue");
+			$title.attr('data-translate', "index_conversion_rate_revenue_title");
+
+			data = [];
+			for(i=0; i < conversionRateObject.revenue.length; i++) {
 				data.push([conversionRateObject.revenue[i], conversionRateObject.revenueFresh[i]]);
-			};
+			}
 
 			updateRightCharts(getGraphDescription(), data, currencyFormatter);
 		}
-		i18n($(".conversion_rate_chart"));
+		i18n($chart);
+		$chart.attr("title", $title.text());
 	}
 }
 
@@ -1729,138 +1758,58 @@ function renderRecommendationChart() {
     //There must be a two dimension array to show the data in the bar graphic
     //e.g.: [[x,y,z],[x1,y1,z1]]
     //There will be created an inner and outer array and pushed the data inside.
-    var outerArray = new Array();
-    
-    if (daterange == "DAY" || daterange == "24H") {
-		var tmpDate = daterange == "DAY" ? getCurrentDateMinusDays(1) : new Date(Date.now()-24*3600*1000);
-		var testDate;
-        for (var i = 0; i < 24; i++) {
-			testDate = getDateTimeValue(tmpDate.getFullYear(), tmpDate.getMonth() +1, tmpDate.getDate(), tmpDate.getHours(), 0, 0, false);
-            var innerArray = new Array();
-            $('select[id^="select_for_delivered_recommendations_chart_bar"]').each(function (index) {
-				var addZeroOutter = true;
-				var value = $(this).val();
-                var totalDeliveredRecommendations = 0;
+    var outerArray = [];
 
-                for (var j = 0; j < scenarioInfoList.length; j++) {
+	var current = currentPeriodFromTime();
+	var last = currentPeriodToTime();
 
-                    var scenario = scenarioInfoList[j];
-                    if (scenario.referenceCode == value || value == "total") {
-                        //the selected scenario was found in the json object
-                        for (var k = 0; k < scenario.statisticItems.length; k++) {
-                            var item = scenario.statisticItems[k];
-                            if (item.timespanBegin == testDate) {
-                                if (value == "total") {
-                                    totalDeliveredRecommendations = totalDeliveredRecommendations + scenario.statisticItems[k].scenarioCalls;
-                                } else {
-                                    innerArray.push(scenario.statisticItems[k].scenarioCalls);
-                                    addZeroOutter = false;
-                                }
-                            }
-                        }
-                    }
-                }
+	while (current.compareTo(last) <= 0) {
 
-                if (value == "total") {
-                    innerArray.push(totalDeliveredRecommendations);
-                    addZeroOutter = false;
-                }
-                if (addZeroOutter) {
-                    innerArray.push(0);
-                }
-            });
+		var innerArray = [];
+		$('select[id^="select_for_delivered_recommendations_chart_bar"]').each(function (index) {
+			var addZeroOutter = true;
+			var value = $(this).val();
+			var totalDeliveredRecommendations = 0;
 
-            outerArray.push(innerArray);
-			tmpDate.setHours(tmpDate.getHours()+1);
+			for (var j = 0; j < scenarioInfoList.length; j++) {
+
+				var scenario = scenarioInfoList[j];
+				if (scenario.referenceCode == value || value == "total") {
+					//the selected scenario was found in the json object
+					for (var k = 0; k < scenario.statisticItems.length; k++) {
+						var item = scenario.statisticItems[k];
+						if (item.timespanBegin == current.toString("yyyy-MM-ddTHH:mm:ss")) {
+							if (value == "total") {
+								totalDeliveredRecommendations = totalDeliveredRecommendations + scenario.statisticItems[k].scenarioCalls;
+							} else {
+								innerArray.push(scenario.statisticItems[k].scenarioCalls);
+								addZeroOutter = false;
+							}
+						}
+					}
+				}
+			}
+
+			if (value == "total") {
+				innerArray.push(totalDeliveredRecommendations);
+				addZeroOutter = false;
+			}
+			if (addZeroOutter) {
+				innerArray.push(0);
+			}
+		});
+
+		outerArray.push(innerArray);
+
+		if (daterange == "DAY" || daterange == "24H") {
+			current.addHours(1);
+		} else if (daterange == "WEEK" || daterange == "MONTH") {
+			current.addDays(1);
+		} else {
+			current.addDays(7);
 		}
-        
-    } else if (daterange == "WEEK") {
-        for (var i = 7; i > 0; i--) {
-            var date = getCurrentDateMinusDays(i);
-            var testDate = "";
+	}
 
-            testDate = getDateTimeValue(date.year, date.month, date.day, 0, 0, 0, false);
-
-            var innerArray = new Array();
-            
-            $('select[id^="select_for_delivered_recommendations_chart_bar"]').each(function (index) {
-            	var addZeroOutter = true;
-                var value = $(this).val();
-                var totalDeliveredRecommendations = 0;
-
-                for (var j = 0; j < scenarioInfoList.length; j++) {
-
-                    var scenario = scenarioInfoList[j];
-                    if (scenario.referenceCode == value || value == "total") {
-                        //the selected scenario was found in the json object
-                        for (var k = 0; k < scenario.statisticItems.length; k++) {
-                            var item = scenario.statisticItems[k];
-                            if (getDateTimeValueFromValue(item.timespanBegin,false) == testDate) {
-                                if (value == "total") {
-                                    totalDeliveredRecommendations = totalDeliveredRecommendations + scenario.statisticItems[k].scenarioCalls;
-                                } else {
-                                    innerArray.push(scenario.statisticItems[k].scenarioCalls );
-                                    addZeroOutter = false;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (value == "total") {
-                    innerArray.push(totalDeliveredRecommendations);
-                    addZeroOutter = false;
-                }
-                if (addZeroOutter) {
-                    innerArray.push(0);
-                }
-            });
-
-            outerArray.push(innerArray);
-        }
-
-    } else if (daterange == "MONTH") {
-        for (var i = 30; i > 0; i--) {
-            var date = getCurrentDateMinusDays(i);
-            var testDate = getDateTimeValue(date.year, date.month, date.day, 0, 0, 0, false);
-            var innerArray = new Array();
-            $('select[id^="select_for_delivered_recommendations_chart_bar"]').each(function (index) {
-            	var addZeroOutter = true;
-                var value = $(this).val();
-                var totalDeliveredRecommendations = 0;
-
-                for (var j = 0; j < scenarioInfoList.length; j++) {
-
-                    var scenario = scenarioInfoList[j];
-                    if (scenario.referenceCode == value || value == "total") {
-                        //the selected scenario was found in the json object
-                        for (var k = 0; k < scenario.statisticItems.length; k++) {
-                            var item = scenario.statisticItems[k];
-                            if (item.timespanBegin == testDate) {
-                                if (value == "total") {
-                                    totalDeliveredRecommendations = totalDeliveredRecommendations + scenario.statisticItems[k].scenarioCalls ;
-                                } else {
-                                    innerArray.push(scenario.statisticItems[k].scenarioCalls);
-                                    addZeroOutter = false;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (value == "total") {
-                    innerArray.push(totalDeliveredRecommendations);
-                    addZeroOutter = false;
-                }
-                if (addZeroOutter) {
-                    innerArray.push(0);
-                }
-            });
-
-            outerArray.push(innerArray);
-        }
-    }
-    
     updateMiddleChart(getGraphDescription(), outerArray);
 }
 
