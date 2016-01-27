@@ -1,0 +1,103 @@
+
+<base href="/">
+
+<div id="pluginPanel" class="ABOverlay" style="display: none;">
+	<div class="content">
+		<div class="contentWrapper" style="padding-bottom: 2em;">
+			<a class="close_button">X</a>
+			
+			<h2 class="" data-translate="plugin_panel_new_plugin">Plugin [<span data-param="0">id</span>]</h2>
+
+			<div class="plugin_logo_wrapper type_selector">
+				<!-- logos will be injected here -->
+			</div>
+			
+			<div style="clear:both;"> </div>
+			
+			<div class="plugin_configuration hide_logos">
+
+				<div class="plugin_logo_wrapper" style="float: right; width: 16em; font-size: 0.8em;">
+					<!-- logos will be injected here -->
+				</div>
+			    
+				<table class="configuration">
+					<tr>
+						<td><label for="pg_type" data-translate="plugin_panel_type">Type and ID</label></td>
+						<td>
+							<input readonly="readonly" id="pg_type" value="">
+							<label for="plugin_id" data-translate="plugin_id" style="display:none">ID</label>
+							<input id="plugin_id" value="4" size="2"></td>
+					</tr>
+					<tr>
+						<td><label for="pg_design" data-translate="plugin_recos_design">Theme</label></td>
+						<td>
+							<input id="pg_design" name="plugin_recos_template" style="width: 30em;" readonly="readonly">
+						</td>
+					</tr>
+				</table>
+
+				<h3 data-translate="plugin_enable_recos"></h3>
+
+				<table class="configuration">
+
+					<tr class="pg_recos">
+						<td colspan="2">
+							<table style="width: 30em;">
+								<tr class="fixed">
+									<td data-translate="plugin_recos_header_box">Recommendation box</td>
+									<td data-translate="plugin_recos_header_rows">Rows</td>
+									<td data-translate="plugin_recos_header_columns">Columns</td>
+									<!--td data-translate="plugin_recos_header_html">HTML</td-->
+								</tr>
+								<tr class="pg_template" style="display: none">
+									<td><label for="rows_xxx" data-translate="plugin_recos_box_xxx">Box [<span data-param="0">xxx</span>]</label></td>
+									<td><input id="rows_xxx" value="4" size="2"></td>
+									<td><label for="columns_xxx" data-translate="plugin_recos_header_columns" style="display:none">Columns</label>
+										<input id="columns_xxx" value="4" size="2"></td>
+									<!--td><font class="settings" style="float: right;">
+										<a href="#"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
+									</font></td-->
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+
+				<h3 class="plugin_import" data-translate="plugin_enable_import"></h3>
+
+				<table class="configuration plugin_import">
+					<tr>
+						<td><label for="plugin_endpoint" data-translate="plugin_endpoint">Login</label></td>
+						<td><input id="plugin_endpoint" value=""></td>
+					</tr>
+					<tr class="plugin_oauth">
+						<td><label for="plugin_app_key">Login</label></td>
+						<td class="login">
+							<input id="plugin_app_key" value=""><br>
+							<!--span data-translate="plugin_app_help" class="help_text">For more information to login and password, click
+								<a href="https://doc.yoochoose.net/display/PUBDOC/Magento+Connect.+Extension+Tutorial"
+								   data-param="1" data-translate="plugin_app_help_link">here</a>.</span-->
+						</td>
+					</tr>
+					<tr class="plugin_oauth">
+						 <td><label for="plugin_app_secret">Password</label></td>
+						 <td class="password"><input id="plugin_app_secret" value=""></td>
+					</tr>
+				 </table>
+
+				<div class="plugin_errors">
+					<div id="plugin_validation_id_already_exists"
+						 data-translate="plugin_validation_id_already_exists"
+						 style="display:none"></div>
+				</div>
+
+				<a class="button inline plugin_save" data-translate="plugin_save">Save Settings</a>
+
+				<a class="button inline plugin_save_and_quit" data-translate="plugin_save_quit">Save Settings and close</a>
+
+			</div>
+
+		</div>
+	</div>
+
+</div>
