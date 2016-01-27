@@ -1569,48 +1569,59 @@ function renderConversionRate() {
 			conversionRateObject.revenueFresh.push(valueOrDefault(statistic[i].revenueFresh));
 		}
 
-		var $h3 = $(".conversion_rate_chart h3");
+		var $chart = $(".conversion_rate_chart");
+		var $h3 = $chart.find("h3");
+		var $title = $chart.find(".conversion_rate_title");
 
 		if ($("#conversion_units").val() == 'relative') {
 
 			$h3.attr('data-translate', "index_conversion_rate_relative");
+			$title.attr('data-translate', "index_conversion_rate_relative_title");
 			
 			updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);
 
-		} else if ($("#conversion_units").val() == 'relativerecs') {
-
-			$h3.attr('data-translate', "index_conversion_rate_relative_rate");
-			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relativeRecs, percentFormatter);
-
-		} else if ($("#conversion_units").val() == 'relativecb') {
-
-			$h3.attr('data-translate', "index_conversion_rate_relative_cb");
-			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relativeCb, percentFormatter);
+		//} else if ($("#conversion_units").val() == 'relativerecs') {
+        //
+		//	$h3.attr('data-translate', "index_conversion_rate_relative_rate");
+		//
+		//	updateRightCharts(getGraphDescription(), conversionRateObject.relativeRecs, percentFormatter);
+        //
+		//} else if ($("#conversion_units").val() == 'relativecb') {
+        //
+		//	$h3.attr('data-translate', "index_conversion_rate_relative_cb");
+		//
+		//	updateRightCharts(getGraphDescription(), conversionRateObject.relativeCb, percentFormatter);
 
 		} else if ($("#conversion_units").val() == 'relativepr') {
 
 			$h3.attr('data-translate', "index_conversion_rate_relative_pr");
+			$title.attr('data-translate', "index_conversion_rate_relative_pr_title");
+
+			var data = [];
+			for(i=0; i < conversionRateObject.revenue.length; i++) {
+				data.push([conversionRateObject.relativePr[i], conversionRateObject.relativePrFresh[i]]);
+			}
 			
-			updateRightCharts(getGraphDescription(), conversionRateObject.relativePr, currencyFormatter);
+			updateRightCharts(getGraphDescription(), data, currencyFormatter);
 
 		} else {
 			var currencyCode = mandatorDao.mandator.advancedOptions.currency;
 			var param = $(".conversion_rate_chart span[data-param='0']");
 			param.text(currencyCode);
 			i18n(param);
-			
-			$(".conversion_rate_chart h3").attr('data-translate', "index_conversion_rate_revenue");
 
-			var data = [];
-			for(var i=0; i < conversionRateObject.revenue.length; i++) {
+			$h3.attr('data-translate', "index_conversion_rate_revenue");
+			$title.attr('data-translate', "index_conversion_rate_revenue_title");
+
+			data = [];
+			for(i=0; i < conversionRateObject.revenue.length; i++) {
 				data.push([conversionRateObject.revenue[i], conversionRateObject.revenueFresh[i]]);
-			};
+			}
 
 			updateRightCharts(getGraphDescription(), data, currencyFormatter);
 		}
-		i18n($(".conversion_rate_chart"));
+		i18n($chart);
+		$chart.attr("title", $title.text());
 	}
 }
 
