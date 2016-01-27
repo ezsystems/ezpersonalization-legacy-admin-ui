@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en-US" style="height: 100%;">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Configurator | Step 1</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width:device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/jqueryui.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="css/spectrum.css">
+    <link rel="stylesheet" href="css/styles_new.css"/>
+    <link rel="stylesheet" href="css/configurator.css">
+    
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
+    <script src="js/lib/jquery.cookie.js"></script>
+    <script src="js/lib/jquery.i18n.properties.js"></script>
+    
+    <script src="js/spectrum.js"></script>
+    
+    <script src="js/form_submit_trigger.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    
+    <script src="js/i18n.js" data-i18n-files="scenario,common"></script>
+	<script src="js/date.js"></script>
+    
+	<script src="js/piwik.js"></script>
+	<script src="js/nl2go.js"></script>
+  </head>
+  <body id="settings" class="scenario_configuration_steps" style="height: 100%; overflow-x: hidden; min-width: 0px;
+  background-repeat: no-repeat; background-position: 100% 100%;">
+  
+    <h2 data-translate="mail_config">Newsletter configuration</h2>
+     
+  
+  	
+       
+    <div class="preview" style=" top: 30px;max-width: 1280px;">
+
+       <div class="models_base" style="width: 410px; position: absolute; overflow: hidden; bottom:0; top:0; left:0;">
+       
+	       <form action="#" method="get" id="import_primary_settings" style="display:block; padding-bottom: 7px;">
+	       <div id="accordion">
+	        <h3 data-translate="mail_general_props">Section 1</h3>
+	        	<div>
+			        <ul class="preview_settings normal_form">
+			        
+			           <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="mail_title" data-translate="mail_title" style="text-align: left;">Newsletter Title</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="mail_title" name="mail_title" placeholder="Newsletter Title" value="" />
+						</div>
+			          </li>
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="mail_scenario" data-translate="mail_scenario" style="text-align: left;">Newsletter type:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<select id="mail_scenario" name="mail_scenario">
+								<option value="1" data-translate="mail_scenario1" selected="selected" >We miss you</option>
+								<option value="2" data-translate="mail_scenario2" selected="selected" >Abandoned shopping cart</option>
+								<option value="3" data-translate="mail_scenario3" selected="selected" >Shopping Reminders</option>
+								<option value="4" data-translate="mail_scenario4" selected="selected" >High value customers</option>
+								<option value="5" data-translate="mail_scenario5" selected="selected" >Interesting for you</option>
+							</select>
+						</div>
+			          </li>
+			          
+			          <li class="types_base select_field clearfix" id="input_type_block">
+						<div class="basis">
+							<label for="input_type" class="input_label" data-translate="settings_input_type" style="text-align: left;">Input type:</label>
+			            </div>
+						<div class="value" style="visibility: hidden;">
+							<select id="input_type" name="input_type">
+								<option value="1" data-translate="settings_product">Product</option>
+								<option value="2" data-translate="settings_article">Article</option>
+							</select>
+						</div>
+			          </li>
+			          
+			          <li class="types_base select_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="mail_schedule" class="input_label" data-translate="mail_schedule" style="text-align: left;">Schedule Newsletter</label>
+			            </div>
+						<div class="value">
+							<select id="mail_schedule" name="mail_schedule">
+							    <option value="ONCE" data-translate="mail_now" selected="selected" >Now</option>
+								<option value="DAILY" data-translate="import_daily">Daily</option>
+								<option value="WEEKLY" data-translate="import_weekly">Weekly</option>
+								<option value="MONTHLY" data-translate="mail_monthly">Monthly</option>
+							</select>
+						</div>
+			          </li>
+			          
+			          <li class="types_base select_field clearfix" id="dayOfmonthli" style="display: none;">
+			          	<div class="basis tooltip_trigger" >
+							<label for="dayOfmonth" class="input_label" data-translate="mail_day_of_month" style="text-align: left;">Day of the month</label>
+			            </div>
+						<div class="value">
+							<select id="dayOfmonth" name="dayOfmonth" ></select>
+						</div>
+			          </li>
+			          
+			          <li class="types_base select_field clearfix" id="dayOfweekli" style="display: none;">
+			          	<div class="basis tooltip_trigger" >
+							<label for="dayOfweek" class="input_label" data-translate="mail_day_of_week" style="text-align: left;">Day of the week</label>
+			            </div>
+						<div class="value">
+							<select id="dayOfweek" name="dayOfweek" ><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="7">Sunday</option></select>
+						</div>
+			          </li>
+			          
+			          <li class="types_base select_field clearfix" id="hourOfdayli" style="display: none;" >
+			          	<div class="basis tooltip_trigger" >
+							<label for="hourOfday" class="input_label" data-translate="mail_hour" style="text-align: left;">Hour</label>
+			            </div>
+						<div class="value">
+							<select id="hourOfday" name="hourOfday" ><option value="0">00:00</option><option value="1">01:00</option><option value="2">02:00</option><option value="3">03:00</option><option value="4">04:00</option><option value="5">05:00</option><option value="6">06:00</option><option value="7">07:00</option><option value="8">08:00</option><option value="9">09:00</option><option value="10">10:00</option><option value="11">11:00</option><option value="12">12:00</option><option value="13">13:00</option><option value="14">14:00</option><option value="15">15:00</option><option value="16">16:00</option><option value="17">17:00</option><option value="18">18:00</option><option value="19">19:00</option><option value="20">20:00</option><option value="21">21:00</option><option value="22">22:00</option><option value="23">23:00</option></select>
+						</div>
+			          </li>
+			          
+			          <li class="types_base select_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="timeframe" class="input_label" data-translate="mail_timeframe" style="text-align: left;">Time frame</label>
+			            </div>
+			            <div class="value">
+							<input type="number" id="timeframe" name="timeframe"  min="1" max="365" step="1" value="1" style="width: 70px;" /> <label data-translate="mail_days" >Days</label>
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="logo" data-translate="mail_logo_url" style="text-align: left;">LOGO URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="logo" name="logo" placeholder="Logo URL" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="mailBackground" data-translate="mail_background_color" style="text-align: left;">Background color:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type='text' id="mailBackground" />
+						</div>
+			          </li>
+			          
+			          
+			         
+			          
+			      
+			          
+			           
+			          
+			       </ul>
+			    </div>
+			          
+			  <h3 data-translate="mail_menu_props">Section 2</h3>
+			  <div>
+			        <ul class="preview_settings normal_form">
+			          
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="Inline" data-translate="mail_menu_background_color" style="text-align: left;">Menu Background color:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type='text' id="menuBackground" />
+						</div>
+			          </li>
+			         </ul>
+			          <hr/>
+			         <ul class="preview_settings normal_form">
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_url1" data-translate="mail_menu_elment_name" style="text-align: left;">Menu element name:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="menu_elment_name1" name="menu_elment_name1" placeholder="Menu element name" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_url1" data-translate="mail_menu_elment_url" style="text-align: left;">Menu link URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="menu_elment_url1" name="menu_elment_url1" placeholder="Menu link URL" value="" />
+						</div>
+			          </li>
+			          
+			       </ul>
+			        <hr/>
+			         <ul class="preview_settings normal_form">
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_url2" data-translate="mail_menu_elment_name" style="text-align: left;">Menu element name:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="menu_elment_name2" name="menu_elment_name2" placeholder="Menu element name" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_url2" data-translate="mail_menu_elment_url" style="text-align: left;">Menu link URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="menu_elment_url2" name="menu_elment_url2" placeholder="Menu link URL" value="" />
+						</div>
+			          </li>
+			          
+			       </ul>
+			        <hr/>
+			         <ul class="preview_settings normal_form">
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_url3" data-translate="mail_menu_elment_name" style="text-align: left;">Menu element name:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="menu_elment_name3" name="menu_elment_name3" placeholder="Menu element name" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_url3" data-translate="mail_menu_elment_url" style="text-align: left;">Menu link URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="menu_elment_url3" name="menu_elment_url3" placeholder="Menu link URL" value="" />
+						</div>
+			          </li>
+			          
+			       </ul>
+			        <hr/>
+			         <ul class="preview_settings normal_form">
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_url4" data-translate="mail_menu_elment_name" style="text-align: left;">Menu element name:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="menu_elment_name4" name="menu_elment_name4" placeholder="Menu element name" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_url4" data-translate="mail_menu_elment_url" style="text-align: left;">Menu link URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="menu_elment_url4" name="menu_elment_url4" placeholder="Menu link URL" value="" />
+						</div>
+			          </li>
+			          
+			       </ul>
+			    </div>
+			  
+	          <h3 data-translate="mail_footer_props">Section 3</h3>
+	          <div>
+			        <ul class="preview_settings normal_form">
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="footerBackground" data-translate="mail_footer_background_color" style="text-align: left;">Footer Background color:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type='text' id="footerBackground" />
+						</div>
+			          </li>
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="facebook" data-translate="mail_facebook_url" style="text-align: left;">Facebook URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="facebook"  name="facebook" placeholder="FACEBOOK URL" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="googleplus" data-translate="mail_googleplus_url" style="text-align: left;">Google Plus URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="googleplus"  name="googleplus" placeholder="GOOGLE+ URL" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="tweeter" data-translate="mail_twitter_url" style="text-align: left;">Twitter URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="twitter"  name="twitter" placeholder="twitter URL" value="" />
+						</div>
+			          </li>
+	        		</ul>
+	        		<hr/>
+			         <ul class="preview_settings normal_form">
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="imprintName" data-translate="mail_imprint_name" style="text-align: left;">Imprint caption:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="imprintName" name="imprintName" placeholder="imprint caption" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="imprintURL" data-translate="mail_imprint_url" style="text-align: left;">Imprint URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="imprintURL" name="imprintURL" placeholder="imprint URL" value="" />
+						</div>
+			          </li>
+			          
+			       </ul>
+			       <hr/>
+			         <ul class="preview_settings normal_form">
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="unsubscribeName" data-translate="mail_unsubscribe_name" style="text-align: left;">Menu element name:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="unsubscribeName" name="unsubscribeName" placeholder="unsubscribe caption" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="unsubscribeURL" data-translate="mail_unsubscribe_url" style="text-align: left;">Menu link URL:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="url" id="unsubscribeURL" name="unsubscribeURL" placeholder="unsubscribe URL" value="" />
+						</div>
+			          </li>
+			          
+			       </ul>
+	        	</div>
+	        	<h3 data-translate="mail_text_props">Section 4</h3>
+	         	 <div>
+	         	
+	         	  	<ul class="preview_settings normal_form">
+	         	  	
+	         	  		<li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_hotline_name" data-translate="mail_menu_hotline_name" style="text-align: left;">Hotline caption</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="menu_elment_hotline_name" name="menu_elment_hotline_name" placeholder="HOTLINE caption" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="menu_elment_hotline_number" data-translate="mail_menu_hotline_number" style="text-align: left;">HOTLINE phone</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="menu_elment_hotline_number" name="menu_elment_hotline_number" placeholder="HOTLINE NUMBER" value="" />
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="cta" data-translate="mail_menu_cta" style="text-align: left;">CTA</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="cta" name="cta" placeholder="CTA" value="" />
+						</div>
+			          </li>
+			          
+			           <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="ctaBackground" data-translate="mail_cta_background_color" style="text-align: left;">CTA Background color:</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type='text' id="ctaBackground" />
+						</div>
+						
+	        			<li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="basket_subject" data-translate="mail_subject" style="text-align: left;">mail subject</label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<input type="text" id="basket_subject" name="basket_subject" placeholder="subject" value="" />
+						</div>
+			          </li>
+			          
+			           <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="basket_note" data-translate="mail_note" style="text-align: left;">mail note </label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<textarea rows="4" id="basket_note" name="basket_note" placeholder="note"  value="" ></textarea>
+						</div>
+			          </li>
+			          
+			          <li class="scenario_id text_field clearfix">
+						<div class="basis tooltip_trigger" >
+							<label for="basket_footer" data-translate="mail_footer" style="text-align: left;">mail footer </label>
+					        <span class="tooltip">
+					          <span data-translate="index_objects_tooltip">Some content.</span>
+					        </span>
+						</div>
+						<div class="value">
+							<textarea rows="4" id="basket_footer" name="basket_footer" placeholder="footer" value=""  ></textarea>
+						</div>
+			          </li>
+			          
+			         </ul>
+			         </div>
+	        	</div>
+	        </form>
+       
+       		<a class="button buttonsbar inline" id="button_save" data-translate="settings_save_changes" style="margin-top: 30px;">Send</a>
+       		
+       </div>
+       <div class="storyboards_base" style="position: absolute; overflow: hidden; left: 400px; bottom:0; top:0; right:0; margin-left: 50px; background-image: url('img/mailBorder.png');background-repeat: no-repeat;">
+       
+       		<iframe id="previewFrame" style="bottom:0; top:0px; left:0; right: 0px; width: 90%;height: 482px;overflow-y: auto; padding: 178px 20px;" ></iframe>
+        	
+       </div>
+   </div>   
+        
+      
+      
+	<div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text"></span>
+      </p>
+    </div>
+    
+    <a id="link-recocontroller" href="https://reco.yoochoose.net" style="display:none">&nbsp;</a>
+    
+  </body>
+</html>
