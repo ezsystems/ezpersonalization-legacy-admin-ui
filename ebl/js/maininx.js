@@ -1763,7 +1763,7 @@ function renderRecommendationChart() {
 	var current = currentPeriodFromTime();
 	var last = currentPeriodToTime();
 
-	while (current.compareTo(last) <= 0) {
+	while (current.compareTo(last) < 0) {
 
 		var innerArray = [];
 		$('select[id^="select_for_delivered_recommendations_chart_bar"]').each(function (index) {

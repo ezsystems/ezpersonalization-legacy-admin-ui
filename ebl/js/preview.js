@@ -231,7 +231,7 @@
 			scriptSrc += '?numrecs='+topn; 
 		}
 		if(outputtype > 0){
-			scriptSrc += '&outputtype='+outputtype;
+			scriptSrc += '&outputtypeid='+outputtype;
 		}
 		if(catId != null && catId.trim() !='' ){
 			scriptSrc += '&categorypath='+catId.trim();
