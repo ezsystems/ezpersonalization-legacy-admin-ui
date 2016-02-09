@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <title>YooChoose Recommendation Engine | Registration</title>
+    <meta name="description" content="YooChoose recommendation engine configurator">
+    <meta name="author" content="Jurij Burkanov">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <!--link href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="css/styles_new.css">
+    
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
+    <script src="js/lib/jquery.cookie.js"></script>
+    <script src="js/lib/jquery.i18n.properties.js"></script>
+    
+    <script src="js/form_submit_trigger.js"></script>
+    <script src="js/equalize.js"></script>
+    <script src="js/things.js"></script>
+    <script src="js/helper.js"></script>
+    
+    <script src="js/i18n.js" data-i18n-files="login,common"></script>
+    <script src="js/date.js"></script>
+
+	<script>
+	
+	$(document).ready(function() {
+	
+	var loginName = $.cookie('email');
+	var password = $.cookie('password');
+	
+		$.ajax({
+			type:"POST",
+			url: "/ebl/v3/registration/logout",
+			beforeSend: function (req) {
+	            req.setRequestHeader('Authorization', make_base_auth(loginName, password));
+	            req.setRequestHeader('no-realm', 'realm1');
+			},
+			success: function(json) {
+					$.cookie('password', null);
+					$.cookie('email', null);
+					window.location = "login.html";
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				if (errorThrown == "Unauthorized") {
+					$.cookie('password', null);
+					$.cookie('email', null);
+					window.location = "login.html";
+	            } else {
+					setMessagePopUp("problem", "error_server_error");
+				}
+			}
+		});
+	
+	
+	});
+	
+	</script>
+  </head>
+  <body>
+  <div class="message" style="display:none;">
+      <p>
+        <a class="destroy_message">X</a>
+        <span id="message_text">Something neutral happened. That's it.</span>
+        <a class="button inline close">OK</a>
+      </p>
+    </div>
+  </body>
+ </html>
