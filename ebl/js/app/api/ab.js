@@ -87,101 +87,12 @@ define(['app/api/base',
 	};
 
 	api.getABTestResults = function(test){
-		var mandatorId,
-			significance,
-			success = false;
+		var mandatorId;
 		return api.getMandatorId()//load the current mandator Id
 			.then(function(mId){
-				mandatorId = mId;
-				return api.getABTestSignificance(test, mandatorId);//load the significance results
-			})
-			.then(function(result){
-				significance = result;
-//********** for debug **************//TODO ensure removal on going live
-//				result.sizeTest.result = "PASSED";
-//				result.differenceTest.result = 'PASSED';
-//				result.studentTest.result = 'PASSED';
-//********** for debug **************//
-				if(result.sizeTest.result === "PASSED" &&
-					result.differenceTest.result === 'PASSED' &&
-					result.studentTest.result === 'PASSED'){
-
-					success = true;
-					return $.ajax({	//if all tests were successful load the test results and pass them to the next function
-						'type': 'GET',
-						'dataType': 'json',
-						'url': baseURL + encodeURIComponent(mandatorId) + '/statistic/abtest/' + encodeURIComponent(test.id),
-						'data': {'granularity': 'P1D'}
-					});
-				}
-				return true; // the test failed and we skipped the fetching of the results
-
-			}).then(
-				function(data){
-					var tmp = {
-						'success' : success,
-						'significance' : significance,
-						'current' : null,
-						'other' : null
-					};
-					if($.isArray(data)){ //if we fetched the results we get an array here other wise we ge the true value from the return above
-						var i = 0,
-							l = data.length,
-							current =
-								{
-									'clickedRecommendedData': [],
-									'clickedRecommended': 0,
-									'purchasedRecommendedData': [],
-									'purchasedRecommended': 0,
-									'consumeEventsData': [],
-									'consumeEvents': 0,
-									'revenueData': [],
-									'revenue': 0,
-									'currency': {
-										'currencyCode' : 'EUR'
-									}
-								},
-							other =
-								{
-									'clickedRecommendedData': [],
-									'clickedRecommended': 0,
-									'purchasedRecommendedData': [],
-									'purchasedRecommended': 0,
-									'consumeEventsData': [],
-									'consumeEvents': 0,
-									'revenueData': [],
-									'revenue': 0,
-									'currency': {
-										'currencyCode' : 'EUR'
-									}
-								},
-							day;
-						for(; i < l; i++){
-							day = data[i];
-							current.clickedRecommendedData.push(day.current.clickedRecommended);
-							other.clickedRecommendedData.push(day.other.clickedRecommended);
-							current.clickedRecommended += day.current.clickedRecommended;
-							other.clickedRecommended += day.other.clickedRecommended;
-							current.purchasedRecommendedData.push(day.current.purchasedRecommended);
-							other.purchasedRecommendedData.push(day.other.purchasedRecommended);
-							current.purchasedRecommended += day.current.purchasedRecommended;
-							other.purchasedRecommended += day.other.purchasedRecommended;
-							current.consumeEventsData.push(day.current.consumeEvents);
-							other.consumeEventsData.push(day.other.consumeEvents);
-							current.consumeEvents += day.current.consumeEvents;
-							other.consumeEvents += day.other.consumeEvents;
-							current.revenueData.push(day.current.revenue);
-							other.revenueData.push(day.other.revenue);
-							current.revenue += day.current.revenue;
-							other.revenue += day.other.revenue;
-						}
-
-						tmp.current = current;
-						tmp.other = other;
-					}
-					return tmp; //return the collection of significance and result data
-				}
-			);
+                mandatorId = mId;
+				window.open('/abtest/#/'+ mandatorId + '/' + test.id +'/revenue/all');
+			});
 	};
 
 	api.getScenario = function(id){
