@@ -91,7 +91,7 @@ define(['app/api/base',
 		return api.getMandatorId()//load the current mandator Id
 			.then(function(mId){
                 mandatorId = mId;
-				window.open('/abtest/#/'+ mandatorId + '/' + test.id +'/revenue/all');
+				window.open('/abtestgui/#/'+ mandatorId + '/' + test.id +'/revenue/all');
 			});
 	};
 
