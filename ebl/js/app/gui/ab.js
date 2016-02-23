@@ -469,19 +469,7 @@ define([
 			$overlay.find('#abTestIndicators').hide();
 			$overlay.find('#abTestResultChart').hide();
 
-		gui.showOverlay($overlay);
-		api.getABTestResults(test)
-			.then(
-				function(results){
-					prepareTestResults($overlay, test, results);
-					$overlay.find('a.showGraph').first().trigger('click');
-					$cover.hide();
-					$wrapper.show();
-				},
-				function(){
-					gui.hideOverlay($overlay);
-					helper.setMessagePopUp('problem', 'ab_test_result_error_unable_to_fetch_results');
-				});
+		api.getABTestResults(test);
 	}
 
 	function showTest(){
