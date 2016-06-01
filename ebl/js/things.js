@@ -18,6 +18,8 @@ var setChartsDimensions = function () {
 		if (typeof leftbar !== 'undefined') {
 			leftbar.Draw();
 		}
+
+		RGraph.Redraw();
 	}
 };
 
