@@ -815,6 +815,9 @@ function magicMessage(type, i18n_id) {
 				$('#magic_message .countdown').hide();
 				clearInterval(magicCountdown);
 			});
+		},
+		type: function() {
+			return type;
 		}
 	}
 	
