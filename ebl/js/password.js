@@ -1,6 +1,5 @@
 var temporaryToken = false;
 var isMetRequirements = false;
-var authorizationCookie = getCookie('Authorization');
 
 $(document).ready(function () {
 
@@ -24,12 +23,12 @@ $(document).ready(function () {
 
 
 function checkPassword() {
-    var regExpNumbers = /[0-9]/,
-        regExpSmallLetters = /[a-z]/,
-        regExpBigLetters = /[A-Z]/,
-        password_old = $("#password_old").val(),
-        password = $("#password").val(),
-        password_confirm = $("#password_confirm").val();
+    var regExpNumbers = /[0-9]/;
+    var regExpSmallLetters = /[a-z]/;
+    var regExpBigLetters = /[A-Z]/;
+    var password_old = $("#password_old").val();
+    var password = $("#password").val();
+    var password_confirm = $("#password_confirm").val();
 
     isMetRequirements = false;
 
@@ -55,17 +54,17 @@ function checkPassword() {
 
     if (!regExpNumbers.test(password)) {
         magicMessage("warning", "password_one_number");
-        return false;
+        return;
     }
 
     if (!regExpSmallLetters.test(password)) {
         magicMessage("warning", "password_lowercase");
-        return false;
+        return;
     }
 
     if (!regExpBigLetters.test(password)) {
         magicMessage("warning", "password_uppercase");
-        return false;
+        return;
     }
 
     if (password != password_confirm) {
@@ -93,8 +92,8 @@ function changePassword() {
                 var magic = magicMessage("positive", "password_password_changed");
                 var returnUrl = gupDecoded('returnUrl');
 
-                if(authorizationCookie !== false ){
-                    deleteCookieFromAllPaths(authorizationCookie);
+                if ($.cookie('Authorization') !== false) {
+                    logoutAndRedirectUserToLogin();
                 }
 
                 $("#password_old").val("");
@@ -120,31 +119,14 @@ function changePassword() {
 
 function addErrorMessageOnSubmit() {
     magicMessage("error", "error_submit_form");
-    setTimeout(function(){ checkPassword(); }, 2000)
+    setTimeout(function () {
+        checkPassword();
+    }, 2000)
 }
 
-function getCookie(name){
-    var pattern = RegExp(name + "=.[^;]*");
-    var matched = document.cookie.match(pattern);
-    if(matched){
-        var cookie = matched[0].split('=');
-        return cookie[1];
-    }
-    return false;
+function logoutAndRedirectUserToLogin() {
+    $.cookie('Authorization', null);
+    window.location = "login.html";
 }
-
-function deleteCookieFromAllPaths(name) {
-    var pathBits = location.pathname.split('/');
-    var pathCurrent = ' path=';
-
-    document.cookie = name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT;';
-
-    for (var i = 0; i < pathBits.length; i++) {
-        pathCurrent += ((pathCurrent.substr(-1) != '/') ? '/' : '') + pathBits[i];
-        document.cookie = name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT;' + pathCurrent + ';';
-    }
-}
-
-
 
 
