@@ -216,7 +216,6 @@ function validateFormFields() {
  */
 function changePassword() {
     var magicMessageType = validateFormFields().type();
-    console.log(magicMessageType);
     if (magicMessageType == 'positive') {
         yooAjax('.change_password', {
             url: '/api/v4/profile/change_password',
