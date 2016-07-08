@@ -64,7 +64,7 @@ function getNewConfirmPasswordValue() {
 }
 
 /**
- * Verifies is passed string empty
+ * Verifies if passed string is empty
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -79,7 +79,7 @@ function isEmptyString(stringValue) {
 }
 
 /**
- * Verifies is string shorter than 8 characters
+ * Verifies if string is shorter than 8 characters
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -94,21 +94,23 @@ function isShortString(stringValue) {
 }
 
 /**
- * Verifies is string contains any empty space
+ * Verifies if string contains any empty space
  *
  * @param {string} stringValue
  * @returns {boolean}
  */
 function isStringContainsSpace(stringValue) {
+    var pattern = /\s/;
     var isStringContainsSpace = false;
-    if (stringValue != stringValue.replace('/^\s+|\s+$/g', '')) {
+
+    if (pattern.test(stringValue)) {
         isStringContainsSpace = true;
     }
     return isStringContainsSpace;
 }
 
 /**
- * Verifies is string contains at least one number
+ * Verifies if string contains at least one number
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -123,7 +125,7 @@ function isStringContainsNumbers(stringValue) {
 }
 
 /**
- * Verifies is string contains lower cases
+ * Verifies if string contains lower cases
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -138,7 +140,7 @@ function isStringContainsLowerCases(stringValue) {
 }
 
 /**
- * Verifies is string contains upper cases
+ * Verifies if string contains upper cases
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -153,7 +155,7 @@ function isStringContainsUpperCases(stringValue) {
 }
 
 /**
- * Verifies are strings equal
+ * Verifies if strings are equal
  *
  * @param {string} stringValue
  * @param {string} stringValueToCompare
@@ -185,14 +187,14 @@ function validateFormFields() {
     if (isEmptyString(getOldPasswordValue())) {
         return magicMessage('warning', 'old_password_not_entered');
     }
+    if (isStringContainsSpace(getNewPasswordValue())) {
+        return magicMessage('warning', 'password_no_spaces');
+    }
     if (isEmptyString(getNewPasswordValue())) {
         return magicMessage('warning', 'password_not_entered');
     }
     if (isShortString(getNewPasswordValue())) {
         return magicMessage('warning', 'password_too_short');
-    }
-    if (isStringContainsSpace(getNewPasswordValue())) {
-        return magicMessage('warning', 'password_no_spaces');
     }
     if (!isStringContainsNumbers(getNewPasswordValue())) {
         return magicMessage('warning', 'password_one_number');
