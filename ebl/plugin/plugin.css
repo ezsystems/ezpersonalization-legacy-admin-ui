@@ -1,0 +1,111 @@
+/* ---------------------------------- PLUGINS TAB ---------------------------------- */
+
+#pluginPanel .content {
+	width: 62em;
+}
+
+#pluginPanel .close_button {
+    display: block;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+}
+
+#pluginPanel .close_button:hover {
+    color: #ff0000;
+}
+
+#pluginPanel div.type_selector {
+	margin-right: -2em;
+}
+
+#pluginPanel .type_selector .type_button {
+	border-radius: 5px; border: 1px solid rgb(238, 236, 225);
+	height: 7em;
+	width: 17em;
+	position: relative;
+	display: block;
+	float: left;
+	margin-right: 1em;
+	margin-bottom: 1em;
+}
+
+#pluginPanel .type_selector .type_button:hover,
+#pluginPanel .type_selector .type_button:focus {
+	background-color: rgba( 238, 236, 225, 1);
+	border-color: rgba( 216, 216, 216, 1);
+	cursor: pointer;
+}
+
+#pluginPanel table.type_selector img {
+	display: inline;
+	margin: 0 auto;
+}
+
+#pluginPanel table.configuration td {
+	padding-right: 0.5em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+}
+
+#pluginPanel table.configuration th {
+	background-color: rgba(238, 236, 225, 1);
+}
+
+#pluginPanel *[readonly=readonly] {
+	background-color: #dddddd;
+}
+
+#pluginPanel h2 {
+	margin-bottom: 0.7em;
+}
+
+#pluginPanel h3 {
+	margin-top: 1em; margin-bottom: 0.5em;
+}
+
+#pluginPanel .plugin_save {
+    margin-top: 2em;
+}
+
+
+#plugin_endpoint,
+#plugin_app_secret,
+#plugin_app_key
+{ width: 30em; }
+
+
+#pluginTab {
+	width: 80em;
+	border-radius: 5px; border: 1px solid rgb(238, 236, 225);
+	margin: 0 auto;
+}
+
+#pluginTab table {
+	width: 100%	
+}
+
+#pluginTab table tr > td {
+	padding: 0.5em;
+	vertical-align: top;
+}
+
+#pluginTab table tr > th {
+	padding: 0.5em 0;
+}
+
+#pluginPanel .hide_logos .type_button,
+#pluginTab .hide_logos .type_button {
+	display: none;
+}
+
+#pluginTab table tr > th > span {
+    background-color: rgba(238, 236, 225, 1);
+    padding: 0.5em;
+    margin: 0 0;
+    display: block;
+}
