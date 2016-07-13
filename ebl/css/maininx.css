@@ -146,3 +146,7 @@ section.scenarios a.create_csv:before {
     border: 1px solid #000000;
     border-radius: 6px;
 }
+
+.change-password-link {
+    float:right;
+}
