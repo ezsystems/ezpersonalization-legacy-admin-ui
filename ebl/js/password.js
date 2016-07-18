@@ -4,67 +4,59 @@
 var temporaryToken = false;
 
 /**
- * Returns an old password object
- *
- * @returns {string}
+ * @returns {*|jQuery|HTMLElement}
  */
-function getOldPassword() {
-    var oldPassword = $('#password_old');
-    return oldPassword;
+function getOldPasswordObject() {
+    var object = $('#password_old');
+    return object;
 }
 
 /**
- * Returns an new password object
  *
- * @returns {string}
+ * @returns {*|jQuery|HTMLElement}
  */
-function getNewPassword() {
-    var newPassword = $('#password');
-    return newPassword;
+function getNewPasswordObject() {
+    var object = $('#password');
+    return object;
 }
 
 /**
- * Returns an new confirm password object
  *
- * @returns {string}
+ * @returns {*|jQuery|HTMLElement}
  */
-function getNewConfirmPassword() {
-    var newConfirmPassword = $('#password_confirm');
-    return newConfirmPassword;
+function getNewConfirmPasswordObject() {
+    var object = $('#password_confirm');
+    return object;
 }
 
 /**
- * Returns an old password value
  *
  * @returns {string}
  */
 function getOldPasswordValue() {
-    var oldPasswordValue = getOldPassword().val();
-    return oldPasswordValue;
+    var value = getOldPasswordObject().val();
+    return value;
 }
 
 /**
- * Returns an new password value
  *
  * @returns {string}
  */
 function getNewPasswordValue() {
-    var newPasswordValue = getNewPassword().val();
-    return newPasswordValue;
+    var value = getNewPasswordObject().val();
+    return value;
 }
 
 /**
- * Returns an new confirm password value
  *
  * @returns {string}
  */
 function getNewConfirmPasswordValue() {
-    var newConfirmPasswordValue = getNewConfirmPassword().val();
-    return newConfirmPasswordValue;
+    var value = getNewConfirmPasswordObject().val();
+    return value;
 }
 
 /**
- * Verifies if passed string is empty
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -79,7 +71,6 @@ function isEmptyString(stringValue) {
 }
 
 /**
- * Verifies if string is shorter than 8 characters
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -94,7 +85,6 @@ function isShortString(stringValue) {
 }
 
 /**
- * Verifies if string contains any empty space
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -110,7 +100,6 @@ function isStringContainsSpace(stringValue) {
 }
 
 /**
- * Verifies if string contains at least one number
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -125,7 +114,6 @@ function isStringContainsNumbers(stringValue) {
 }
 
 /**
- * Verifies if string contains lower cases
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -140,7 +128,6 @@ function isStringContainsLowerCases(stringValue) {
 }
 
 /**
- * Verifies if string contains upper cases
  *
  * @param {string} stringValue
  * @returns {boolean}
@@ -155,7 +142,6 @@ function isStringContainsUpperCases(stringValue) {
 }
 
 /**
- * Verifies if strings are equal
  *
  * @param {string} stringValue
  * @param {string} stringValueToCompare
@@ -170,49 +156,98 @@ function isStringsEqual(stringValue, stringValueToCompare) {
 }
 
 /**
- * Resets form fields
+ *
+ * @returns {bool}
  */
-function resetFormFields() {
-    getOldPassword().val('');
-    getNewPassword().val('');
-    getNewConfirmPassword().val('');
+function isOldPasswordFieldVisible() {
+    var isVisible = getOldPasswordObject().is(':visible');
+    return isVisible;
 }
 
 /**
- * Validates passwords (old, new, confirmed)
+ * @returns {void}
+ */
+function resetOldPassword() {
+    getOldPasswordObject().val('');
+}
+
+/**
+ * @returns {void}
+ */
+function resetNewPassword() {
+    getNewPasswordObject().val('');
+}
+
+/**
+ * @returns {void}
+ */
+function resetNewConfirmPassword() {
+    getNewConfirmPasswordObject().val('');
+}
+
+/**
+ * @returns {void}
+ */
+function resetFormFields() {
+    resetOldPassword();
+    resetNewPassword();
+    resetNewConfirmPassword();
+}
+
+/**
  *
  * @returns {*}
  */
 function validateFormFields() {
-    if (isEmptyString(getOldPasswordValue())) {
-        return magicMessage('warning', 'old_password_not_entered');
+    if (isEmptyString(getOldPasswordValue())
+        && isOldPasswordFieldVisible()
+    ) {
+        return magicMessage(
+            'warning', 'old_password_not_entered'
+        );
     }
     if (isStringContainsSpace(getNewPasswordValue())) {
-        return magicMessage('warning', 'password_no_spaces');
+        return magicMessage(
+            'warning', 'password_no_spaces'
+        );
     }
     if (isEmptyString(getNewPasswordValue())) {
-        return magicMessage('warning', 'password_not_entered');
+        return magicMessage(
+            'warning', 'password_not_entered'
+        );
     }
     if (isShortString(getNewPasswordValue())) {
-        return magicMessage('warning', 'password_too_short');
+        return magicMessage(
+            'warning', 'password_too_short'
+        );
     }
     if (!isStringContainsNumbers(getNewPasswordValue())) {
-        return magicMessage('warning', 'password_one_number');
+        return magicMessage(
+            'warning', 'password_one_number'
+        );
     }
     if (!isStringContainsLowerCases(getNewPasswordValue())) {
-        return magicMessage('warning', 'password_lowercase');
+        return magicMessage(
+            'warning', 'password_lowercase'
+        );
     }
     if (!isStringContainsUpperCases(getNewPasswordValue())) {
-        return magicMessage('warning', 'password_uppercase');
+        return magicMessage(
+            'warning', 'password_uppercase'
+        );
     }
     if (!isStringsEqual(getNewPasswordValue(), getNewConfirmPasswordValue())) {
-        return magicMessage('warning', 'password_confirm_not_match');
+        return magicMessage(
+            'warning', 'password_confirm_not_match'
+        );
     }
-    return magicMessage('positive', 'password_met_requirements');
+    return magicMessage(
+        'positive', 'password_met_requirements'
+    );
 }
 
 /**
- * Changes password
+ * @returns {void}
  */
 function changePassword() {
     var magicMessageType = validateFormFields().type();
