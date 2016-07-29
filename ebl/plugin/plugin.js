@@ -68,6 +68,8 @@
 var PLUGIN_ANCHOR_CREATE = "plugin/create";
 var PLUGIN_ANCHOR_CONFIG = "plugin/configuration";
 
+var PLUGIN_TYPE_MAGENTO = "MAGENTO";
+
 var pluginPanel = {
 
 	/**
@@ -525,7 +527,7 @@ var pluginPanel = {
 
 		var import_config = this.$panel.find(".plugin_import");
 
-		if ( ! plugin.base.importAvailable) {
+		if (plugin.base.type != PLUGIN_TYPE_MAGENTO) {
 			import_config.hide();
 		} else {
 			import_config.show();
