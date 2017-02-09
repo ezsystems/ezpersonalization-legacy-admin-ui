@@ -311,6 +311,8 @@ var fromTemplate   = gupDecoded('from_template');
 		jsonStandard.standardFilterSet.excludeContextItems = $('#currently_viewed')[0].checked;
 		
 		jsonProfile.profileFilterSet.excludeAlreadyPurchased = $('#no_already_purchased')[0].checked;
+        
+        jsonProfile.profileFilterSet.excludeAlreadyConsumed = $('#no_already_consumed')[0].checked;
 
 		jsonStandard.standardFilterSet.excludeItemsWithoutPrice = no_price_hide_checked;
 		
@@ -466,12 +468,17 @@ var fromTemplate   = gupDecoded('from_template');
 		$('body').data('filters_profile', json);
 			
 		var excludeAlreadyPurchased = pset.excludeAlreadyPurchased;
+        var excludeAlreadyConsumed = pset.excludeAlreadyConsumed;
 		var excludeRepeatedRecommendations = pset.excludeRepeatedRecommendations;
 		
 		if(excludeAlreadyPurchased == true) {
 			$('#no_already_purchased').prop("checked", true);
 		}
-		
+                		
+		if(excludeAlreadyConsumed == true) {
+			$('#no_already_purchased').prop("checked", true);
+		}
+				
 		if(excludeRepeatedRecommendations != null) {
 			$('#enable_limit_max_recs_per_session').prop("checked", true);
 			$('#limit_max_recs_per_session').prop("disabled", false);
