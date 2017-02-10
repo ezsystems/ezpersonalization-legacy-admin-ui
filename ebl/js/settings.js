@@ -476,7 +476,7 @@ var fromTemplate   = gupDecoded('from_template');
 		}
                 		
 		if(excludeAlreadyConsumed == true) {
-			$('#no_already_purchased').prop("checked", true);
+			$('#no_already_consumed').prop("checked", true);
 		}
 				
 		if(excludeRepeatedRecommendations != null) {
