@@ -14,18 +14,18 @@
     <link rel="stylesheet" href="css/maininx.css">
     <link rel="stylesheet" href="css/toggles.css">
     <link rel="stylesheet" href="css/toggles-light.css">
-    
+
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/jquery-ui.js"></script>
     <script src="js/lib/jquery.cookie.js"></script>
     <script src="js/lib/jquery.i18n.properties.js"></script>
-    
+
     <script src="js/form_submit_trigger.js"></script>
     <script src="js/things.js"></script>
     <script src="js/helper.js"></script>
-    
+
     <script src="js/equalize.js"></script>
-	
+
     <script src="js/libraries/RGraph/RGraph.common.core.js"></script>
     <script src="js/libraries/RGraph/RGraph.common.annotate.js"></script>  <!-- Just needed for annotating -->
     <script src="js/libraries/RGraph/RGraph.common.context.js"></script>   <!-- Just needed for context menus -->
@@ -50,14 +50,14 @@
     <script src="js/libraries/RGraph/RGraph.scatter.js"></script>          <!-- Just needed for scatter charts -->
     <script src="js/libraries/RGraph/RGraph.radar.js"></script>            <!-- Just needed for radar charts -->
     <script src="js/libraries/RGraph/RGraph.vprogress.js"></script>        <!-- Just needed for vertical progress bars -->
-    
+
     <script data-main="js/ab.js" src="js/lib/require.js"></script>
-    
+
     <script src="js/maininx.js"></script>
-    
+
     <script src="js/i18n.js" data-i18n-files="dashboard,common,plugin"></script>
     <script src="js/date.js"></script>
-	
+
 	 <style>
   .custom-combobox {
     position: relative;
@@ -98,36 +98,36 @@
       </nav>
       <ul class="account_data s2_5">
         <li><span data-translate="index_login">Login:</span> <strong></strong></li>
-        <li id="licence_key"><a id="showLicenseKey" href="#" 
+        <li id="licence_key"><a id="showLicenseKey" href="#"
         	data-translate="show_license_key"
         	onclick="openLicenseKey(true); return false;">Show license key</a></li>
-        <li><a id="edit_personal_datal" class="edit_contact_data" 
+        <li><a id="edit_personal_datal" class="edit_contact_data"
         	data-translate="index_edit_personal"
         	onclick="openPersonalDetails(true); return false;">Edit personal data</a></li>
-        <li><a id="edit_contact_datal" class="edit_contact_data" 
-        	data-translate="index_edit_contract" target="_blank">Edit contract data</a></li>        	
+        <li><a id="edit_contact_datal" class="edit_contact_data"
+        	data-translate="index_edit_contract" target="_blank">Edit contract data</a></li>
       </ul>
     </header>
     <section class="mandant" style="margin: 0 20px;">
       <header class="clearfix">
-      
+
         <div style="float: left; font-size: 26px; margin: 11px 10px 0 15px;">
           <h2 class="info">Dashboard</h2>
         </div>
-        
+
         <div style="float: left; margin-left: 25px">
           <h2 class="info">
             <strong class="project_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong><br>
             <span class="code"><span data-translate="webpage_code">Customer ID:</span><span class="codeid">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
           </h2>
         </div>
-        
+
         <div style="float: left; margin: 10px 10px 0 25px;">
           <p class="switch">
             <a href="#" data-translate="index_switch_mandant">Switch</a>
           </p>
         </div>
-        
+
         <div style="float: right; height: 30px;">
 	        <div class="index_mandator" >
 	        	<table>
@@ -147,10 +147,10 @@
 	        		<tr class="index_hover">
 	        			<td><span data-translate="index_recommendations">Delivered recommendations:</span></td>
 	        			<td style="text-align: right;"><strong id="statistic_recommendations">0</strong></td>
-	        		</tr>        		
+	        		</tr>
 	        		<tr class="index_hover">
 						<td><span data-translate="index_events">Events:</span></td>
-		        		<td style="text-align: right; padding-left: 10px;"><strong id="statistic_events">0</strong></td>	        			
+		        		<td style="text-align: right; padding-left: 10px;"><strong id="statistic_events">0</strong></td>
 	        		</tr>
 	        		<tr class="index_hover">
 	        			<td><span data-translate="index_objects">Objects: </span></td>
@@ -166,12 +166,12 @@
 			            <td><span data-translate="index_models">Recommendation models: </span></td>
 			            <td style="text-align: right;"><strong class="active" title="active" id="statistic_models">0</strong>
 			            <span class="tooltip" data-translate="index_profiles_tooltip"></span></td>
-	        		</tr>        		
-	        	</table> 
+	        		</tr>
+	        	</table>
 	        </div>
         </div>
       </header>
-      
+
       <form class="clearfix" method="get" action="#">
         <fieldset class="time_settings">
           <ul class="available_view_options options_menu clearfix">
@@ -212,7 +212,7 @@
             </li>
           </ul>
 		  <a class="export excel" data-translate="index_download_statistics">Download statistics</a>
-        </fieldset>      
+        </fieldset>
         <div id="statistic_charts" class="clearfix">
           <div class="collected_events_chart s1_3">
             <h3 id="index_collected_events" data-translate="index_collected_events">Collected events</h3>
@@ -352,30 +352,30 @@
 			<a id="createNewScenario"  class="create_new" data-translate="index_create_a_new_scenario">Create a new scenario</a>
 			<a class="helpLink" data-target="#scenarioHelp"></a>
 		</div>
-		
+
         <div id="addedRevenueControls" class="controls" style="display: none;">
 			<a class="create_csv" data-translate="added_revenue_create_excel">Download added revenue report</a>
-		</div>	
-			
+		</div>
+
 		<div id="abControls" class="controls" style="display: none;">
 			<a id="createNewTest" class="create_new" data-translate="ab_test_create_new_test"></a>
 			<a class="helpLink" data-target="#ABHelp"></a>
 		</div>
-		
+
 		<!--<div id="pluginTabControls" class="controls" style="display: none;">-->
 			<!--<a id="createNewPlugin" class="create_new" data-translate="create_new_plugin_button">Install new plugin</a>-->
 		<!--</div>-->
-		
+
 		<div id="itemImortControls" class="controls" style="display: none;">
 			<a id="createNewImport" class="create_new" data-translate="item_import_create_new_job">Create new import job</a>
 		</div>
-		
+
 		<div id="mailControls" class="controls" style="display: none;">
 			<a id="createNewMail" class="create_new" data-translate="mail_create_new_job"></a>
 		</div>
-		
+
       </header>
-      
+
       <ul id="available_scenarios" class="available_scenarios clearfix tabContent" style="min-height: 150px;">
         <li class="dummy_scenario" style="display:none; heigth: 100ex;">
           <div class="scenario activated" style="minHeight:250px;">
@@ -384,14 +384,14 @@
             	<font class="settings" style="float: right;">
               		<a href="#" onclick="$('#settingsP').show();"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
             	</font>
-             	<span>Dummy</span> 
+             	<span>Dummy</span>
             </h4>
             <p class="data" style="padding-right: 5px;"><span class="delivered_recommendations"><strong>0</strong> <span data-translate="index_delivered_recommendations_scenario">Delivered recommendations</span></span></p>
             <p class="description">Some brief description of the scenario, that can be edited together with other parameters</p>
           </div>
         </li>
       </ul>
-      
+
       <div id="addedRevenue" class="tabContent" style="display: none;">
 			<table>
 				<tr class="fixed">
@@ -417,7 +417,7 @@
 				</tr>
 			</table>
 		</div>
-		      
+
 	   <div id="importJobs" class="importItems tabContent" style="display: none;">
 			<div class="table" id="importJobsTable" style="width: 100%;display: none;">
 				<div class="tr head" id = "import_head">
@@ -433,7 +433,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div id="mailJobs" class="newsletters tabContent" style="display: none;">
 			<div class="table" id="mailTable" style="width: 100%;display: none;">
 				<div class="tr head" id = "mail_head">
@@ -471,20 +471,20 @@
 			</div>
 		</div>
     </section>
-    
+
     <footer>
       Copyright <script>document.write('2009-' + new Date().getFullYear());</script> YOOCHOOSE GmbH
       <ul class="clearfix">
-        <li><a id="corporate" data-translate="common_corporate_information" 
+        <li><a id="corporate" data-translate="common_corporate_information"
                               href="https://www.yoochoose.com/Imprint">Corporate information</a></li>
-        <li><a id="privacy"   data-translate="common_data_privacy" 
+        <li><a id="privacy"   data-translate="common_data_privacy"
                               href="https://www.yoochoose.com/Data-Privacy">Data privacy</a></li>
-        <li><a id="contact"   data-translate="common_contact" 
+        <li><a id="contact"   data-translate="common_contact"
                               href="https://www.yoochoose.com/About-Us/Contact-us">Contact</a></li>
       </ul>
-      
+
     </footer>
-    
+
     <div id="switch_mandator_popup" class="overlay">
       <div class="dialog_body change_mandant">
         <a class="destroy_dialog">X</a>
@@ -646,12 +646,12 @@
 			</div>
 		</div>
 	</div>
-	
+
 	 <div id="editDataOverlay" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
 		<div class="content" style="min-width: 450px;">
 			<div class="contentWrapper">
 				<a class="closeOverlay">X</a>
-				
+
 				<h2 data-translate="edit_contact_personal_details">Personal Details</h2>
 				<form id="personal_details" class="normal_form clearfix" action="#" method="get" style="position: relative;">
 					<img src="/img/auth-providers/250-facebook-nom.png" class="sso-icon" style="display: none;">
@@ -671,10 +671,10 @@
                         <a class="change-password-link" data-translate="change_password_link" href="password.html" >Change your password</a>
 		         	 </ul>
 		        </form>
-				
+
 				<div id="contract_details">
 					<h2 data-translate="edit_contact_account_details">Contract Details</h2>
-	
+
 					<form class="normal_form clearfix" action="#" method="get">
 	           			<ul class="editdata">
 				          <li class="clearfix">
@@ -722,7 +722,7 @@
 			</div>
 		</div>
 	</div>
-    	
+
 	<div id="licenceKeyId" style="display: none; background-color: rgba(63, 63, 63, 0.3); padding: 300px 0;">
 		<div class="content">
 			<div class="contentWrapper">
@@ -737,7 +737,7 @@
 		    </div>
 		</div>
 	</div>
-	
+
 	<div id="settingsP" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
 		<div class="content" id="contentFrame" style="width: 100%; height: 85%; min-height: 65%; position: relative;">
 			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
@@ -746,7 +746,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="itemimportP" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
 		<div class="content" id="contentFrame" style="width: 900px; height: 600px; min-height: 45%; position: relative;">
 			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
@@ -755,7 +755,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="mailP" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
 		<div class="content" id="contentFrame" style="width: 1340px; height: 780px; min-height: 45%; position: relative;">
 			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
@@ -782,7 +782,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="mailHistoryP" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);">
 		<div class="content" id="contentFrame" style="width: 600px; height: 400px; min-height: 20%; position: relative;">
 			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
@@ -799,7 +799,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="itemimportHistoryLogP" class="ABOverlay" style="display: none; background-color: rgba(63, 63, 63, 0.3);z-index: 15;">
 		<div class="content" id="contentFrameLog" style="width: 650px; height: 300px; min-height: 45%; position: relative;">
 			<div style="position:absolute; bottom:3em; top:3em; left:3em; right:3em;">
@@ -811,8 +811,8 @@
 			</div>
 		</div>
 	</div>
-	
-	
+
+
 	<div id="pactasPopup"style="display: none; background-color: rgba(63, 63, 63, 0.3);">
 		<a class="closeOverlay">X</a>
 		<div class="content" id="contentFrame">
@@ -859,7 +859,7 @@
 
 		</div>
 	</div>
-	
+
 	<div id="abTestResults" class="ABOverlay" style="display: none;">
 		<div class="content">
 			<div class="cover" style="display: none;">
