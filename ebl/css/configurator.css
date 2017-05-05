@@ -1,6 +1,6 @@
-    
-    
-    
+
+
+
 .settings,
 .configurator,
 .preview {
@@ -8,7 +8,7 @@
 	 min-width: 800px;
 	 margin-right: auto;
 	 margin-left: auto;
-	 
+
 	 position: absolute; bottom:0; top:145px; left:0; right:0;
 }
 
@@ -47,9 +47,9 @@ body.scenario_configuration_steps h2 {
   border-radius: 5px;
   margin: 0;
 }
-	
-	
-	
+
+
+
 .wizard_navi_wrapper {
 	min-height: 103px;
 }
@@ -111,31 +111,31 @@ ul.wizard_steps  {
 	border-radius: 0 5px 0 0;
 	border-left: 0;
 }
-    	
+
    	ul.buttonsbar > li {
    		float: left;
   		margin: 0;
    	}
-   	
+
    	ul.buttonsbar > li > a.button {
    		border-right-width: 0;
 		border-radius: 0;
 		margin-left: 0;
 		margin-right: 0;
 	}
-	
+
 	ul.buttonsbar > li:first-child > a.button {
 		border-top-left-radius: 5px;
  			border-bottom-left-radius: 5px;
 	}
-	
+
    	ul.buttonsbar > li:last-child > a.button {
    		border-right-width: 1;
 		border-top-right-radius: 5px;
  			border-bottom-right-radius: 5px;
 	}
 
-	
+
 	ul.dropdown-menu {
 		background-color: rgb(255, 255, 255);
 		border: 1px solid rgba(0,0,0,.2);
@@ -148,83 +148,83 @@ ul.wizard_steps  {
 		position: absolute; top: 40px;
 		z-index: 5;
 	}
-	
+
 	ul.dropdown-menu li {
 		line-height: 3.5ex;
 		padding-left: 12px;
 		padding-right: 10px;
 	}
-	
+
 	ul.dropdown-menu a {
 		color: rgba(35, 119, 160, 1)!important;
 	}
-	
+
 	ul.dropdown-menu a:hover, ul.dropdown-menu a:active {
 		color: rgba(0, 0, 0, 1)!important;
 	}
-			
+
 	ul.dropdown-menu li:hover {
 		background-color: rgba( 238, 236, 225, 1);
 	}
-	
+
 
 	ul.scenario_setting_list label {
-	    white-space: nowrap; 
+	    white-space: nowrap;
 	}
-	
+
 	ul.scenario_setting_list .basis {
 	    float: left;
 	    width: 25%;
 	    padding-right: 9px;
 	    line-height: 35px;
 	}
-	
+
 	ul.scenario_setting_list .value {
 		float: left;
 		width: 70%;
 		line-height: 35px;
 	}
-	
-	
-		
+
+
+
 	ul.scenario_setting_list .value input {
 	 	margin: 0;
 	}
-	
+
 	ul.scenario_setting_list .value textarea {
 		margin-top: 5px;
 		padding-top: 4px;
 	 	width: 95%;
 	}
-	
+
 	.problem {
 	  	box-shadow: 0 0 8px rgba(192, 80, 77, 1);
 	}
-	
+
 	.models_base .problem {
 		box-shadow: none;
 	}
-	
+
 	h4 {
 		font-weight: bold;
 		border-bottom: 1px solid rgba(140, 150, 138, 1);
 		margin-bottom: 1px;
 		margin-top: 1.5ex;
 	}
-	
+
 	.annotation {
 		display: block;
 		font-style: italic;
 		color: rgba(192, 80, 77, 1);
 	}
-	
+
 	ul.setting_list .basis {
 	    float: left;
 	    width: 50%;
 	    padding-right: 9px;
 	    line-height: 35px;
 	}
-	
+
 	ul.setting_list .value {
 		float: left;
 		width: 40%;
@@ -428,9 +428,9 @@ ul.wizard_steps  {
 
 
 .placed_model .right-shadow {
-	display: block; 
-	position: absolute; 
-	width: 20px; 
+	display: block;
+	position: absolute;
+	width: 20px;
 	right: 0; top: 0; bottom: 0;
 	background-image: linear-gradient(to left, rgb(216, 216, 216), rgba(216, 216, 216, 0.8), transparent);
 	z-index: 1;
@@ -570,7 +570,7 @@ ul.placed_model_settings > li.usesubmodels > div > input {
 .grouping_attributes{
     min-height: 45px;
 }
-	
+
 .model.ready_to_use h5 {
   border-left-color: rgba(180, 216, 170, 1);
 }
@@ -624,11 +624,11 @@ ul.placed_model_settings > li.usesubmodels > div > input {
 	position: absolute;
 	bottom: 0;
 	height: 1.6em;
-	width: 100%; 
+	width: 100%;
 /* 	padding:0.2em; */
 /* 	background-color: grey; */
 	border-top: 1px solid grey;
-	
+
 }
 
 .model .info{
@@ -637,9 +637,9 @@ ul.placed_model_settings > li.usesubmodels > div > input {
 	overflow: hidden;
 	text-align: center;
 }
-	
-	
-	
+
+
+
 .preview_settings > li {
 	display: block;
 	padding-bottom: 6px;
@@ -689,6 +689,9 @@ ul.placed_model_settings > li.usesubmodels > div > input {
 	padding-top: 5px;
 }
 
+.preview_settings .value > textarea[name=custom_parameters] {
+	resize: none;
+}
 
 #model_configuration_classic {
 	padding: 40px;
@@ -696,7 +699,7 @@ ul.placed_model_settings > li.usesubmodels > div > input {
     background: white url("../img/rauschen.png") repeat left top;
 	box-shadow: 10px 10px 10px 5px rgba(0,0,0,0.5);
 	border: 1px solid #000000;
-	border-radius: 6px; 
+	border-radius: 6px;
 }
 
 #model_configuration_classic h2 {
@@ -832,4 +835,3 @@ ul.placed_model_settings > li.usesubmodels > div > input {
 
 
 
-	
