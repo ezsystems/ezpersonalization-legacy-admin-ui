@@ -5,7 +5,7 @@ var URL_LOGIN = "/login.html";
 
 
 var logout = function() {
-	
+
 	$.ajax({
 		async: false,
 		type:"POST",
@@ -25,11 +25,11 @@ var logout = function() {
 			}
 		}
 	});
-	
+
 	$.cookie('password', null);
 	$.cookie('email', null);
 	$.cookie('authorization', null);
-	
+
 	window.location = URL_LOGIN;
 };
 
@@ -53,38 +53,38 @@ var getCurrentUser = function(callback) {
 
 
 var defaultErrorHandler = function (jqXHR, textStatus, errorThrown) {
-	
-	if(jqXHR.status != null && jqXHR.status == 403) {
+
+	if(jqXHR.status !== null && jqXHR.status == 403) {
 		setMessagePopUp("problem", "error_server_error_403");
-			
-	} else if(jqXHR.status != null && jqXHR.status == 401) {
-		
+
+	} else if(jqXHR.status !== null && jqXHR.status == 401) {
+
 		json = jqXHR.responseJSON;
-		
+
 		var code = (json.authenticationFault ? json.authenticationFault.faultCode : "UNKNOWN");
-		
+
 		if (code == "NOT_AUTHENTICATED") {
 			window.location.href = URL_LOGIN;
-			
+
 		} else if (code == "TOKEN_EXPIRED") {
 			setMessagePopUpLink("problem", URL_LOGIN, "error_server_error_401_" + code);
-			
+
 		} else if (code == "PASSWORD_NOT_MATCH" || code == "LOGIN_NOT_FOUND" || code == "LOGIN_DISABLED") {
 			setMessagePopUp("problem", "error_server_error_401_" + code);
-			
+
 		} else {
 			setMessagePopUp("problem", "error_server_error_401_UNKNOWN");
 		}
-		
-	} else if(jqXHR.status != null && jqXHR.status == 400)
+
+	} else if(jqXHR.status !== null && jqXHR.status == 400)
 	{
 		setMessagePopUp("problem", "error_server_error_400");
 	}
-	else if(jqXHR.status != null && jqXHR.status == 404)
+	else if(jqXHR.status !== null && jqXHR.status == 404)
 	{
 		setMessagePopUp("problem", "error_server_error_404");
 	}
-	else if(jqXHR.status != null && jqXHR.status == 409)
+	else if(jqXHR.status !== null && jqXHR.status == 409)
 	{
 		setMessagePopUp("problem", "error_server_error_409");
 	}

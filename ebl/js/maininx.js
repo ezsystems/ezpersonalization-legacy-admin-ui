@@ -68,19 +68,19 @@ var loginInfo;
 $(document).ready(function() {
 
 	// STATIC INITIALIZER
-	
+
 	//Revert to a previously saved state
 	window.addEventListener('popstate', function(event) {
 		var state = event.state;
 		switchState(state, false);
 	});
-	
+
 	window.addEventListener('popstate_manual', function(event) {
 		var state = event.detail;
 		switchState(state, false);
 	});
-	
-	
+
+
 	var closePopup = function(e) {
 	    if (e.which == 1 || e.which == 27) { // left click or Esc
 	    	if ($("#pactasPopup").is(':visible')) {
@@ -94,64 +94,64 @@ $(document).ready(function() {
 	    	}
 	    }
 	};
-	
+
 	$(document).bind('keydown', closePopup);
 
 	$('#pactasPopup a.closeOverlay, #licenceKeyId a.closeOverlay').click(function () {
 	    switchState("", true);
-	});	
-	
+	});
+
 	$('#copyrightsLink').off('click').click(function() {
 		$('#messageCorporate').hide();
 		$('#messageCopyrights').show();
 	});
-	
+
 	//Change the value in selectbox 1 in collected events
 	$('select[id^="events_select_for_chart_bar"]').change(function () {
 	    renderCollectedEvents();
 	});
-	
+
 	$('select[id^="select_for_delivered_recommendations_chart_bar"]').change(function () {
 	    renderRecommendationChart();
 	});
-	
-	
-	
+
+
+
 	// SCENARIOS, REVENUE, ABTESTS, IMPORT
-	
+
 	$('section.scenarios li.tabScenarios').click(function() {
 		switchTab("SCENARIOS");
 	});
-	
-	
+
+
 	$('section.scenarios li.tabRevenue').click(function() {
 		switchTab("REVENUE");
 	});
-	
+
 	$('section.scenarios li.tabAbTests').click(function() {
 		switchTab("ABTESTS");
 	});
-	
+
 	$('section.scenarios li.tabImports').click(function() {
 		switchTab("IMPORT");
 	});
-	
+
 	$('section.scenarios li.tabMail').click(function() {
 		switchTab("MAIL");
 	});
-	
-	
-	
+
+
+
 	$('#createNewTest').click(function(){
 		gui.editTest(new Test(emptyTest));
 	});
 
-	
+
 	// is called if right converison unit is changed from relative -> absolute and vice versa
 	$('#conversion_units').change(function () {
 		renderConversionRate();
 	});
-	
+
 	$('#settingsP .closeOverlay').click(function () {
 		window.parent.history.replaceState(null, null, "/");
 	});
@@ -161,20 +161,20 @@ $(document).ready(function() {
 	$('#mailP .closeOverlay').click(function () {
 		 readMailJobs();
 	});
-	
-	
+
+
 	$('section  div.index_mandator').hover(function() {
 		$(this).find('.index_hover').css('display', 'table-row');
 	}, function() {
 		$(this).find('.index_hover').css('display', 'none');
 	});
-	
-	
+
+
 	$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
 	$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
 	$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
 
-	
+
 
     //set drop down field to default values: click, purchase, consume
     $('#events_select_for_chart_bar_1').val('click');
@@ -184,20 +184,20 @@ $(document).ready(function() {
 	showEmptyCharts();
 	showEmptyEventChart();
 
-	
+
 	include(["/js/switch_mandator.js", "/js/user.js", "/js/dao/mandator.js", "/js/added_revenue.js", "/plugin/plugin.js"], function() {
-		
+
 		setLoadingDiv('section.mandant > header');
-		
+
 		yooAjax(null, {
 			url: "/api/v4/profile/get_accessible_mandators?versionFilter=LITE,EXTENDED", // <-- no 2GO mandators
 			success: function (json) {
-				
+
 				mandatorList = json; // "mandatorList" is a global variable
-				
+
 				if (json.length > 0) {
 					var cooMandator = gupDecoded('customer_id') || $.cookie('customerID');
-					
+
 					for (var i = 0; i < json.length; i++) {
 						if (cooMandator == json[i].baseInformation.id) {
 							customerID = cooMandator; // "customerID" is a global variable
@@ -212,7 +212,7 @@ $(document).ready(function() {
 					showNoAvailableMandatorPopup();
 					return;
 				}
-				
+
 				mandatorDao.init(customerID).always(function() {
 					ajaxScenarioList(period).always(function() {
 						initialize().always(function() {
@@ -222,7 +222,7 @@ $(document).ready(function() {
 				});
 			}
 		}).always(function() {
-			unsetLoadingDiv('section.mandant > header');		
+			unsetLoadingDiv('section.mandant > header');
     	});
 	});
 });
@@ -231,23 +231,23 @@ $(document).ready(function() {
 /** There are following tabs: SCENARIOS, REVENUE, ABTESTS, IMPORT
  */
 function switchTab(newTab) {
-	
+
 	if (newTab) {
 		sessionStorage.setItem("active_tab", newTab);
 	} else {
 		newTab = sessionStorage.getItem("active_tab");
 	}
-	
+
 	$("section.scenarios ul.options_menu li").removeClass("current");
 	$("section.scenarios .tabContent").hide();
 	$("section.scenarios div.controls").hide();
-	
+
 	if (newTab == "SCENARIOS") {
 		$("#available_scenarios").show();
 		$("#scenarioControls").show();
-		$("section.scenarios li.tabScenarios").addClass("current");	
-		
-		
+		$("section.scenarios li.tabScenarios").addClass("current");
+
+
 	} else if (newTab == "REVENUE") {
 		$("#addedRevenue").show();
 		$("#addedRevenueControls").show();
@@ -257,26 +257,26 @@ function switchTab(newTab) {
 		$("#ABTests").show();
 		$("#abControls").show();
 		$("section.scenarios li.tabAbTests").addClass("current");
-		
+
 		if(!$('#testList').data('tests').length){
 			$('#abControls').find('.helpLink').trigger('click');
 		}
-		
+
 	} else if (newTab == "PLUGINS") {
 		$("#pluginTab").show();
 		$("#pluginTabControls").show();
 		$("section.scenarios li.tabPlugins").addClass("current");
-		
+
 	} else if (newTab == "IMPORT") {
 		$("#importJobs").show();
 		$("#itemImortControls").show();
 		$("section.scenarios li.tabImports").addClass("current");
-	
+
 	} else if (newTab == "MAIL") {
 		$("#mailJobs").show();
 		$("#mailControls").show();
 		$("section.scenarios li.tabMail").addClass("current");
-	
+
 	} else {
 		switchTab("SCENARIOS");
 	}
@@ -330,22 +330,22 @@ function currentPeriodToTime() { // <-- "period" is a global variable
 /** Called, if the time period (MONTH, WEEK, DAY etc.) was changed
  */
 var ajaxScenarioList = function(new_period, callback) {
-	
+
 	if (!customerID) {
 		return;
 	}
-	
-	$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID)); 
-	
+
+	$('#itemimportF').attr('src', 'itempop.html?customer_id=' +  encodeURIComponent(customerID));
+
 	setLoadingDiv($('#statistic_charts'));
 	setLoadingDiv($('.available_scenarios'));
-	
+
 	period = new_period; // <-- "period" is a global variable
 	sessionStorage.setItem("period", period);
-	
-	
+
+
 	// redecorating menu
-	
+
 	$("fieldset.time_settings li.current").removeClass("current");
 	$("fieldset.time_settings .custom_range_settings").hide();
 
@@ -353,23 +353,23 @@ var ajaxScenarioList = function(new_period, callback) {
 	var date_to = currentPeriodToTime();
 
 	var date_to_excluded = date_to.clone().add({"milliseconds": -1});
-	
+
 	var xsd_from = date_from.toString("yyyy-MM-ddTHH:mm:ss");
 	var xsd_to   = date_to.toString("yyyy-MM-ddTHH:mm:ss");
 	var granularity;
 
 	var $current;
-	
+
 	if (period == 'WEEK') {
 	    granularity = "PT12H";
 	    $current = $("fieldset.time_settings li.view_option_week");
-	    
+
 	    $("fieldset.time_settings li.view_option_week span.info").text(dateFormat(date_from) + " - " + dateFormat(date_to_excluded));
-	    
+
 	} else if (period == 'MONTH') {
         granularity = "P1D";
         $current = $("fieldset.time_settings li.view_option_month");
-        
+
         $("fieldset.time_settings li.view_option_month span.info").text(dateFormat(date_from) + " - " + dateFormat(date_to_excluded));
 
 	} else if (period == '3MONTHS') {
@@ -387,15 +387,15 @@ var ajaxScenarioList = function(new_period, callback) {
 	} else if (period == 'DAY') {
 	    granularity = "PT1H";
 	    $current = $("fieldset.time_settings li.view_option_day");
-	    
+
 	} else { // 24H
 	    granularity = "PT1H";
 	    $current = $("fieldset.time_settings li.view_option_day");
 	}
-	
+
 	$current.addClass("current");
 	$current.find(".custom_range_settings").show();
-	
+
 	var result1 = $.ajax({
         dataType: "json",
         url: "/api/v4/" + encodeURIComponent(customerID) + "/statistic/summary/REVENUE,RECOS,EVENTS?from_date_time=" + xsd_from + "&to_date_time=" + xsd_to + "&granularity=" + granularity + "&no-realm",
@@ -404,7 +404,7 @@ var ajaxScenarioList = function(new_period, callback) {
         },
         error: mainErrorHandler
     });
-	
+
 	var result2 = $.ajax({
 	    dataType: "json",
 	    url: "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_scenario_list?from_date_time=" + xsd_from + "&to_date_time=" + xsd_to + "&granularity=" + granularity + "&no-realm",
@@ -413,20 +413,20 @@ var ajaxScenarioList = function(new_period, callback) {
 	    },
 	    error: mainErrorHandler
 	});
-	
-	
+
+
 	loadAddedRevenue(); // <-- this function is in "added_revenue.js"
-	
-	
+
+
 	return $.when(result1, result2).done(function() {
-		
+
 		$('.export').attr('href', "/api/v3/" + encodeURIComponent(customerID) + "/revenue/statistic.xlsx?from_date_time=" + xsd_from + "&to_date_time=" + xsd_to + "&granularity=" + granularity + "&no-realm");
-		
+
 		if (period == 'WEEK') {
 			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_week');
 			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_week');
 			$('#index_collected_events').attr('data-translate', 'index_collected_events_week');
-		    
+
 		} else if (period == 'MONTH') {
 			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_month');
 			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_month');
@@ -441,20 +441,20 @@ var ajaxScenarioList = function(new_period, callback) {
 			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_year');
 			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_year');
 			$('#index_collected_events').attr('data-translate', 'index_collected_events_year');
-	        
+
 		} else if (period == 'DAY' || period == '24H') {
 			$('#index_conversion_rate_average').attr('data-translate', 'index_conversion_rate_average_day');
 			$('#index_delivered_recommendations').attr('data-translate', 'index_delivered_recommendations_day');
 			$('#index_collected_events').attr('data-translate', 'index_collected_events_day');
 		}
-		
+
 		localizer();
-		
+
 		renderScenarioList();
 		renderRecommendationChart();
 		renderCollectedEvents();
 		renderConversionRate();
-		
+
     	if (callback) {
     		callback(json);
     	}
@@ -486,24 +486,24 @@ function piwikCallerInternal(){
 
 
 /** Called only once, when the page is loaded.
- *  User related GUI elements must be configured here. 
- *  
- *  Use the global variable "customerID" to have the current mandator ID. 
- *  
+ *  User related GUI elements must be configured here.
+ *
+ *  Use the global variable "customerID" to have the current mandator ID.
+ *
  *  @see #initialLoadData()
  */
 function initialize() {
-	
-	
+
+
 	//Last day click event
 	$('#view_option_day').click(function () {
 	    ajaxScenarioList("24H");
 	});
-	
+
 	$('#view_option_week').click(function () {
 		ajaxScenarioList("WEEK");
 	});
-	
+
 	$('#view_option_month').click(function () {
 	    ajaxScenarioList('MONTH');
 	});
@@ -515,50 +515,50 @@ function initialize() {
 	$('#view_option_year').click(function () {
 		ajaxScenarioList('YEAR');
 	});
-	
-	
+
+
 	// SCENARIOS, REVENUE, ABTESTS, IMPORT
 	$('section.scenarios li.tabScenarios').click(function() {
 		switchTab("SCENARIOS");
 	});
-	
-	
+
+
 	$('section.scenarios li.tabRevenue').click(function() {
 		switchTab("REVENUE");
 	});
-	
+
 	$('section.scenarios li.tabAbTests').click(function() {
 		switchTab("ABTESTS");
 	});
-	
+
 	$('section.scenarios li.tabImports').click(function() {
 		switchTab("IMPORT");
 	});
-	
+
 	$('section.scenarios li.tabPlugins').click(function() {
 		switchTab("PLUGINS");
 	});
-	
+
 	$('section.scenarios li.tabMail').click(function() {
 		switchTab("MAIL");
 	});
-	
-				
+
+
 	//init the tab behaviour
 	$('.tab').on('click', function(){
 		var $this = $(this);
 		if($this.hasClass('active')){
 			return;
 		}
-		
+
 		var targetSelector = $this.data('target'); // for example '#importJobs'
-		
+
 		$this.addClass('active current').siblings('.tab').removeClass('active current');
 		$(targetSelector).show().siblings('.tabContent').hide();
 		//$($this.data('controls')).show().siblings('.controls').hide();
-		
+
 		var event = new CustomEvent('dashboard_tab_switched', { 'detail': targetSelector });
-		
+
 		if (mandatorDao.mandator) {
 			window.dispatchEvent(event);
 		} else {
@@ -567,64 +567,64 @@ function initialize() {
 			});
 		}
 	}).removeClass('active').first().trigger('click');
-	
-	
+
+
 	$('#createNewTest').click(function(){
 		gui.editTest(new Test(emptyTest));
 	});
 
 
 	var userLoadingPromise = getCurrentUser(function(loginInfo) {
-		
+
 		var name = "";
 		if (loginInfo.firstName) name += loginInfo.firstName;
 		if (loginInfo.lastName && name) name += " ";
 		if (loginInfo.lastName) name += loginInfo.lastName;
-		
+
 		if ( ! name) {
 			name += loginInfo.id;
 		}
-		
+
 		$('.account_data').children('li').first().find('strong').text(name);
 		piwikCaller(name);
-	    
+
 	    // updating interface language
 	    if (loginInfo.lang && in_to_language != loginInfo.lang) { // "in_to_language" is a global variable defined in "i18n.js"
 	    	changeLang(loginInfo.lang, false);
 	    }
 	});
-	
+
 	return $.when(
 		userLoadingPromise,
 		initialLoadData(),                   // getting profile pack
-		setMandantData(mandatorDao.mandator) // getting mandator statistic	
+		setMandantData(mandatorDao.mandator) // getting mandator statistic
     ).always(function() {
-    	
+
     	if (mandatorList.length > 1) {
     		$('.switch').show();
     	} else {
     		$('.switch').hide();
     	}
-    	
+
     	for (var i = 0; i < mandatorList.length; i++) {
     		var mandatorInfo = mandatorList[i];
     		var id = mandatorInfo.baseInformation.id;
     		var web = mandatorInfo.baseInformation.website;
-    		
+
     		$('#choose_mandant').append('<option value="' + id + '">' + id + ': ' + web + '</option>');
     	}
-    	
+
     	if (customerID && open_reference_code) {
     		openScenarioDialog(customerID, open_reference_code);
     	} else {
     		var anchor = anchorDecoded();
-    		
+
     		var event = new CustomEvent('popstate_manual', { 'detail': anchor });
 			window.dispatchEvent(event);
     	}
-    });	
-	
-};
+    });
+
+}
 
 
 
@@ -644,7 +644,7 @@ function switchState(state, pushState) {
 		openPersonalDetails(pushState);
 	} else if (state == "license") {
 		openLicenseKey(pushState);
-		
+
 	}
 }
 
@@ -652,14 +652,14 @@ function switchState(state, pushState) {
 /** Opens the popup "Edit personal data".
  */
 function openLicenseKey(pushState) {
-	
+
 	mandatorDao.loadRegistrationData("header.top_head", function(json) {
 		$('#thekeyid').html(json.licenseKey);
-	    $('#licenceKeyId').show();	
-	    
+	    $('#licenceKeyId').show();
+
 	    switchHistoryState("license", pushState);
 	});
-    
+
 }
 
 
@@ -672,12 +672,12 @@ function openPersonalDetails(pushState) {
 		console.log("No mandator loaded. Unable to open personal data popup.");
 		return;
 	}
-	
+
     var customerPromise = yooAjax(null, {
         url: "/api/v3/profile/get_profile_pack/" + decodeURIComponent(mandatorDao.getId()),
         success: function (json) {
             customer = json.profilePack.customer; // <-- "customer" is a global variable
-            
+
             if (customer.id) {
 	        	$('#eemail').val(ifnull(customer.email, ""));
 	        	$('#ecompany').val(ifnull(customer.company, ""));
@@ -688,21 +688,21 @@ function openPersonalDetails(pushState) {
 	        	$('#ezip').val(ifnull(customer.address.zip, ""));
 	        	$('#ecity').val(ifnull(customer.address.city, ""));
 	        	$('#ecountry').val(ifnull(customer.address.country, ""));
-	        	
+
 	        	$('#contract_details').show();
             } else {
             	$('#contract_details').hide();
             }
         }
     });
-    
+
     var personalPromise = yooAjax(null, {
         url: "/api/v4/profile/get_me",
         success: function (json) {
         	loginInfo = json; // <-- "loginInfo" is a global variable
-        	
+
             var localProfile = loginInfo.localProfile; // <-- "loginInfo" is a global variable
-            
+
             if (json.provider) {
             	$("#personal_details img.sso-icon").attr("src", "");
             } else {
@@ -710,9 +710,9 @@ function openPersonalDetails(pushState) {
             	$("#personal_details input[name='p_email']").val(ifnull(json.id, ""));
             	$("#personal_details input[name='p_email']").attr("disabled", "disabled");
             }
-            
+
             if (localProfile) {
-            	if (json.provider) {            	
+            	if (json.provider) {
             		$("#personal_details input[name='p_email']").val(ifnull(localProfile.email, ""));
             		$("#personal_details input[name='p_email']").removeAttr("disabled");
             	}
@@ -721,9 +721,9 @@ function openPersonalDetails(pushState) {
             }
         }
     });
-    
+
     setLoadingDiv("header.top_head");
-    
+
 	$.when(
 		customerPromise,
 		personalPromise
@@ -731,7 +731,7 @@ function openPersonalDetails(pushState) {
     	switchHistoryState("personal", pushState);
     	$('#editDataOverlay').show();
     	unsetLoadingDiv("header.top_head");
-    });	
+    });
 
 }
 
@@ -745,7 +745,7 @@ function openPersonalDetails(pushState) {
 //		console.log("No mandator loaded. Unable to open Pactas/Customer popup.");
 //		return;
 //	}
-//	
+//
 //	var custId = mandatorDao.getId();
 //
 //	yooAjax("header.top_head", {
@@ -754,16 +754,16 @@ function openPersonalDetails(pushState) {
 //        success: function (json) {
 ////        	$('#pactasPopup iframe').attr("src", json.url);
 ////        	$('#pactasPopup').show();
-//        	
+//
 //        	$(a).attr("href", json.url);
-//        	
+//
 ////        	closePopupIfOpen("pactas_contract_details");
 ////        	var win = window.open(json.url, "pactas_contract_details", "width=800, height=550, scrollbars=yes", true);
 ////        	win.focus();
 ////        	setTimeout(function(){win.focus();},1000);
 ////        	switchHistoryState("contract", pushState);
 //        },
-//    });	
+//    });
 //}
 
 function closePopupIfOpen(popupName){
@@ -775,15 +775,15 @@ function closePopupIfOpen(popupName){
 var ifExtended = function() {
 	  var solution = mandatorDao.mandator.baseInformation.version;
 	  var extendedSolution = (solution == 'EXTENDED');
-	  
+
 	  return extendedSolution;
 };
 
 
 
 function validateField(name) {
-		
-	if($("input[name='" + name + "']").val() == "") {
+
+	if($("input[name='" + name + "']").val() === "") {
 		$("label[for='" + name + "']").parent().addClass("problem");
 		return false;
 	} else {
@@ -794,7 +794,7 @@ function validateField(name) {
 
 
 function saveForme() {
-	
+
 	var validated =
 			validateField("ecompany") &
 			validateField("efname") &
@@ -804,23 +804,23 @@ function saveForme() {
 			validateField("ecity") &
 			validateField("ecountry") &
 			validateField("ephone");
-	
+
 	var showError = ! validated;
-	
-	if(customer.id && showError == true) {
+
+	if(customer.id && showError === true) {
 		setMessagePopUp("problem", "error_fill_required_fields");
 	} else {
-		
+
 		var localProfile = loginInfo.localProfile; // <-- "loginInfo" is a global variable
-		
+
 		localProfile.email     = $("#personal_details input[name='p_email']").val();
 		localProfile.firstName = $("#personal_details input[name='p_firstname']").val();
 		localProfile.lastName  = $("#personal_details input[name='p_lastname']").val();
-		
+
 		var updateContract;
-		
+
 		if (customer.id) {
-			
+
 		    customer.company         = $("#contract_details input[name='ecompany']").val();
 		    customer.firstName       = $("#contract_details input[name='efname']").val();
 		    customer.lastName        = $("#contract_details input[name='elname']").val();
@@ -829,7 +829,7 @@ function saveForme() {
 		    customer.address.zip     = $("#contract_details input[name='ezip']").val();
 			customer.address.city    = $("#contract_details input[name='ecity']").val();
 		    customer.address.country = $("#contract_details input[name='ecountry']").val();
-		    
+
 			updateContract = yooAjax(null, {
 				data: customer,
 				url: "/api/v3/profile/update_customer",
@@ -842,7 +842,7 @@ function saveForme() {
 			updateContract = $.Deferred();
 			updateContract.resolve();
 		}
-	    
+
 		var updatePersonal = yooAjax(null, {
 			data: localProfile,
 			url: "/api/v4/profile/update_local_profile",
@@ -859,18 +859,18 @@ function saveForme() {
     		setMessagePopUp("positive", "message_data_saved_successfully");
 	    }).always(function() {
 	    	unsetLoadingDiv("#editDataOverlay");
-	    });	
+	    });
 	}
 }
 
 
 
 function setMandantData(mandatorInfo) {
-	
+
 	var id = mandatorInfo.baseInformation.id;
 	var website = mandatorInfo.baseInformation.website;
 	var version = mandatorInfo.baseInformation.version;
-    
+
     $('.info').children('strong').text(website);
     $('.info').children('p').text(" (" + version + ")");
     $('.info').children('span').children('.codeid').text(id);
@@ -895,7 +895,7 @@ function formatInteger(v) {
 	v = v + '';
 	for (var i = 0; i < v.length; i++) {
 		result = v[v.length - 1 - i] + result;
-		if ((i+1) % 3 == 0 && i != v.length - 1) {
+		if ((i+1) % 3 === 0 && i != v.length - 1) {
 			result = '.' + result;
 		}
 	}
@@ -905,26 +905,26 @@ function formatInteger(v) {
 
 
 /** This function is called, after the mandator was sucessfully loaded
- * 
- *  Use the global variable "customerID" to have the current mandator ID. 
- * */ 
+ *
+ *  Use the global variable "customerID" to have the current mandator ID.
+ * */
 function initialLoadData() {
-	
+
 	var event = new CustomEvent('mandator_loaded', { 'detail': mandatorDao.mandator });
 	window.dispatchEvent(event);
-	
+
 	var coma = mandatorDao.getProductComa();
-	
+
 	if (mandatorDao.getProductComa() == 'IBS') {
 		$("#edit_personal_datal").hide();
 	} else {
 		$("#edit_personal_datal").show();
 	}
-	
+
 	$('#edit_contact_datal').hide();
-	
+
 	if (coma == 'PACTAS') {
-		
+
 		var custId = mandatorDao.getId();
 
 		yooAjax("header.top_head", {
@@ -933,22 +933,22 @@ function initialLoadData() {
 	        success: function (json) {
 //	        	$('#pactasPopup iframe').attr("src", json.url);
 //	        	$('#pactasPopup').show();
-	        	
+
 	        	$('#edit_contact_datal').attr("href", json.url);
-	        	
+
 	        	$('#edit_contact_datal').show();
-	        	
+
 //	        	closePopupIfOpen("pactas_contract_details");
 //	        	var win = window.open(json.url, "pactas_contract_details", "width=800, height=550, scrollbars=yes", true);
 //	        	win.focus();
 //	        	setTimeout(function(){win.focus();},1000);
 //	        	switchHistoryState("contract", pushState);
 	        },
-	    });	
-		
+	    });
+
 	}
-	
-	
+
+
 	if ( ! ifExtended()) {
 		$(".available_charts select option[value='rate']").hide();
 		$(".available_charts select option[value='blacklist']").hide();
@@ -956,14 +956,14 @@ function initialLoadData() {
 	} else {
 		$(".available_charts select option[value='rate']").show();
 		$(".available_charts select option[value='blacklist']").show();
-		$(".available_charts select option[value='basket']").show();		
+		$(".available_charts select option[value='basket']").show();
 	}
-   	
+
     $('#createNewScenario').off('click').click(function() {
     	$('#settingsF').attr('src',"settingspop.html?customer_id=" + encodeURIComponent(customerID) + "&from_template=3");
     	$('#settingsP').show();
     });
-    
+
     $('#contactlink').off('click').click(function() {
     	$('#messageContact').show();
     });
@@ -973,18 +973,18 @@ function initialLoadData() {
     $('#corporatlink').off('click').click(function() {
     	$('#messageCorporate').show();
     });
-    
+
     $('#copyrightsLink').off('click').click(function() {
     	console.log("should close corporate1");
     	$('#messageCorporate').hide();
     	console.log("should close corporate2");
     	$('#messageCopyrights').show();
     });
-    
+
 	if(mandatorDao.getVersion() == 'EXTENDED'){
 		$('section.scenarios li.tabAbTests').show();
 		$('section.scenarios li.tabPlugins').show();
-		$('section.scenarios li.tabImports').show();	
+		$('section.scenarios li.tabImports').show();
 		if('321' === customerID || '1221'  === customerID || '1780'  === customerID  || '1351'  === customerID || '1209'  === customerID ){
 			$('section.scenarios li.tabMail').show();
 			$('#mailF').attr('src', 'mailconfig.html?customer_id=' +  encodeURIComponent(customerID));
@@ -1002,7 +1002,7 @@ function initialLoadData() {
 			$('#itemimportP').show();
 		});
 		readImportJobs();
-		
+
 	}else{
 		$('section.scenarios li.tabAbTests').hide();
 		$('section.scenarios li.tabPlugins').hide();
@@ -1011,7 +1011,7 @@ function initialLoadData() {
 	}
 	$('section.scenarios ul.options_menu').find('li:visible').removeClass('last-child');
 	$('section.scenarios ul.options_menu').find('li:visible:last').addClass('last-child');
- 
+
 	switchTab(false); // switching tab loading the last tab from session storage
 }
 
@@ -1029,7 +1029,7 @@ function readImportJobs(){
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/import/get_importjobs/",
 		  success: function(json) {
 			  var htmlToAppend ='';
-			  if(json.length == 0){
+			  if(json.length === 0){
 				  htmlToAppend = '<div id="noTests" data-translate="item_import_no_jobs">you have no import jobs defined</div>';
 			  }else{
 				allJobsI = json;
@@ -1076,7 +1076,7 @@ function readImportJobs(){
                       if (obj.fileFormat == "CSV") {
                           htmlToAppend += ' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' + encodeURIComponent(customerID) + '&importJobId=' + id + '\');$(\'#itemimportP\').show();">Edit</a> </div>';
                       } else {
-                          htmlToAppend += ' <div class="tc editimport"></div>'
+                          htmlToAppend += ' <div class="tc editimport"></div>';
                       }
 
 					    htmlToAppend +=' <div class="tc jobstatus"><img id="statusImage'+i+'" style="vertical-align: middle;" src="'+statusURL+'" /></div>';
@@ -1090,20 +1090,20 @@ function readImportJobs(){
 						    		+'<div id="toggle-off'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
 						    	 +'</div>'
 						    +'</div></div></div>';
-					    	
+
 					    htmlToAppend +='</div>';
-				  } 
+				  }
 				  htmlToAppend +='<div>';
 			  }
 			var header = $('#import_head').clone();
-			$('#importJobsTable').empty(); 
+			$('#importJobsTable').empty();
 			$('#importJobsTable').append(header);
           	$('#importJobsTable').append(htmlToAppend);
           	$('#importJobsTable').show();
-          	
-          	
-          	
-			  
+
+
+
+
 		  },
 		  error: mainErrorHandler
 	  });
@@ -1118,7 +1118,7 @@ function readMailJobs(){
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/get_jobs/",
 		  success: function(json) {
 			  var htmlToAppend ='';
-			  if(json.length == 0){
+			  if(json.length === 0){
 				  htmlToAppend = '<div id="noTests" data-translate="mail_no_jobs">you have no newsletters defined</div>';
 			  }else{
 				allJobsM = json;
@@ -1130,7 +1130,7 @@ function readMailJobs(){
 					    var startdate = obj.startDate;
 					    var enabled = obj.enabled;
 					    var runURL = 'img/clock.png';
-					   
+
 					    var margin = -48;
 					    var off =  'active';
 					    var on =  '';
@@ -1138,16 +1138,16 @@ function readMailJobs(){
 					    	on =  'active';
 					    	off =  '';
 					    	margin = 0;
-					    	
+
 					    }
 					    htmlToAppend +='<div class="tr test">\n';
 					    htmlToAppend +=' <div class="tc name">'+name+'</div>';
 					    htmlToAppend +=' <div class="tc interval">'+interval+'</div>';
-					  
-	
-					    
+
+
+
 					    htmlToAppend +=' <div class="tc editimport"><a onclick="$(\'#mailF\').attr(\'src\', \'mailconfig.html?customer_id=' +  encodeURIComponent(customerID)+'&nlid='+nlid+'\');$(\'#mailP\').show();">Edit</a> </div>';
-					    
+
 					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="sendMailNow('+nlid+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
 					    htmlToAppend +=' <div class="tc jobon toggle-light">'
 					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
@@ -1158,20 +1158,20 @@ function readMailJobs(){
 						    		+'<div id="toggle-offm'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
 						    	 +'</div>'
 						    +'</div></div></div>';
-					    	
+
 					    htmlToAppend +='</div>';
-				  } 
+				  }
 				  htmlToAppend +='<div>';
 			  }
 			var header = $('#mail_head').clone();
-			$('#mailTable').empty(); 
+			$('#mailTable').empty();
 			$('#mailTable').append(header);
           	$('#mailTable').append(htmlToAppend);
           	$('#mailTable').show();
-          	
-          	
-          	
-			  
+
+
+
+
 		  },
 		  error: mainErrorHandler
 	  });
@@ -1203,17 +1203,17 @@ function updateMailStatus(activeId){
 
 	if(status == 1){
 		$('#toggle-innerm'+activeId).css('margin-left','0px');
-		$('#toggle-onm'+activeId).addClass('active'); 
+		$('#toggle-onm'+activeId).addClass('active');
 		$('#toggle-offm'+activeId).removeClass('active');
 		job.enabled = true;
 	}else{
 		$('#toggle-innerm'+activeId).css('margin-left','-48px');
-		$('#toggle-onm'+activeId).removeClass('active'); 
-		$('#toggle-offm'+activeId).addClass('active'); 
+		$('#toggle-onm'+activeId).removeClass('active');
+		$('#toggle-offm'+activeId).addClass('active');
 		job.enabled = false;
 	}
-	 
-	 
+
+
 	 var urlsufix = '/nl2go/pref/updateJob';
 	 $.ajax({
 		  type: "POST",
@@ -1222,7 +1222,7 @@ function updateMailStatus(activeId){
 		  dataType: "json",
 		  data: JSON.stringify(job),
 		  url: "/api/v4/" + encodeURIComponent(customerID) + urlsufix,
-		  success: function(json) { 
+		  success: function(json) {
 		  },
 		  error: function() {
 			  stdAjaxErrorHandler();
@@ -1243,7 +1243,7 @@ function updateStatus(activeId){
 	var statusURL = 'img/blue.png';
 	if(status == 1){
 		$('#toggle-inner'+activeId).css('margin-left','0px');
-		$('#toggle-on'+activeId).addClass('active'); 
+		$('#toggle-on'+activeId).addClass('active');
 		$('#toggle-off'+activeId).removeClass('active');
 		var lastRun = job.lastRun;
 		if(lastRun){
@@ -1260,13 +1260,13 @@ function updateStatus(activeId){
 		job.enabled = true;
 	}else{
 		$('#toggle-inner'+activeId).css('margin-left','-48px');
-		$('#toggle-on'+activeId).removeClass('active'); 
-		$('#toggle-off'+activeId).addClass('active'); 
+		$('#toggle-on'+activeId).removeClass('active');
+		$('#toggle-off'+activeId).addClass('active');
 		statusURL = 'img/red.png';
 		job.enabled = false;
 	}
-	 
-	 
+
+
 	 var urlsufix = '/import/save_importjob';
 	 $.ajax({
 		  type: "POST",
@@ -1307,10 +1307,10 @@ function showImportHistory(jobId) {
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/import/get_importjob_history/"+jobId,
 		  success: function(json) {
 			  var htmlToAppend ='';
-			  if(json.length == 0){
+			  if(json.length === 0){
 				  htmlToAppend = '<div id="noTests" data-translate="item_import_no_history">no import history for this job found</div>';
 			  }else{
-				
+
 				  for(var i = 0; i < json.length; i++) {
 					    var obj = json[i];
 					    var startTime = obj.runtime;
@@ -1320,7 +1320,7 @@ function showImportHistory(jobId) {
 					    if(!finishTime){
 					    	finishTime = 'still running';
 					    }
-					   
+
 					    htmlToAppend +='<div class="tr test">\n';
 					    htmlToAppend +=' <div class="tc startTime">'+startTime+'</div>';
 					    htmlToAppend +=' <div class="tc finishTime">'+finishTime+'</div>';
@@ -1330,15 +1330,15 @@ function showImportHistory(jobId) {
 							'<a target="_blank" href="/api/v4/' + encodeURIComponent(customerID) + '/import/get_log/' + jobId + '/'+ obj.id +'">show log </a>' +
 							'</div>';
 					    htmlToAppend +='</div>';
-				  } 
+				  }
 				  htmlToAppend +='<div>';
 			  }
 			var header = $('#import_history_head').clone();
-			$('#importJobsHistoryTable').empty(); 
+			$('#importJobsHistoryTable').empty();
 			$('#importJobsHistoryTable').append(header);
         	$('#importJobsHistoryTable').append(htmlToAppend);
         	$('#itemimportHistoryP').show();
-			  
+
 		  },
 		  error: mainErrorHandler
 	  });
@@ -1354,33 +1354,33 @@ function showMailHistory(nlid) {
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/nl2go/pref/getMailHistory?nlid="+nlid,
 		  success: function(json) {
 			  var htmlToAppend ='';
-			  if(json.length == 0){
+			  if(json.length === 0){
 				  htmlToAppend = '<div id="noTests" data-translate="mail_no_history">no mail history for this job found</div>';
 			  }else{
-				
+
 				  for(var i = 0; i < json.length; i++) {
 					    var obj = json[i];
 					    var finishTime = obj.lastSend;
 					    var amount = obj.amount;
-					   
-	
+
+
 					    if(!finishTime){
 					    	finishTime = 'nope';
 					    }
-					   
+
 					    htmlToAppend +='<div class="tr test">\n';
 					    htmlToAppend +=' <div class="tc finishTime">'+finishTime+'</div>';
 					    htmlToAppend +=' <div class="tc amount">'+amount+'</div>';
 					    htmlToAppend +='</div>';
-				  } 
+				  }
 				  htmlToAppend +='<div>';
 			  }
 			var header = $('#mail_history_head').clone();
-			$('#mailJobsHistoryTable').empty(); 
+			$('#mailJobsHistoryTable').empty();
 			$('#mailJobsHistoryTable').append(header);
         	$('#mailJobsHistoryTable').append(htmlToAppend);
         	$('#mailHistoryP').show();
-			  
+
 		  },
 		  error: mainErrorHandler
 	  });
@@ -1388,7 +1388,7 @@ function showMailHistory(nlid) {
 
 
 function showSpecificLog(urlLog){
-	
+
 	 $.get(urlLog, function( data ) {
 		 var find = '\n';
 		 var re = new RegExp(find, 'g');
@@ -1398,9 +1398,9 @@ function showSpecificLog(urlLog){
 }
 
 function renderScenarioList() {
-    
+
     var json = {"scenarioInfoList" : scenarioInfoList};
-    
+
     if (json.scenarioInfoList.length < 1) {
         console.log("no scenarios");
     } else {
@@ -1417,31 +1417,31 @@ function renderScenarioList() {
             var dummyClone = $(dummy).clone();
             $(dummyClone).show();
 			var escapedRefCode = escape(scenario.referenceCode);
-			
+
 			var scenarioDiv = $(dummyClone).children("div");
 			scenarioDiv.attr("id", "scenario_" + j);
 
-            if (scenario.title == null || $.trim(scenario.title) == "") {
+            if (scenario.title === null || $.trim(scenario.title) === "") {
                 scenario.title = scenario.referenceCode;
             }
-            if (scenario.description == null) {
+            if (scenario.description === null) {
                 scenario.description = "Some brief description of the scenario, that can be edited together with other parameters";
             }
-            
+
             var option = $('<option></option>');
             option.text(scenario.title);
             option.attr("value", scenario.referenceCode);
             options.push(option);
-            
+
 			scenarioDiv.children("h4").children("span").text(scenario.title);
 			scenarioDiv.children("p.description").text(scenario.description);
-			
+
 			scenarioDiv.find("h4 a").attr('data-refcode', escapedRefCode);
 
             scenarioDiv.find("h4 a").click(function() {
             	openScenarioDialog(customerID, $(this).attr('data-refcode'));
             });
-                
+
             var derecos = sumDeliveredRecommendations(scenario);
 
             scenarioDiv.children("p.data").children("span").children("strong").text(formatInteger(derecos));
@@ -1456,13 +1456,13 @@ function renderScenarioList() {
             } else if (scenario.avaliable === "PARTLY_AVAILABLE") {
             	scenarioDiv.addClass("partly_available");
             }
-            if(j == 0){
+            if(j === 0){
             	$('.available_scenarios').empty();
             	$('.available_scenarios').append(dummy);
             }
-          
+
             $('.available_scenarios').append(dummyClone);
-            
+
         }
 		//removes all elements from the select except the first one
 		function removeOptions(index){
@@ -1470,17 +1470,17 @@ function renderScenarioList() {
 				$(this).remove();
 			}
 		}
-		
+
 		$('.delivered_recommendation_chart li').each(function() {
 			  var htmlSelect = $(this).find('select');
-			  
+
 			  htmlSelect.find('option[value!=""][value!="total"]').remove();
-		
+
 			  for (var i in  options) {
 				  htmlSelect.append(options[i].clone());
 			  }
 	    });
-		
+
         //Fill the select boxes at the bottom of the middle chart
         $('#select_for_delivered_recommendations_chart_bar_1').find('option[value="total"]').siblings().removeAttr('selected')
 				.end().attr('selected', 'selected'); //select the total scenario
@@ -1495,10 +1495,10 @@ function renderScenarioList() {
 
 
 function openScenarioDialog(mandatorId, referenceCode) {
-	
+
 	var additionalParameter = "?reference_code=" + encodeURIComponent(referenceCode) + "&customer_id=" + encodeURIComponent(mandatorId);
-	
-	$('#settingsF').attr('src', 'settingspop.html' + additionalParameter); 
+
+	$('#settingsF').attr('src', 'settingspop.html' + additionalParameter);
 	$('#settingsP').show();
 }
 
@@ -1513,7 +1513,7 @@ function sumDeliveredRecommendations(scenario) {
 
 
 function renderConversionRate() {
-	 
+
 	if (statistic.length < 1) {
 		//To prevent old data in the graphs the use the "zero" object
 		showEmptyCharts();
@@ -1531,7 +1531,7 @@ function renderConversionRate() {
 		var convRateValMax = 0;
 		var convRateRecsValMax = 0;
 		var convRateCbValMax = 0;
-		
+
 		for(var i = 0; i < statistic.length; i++){
 			var convRate = 0.0;
 
@@ -1577,7 +1577,7 @@ function renderConversionRate() {
 
 			$h3.attr('data-translate', "index_conversion_rate_relative");
 			$title.attr('data-translate', "index_conversion_rate_relative_title");
-			
+
 			updateRightCharts(getGraphDescription(), conversionRateObject.relative, percentFormatter);
 
 		//} else if ($("#conversion_units").val() == 'relativerecs') {
@@ -1601,7 +1601,7 @@ function renderConversionRate() {
 			for(i=0; i < conversionRateObject.revenue.length; i++) {
 				data.push([conversionRateObject.relativePr[i], conversionRateObject.relativePrFresh[i]]);
 			}
-			
+
 			updateRightCharts(getGraphDescription(), data, currencyFormatter);
 
 		} else {
@@ -1638,7 +1638,7 @@ function getInnerArrayForRenderCollectedEventsWeek(item1,item2) {
 		Blacklist - blacklistEvents
 		Owns OwnsEvents
 		Total
-		
+
 		var quotient = 24; */
 	    var innerArray = new Array();
 	    $('select[id^="events_select_for_chart_bar"]').each(function (index) {
@@ -1677,14 +1677,14 @@ function getInnerArrayForRenderCollectedEventsWeek(item1,item2) {
 	        default:
 	            innerArray.push(0);
 	            break;
-	    	
+
 	        }
 	    });
 	    return innerArray;
 	}
-	
+
 function valueOrDefault(val) {
-    return val == undefined ? 0 : val;
+    return val === undefined ? 0 : val;
 }
 
 function getTotalSum(click1,consume1,purchase1,clickedRecommended1,rate1,blacklist1,basket1 ){
@@ -1752,7 +1752,7 @@ function getInnerArrayForRenderCollectedEvents(item, daterange) {
 
 
 function renderRecommendationChart() {
-	
+
 	var daterange = period;
 
     //There must be a two dimension array to show the data in the bar graphic
@@ -1822,7 +1822,7 @@ function renderCollectedEvents() {
    var outerArray = [];
 
    if (period == "WEEK") {
-			
+
 		for(var i = 0; i < statistic.length;){
 			outerArray.push(getInnerArrayForRenderCollectedEventsWeek(statistic[i++], statistic[i++]));
 		}
@@ -1840,12 +1840,12 @@ function renderCollectedEvents() {
 
 //Helper method that generates the X-Chart description for a month call
 function getGraphDescription() {
-	
+
 	var resultDates = [];
 
 	var now  = currentPeriodToTime();
 	var date = currentPeriodFromTime();
-	
+
 	if (period == 'MONTH') {
 
 		while (date.compareTo(now) < 0) {
@@ -1865,13 +1865,13 @@ function getGraphDescription() {
 		//resultDates.push("W" + date.getWeekOfYear(1));
 
 	} else if (period == 'WEEK') {
-	
+
 	    for (var i = 7; i > 0; i = i - 1) {
 	        var date = getCurrentDateMinusDays(i);
 	        resultDates.push(date.day + "." + date.month + ".");
 	    }
 	} else if (period == 'DAY') {
-	
+
 	    for (var i = 0; i < 25; i++) {
 	        if (i % 4 !== 0) {
 	           resultDates.push("");
@@ -1896,7 +1896,7 @@ function getGraphDescription() {
 
 	return resultDates;
 }
-	
+
 
 function myFormatter(obj, num) {
   if (num > 1000){
@@ -2084,15 +2084,15 @@ function commonChart(bar) {
 
 
 function mainErrorHandler(jqXHR, textStatus, errorThrown) {
-    if(jqXHR.status != null && jqXHR.status == 403) {
+    if(jqXHR.status !== null && jqXHR.status == 403) {
     	magicMessage("problem", "error_server_error_403");
-	} else if(jqXHR.status != null && jqXHR.status == 401) {
+	} else if(jqXHR.status !== null && jqXHR.status == 401) {
 		window.location = "/login.html";
-	} else if(jqXHR.status != null && jqXHR.status == 400) {
+	} else if(jqXHR.status !== null && jqXHR.status == 400) {
 		magicMessage("problem", "error_server_error_400");
-	} else if(jqXHR.status != null && jqXHR.status == 404) {
+	} else if(jqXHR.status !== null && jqXHR.status == 404) {
 		magicMessage("problem", "error_server_error_404");
-	} else if(jqXHR.status != null && jqXHR.status == 409) {
+	} else if(jqXHR.status !== null && jqXHR.status == 409) {
 		magicMessage("problem", "error_server_error_409");
 	} else {
 		magicMessage("problem", "error_server_error");

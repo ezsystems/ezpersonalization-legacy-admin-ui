@@ -2,14 +2,14 @@
  * This test engine works together with the rest_test.html file.
  * Individual steps, which need user interactio, like the entry of codes send in a e-mail
  * are provided throu forms in the html document.
- * 
+ *
  *   The results of the single tests are inserted into the html document.
- *   
+ *
  *   Beside the check of the correct response codes, also the responded content is checked
- *   
+ *
  *   For debugging purpose are the responded and the for the request used objects stored in
  *   test.debug. When a test failes you can find the compared objects under the tests name and
- *   you can inspect them manualy. 
+ *   you can inspect them manualy.
  */
 
 (function(){
@@ -62,7 +62,7 @@
 			'log' : function log(obj, category){
 				var type = typeof obj;
 				if(type === 'string'){
-					var $entry = $('<div>'+ obj +'</div>')
+					var $entry = $('<div>'+ obj +'</div>');
 					if(typeof category === 'string'){
 						$entry.addClass(category);
 					}
@@ -70,7 +70,7 @@
 				}else if(obj instanceof jQuery){
 					$currentCase.append(obj);
 				}else{
-					$currentCase.append('<p>wrong use of log mechanism</p>')
+					$currentCase.append('<p>wrong use of log mechanism</p>');
 				}
 			},
 			// provides a simple way to log wether a test was successfull or
@@ -105,9 +105,9 @@
 					this.testCases[currentTest].func.apply(null, obj.args);
 				}else{
 					alert('invalid scenario configutation');
-				}	
+				}
 			}
-		};	
+		};
 		// add the event handler for tester interaction
 		$('#admin_login').find('button').on('click', function(e){e.preventDefault(); test.next();});
 		$('#user_registration_1').find('button').on('click', new_customer);
@@ -123,20 +123,20 @@
 		$('#clear_log').on('click', function(){
 			$('#logs').html('');
 		});
-		
+
 		// start the testing
 		$('#teststart').on('click', function(){
 			test.next();
 		});
-		
+
 		test.next();
 	});
-	
 
-	
+
+
 	/**
 	 * Click handler for new customer form
-	 * 
+	 *
 	 * @param e clickEvent
 	 */
 	function new_customer(e){
@@ -145,11 +145,11 @@
 		//after the template data has loaded, we create the the customer
 		test.templateScenariosPromise.always(create_customer);
  	}
-	
+
 	/**
 	 * fetches the data specified in the template to be used
 	 * to compare the new customer later with the template data
-	 * 
+	 *
 	 * @returns prommise which provides an array of scenarios when resolved
 	 */
 	function prepare_scenario_check(){
@@ -206,13 +206,13 @@
 				}
 				//we have fired all the ajax-calls so we can logout as admin to not disturbe the future processing
 				//TODO make sure we proceed after the logout was successfull (add another level to prevent interaction with scenario array
-				ajaxrequest({ 
+				ajaxrequest({
 					type: "POST",
 					dataType: "json",
 					url: "ebl/v3/registration/logout",
 					success: function () {
 						test.log('Admin Logout Success');
-					},	
+					},
 					error: errorhandler
 				});
 				//we aggregate all the prommises from the ajax calles,
@@ -220,7 +220,7 @@
 				//when returns a prommise, which is resolved just in case all ajax requests succeed
 				return $.when.apply(null, deferreds);//the callbacks get the responses from all deferreds in the array
 		}).pipe(
-			//the success function is calles with all filtered (see above) responses from the ajax calls 
+			//the success function is calles with all filtered (see above) responses from the ajax calls
 			function(){
 				var arr = [],
 				l= arguments.length;
@@ -278,7 +278,7 @@
 			error: errorhandler
 		});
 	}
-	
+
 	/**
 	 * handles the submit event for user login form
 	 */
@@ -302,7 +302,7 @@
 			test.next();
 		});
 	}
-	
+
 	function faultAutoLogin(){
 		test.log('Login Failure Start');
 		create_access_token(test.data.login, test.data.password)
@@ -312,9 +312,9 @@
 				test.log('Login with old password failed');
 				test.next();
 		});
-		
+
 	}
-	
+
 	function successAutoLogin(){
 		test.log('Login Success Start');
 		create_access_token(test.data.login, test.data.staticPassword).
@@ -322,11 +322,11 @@
 			test.log('Login with new password Succeeded');
 			test.next();
 		},function(){
-			test.log('Login with new password failed', 'error')
+			test.log('Login with new password failed', 'error');
 		});
-		
+
 	}
-	
+
 	function create_access_token(login, password) {
 		test.log('Create Access Token start');
 		return ajaxrequest({
@@ -347,14 +347,14 @@
 				test.data.accessToken = json.accessToken;
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				test.log('Create Access Token failed')
+				test.log('Create Access Token failed');
 				errorhandler(jqXHR, textStatus, errorThrown);
 			}
 		});
 	}
-	
+
 	function get_access_token() {
-		test.log('Get Access Token started')
+		test.log('Get Access Token started');
 		ajaxrequest({
 			type: "GET",
 			url: "ebl/v3/registration/get_access_token",
@@ -371,12 +371,12 @@
 				test.assert(customer.login.provider === json.loginInfo.provider, 'provider matches', 'provider varies');
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				test.log('get me failed')
+				test.log('get me failed');
 				errorhandler(jqXHR, textStatus, errorThrown);
 			}
 		});
 	}
-	
+
 	function change_password(){
 		test.log($('<h3>Change Password started</h3>'));
 		ajaxrequest({
@@ -394,14 +394,14 @@
 				test.next();
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				test.log('Change password failed')
+				test.log('Change password failed');
 				errorhandler(jqXHR, textStatus, errorThrown);
 			}
 		});
 	}
-	
+
 	function get_me() {
-		test.log('get me started')
+		test.log('get me started');
 		return ajaxrequest({
 			type: "GET",
 			url: "ebl/v3/registration/get_me",
@@ -418,12 +418,12 @@
 				test.assert(customer.login.provider === json.loginInfo.provider, 'provider matches', 'provider varies');
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				test.log('get me failed')
+				test.log('get me failed');
 				errorhandler(jqXHR, textStatus, errorThrown);
 			}
 		});
 	}
-	
+
 	function get_accesible_mandator_list() {
 		test.log('get accessible mandator list started');
 		ajaxrequest({
@@ -443,10 +443,10 @@
 			}
 		});
 	}
-	
-	
+
+
 	function get_mandator_statistics() {
-		test.log('get statistics started')
+		test.log('get statistics started');
 		ajaxrequest({
 			type: "GET",
 			url: "ebl/v3/profile/get_mandator_statistic/" + test.data.customer.mandator.name,
@@ -458,12 +458,12 @@
 				test.log('get statistics success');
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				test.log('get statistics failed')
+				test.log('get statistics failed');
 				errorhandler(jqXHR, textStatus, errorThrown);
 			}
 		});
 	}
-	
+
 	function prepare_forgot_password() {
 		//fill the form
 		test.log('preparing forgot password dialog');
@@ -475,7 +475,7 @@
 		$form.find('[name="captcha"]').val("");
 		//logout
 		test.log("trying to terminate current session");
-		ajaxrequest({ 
+		ajaxrequest({
 			type: "POST",
 			dataType: "json",
 			url: "ebl/v3/registration/logout",
@@ -490,9 +490,9 @@
 				test.log('session termination succeeded');
 				test.next();
 		});
-		
+
 	}
-	
+
 	function forgot_password(e){
 		//
 		e.preventDefault();
@@ -521,12 +521,12 @@
 		});
 		$('#reset_password form input[name="username"]').val(test.data.login);
 	}
-	
+
 	function reset_password(e){
 		e.preventDefault();
 		test.log('Reset Password start');
 		var $form = $('#reset_password form');
-		
+
 		ajaxrequest({		//reset password with code
 			type: "POST",
 			dataType: "json",
@@ -540,7 +540,7 @@
 					test.log("invalid forgotten password code");
 				}
 			}
-		}).pipe( 
+		}).pipe(
 			//on success set the new password
 			function (json) {
 				var $form = $('#reset_password form'),
@@ -600,9 +600,9 @@
 
 	function prepare_customer_update(){
 		var $form = $('#customer_update form');
-		
+
 	}
-	
+
 	function update_customer(){
 		test.log('Start Customer Update');
 		ajaxrequest({
@@ -614,7 +614,7 @@
 		}).pipe(function(json){
 			var c = json.profilePack.customer,
 			data = {
-				'address': {		
+				'address': {
 					'city': 'Some City',
 					'country': 'A C08ntry "',
 					'street': 'new Street 45 �&',
@@ -645,7 +645,7 @@
 			});
 		});
 	}
-	
+
 	function check_scenarios(){
 		test.userScenariosPromise = get_user_scenarios();
 		$.when(test.templateScenariosPromise, test.userScenariosPromise)
@@ -665,7 +665,7 @@
 			}
 		);
 	}
-	
+
 	/**
 	 * loads _ALL_ scenarios of the current logged in user
 	 * and store it to test.actualScenarios
@@ -710,9 +710,9 @@
 			return arr;
 		});
 	}
-	
 
-	
+
+
 	// fetches a predefined scenario and tries to create it
 	function new_scenario(){
 		test.log($('<h3>new_scenario</h3>'));
@@ -777,7 +777,7 @@
 			s = 3,
 			max = 1, //maximum number of models per stage
 			context;
-			
+
 			// add some models (all existing models are used and added to the
 			// three stages of the scenario
 			while(l--){
@@ -824,7 +824,7 @@
 			test.log('Create Scenario preconditions failed');
 		});
 	}
-	
+
 	function update_scenario(){
 		test.log($('<h3>update_scenario</h3>'));
 		var scenario;
@@ -841,7 +841,7 @@
 				// adaptthe scenario
 				scenario.title += ' adapted';
 				scenario.description += ' adapted';
-				
+
 				// update the adapted scenario
 				ajaxrequest({
 					type: "POST",
@@ -864,9 +864,9 @@
 				});
 			},
 			error: errorhandler
-		})		
+		});
 	}
-	
+
 	function handle_models(){
 		test.log($('<h3>handle_models</h3>'));
 		var scenario = test.data.new_scenario;
@@ -895,9 +895,9 @@
 			error: errorhandler
 		});
 	}
-	
+
 	function configure_model(){
-		test.log('Starting to configure models of scenario')
+		test.log('Starting to configure models of scenario');
 		var scenario = test.data.new_scenario;
 		scenario.stages['0'].useCategoryPath = 2;
 //		scenario.stages['0'].xingModels[0].weight = 100;
@@ -920,13 +920,13 @@
 			error: errorhandler
 		});
 	}
-	
+
 	function update_profile_filter_set(){
 		profileSet = {
 			'excludeAlreadyPurchased': true,
 			'excludeRepeatedRecommendations': null,
 			'excludeBlacklist': true
-		}
+		};
 //		console.log('{"profileFilterSet":' + JSON.stringify(profileSet)+ '}');
 		// set the new filters
 		ajaxrequest({
@@ -941,7 +941,7 @@
 				test.log("Update Scenario successfull");
 				debug('profile_filter', json.profileFilterSet, profileSet);
 				test.log(debugButton('profile_filter'));
-				test.assert(equals(json.profileFilterSet, profileSet), 
+				test.assert(equals(json.profileFilterSet, profileSet),
 					'update profile filter set check passed',
 					'update profile filter set check failed');
 				test.next();
@@ -949,7 +949,7 @@
 			error: errorhandler
 		});
 	}
-	
+
 	function update_standard_filter_set(){
 		// standard set of filters
 		stdSet = {
@@ -961,21 +961,21 @@
 			'excludeTopSellingResults': false,
 			'maximalItemAge': null,
 			'sameCategoryFilter': "INACTIVE"
-		}
+		};
 		// set the new filters
 		ajaxrequest({
 			type: "POST",
 				dataType: "json",
 				data: {
 					'standardFilterSet' : '{"standardFilterSet":' + JSON.stringify(stdSet)+ '}'
-					},				
+					},
 				url: test.mandatorRequestStr + '/structure/update_filter_set/standard/' + test.data.new_scenario.referenceCode,
 				statusCode: {},
 				success: function (json) {
 					test.log("Update Scenario successfull");
 					debug('std_filter', json.standardFilterSet, stdSet);
 					test.log(debugButton('std_filter'));
-					test.assert(equals(json.standardFilterSet, stdSet), 
+					test.assert(equals(json.standardFilterSet, stdSet),
 							'update stdandard filter set check passed',
 							'update standard profile filter set check failed' );
 					test.next();
@@ -983,9 +983,9 @@
 			error: errorhandler
 		});
 	}
-	
+
 	function update_submodel(){
-		test.log('Submodel Test')		
+		test.log('Submodel Test');
 		ajaxrequest({
 			type: 'GET',
 			dataType: 'json',
@@ -1027,12 +1027,12 @@
 					url: test.mandatorRequestStr + '/structure/update_submodel/' + model.referenceCode,
 					data: JSON.stringify(test.data.submodel)
 				});
-			}	
+			}
 		).pipe(
 			function(json){
 				debug('submodel', json.submodel, test.data.submodel);
 				test.log(debugButton('submodel'));
-				test.assert(equals(json.submodel, test.data.submodel), 'submodel matches', 'submodel matches not')
+				test.assert(equals(json.submodel, test.data.submodel), 'submodel matches', 'submodel matches not');
 				test.next();
 			},
 			function(){
@@ -1040,7 +1040,7 @@
 				test.next();
 			});
 	}
-	
+
 	function check_statistics(){
 		var start = new Date(Date.now() - 5184000*1000);
 		var now = new Date();
@@ -1119,10 +1119,10 @@
 			function(){
 				test.log('Get revenue statistic.xslx failed', 'error');
 				test.next();
-			}	
+			}
 		);
 	}
-	
+
 //	function change_email(){
 //		test.log('Changing email');
 //		ajaxrequest({
@@ -1151,25 +1151,25 @@
 //			error: errorhandler
 //		});
 //	}
-	
+
 	function finishTest(){
-		test.log('Finalizig the tests and logging out')
-		ajaxrequest({ 
+		test.log('Finalizig the tests and logging out');
+		ajaxrequest({
 			type: "POST",
 			dataType: "json",
 			url: "ebl/v3/registration/logout",
 			success: function () {
 				test.log('Logout success');
 				text.log('all tests finished');
-			},	
+			},
 			error: errorhandler
 		});
 	}
-	
+
 	function equals(obj1, obj2){
 		return _equals(obj1, obj2) && _equals(obj2, obj1) ? true : false;
 	}
-//	
+//
 //	function _equals(obj1, obj2){
 //		var i, type1, type2, attr1, attr2, l1, l2;
 //		obj1 = $.extend(true, {}, obj1);
@@ -1218,11 +1218,11 @@
 //				}
 //			}else{
 //				return false;
-//			}	
+//			}
 //		}
 //		return true;
 //	}
-	
+
 	function _equals(obj1, obj2){
 		var i, type1, type2, attr1, attr2;
 		if(obj1 instanceof Array){
@@ -1263,14 +1263,14 @@
 					}
 				}else{
 					return false;
-				}	
+				}
 			}
 		}else if(obj1 !== obj2){
 			return false;
 		}
 		return true;
 	}
-	
+
 	function arrayCompare(arr1, arr2){
 		if(!(arr1 instanceof Array && arr2 instanceof Array)){
 			return false;
@@ -1294,14 +1294,14 @@
 		}
 		return true;
 	}
-	
+
 	window.equals = equals;
 	window._equals = _equals;
 
 	function rejectDeferred(){
 		return $.Deferred().reject();
 	}
-	
+
 	function deepsort(obj){
 		var i;
 		if(obj instanceof Array){
@@ -1324,10 +1324,10 @@
 		}
 		return obj;
 	}
-	
+
 /**
  * stores objects for later debugging
- * 
+ *
  * @param 1st string -- name of scope
  * @param *st object -- objects to be saved in the scope
  */
@@ -1344,10 +1344,10 @@
 			test.debug[arguments[0]] = arr;
 		}
 	}
-	
+
 /**
  * Helper function for logging post requests
- * 
+ *
  */
 	function ajaxrequest(params){
 		var reqId = test.ajaxreq++,
@@ -1374,7 +1374,7 @@
 				if(params.dataType === 'json'){
 					debugJson(data);
 				}else{
-					debugString(data)
+					debugString(data);
 				}
 			}));
 		});
@@ -1390,7 +1390,7 @@
 			var endDate = new Date(),
 			durration = endDate.getTime() - startDate.getTime();
 			$logEntry.append('<div class="inline">time: '+ durration +'ms</div>');
-		})
+		});
 		return deferred;
 	}
 /**
@@ -1404,16 +1404,16 @@
 
 /**
  * removes the parent of a button from the DOM
- */	
+ */
 	function removeParent(){
 		var $this = $(this);
 		$this.parent().remove();
 	}
-	
+
 /**
- * Shows a number of objects in a comprehensive way, which are stored in teh debug property of test. 
- * 
- * @param name string name of the attribute with the two objects to be compared 
+ * Shows a number of objects in a comprehensive way, which are stored in teh debug property of test.
+ *
+ * @param name string name of the attribute with the two objects to be compared
  */
 	function showDebug(name){
 		//fill the debug div
@@ -1430,7 +1430,7 @@
 		}
 		$debug.show();
 	}
-	
+
 /**
  * shows a single Json object in the debug area
  */
@@ -1457,7 +1457,7 @@
 			.html('<pre>' + dump(data) + '</pre>')
 			.show();
 	}
-	
+
 	function debugString(data){
 		$('#debug_content')
 			.html('<pre>' + data + '</pre>')
@@ -1477,15 +1477,15 @@
 //	function dump2(arr,level) {
 //		var dumped_text = "";
 //		if(!level) level = 0;
-//		
+//
 //		//The padding given at the beginning of the line.
 //		var level_padding = "";
 //		for(var j=0;j<level+1;j++) level_padding += "    ";
-//		
-//		if(typeof(arr) == 'object') { //Array/Hashes/Objects 
+//
+//		if(typeof(arr) == 'object') { //Array/Hashes/Objects
 //			for(var item in arr) {
 //				var value = arr[item];
-//				
+//
 //				if(typeof(value) == 'object') { //If it is an array,
 //					dumped_text += level_padding + "'" + item + "' []\n";
 //					dumped_text += dump(value,level+1);
@@ -1531,9 +1531,9 @@
 				dumped_text += '\n' +  level_padding + '{\n';
 				for(item in arr) {
 					value = arr[item];
-					if(value == null){
+					if(value === null){
 						dumped_text += level_padding + '"' + item + '":null,\n';
-					}else if(typeof(value) == 'object') {
+					}else if(typeof(value) === 'object') {
 						dumped_text += level_padding + '"' + item + '":';
 						dumped_text += dump(value,level+1) + ",\n";
 					} else {
@@ -1552,7 +1552,7 @@
 				}
 				dumped_text += '\n' + level_padding + '}';
 			}
-		} else { 
+		} else {
 			dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
 		}
 		return dumped_text;
@@ -1561,19 +1561,19 @@
  * handler to log errors from server
  */
 	function errorhandler(jqXHR) {
-		if(jqXHR.status != null && jqXHR.status == 403)
+		if(jqXHR.status !== null && jqXHR.status == 403)
 		{
 			test.log("error_server_error_403");
 		}
-		else if(jqXHR.status != null && jqXHR.status == 401)
+		else if(jqXHR.status !== null && jqXHR.status == 401)
 		{
 			test.log("error_password_or_login_not_correct");
 		}
-		else if(jqXHR.status != null && jqXHR.status == 400)
+		else if(jqXHR.status !== null && jqXHR.status == 400)
 		{
 			test.log("error_server_error_400");
 		}
-		else if(jqXHR.status != null && jqXHR.status == 404)
+		else if(jqXHR.status !== null && jqXHR.status == 404)
 		{
 			test.log("error_server_error_404");
 		}
