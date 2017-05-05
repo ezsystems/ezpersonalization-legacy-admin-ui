@@ -55,7 +55,7 @@ var ifTrempty = function() {
     var i18n_params = Array.prototype.slice.call(arguments, 0);
 
     for (var i = 0; i < arguments.length; i++) {
-        if (typeof arguments[i] === 'undefined' || arguments[i] === null ||  (arguments[i]+"").trim() == "") {
+        if (typeof arguments[i] === 'undefined' || arguments[i] === null ||  (arguments[i]+"").trim() === "") {
             continue;
         }
 
@@ -68,16 +68,16 @@ var ifTrempty = function() {
 
 /** Returns the first non-null argument */
 var ifnull = function() {
-	
+
 	var i18n_params = Array.prototype.slice.call(arguments, 0);
-	
+
 	for (var i = 0; i < arguments.length; i++) {
 		if (typeof arguments[i] === 'undefined' || arguments[i] === null) {
 			continue;
 		}
 		return arguments[i];
 	}
-	
+
 	return null;
 };
 
@@ -142,7 +142,7 @@ var saveCBModel = function saveCBModel(model, $overlay) {
 		weight,
 		l = 3;
 	duration[unit] = parseInt($overlay.find('input[name="maxItemAge"]').val(), 10);
-	duration[unit] = duration[unit] === NaN ? 0 : duration[unit];
+	duration[unit] = isNaN(duration[unit]) ? 0 : duration[unit];
 	model.maximumItemAge = duration.getXSDuration();
 	if(!startsWith('CBFT', model.modelType, true)) {
 		model.attributes = [];
@@ -254,7 +254,7 @@ var setMessages = function () {
 	var destroyMessageTrigger = $('.message .destroy_message, .message .close');
 	destroyMessageTrigger.on("click", function (event) {
 		if ( ! $(this).attr("href")) {
-			$(this).closest('.message').fadeOut('fast');	
+			$(this).closest('.message').fadeOut('fast');
 		}
 	});
 };
@@ -301,4 +301,3 @@ $(window).resize(function () {
 	}
 
 });
- 

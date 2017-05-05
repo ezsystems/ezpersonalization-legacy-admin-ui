@@ -4,14 +4,14 @@ var importJobId = gup('importJobId');
 var mandatorInfo;
 
 $(document).ready(function() {
-	 
+
 	  setLoadingDiv($('body'));
-	  	  
+
 	  $.when(
 		  initialize_first(null, "preview_send")
-		  
+
      ).done(function() {
-    	 
+
   	  unsetLoadingDiv($('body'));
 		  initialize();
 	  });
@@ -30,7 +30,7 @@ function initialize_first(callback, i18n_save_button) {
 			$('#dayOfweek').hide();
 			$('#hourOfday').hide();
 		}
-		
+
 	});
 	$('#import_primary_settings').submit(function () {
 		saveImport();
@@ -69,12 +69,12 @@ function loadTypes(){
 			selectedTxt = ' id="defaultInItemType" selected = "selected" ';
 			console.log("defaultItemType="+defaultItemType+".");
 		}
-		$('<option value="' + t.id + '"'+selectedTxt+'></option>').appendTo($("#input_type_block select")).text(d);	
+		$('<option value="' + t.id + '"'+selectedTxt+'></option>').appendTo($("#input_type_block select")).text(d);
 	}
 }
 
 function loadMandatorInfo(callback) {
-	
+
 	var result = $.ajax({
 		dataType: "json",
 		url: "/api/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration&no-realm",
@@ -88,25 +88,25 @@ function loadMandatorInfo(callback) {
 
 
 function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
-	
+
 	unsetLoadingDiv($('body'));
-	
-	if(jqXHR.status != null && jqXHR.status == 403) {
+
+	if(jqXHR.status !== null && jqXHR.status == 403) {
 		setMessagePopUp("problem", "error_server_error_403");
-		
-	} else if(jqXHR.status != null && jqXHR.status == 401) {
+
+	} else if(jqXHR.status !== null && jqXHR.status == 401) {
 
 		window.parent.location = "/login.html";
-		
-	} else if(jqXHR.status != null && jqXHR.status == 400) {
+
+	} else if(jqXHR.status !== null && jqXHR.status == 400) {
 		setMessagePopUp("problem", "error_server_error_400");
-		
-	} else if(jqXHR.status != null && jqXHR.status == 404) {
+
+	} else if(jqXHR.status !== null && jqXHR.status == 404) {
 		setMessagePopUp("problem", "error_server_error_404");
-		
-	} else if(jqXHR.status != null && jqXHR.status == 409) {
+
+	} else if(jqXHR.status !== null && jqXHR.status == 409) {
 		setMessagePopUp("problem", "error_server_error_409");
-		
+
 	} else {
 		setMessagePopUp("problem", "error_server_error");
 	}
@@ -115,7 +115,7 @@ function configuratorErrorHandler(jqXHR, textStatus, errorThrown) {
 var initialize = function() {
 	$("#button_save").click(submitImport);
 	$("#button_save2").click(submitImport2);
-	
+
 };
 
 function submitImport() {
@@ -146,7 +146,7 @@ function getCSVFields(){
 				  csvFields = fields;
 				  for(var i=0;i<fields.length;i++){
 					  var field = fields[i];
-					 
+
 					  htmlToSet += '<li class="types_base select_field clearfix">\n'+
 						'<div class="basis" >\n'+
 							'<label for="field'+i+'" id="name_field'+i+'" class="input_label" style="text-align: left;">'+field+'</label>\n'+
@@ -205,11 +205,11 @@ function getCSVFields(){
 									  }
 									  $("#prefixURL"+j).show();
 								  }
-								  if(retObj.mappings[i].valueDelimiter && retObj.mappings[i].valueDelimiter != ''){
+								  if(retObj.mappings[i].valueDelimiter && retObj.mappings[i].valueDelimiter !== ''){
 									   $("#vdelimiter"+j).val(retObj.mappings[i].valueDelimiter);
 								  }
-								
-								  
+
+
 							  }
 						  }
 					  }
@@ -220,7 +220,7 @@ function getCSVFields(){
 				  stdAjaxErrorHandler();
 			  }
 		  });
-		
+
 	}
 	unsetLoadingDiv($('body'));
 }
@@ -250,7 +250,7 @@ function changeType(typeId){
 			}
 		}
 	}
-		
+
 }
 
 function saveImport2() {
@@ -265,7 +265,7 @@ function saveImport2() {
 			 var fidv="type_field"+i;
 			 if( $("#"+fid).val() != 'notfu'){
 				 retObj.mappings[j] = new Object();
-				 retObj.mappings[j].key = $("#"+fid).val(); 
+				 retObj.mappings[j].key = $("#"+fid).val();
 				 retObj.mappings[j].value = $("#"+fidn).html();
 				 if(retObj.mappings[j].key == 'id'){
 					 retObj.mappings[j].valuePk = true;
@@ -274,10 +274,10 @@ function saveImport2() {
 					 retObj.mappings[j].valuePk = false;
 				 }
 				 retObj.mappings[j].valueFormat = $("#"+fidv).val();
-				 if(retObj.mappings[j].valueFormat == 'URI' && $("#prefixURL"+i).val() != null && $("#prefixURL"+i).val() != '' ){
+				 if(retObj.mappings[j].valueFormat == 'URI' && $("#prefixURL"+i).val() !== null && $("#prefixURL"+i).val() !== '' ){
 					 retObj.mappings[j].valuePrefix = $("#prefixURL"+i).val();
 				 }
-				 if($("#vdelimiter"+i).val() != null && $("#vdelimiter"+i).val() != '' ){
+				 if($("#vdelimiter"+i).val() !== null && $("#vdelimiter"+i).val() !== '' ){
 					 retObj.mappings[j].valueDelimiter = $("#vdelimiter"+i).val();
 				 }
 				 j++;
@@ -285,14 +285,14 @@ function saveImport2() {
 		 }
 		 if(foundID != 1){
 			 unsetLoadingDiv($('body'));
-			 if(foundID == 0){
+			 if(foundID === 0){
 				 setMessagePopUp("problem", "item_import_error_must_set_id");
 			 }else{
 				 setMessagePopUp("problem", "item_import_error_only_one_id");
 			 }
 			 return;
 		 }
-		
+
 		 var urlsufix = '/import/save_importjob';
 		 $.ajax({
 			  type: "POST",
@@ -330,7 +330,7 @@ function saveImport() {
 	 if(password && password.trim().length > 0){
 		 retObj.password = password;
 	 }
-	
+
 	 retObj.delimiter = $("#delimiter").val();
 	 retObj.interval = $("#import_schedule").val();
 	 retObj.enabled = true;
@@ -351,7 +351,7 @@ function saveImport() {
 		 retObj.language = $("#input_language").val();
 		 retObj.name = retObj.name+ " IN "+ $("#input_language").find(":selected").text();
 	 }
-	 
+
 	 getCSVFields();
 }
 
@@ -397,7 +397,7 @@ function getImport() {
 							$('#hourOfday').show();
 					 }
 					 var startDate = new Date(obj.startDate);
-					 
+
 					 var importWeek = startDate.getDay();
 					 if(importWeek){
 						 $("#dayOfweek").val(importWeek);
@@ -414,7 +414,7 @@ function getImport() {
 							 itemId = map.value;
 							 itemIdPk = map.id;
 						 }
-						
+
 					 }
 					 if(itemId){
 						 $("#itemId").val(itemId);
@@ -424,11 +424,11 @@ function getImport() {
 						 $("#delimiter").val(delimiter);
 					 }
 					 if(obj.language){
-						 $("#input_language").val(obj.language); 
+						 $("#input_language").val(obj.language);
 					 }
 				 }
 				 unsetLoadingDiv($('body'));
-				 
+
 			  },
 			  error: function() {
 				  unsetLoadingDiv($('body'));
@@ -438,19 +438,19 @@ function getImport() {
 }
 
 function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
-	  if(jqXHR != null && jqXHR.status == 403) {
+	  if(jqXHR !== null && jqXHR.status == 403) {
 		  setMessagePopUp("problem", "error_server_error_403");
 	  }
-	  else if(jqXHR != null && jqXHR.status == 401) {
+	  else if(jqXHR !== null && jqXHR.status == 401) {
 		  setMessagePopUp("problem", "error_server_error_401");
 	  }
-	  else if(jqXHR != null && jqXHR.status == 400) {
+	  else if(jqXHR !== null && jqXHR.status == 400) {
 		  setMessagePopUp("problem", "error_server_error_400");
 	  }
-	  else if(jqXHR != null && jqXHR.status == 404) {
+	  else if(jqXHR !== null && jqXHR.status == 404) {
 		  setMessagePopUp("problem", "error_server_error_404");
 	  }
-	  else if(jqXHR != null && jqXHR.status == 409) {
+	  else if(jqXHR !== null && jqXHR.status == 409) {
 		  setMessagePopUp("problem", "error_server_error_409");
 	  }
 	  else {

@@ -1,24 +1,24 @@
 
 /** It loads the specified scripts and call the specified callback functions.
  *  It works similar to jQuery.getScript function with some additional features:<br>
- *  
+ *
  *     1. It is able to load multiple scripts simultaneously.<br>
  *     2. It loads scripts in cross domain mode (see $.ajax description).<br>
  *     3. It allows browser to use the cache.<br>
  */
 var include = function(scripts, callback) {
 	var arguments = [];
-	
+
 	for (var i in scripts) {
 		arguments.push(cachedScript(scripts[i]));
 	}
-	
+
 	var result = $.when.apply(null, arguments);
-    
+
 	if (callback) {
 		result.done(callback);
 	}
-	
+
 	return result;
 };
 
@@ -35,7 +35,7 @@ Date.prototype.getWeekNumber = function(){
 
 var cachedScript = function(url) {
  	  var options = {
- 			crossDomain: true, // it adds script tag and allows to debug included file 
+ 			crossDomain: true, // it adds script tag and allows to debug included file
 		    dataType: "script",
 		    cache: true,
 		    url: url
@@ -56,10 +56,10 @@ function getUrlVars() {
     }
     return vars;
 }
-		
+
 
 /** @deprecated use gupEncoded instead.
- *  
+ *
  * @param name
  * @returns
  */
@@ -69,21 +69,21 @@ function gup(name) {
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
     var results = regex.exec(window.location.href);
-    if (results == null) return "";
+    if (results === null) return "";
     else return results[1];
 }
 
 
-/** Returns the anchor (a string behind a # in a URL), decoding the URL. 
+/** Returns the anchor (a string behind a # in a URL), decoding the URL.
  *  Returns <code>null</code>, if no anchor set (no # found in the URL).
  */
 function anchorDecoded(name) {
 	var url = window.location.href;
-	var i = url.indexOf("#")
+	var i = url.indexOf("#");
 	if (i != -1) {
 		return decodeURIComponent(url.substring(i + 1));
 	} else {
-		return null
+		return null;
 	}
 }
 
@@ -93,7 +93,7 @@ function gupDecoded(name) {
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
     var results = regex.exec(window.location.href);
-    if (results == null) {
+    if (results === null) {
     	return "";
     } else {
     	var value = results[1].replace(/\+/g, ' ');
@@ -117,21 +117,21 @@ var parseDuration = function(str) {
 	var getHours = function() {
 		return (((((this.Y * 12) + this.M) * 30) + this.D) * 24) + this.H + (this.m > 30 ? 1 : 0);
 	};
-	
+
 	var setHours = function(value) {
-		
+
 		var a = value % 24;
 
 		this.D = Math.round((value - a) / 24);
 		this.H = Math.floor(a);
 		this.M = Math.round((a - this.H) * 60);
-		
+
 		this.Y = 0;
 		this.m = 0;
 		this.S = 0;
 	};
-	
-	
+
+
 	var setDays = function(value) {
 		this.setHours(value * 24);
 	};
@@ -248,7 +248,7 @@ function getCurrentDateMinusDays(days) {
     var day = currentTime.getDate();
     var year = currentTime.getFullYear();
     var hour = currentTime.getHours();
-    
+
     result.month = month;
     result.day = day;
     result.year = year;
@@ -267,7 +267,7 @@ function getCurrentDateTimeMinusDays(days,hour) {
     var day = currentTime.getDate();
     var year = currentTime.getFullYear();
     var hour = currentTime.getHours();
-    
+
     result.month = month;
     result.day = day;
     result.year = year;
@@ -279,24 +279,24 @@ function getCurrentDateTimeMinusDays(days,hour) {
 function setLoadingDiv(selector) {
     var width  = $(selector).outerWidth();
     var height = $(selector).outerHeight();
-	
+
 	if($(selector).is(":visible")) {
-		
+
 		$(selector).each(function() {
-			
+
 		 	var loaddiv = $(this).prev();
-		 	
+
 		 	var style = 'position: absolute; z-index: 100; width: ' + width + 'px; height: ' + height + "px;";
-		 	
+
 		 	if (! loaddiv || ! loaddiv.hasClass("loading")) {
-		
+
 		 		$(this).before('<div class="loading" style="' + style + '"><div class="loader_wrapper w_30"><img src="/img/wait30trans.gif"></div></div>');
 		 		loaddiv = $(this).prev();
 		 	}
-		 	
+
 		 	loaddiv.attr('style', style);
-		 	
-	 		copyCss(this, loaddiv, [ 
+
+	 		copyCss(this, loaddiv, [
       	             	"margin", "margin-top", "margin-left", "margin-bottom", "margin-right",
       	             	"border-top-left-radius", "border-top-right-radius", "border-bottom-right-radius",
       					"border-bottom-left-radius"]);
@@ -308,21 +308,21 @@ function setLoadingDiv(selector) {
 function setLockedDiv(element) {
     var width  = $(element).outerWidth();
     var height = $(element).outerHeight();
-	
+
 	if($(element).is(":visible")) {
 		$(element).each(function() {
 		 	var disableddiv = $(this).prev();
 		 	var style = 'position: absolute; z-index: 10; width: ' + width + 'px; height: ' + height + "px;";
-		 	
+
 		 	if (! disableddiv || ! disableddiv.hasClass("locked")) {
-		
+
 		 		$(this).before('<div class="locked" style="' + style + '"></div>');
 		 		disableddiv = $(this).prev();
 		 	}
-		 	
+
 		 	disableddiv.attr('style', style);
-		 	
-	 		copyCss(this, disableddiv, [ 
+
+	 		copyCss(this, disableddiv, [
       	             	"margin", "margin-top", "margin-left", "margin-bottom", "margin-right",
       	             	"border-top-left-radius", "border-top-right-radius", "border-bottom-right-radius",
       					"border-bottom-left-radius"]);
@@ -354,7 +354,7 @@ function unsetLoadingDiv(element) {
 function validateEmail(email) {
    var reg = /^([A-Za-z0-9_\-\+\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,8})$/;
    var address = email;
-   if(reg.test(address) == false) {
+   if(reg.test(address) === false) {
       return false;
    } else {
 		return true;
@@ -470,7 +470,9 @@ var Base64 = {
 	_utf8_decode: function (utftext) {
 		var string = "";
 		var i = 0;
-		var c = c1 = c2 = 0;
+		var c = 0;
+		var c1 = 0;
+		var c2 = 0;
 
 		while (i < utftext.length) {
 
@@ -520,9 +522,9 @@ function initHelpBtn(){
 			e.stopPropagation();//prevent the immediate execution of hideOnce
 			var $view = $('#helpView');
 			$view.find('.content').attr('data-translate', $(this).data('helptxt'));
-			
+
 			i18n($view.find('.content'));
-			
+
 			$view
 				.css({
 					'left':  e.pageX + 20,
@@ -551,16 +553,16 @@ function yooJson(blurSelector, options) {
 
 /** Makes a $.ajax() call setting JSON content type by default.
  *  If non 2xx returned, calls method <code>fault_[json.faultCode]</code> or <code>fault_[statusCode]</code>
- *  or <code>fault</code> instead of <code>error</code>. Calls the method <code>error</code> only, 
+ *  or <code>fault</code> instead of <code>error</code>. Calls the method <code>error</code> only,
  *  if the <code>fault*</code> mehtod was not found.
- * 
+ *
  *  @param blurSelector
  *  	selector of the DOM element to blur during the call. It can be <code>null</code>.
  *  @param options
  *  	see <code>$.ajax()</code> for more infromation.
  */
 function yooAjax(blurSelector, options) {
-	
+
 	if (blurSelector) {
 		setLoadingDiv($(blurSelector));
 	}
@@ -578,16 +580,16 @@ function yooAjax(blurSelector, options) {
 			unsetLoadingDiv($(blurSelector));
 		});
 	}
-	
+
     var old_success = options.success;
     var old_error = options.error;
-    
+
     if (options.data) {
     	if (! options.type) {
     		options.type = "POST";
     	}
     }
-    
+
     if (options.type == "POST") {
     	if (! options.contentType) {
     		options.contentType = "application/json";
@@ -596,13 +598,13 @@ function yooAjax(blurSelector, options) {
     		options.data = JSON.stringify(options.data);
         }
     }
-    
+
     if (! options.fault_authenticationFailure) {
 	    options.fault_authenticationFailure = function(json) {
-	    	
+
 	    	var auth_code = json.faultDetail ? json.faultDetail.faultCode : null;
 	    	var i18n_id = "fault_authenticationFailure";
-	    	
+
 	    	if (auth_code == "LOGIN_DISABLED" || auth_code == "LOGIN_NOT_FOUND") {
 	    		i18n_id = "fault_authenticationFailure_LOGIN_DISABLED";
 	    	} else if (auth_code == "TOKEN_EXPIRED") {
@@ -610,30 +612,30 @@ function yooAjax(blurSelector, options) {
 	    	} else if (auth_code == "NOT_AUTHENTICATED") {
 	    		i18n_id = "fault_authenticationFailure_NOT_AUTHENTICATED";
 	    	}
-	    	
+
 			var magic = magicMessage("negative", i18n_id, auth_code);
 			var returnUrl = window.location;
-			 
+
 			magic.addLink("/login.html?returnUrl=" + encodeURIComponent(returnUrl), "fault_link_login_page");
 		};
     }
-    
+
     if (! options.fault_securityFault) {
 	    options.fault_securityFault = function(json) {
 	    	if (json.faultDetail.object) {
 	    		magicMessage("negative", "fault_securityFault_object", json.faultDetail.code, json.faultDetail.object);
 	    	} else {
-	    		magicMessage("negative", "fault_securityFault", json.faultDetail.code);	
+	    		magicMessage("negative", "fault_securityFault", json.faultDetail.code);
 	    	}
 		};
     }
-    
-    if (! options.fault) { 
+
+    if (! options.fault) {
     	options.fault = function(json) {
     		magicMessage("negative", "fault_unexpected", json.faultCode, JSON.stringify(json.faultDetail));
     	};
     }
-    
+
     options.error = function(jqXHR, textStatus, errorThrown) {
     	var json = jqXHR.responseJSON;
     	if (json) {
@@ -648,7 +650,7 @@ function yooAjax(blurSelector, options) {
     		magicMessage("negative", "error_server_error", jqXHR.status);
     	}
     };
-    
+
     if (options.async === false) { // sync mode was explicitely set (default is "async")
     	var result = $.ajax(options);
     	if (blurSelector) {
@@ -710,10 +712,10 @@ function pad(num, size) {
 
 
 /** Shows a magic message.
- *  
+ *
  *  It makes the DIV#magic_message visible. If no magic DIV exists,
  *  creates one as a popup.
- * 
+ *
  *  @param type
  *  	'info', 'warining' or 'error'
  *  @param i18n_id
@@ -721,28 +723,28 @@ function pad(num, size) {
  *  	returns an object for additional features. Can be ignored.
  */
 function magicMessage(type, i18n_id) {
-	
+
 	if (! $('#magic_message').length) {
-		$('body').append('<div id="magic_message" class="default_message"><p><a class="close_link">X</a><span class="countdown">10</span></p></div>')
+		$('body').append('<div id="magic_message" class="default_message"><p><a class="close_link">X</a><span class="countdown">10</span></p></div>');
 		$('#magic_message p').append("<span id='magic_message_text'></span>");
-		
+
 		$('#magic_message .close_link').click(function() {
 			$('#magic_message').css("visibility", "hidden"); // not "hide"
 		});
-				
-		var closeMagicMessage = function(e) { 
+
+		var closeMagicMessage = function(e) {
 		    if (e.which == 1 || e.which == 27) {
 		    	if ($('#magic_message').is(":visible")) {
 		    		$('#magic_message').css("visibility", "hidden");
-		    	} 
+		    	}
 		    }
 		};
-	    
+
 	    $(document).bind('keydown', closeMagicMessage);
 	}
 
 	$('#magic_message .countdown').hide();
-	
+
 	$('#magic_message').removeClass("problem");
 	$('#magic_message').removeClass("negative");
 	$('#magic_message').removeClass("error");
@@ -750,58 +752,58 @@ function magicMessage(type, i18n_id) {
 	$('#magic_message').removeClass("info");
 	$('#magic_message').removeClass("neutral");
 	$('#magic_message').removeClass("warning");
-	
+
     $('#magic_message').addClass(type);
     $('#magic_message').css("visibility", "visible");
-    
+
     $('#magic_message > a').remove();
     $('#magic_message > br').remove();
-    
+
     var i18n_params = Array.prototype.slice.call(arguments, 2);
-    
+
     for (var i in i18n_params) {
     	i18n_params[i] = "<span data-param='" + i + "'>" + i18n_params[i] + "</span>";
     }
-    
+
     $('#magic_message_text').attr("data-translate", i18n_id);
 	$('#magic_message_text').html(i18n_params.join(""));
-	
+
 	i18n($('#magic_message_text'));
-	
+
 	clearInterval(magicCountdown);
-	
+
 	var magicMessage = {
-			
+
 		countdown: null,
-			
+
 		addLink: function(href, i18n_id) {
-			var i18n_params = Array.prototype.slice.call(arguments, 2);		
+			var i18n_params = Array.prototype.slice.call(arguments, 2);
 
 		    for (var i in i18n_params) {
 		    	i18n_params[i] = "<span data-param='" + i + "'>" + i18n_params[i] + "</span>";
 		    }
-			
+
 			$('#magic_message_text').parent().
 				append("<br><a href='"+href+"' data-translate='" + encodeURIComponent(i18n_id) + "'>" + i18n_params.join("") + "</a>");
-			
+
 			$('#magic_message_text').parent().children('a.destroy_message').hide();
-			
+
 			i18n($('#magic_message_text').parent());
 		},
 		timeout: function() {
 			var $countdown = $('#magic_message .countdown');
-			
-			if ($countdown.length == 0) {
+
+			if ($countdown.length === 0) {
 				return;
 			}
-			
+
 			clearInterval(magicCountdown);
-			
-			var value = arguments.length == 0 ? 10 : arguments[0];	
-			
+
+			var value = arguments.length === 0 ? 10 : arguments[0];
+
 			$('#magic_message .countdown').text(value);
 			$('#magic_message .countdown').show();
-			
+
 			magicCountdown = window.setInterval(function() {
 				var value = parseInt($('#magic_message .countdown').text()) - 1;
 				if (value < 0 || isNaN(value)) {
@@ -810,7 +812,7 @@ function magicMessage(type, i18n_id) {
 				}
 				$('#magic_message .countdown').text(value);
 			}, 1000);
-			
+
 			$("#magic_message").mouseover(function() {
 				$('#magic_message .countdown').hide();
 				clearInterval(magicCountdown);
@@ -819,18 +821,18 @@ function magicMessage(type, i18n_id) {
 		type: function() {
 			return type;
 		}
-	}
-	
+	};
+
 	if (type == "info" || type == "positive") {
 		magicMessage.timeout(10);
 	}
-	 
+
 	return magicMessage;
 }
 
 
 /** Swith the history state to the specified value.
- * 
+ *
  *  @param state
  *  @param pushState
  *  	if <code>true</code>, pushs the state, otherwise replases it.
@@ -906,10 +908,10 @@ $(document).ready(function(){
 			.addClass(typeof classes.accept === 'string' ? classes.accept : '');
 		$infoBox.find('.msg').attr('data-translate', args.message ? args.message : 'provide_message');
 		$infoBox.find('.heading').attr('data-translate', args.heading ? args.heading : 'provide_heading');
-		
+
 		i18n($infoBox.find('.msg'));
 		i18n($infoBox.find('.heading'));
-		
+
 		//after we got the localized strings, we replace the place holders
 		if(args.placeHolders){
 			for(name in args.placeHolders){
