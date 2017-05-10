@@ -200,7 +200,10 @@ function renderModelUpdate(model) {
   var addInfo = getModelAdditionalInfo(model);
   var additionalInfoString = addInfo ? " (" + addInfo + ")" : "";
   ghostModel.find('.info').html(additionalInfoString);
-  
+
+  //display number of submodels in the model 
+  ghostModel.find('.info').append(getSubmodelsCountString(model));
+
   //1st phase do csv
   //2nd phase do itemList
 
