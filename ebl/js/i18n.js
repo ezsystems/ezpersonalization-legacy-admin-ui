@@ -5,7 +5,7 @@ var in_to_language = gupDecoded('lang') || $.cookie('language') || navigator.lan
 
 var _i18n_ready = false;
 
-
+////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function () {
 	try {
 		init_i18n();
@@ -14,7 +14,7 @@ $(document).ready(function () {
 	}
 });
 
-
+////////////////////////////////////////////////////////////////////////////////
 function i18n_files() {
 	var files = [];
 
@@ -32,7 +32,7 @@ function i18n_files() {
 	return files;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Initialize the i18n library.
  *  Translate the whole page and initializes the language switch.
  *
@@ -66,16 +66,16 @@ function init_i18n(filenames) {
 		console.error("No i18n files specified. Use attribute 'data-i18n-files' in the [script] tag.");
 	}
 }
-
+////////////////////////////////////////////////////////////////////////////////
 
 var changeLangListeners = [];
 
-
+////////////////////////////////////////////////////////////////////////////////
 function addChangeLangListener(listener) {
 	changeLangListeners.push(listener);
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function changeLang(newLang, updateProfile) {
 	if (in_to_language == newLang) {
 		return;
@@ -104,7 +104,7 @@ function changeLang(newLang, updateProfile) {
 	}
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function getLocalString(term){
 
 	var i18n_params = Array.prototype.slice.call(arguments, 1);
@@ -112,7 +112,7 @@ function getLocalString(term){
 	return jQuery.i18n.prop.apply(null, [term].concat(i18n_params));
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function setMessagePopUpLink(type, link, i18n_id) {
 
 	var i18n_params = Array.prototype.slice.call(arguments, 3);
@@ -127,7 +127,7 @@ function setMessagePopUpLink(type, link, i18n_id) {
 //    }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /**
  *
  * @param type
@@ -169,7 +169,7 @@ function setMessagePopUp(type, i18n_id) {
 //	$('.message a.close').removeAttr('href');
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Translates all the elements on the page.
  *
  *  @param element
@@ -195,7 +195,7 @@ function apply_i18n(filenames) {
 	});
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Same as "i18n" without arguments.
  *  For backward compatibility.
  */
@@ -204,7 +204,7 @@ function localizer() {
 }
 
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Translates the specified element.
  *
  *  @param element
@@ -302,7 +302,7 @@ function i18n() {
 	}
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function to_outer_html(elements) {
 	result = [];
 
@@ -320,7 +320,7 @@ function to_outer_html(elements) {
 	return result;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Returns all the children of the specified "data" element
  *  with the numeric attibute "data-param".
  *
