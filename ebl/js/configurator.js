@@ -36,11 +36,13 @@
  * @property {string[]} values
  */
 
+////////////////////////////////////////////////////////////////////////////////
 
 var reference_code = gupDecoded('reference_code');
 var customerID = gupDecoded('customer_id');
 var saved = gupDecoded('saved');
 
+////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function () {
   setLoadingDiv($('body'));
 
@@ -67,7 +69,7 @@ $(document).ready(function () {
   destroyPlacedModel();
 });
 
-
+////////////////////////////////////////////////////////////////////////////////
 var initialize = function () {
 
   var row = 0;
@@ -99,7 +101,10 @@ var initialize = function () {
 
     var dummy = $('.dummymodel');
     var dummyClone = $(dummy).clone();
+
     $(dummyClone).show();
+
+    //replace id with model_REFCODE
     $(dummyClone).attr("id", "model_" + model.referenceCode);
 
     if (model.modelType.indexOf("CF_I2I") === 0) { // startWith emulation
@@ -111,6 +116,7 @@ var initialize = function () {
       nest = $('#other_list');
     }
 
+    //append dummyClone to nest
     $(dummyClone).appendTo(nest).removeClass("dummymodel");
 
     renderModel(model);
@@ -143,7 +149,7 @@ var initialize = function () {
   initHelpBtn();
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 /**
  *
  * @param {Model} model
@@ -151,8 +157,6 @@ var initialize = function () {
 function renderModel(model) {
 
   var ghostModel = $('#model_' + model.referenceCode).removeAttr("style");
-
-
 
   ghostModel.find('a.configure_model').on('click', function (e) {
     e.preventDefault();
@@ -171,7 +175,7 @@ function renderModel(model) {
   renderModelUpdate(model);
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /**
  *
  * @param {Model} model
@@ -184,20 +188,101 @@ function renderModelUpdate(model) {
   ghostModel.children("div").children("h5").children("span.mtitle").attr('data-translate', modelNameKey + '_title');
   ghostModel.children("div").children("p").children("span").attr('data-translate', modelNameKey + '_description');
 
+  //hide the config gear-wheel for CB, random, EDITOR_BASED
   if (!model.submodelsSupported &&
     !startsWith('CB', model.modelType, true) &&
     !startsWith('random', model.modelType, true) &&
     !startsWith('EDITOR_BASED', model.modelType, true)) {
+
     ghostModel.find('a.configure_model').hide();
   }
+
   var addInfo = getModelAdditionalInfo(model);
+  var additionalInfoString = addInfo ? " (" + addInfo + ")" : "";
+  ghostModel.find('.info').html(additionalInfoString);
+  
+  //1st phase do csv
+  //2nd phase do itemList
 
+  //set submodels as cvs
+  ghostModel.find('.info').append(getSubmodelsItemList(model));
 
-  ghostModel.find('.info').html(addInfo ? " (" + addInfo + ")" : "");
-
+  //set submodels as itemList
+  //ghostModel.find('.model_description').append(getSubmodelsItemList2(model));
+  ghostModel.find('.model_description').append("MODELS_AS_LIST");
 }
 
+////////////////////////////////////////////////////////////////////////////////
 
+function getSubmodelsCountString(model) {
+  if (!model.submodelsSupported) {
+    //TODO delete this console.log when done
+    console.log("submodels are not supported for model", model)
+    return "";
+  }
+  var submodelsCount = model.submodelSummaries.length;
+  var submodelsCountString = "";
+  switch (submodelsCount) {
+    case 0: //do nothing (submodelsCountString = "")
+      break;
+    case 1:
+      submodelsCountString = " - " + submodelsCount + " submodel";
+      break;
+    default:
+      submodelsCountString = " - " + submodelsCount + " submodels";
+      break;
+  }
+  return submodelsCountString;
+}
+////////////////////////////////////////////////////////////////////////////////
+
+function getSubmodelsItemList(model) {
+  if (!model.submodelsSupported) {
+    //TODO delete this console.log when done
+    console.log("submodels itemList are not supported for model", model)
+    return "";
+  }
+  var submodelsCount = model.submodelSummaries.length;
+  if(submodelsCount <1 ) {
+    return "";
+  } 
+
+  var submodelsItems = " [";
+  for (var i = 0; i < submodelsCount; i++) {
+    submodelsItems +=  model.submodelSummaries[i].attributeKey;
+    if(submodelsCount > 1 && i !== (submodelsCount-1)) {
+      submodelsItems += ", "
+    }
+  }
+  submodelsItems +="]";
+  return submodelsItems;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//TODO - make submodelsList as verticaList.
+function getSubmodelsItemList2(model) {
+  if (!model.submodelsSupported) {
+    //TODO delete this console.log when done
+    console.log("submodels itemList are not supported for model", model)
+    return "";
+  }
+  var submodelsCount = model.submodelSummaries.length;
+  if(submodelsCount <1 ) {
+    return "";
+  } 
+
+  var submodelsItems = " [";
+  for (var i = 0; i < submodelsCount; i++) {
+    submodelsItems +=  model.submodelSummaries[i].attributeKey;
+    if(submodelsCount > 1 && i !== (submodelsCount-1)) {
+      submodelsItems += ", "
+    }
+  }
+  submodelsItems +="]";
+  return submodelsItems;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function saveScenario() {
 
   setLoadingDiv($('body'));
@@ -260,8 +345,8 @@ function saveScenario() {
 
 }
 
+////////////////////////////////////////////////////////////////////////////////
 //ajax request for the right section
-
 function itemTypeTreeAsText(input, output) {
 
   var result = "";
@@ -276,7 +361,7 @@ function itemTypeTreeAsText(input, output) {
   return result;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function loadRightSection() {
 
   var json = {
@@ -365,7 +450,7 @@ function loadRightSection() {
       $('#' + path + '_str').attr('data-translate', 'configurator_category_main_category');
       $('#' + path + '_level').html(value);
     }
-    localizer();
+    localizer(); //her inside it will overrite everything in the models box
   }
 
   $(document).on('click', '.edit_category_path', function () {
@@ -489,9 +574,9 @@ function loadRightSection() {
     if (stage) {
 
       if (j === 0) {
-        setCategoryPath('primary_category_path', stage.useCategoryPath);
+        setCategoryPath('primary_category_path', stage.useCategoryPath);//(through localizer) overrites everything in the models box 
       } else {
-        setCategoryPath('fallback' + j + '_category_path', stage.useCategoryPath);
+        setCategoryPath('fallback' + j + '_category_path', stage.useCategoryPath);//(through localizer) overrites everything in the models box
       }
 
       for (var k = 0; k < stage.xingModels.length; k++) {
@@ -511,12 +596,13 @@ function loadRightSection() {
 
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 var ifExtended = function () {
   var solution = mandatorInfo.baseInformation.version;
   return (solution == 'EXTENDED');
 };
 
+////////////////////////////////////////////////////////////////////////////////
 /**
  * @param model
  * 	model reference code of model JSON
@@ -608,7 +694,7 @@ function generatePlacedModel(model, j, k, xing) {
   return ghostModel;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Returns submodel by attribute.
  *
  *  @param {String} attributeKey
@@ -638,7 +724,7 @@ function getSubmodel(attributeKey, attributeType) {
   return newSubmodel;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /**
  *
  * @param {AttributePk[]} attributes
@@ -698,7 +784,7 @@ function renderAttributes(attributes) {
   }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
   if (jqXHR !== null && jqXHR.status == 403) {
     setMessagePopUp("problem", "error_server_error_403");
@@ -715,6 +801,7 @@ function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function createJsonXingModel(json, stage, stageIndex, modelName, modelIndex) {
   if (stage === null) {
     json.scenario.stages[stageIndex] = new Object();
@@ -737,7 +824,7 @@ function createJsonXingModel(json, stage, stageIndex, modelName, modelIndex) {
   updateJsonValueForModel(modelName);
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function createJsonModel(modelDOM, modelName, row, column) {
 
   var json = $('body').data('scenario');
@@ -747,7 +834,7 @@ function createJsonModel(modelDOM, modelName, row, column) {
   createJsonXingModel(json, stage, row, modelName, column);
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function updateJsonValueForModel(modelName) {
   var json = $('body').data('scenario');
   for (var i = 0; i < 4; i++) {
@@ -771,7 +858,7 @@ function updateJsonValueForModel(modelName) {
   }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function deleteJsonModelWithName(modelName) {
   var json = $('body').data('scenario');
   for (var i = 0; i < 4; i++) {
@@ -790,7 +877,7 @@ function deleteJsonModelWithName(modelName) {
   updateJsonValueForModel();
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /**
  * @param {String} modelID
  */
@@ -830,7 +917,7 @@ function fillSubModels(modelID) {
   });
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function updateSubModel() {
 
   var model = current_submodel;
@@ -842,7 +929,7 @@ function updateSubModel() {
   }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function fillSubModelsChange(attributeKey, type) {
   if (!attributeKey) {
     fillSubmodelValues(null);
@@ -867,6 +954,7 @@ function fillSubModelsChange(attributeKey, type) {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function fillAttributeEmptyValues(attributeKey, type) {
 
   $('.grouping_attributes').children('li').remove();
@@ -892,7 +980,7 @@ function fillAttributeEmptyValues(attributeKey, type) {
   });
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /**
  *
  * @param {Submodel} subModel
@@ -978,6 +1066,7 @@ function fillSubmodelValues(subModel) {
   });
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function getAttributeValues(attributeKey, type) {
   return yooAjax("body", {
     'dataType': "json",
@@ -985,19 +1074,21 @@ function getAttributeValues(attributeKey, type) {
   });
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function disableSubmodelActions() {
   $('#save_submodels').addClass('inactive');
   $('#submodels_attributes').attr('disabled', 'disabled');
   localizer();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function enableSubmodelActions() {
   $('#save_submodels').removeClass('inactive');
   $('.overlay .hintSpace').removeAttr('data-translate').html('');
   $('#submodels_attributes').removeAttr('disabled');
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function createAttributeValueList() {
   var attributeValueList = [];
   var relevantPeriod = checkRelevantPeriod();
@@ -1028,7 +1119,7 @@ function createAttributeValueList() {
   return attributeValueList;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function checkRelevantPeriod() {
 
   var visible = $("div.model_config_overlay .relevance").is(':visible');
@@ -1066,8 +1157,8 @@ function checkRelevantPeriod() {
   return val;
 }
 
-
-/** This method must be called once during the initialisation. */
+////////////////////////////////////////////////////////////////////////////////
+/** This method must be called once during the initialization. */
 function initSubmodelDialog() {
 
   var $layer = $('#model_configuration_classic');
@@ -1118,7 +1209,7 @@ function initSubmodelDialog() {
   });
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Currently selected model reference code. */
 var model_reference_code;
 var current_submodels = [];
@@ -1126,7 +1217,7 @@ var current_submodel = null;
 //var current_attributes = [];
 
 
-
+////////////////////////////////////////////////////////////////////////////////
 function activateSubmodelDialog(modelID) {
 
   model_reference_code = modelID;
@@ -1170,8 +1261,7 @@ function activateSubmodelDialog(modelID) {
   overlay.show();
 }
 
-
-
+////////////////////////////////////////////////////////////////////////////////
 /**
  * show an overlay to configure a cb model
  *
@@ -1393,7 +1483,7 @@ var activateCBModelDialog = function activateCBModelDialog(model, title) {
   }
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Saves the currently selected model
  */
 function saveModel() {
@@ -1416,7 +1506,7 @@ function saveModel() {
     configuratorErrorHandler);
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function fillNumericSubmodelValues(sm) {
   var $content = $('#numericSubmodelValues');
   var $ghost = $content.find('.ghost');
@@ -1492,7 +1582,7 @@ function fillNumericSubmodelValues(sm) {
     });
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function checkNumericSubModel($content) {
   //  		console.log('checkNumericSubModel');
   $content = $content ? $content : $('#numericSubmodelValues');
@@ -1563,7 +1653,7 @@ function checkNumericSubModel($content) {
   return values;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 function durationToString(duration) {
 
   var hh = jQuery.i18n.prop("model_duration_hours");
@@ -1579,7 +1669,12 @@ function durationToString(duration) {
   return result;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
+/**
+ *
+ * @param model
+ * @returns string with additional info; returns empty string (evaluates to falsy) if has no additional info.
+ */
 function getModelAdditionalInfo(model) {
 
   var type = model.modelType;
@@ -1600,10 +1695,10 @@ function getModelAdditionalInfo(model) {
     }
 
   } else if (startsWith('CB', type, true) && !startsWith('CBFT', type, true)) { //CB Model
-    var l = model.attributes.length;
-    while (l--) {
-      str += model.attributes[l].key;
-      if (l) {
+    var length = model.attributes.length;
+    while (length--) {
+      str += model.attributes[length].key;
+      if (length) {
         str += ', ';
       }
     }
@@ -1626,7 +1721,7 @@ function getModelAdditionalInfo(model) {
   return str;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 var setLiveDragDrop = function (element) {
   element.draggable({
     //connectToSortable: ".empty_model_place",
@@ -1662,25 +1757,26 @@ var setLiveDragDrop = function (element) {
 };
 
 
+////////////////////////////////////////////////////////////////////////////////
 var createPlacedModel = function (placed_model, model) {
 
   var nest = placed_model.parent("li[data-row]");
 
-  var j = nest.attr("data-row");
-  var k = nest.attr("data-column");
+  var rowData = nest.attr("data-row");
+  var columnData = nest.attr("data-column");
 
   var mid = model.attr("id");
   var refcode = mid.substring('model_'.length, mid.length);
 
-  var htmlModel = generatePlacedModel(refcode, j, k);
+  var htmlModel = generatePlacedModel(refcode, rowData, columnData);
 
   nest.html(htmlModel);
 
-  createJsonModel(htmlModel, refcode, j, k);
+  createJsonModel(htmlModel, refcode, rowData, columnData);
 
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 var destroyPlacedModel = function () {
   $('body').on("click", ".destroy_placed_model", function (event) {
     var placedModel = $(this).parent();
@@ -1693,6 +1789,7 @@ var destroyPlacedModel = function () {
 };
 
 
+////////////////////////////////////////////////////////////////////////////////
 var setSubmodelGroupsSortable = function () {
   var sortable = $(".user_created_group, .grouping_attributes");
 
@@ -1716,7 +1813,7 @@ var setSubmodelGroupsSortable = function () {
   }
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 /**
  * the app variable holds the wrapper object for all functions to handle the editorial list
  *
@@ -1735,6 +1832,7 @@ var app = {
   }
 };
 
+////////////////////////////////////////////////////////////////////////////////
 app.editorialListsEditor = {
   'init': function () {
     var self = this;
@@ -1948,7 +2046,7 @@ app.editorialListsEditor = {
 
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Loads the editorial list for the given model
  */
 app.api.getEditorialList = function (refCode) {
@@ -1957,7 +2055,7 @@ app.api.getEditorialList = function (refCode) {
   });
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Saves the list of items on the server
  */
 app.api.saveEditorialList = function (refCode, list) {
@@ -1967,7 +2065,7 @@ app.api.saveEditorialList = function (refCode, list) {
   });
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 /** Retrieves a item from server with given Id
  */
 app.api.getItem = function (type, id) {
@@ -1982,7 +2080,7 @@ app.api.getItem = function (type, id) {
   });
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 app.gui.showEditorialListEditor = function (model) {
   $.when(app.api.getEditorialList(model.referenceCode)).then(
     function (items) {
@@ -1994,6 +2092,7 @@ app.gui.showEditorialListEditor = function (model) {
   );
 };
 
+////////////////////////////////////////////////////////////////////////////////
 (function () {
   var config = {
 
@@ -2003,6 +2102,7 @@ app.gui.showEditorialListEditor = function (model) {
   };
 })();
 
+////////////////////////////////////////////////////////////////////////////////
 app.tools.toolTipFullContent = (function () {
   var $hoverView = $('#hoverView'),
     _config = {
@@ -2049,6 +2149,7 @@ app.tools.toolTipFullContent = (function () {
   };
 })();
 
+////////////////////////////////////////////////////////////////////////////////
 app.tools.extend = function (a, b) {
   var prop;
   if (!a instanceof Object) {
@@ -2063,6 +2164,7 @@ app.tools.extend = function (a, b) {
   }
 };
 
+////////////////////////////////////////////////////////////////////////////////
 app.tools.stdAjaxErrorHandler = function (jqXHR, textStatus, errorThrown) {
   if (jqXHR.status !== null && jqXHR.status == 403) {
     setMessagePopUp("problem", "error_server_error_403");
@@ -2079,4 +2181,7 @@ app.tools.stdAjaxErrorHandler = function (jqXHR, textStatus, errorThrown) {
   }
 };
 
+////////////////////////////////////////////////////////////////////////////////
 app.init();
+
+////////////////////////////////////////////////////////////////////////////////
