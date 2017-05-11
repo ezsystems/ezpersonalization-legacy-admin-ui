@@ -182,7 +182,6 @@ function renderModel(model) {
  */
 function renderModelUpdate(model) {
   var ghostModel = $('#model_' + model.referenceCode).removeAttr("style");
-
   var modelNameKey = modelDao.getModelNameKey(model.referenceCode);
 
   ghostModel.children("div").children("h5").children("span.mtitle").attr('data-translate', modelNameKey + '_title');
@@ -211,11 +210,10 @@ function renderModelUpdate(model) {
   //2nd phase do itemList
 
   //set submodels as cvs
-  ghostModel.find('.info').append(getSubmodelsItemList(model));
+  // ghostModel.find('.info').append(getSubmodelsItems(model));
 
   //set submodels as itemList
-  //ghostModel.find('.model_description').append(getSubmodelsItemList2(model));
-  ghostModel.find('.model_description').append("SUBMODELS_AS_LIST");
+  ghostModel.find('#submodels_list').append(getSubmodelsItemList(model));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -246,7 +244,7 @@ function getSubmodelsCountString(model) {
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-function getSubmodelsItemList(model) {
+function getSubmodelsItems(model) {
   if (!model.submodelsSupported) {
     //TODO delete this console.log when done
     console.log("submodels itemList are not supported for model", model)
@@ -270,7 +268,7 @@ function getSubmodelsItemList(model) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //TODO - make submodelsList as verticaList.
-function getSubmodelsItemList2(model) {
+function getSubmodelsItemList(model) {
   if (!model.submodelsSupported) {
     //TODO delete this console.log when done
     console.log("submodels itemList are not supported for model", model)
@@ -281,14 +279,12 @@ function getSubmodelsItemList2(model) {
     return "";
   }
 
-  var submodelsItems = " [";
+  var submodelsItems = "<span class='model_description'><strong>Submodels:</strong><br><ul>";
   for (var i = 0; i < submodelsCount; i++) {
-    submodelsItems += model.submodelSummaries[i].attributeKey;
-    if (submodelsCount > 1 && i !== (submodelsCount - 1)) {
-      submodelsItems += ", "
-    }
+    submodelsItems += "<li>- " + model.submodelSummaries[i].attributeKey + "</li>";
+    if (submodelsCount > 1 && i !== (submodelsCount - 1)) {}
   }
-  submodelsItems += "]";
+  submodelsItems += "</ul></span>";
   return submodelsItems;
 }
 
@@ -460,7 +456,7 @@ function loadRightSection() {
       $('#' + path + '_str').attr('data-translate', 'configurator_category_main_category');
       $('#' + path + '_level').html(value);
     }
-    localizer_new(); //here inside, it will overwrite everything in the models box
+    localizer(); //here inside, it will overwrite everything in the models box
   }
 
   $(document).on('click', '.edit_category_path', function () {
@@ -1257,7 +1253,7 @@ function activateSubmodelDialog(modelID) {
   currentModelConf.attr("data-translate", modelNameKey + '_title');
 
   i18n(currentModelConf);
-  
+
   //addd model reference in the configurator popup
   currentModelConf.append(getModelReference(model));
 
