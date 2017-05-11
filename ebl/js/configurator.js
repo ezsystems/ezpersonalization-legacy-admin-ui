@@ -201,6 +201,9 @@ function renderModelUpdate(model) {
   var additionalInfoString = addInfo ? " (" + addInfo + ")" : "";
   ghostModel.find('.info').html(additionalInfoString);
 
+  //display model reference code
+  ghostModel.find('.info').append(getModelReference(model));
+
   //display number of submodels in the model 
   ghostModel.find('.info').append(getSubmodelsCountString(model));
 
@@ -212,11 +215,15 @@ function renderModelUpdate(model) {
 
   //set submodels as itemList
   //ghostModel.find('.model_description').append(getSubmodelsItemList2(model));
-  ghostModel.find('.model_description').append("MODELS_AS_LIST");
+  ghostModel.find('.model_description').append("SUBMODELS_AS_LIST");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function getModelReference(model) {
+  return model.referenceCode.length === 0 ? "" : " [" + model.referenceCode + "]";
+}
 
+////////////////////////////////////////////////////////////////////////////////
 function getSubmodelsCountString(model) {
   if (!model.submodelsSupported) {
     //TODO delete this console.log when done
@@ -246,18 +253,18 @@ function getSubmodelsItemList(model) {
     return "";
   }
   var submodelsCount = model.submodelSummaries.length;
-  if(submodelsCount <1 ) {
+  if (submodelsCount < 1) {
     return "";
-  } 
+  }
 
-  var submodelsItems = " [";
+  var submodelsItems = " (";
   for (var i = 0; i < submodelsCount; i++) {
-    submodelsItems +=  model.submodelSummaries[i].attributeKey;
-    if(submodelsCount > 1 && i !== (submodelsCount-1)) {
+    submodelsItems += model.submodelSummaries[i].attributeKey;
+    if (submodelsCount > 1 && i !== (submodelsCount - 1)) {
       submodelsItems += ", "
     }
   }
-  submodelsItems +="]";
+  submodelsItems += ")";
   return submodelsItems;
 }
 
@@ -270,18 +277,18 @@ function getSubmodelsItemList2(model) {
     return "";
   }
   var submodelsCount = model.submodelSummaries.length;
-  if(submodelsCount <1 ) {
+  if (submodelsCount < 1) {
     return "";
-  } 
+  }
 
   var submodelsItems = " [";
   for (var i = 0; i < submodelsCount; i++) {
-    submodelsItems +=  model.submodelSummaries[i].attributeKey;
-    if(submodelsCount > 1 && i !== (submodelsCount-1)) {
+    submodelsItems += model.submodelSummaries[i].attributeKey;
+    if (submodelsCount > 1 && i !== (submodelsCount - 1)) {
       submodelsItems += ", "
     }
   }
-  submodelsItems +="]";
+  submodelsItems += "]";
   return submodelsItems;
 }
 
@@ -453,7 +460,7 @@ function loadRightSection() {
       $('#' + path + '_str').attr('data-translate', 'configurator_category_main_category');
       $('#' + path + '_level').html(value);
     }
-    localizer(); //her inside it will overrite everything in the models box
+    localizer_new(); //here inside, it will overwrite everything in the models box
   }
 
   $(document).on('click', '.edit_category_path', function () {
@@ -577,9 +584,9 @@ function loadRightSection() {
     if (stage) {
 
       if (j === 0) {
-        setCategoryPath('primary_category_path', stage.useCategoryPath);//(through localizer) overrites everything in the models box 
+        setCategoryPath('primary_category_path', stage.useCategoryPath); //(through localizer) overrites everything in the models box 
       } else {
-        setCategoryPath('fallback' + j + '_category_path', stage.useCategoryPath);//(through localizer) overrites everything in the models box
+        setCategoryPath('fallback' + j + '_category_path', stage.useCategoryPath); //(through localizer) overrites everything in the models box
       }
 
       for (var k = 0; k < stage.xingModels.length; k++) {
@@ -1250,6 +1257,9 @@ function activateSubmodelDialog(modelID) {
   currentModelConf.attr("data-translate", modelNameKey + '_title');
 
   i18n(currentModelConf);
+  
+  //addd model reference in the configurator popup
+  currentModelConf.append(getModelReference(model));
 
   if (!extendedSolution) {
     $layer.css("height", "auto");
