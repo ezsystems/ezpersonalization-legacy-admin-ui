@@ -224,8 +224,6 @@ function getModelReference(model) {
 ////////////////////////////////////////////////////////////////////////////////
 function getSubmodelsCountString(model) {
   if (!model.submodelsSupported) {
-    //TODO delete this console.log when done
-    console.log("submodels are not supported for model", model)
     return "";
   }
   var submodelsCount = model.submodelSummaries.length;
@@ -246,8 +244,6 @@ function getSubmodelsCountString(model) {
 
 function getSubmodelsItems(model) {
   if (!model.submodelsSupported) {
-    //TODO delete this console.log when done
-    console.log("submodels itemList are not supported for model", model)
     return "";
   }
   var submodelsCount = model.submodelSummaries.length;
@@ -270,8 +266,6 @@ function getSubmodelsItems(model) {
 //TODO - make submodelsList as verticaList.
 function getSubmodelsItemList(model) {
   if (!model.submodelsSupported) {
-    //TODO delete this console.log when done
-    console.log("submodels itemList are not supported for model", model)
     return "";
   }
   var submodelsCount = model.submodelSummaries.length;
@@ -282,7 +276,6 @@ function getSubmodelsItemList(model) {
   var submodelsItems = "<span class='model_description'><strong>Submodels:</strong><br><ul>";
   for (var i = 0; i < submodelsCount; i++) {
     submodelsItems += "<li>- " + model.submodelSummaries[i].attributeKey + "</li>";
-    if (submodelsCount > 1 && i !== (submodelsCount - 1)) {}
   }
   submodelsItems += "</ul></span>";
   return submodelsItems;
@@ -308,9 +301,9 @@ function saveScenario() {
   }
 
   for (var k = 1; k < 4; k++) {
-    if (stages[k] !== null) {
+    if (stages[k] !== null && "undefined" !== typeof stages[k]) {
       var strn = '#fallback' + k + '_category_path';
-      if ($(strn).val() == "null") {
+      if ("undefined" === typeof $(strn).val() || $(strn).val() === null) {
         stages[k].useCategoryPath = null;
       } else {
         stages[k].useCategoryPath = $(strn).val();
@@ -809,7 +802,7 @@ function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
 
 ////////////////////////////////////////////////////////////////////////////////
 function createJsonXingModel(json, stage, stageIndex, modelName, modelIndex) {
-  if (stage === null) {
+  if (stage === null || "undefined" === typeof stage) {
     json.scenario.stages[stageIndex] = new Object();
     json.scenario.stages[stageIndex].xingModels = new Array();
   }
