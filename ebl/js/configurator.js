@@ -134,7 +134,7 @@ var initialize = function () {
 
   localizer();
 
-  if (saved == "true") {
+  if (saved === "true") {
     magicMessage("positive", "message_data_saved_successfully");
   }
 
@@ -203,15 +203,6 @@ function renderModelUpdate(model) {
   //display model reference code
   ghostModel.find('.info').append(getModelReference(model));
 
-  //display number of submodels in the model 
-  ghostModel.find('.info').append(getSubmodelsCountString(model));
-
-  //1st phase do csv
-  //2nd phase do itemList
-
-  //set submodels as cvs
-  // ghostModel.find('.info').append(getSubmodelsItems(model));
-
   //set submodels as itemList
   ghostModel.find('#submodels_list').append(getSubmodelsItemList(model));
 }
@@ -222,48 +213,6 @@ function getModelReference(model) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function getSubmodelsCountString(model) {
-  if (!model.submodelsSupported) {
-    return "";
-  }
-  var submodelsCount = model.submodelSummaries.length;
-  var submodelsCountString = "";
-  switch (submodelsCount) {
-    case 0: //do nothing (submodelsCountString = "")
-      break;
-    case 1:
-      submodelsCountString = " - " + submodelsCount + " submodel";
-      break;
-    default:
-      submodelsCountString = " - " + submodelsCount + " submodels";
-      break;
-  }
-  return submodelsCountString;
-}
-////////////////////////////////////////////////////////////////////////////////
-
-function getSubmodelsItems(model) {
-  if (!model.submodelsSupported) {
-    return "";
-  }
-  var submodelsCount = model.submodelSummaries.length;
-  if (submodelsCount < 1) {
-    return "";
-  }
-
-  var submodelsItems = " (";
-  for (var i = 0; i < submodelsCount; i++) {
-    submodelsItems += model.submodelSummaries[i].attributeKey;
-    if (submodelsCount > 1 && i !== (submodelsCount - 1)) {
-      submodelsItems += ", "
-    }
-  }
-  submodelsItems += ")";
-  return submodelsItems;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//TODO - make submodelsList as verticaList.
 function getSubmodelsItemList(model) {
   if (!model.submodelsSupported) {
     return "";
@@ -293,7 +242,7 @@ function saveScenario() {
   var stages = json.scenario.stages;
 
   if (stages[0] !== null) {
-    if ($('#primary_category_path').val() == "null") {
+    if ($('#primary_category_path').val() === "null") {
       stages[0].useCategoryPath = null;
     } else {
       stages[0].useCategoryPath = $('#primary_category_path').val();
@@ -366,6 +315,7 @@ function loadRightSection() {
   var json = {
     scenario: scenarioDao.scenario
   };
+
   $('body').data('scenario', json); // backward compatibility
 
   var modelRefList = modelDao.getModels();
@@ -381,28 +331,28 @@ function loadRightSection() {
       var hasSameItemType = true;
       for (var m = 0; m < model.itemTypeTrees.length; m++) {
         var itemTypeTree = model.itemTypeTrees[m];
-        if (itemTypeTree.inputItemType !== null && itemTypeTree.inputItemType != json.scenario.inputItemType) {
+        if (itemTypeTree.inputItemType !== null && itemTypeTree.inputItemType !== json.scenario.inputItemType) {
           hasSameItemType = false;
         } else {
           hasSameItemType = true;
           if (itemTypeTree.outputItemTypes.length > 0) {
             var counter = 0;
-            for (var n = 0; n < itemTypeTree.outputItemTypes.length; n++) {
-              var modelOutputItemType = itemTypeTree.outputItemTypes[n];
+            for (var treeOut = 0; treeOut < itemTypeTree.outputItemTypes.length; treeOut++) {
+              var modelOutputItemType = itemTypeTree.outputItemTypes[treeOut];
 
-              for (var o = 0; o < json.scenario.outputItemTypes.length; o++) {
-                var scenarioOutputItemType = json.scenario.outputItemTypes[o];
-                if (modelOutputItemType == scenarioOutputItemType) {
+              for (var sOut = 0; sOut < json.scenario.outputItemTypes.length; sOut++) {
+                var scenarioOutputItemType = json.scenario.outputItemTypes[sOut];
+                if (modelOutputItemType === scenarioOutputItemType) {
                   counter++;
                 }
               }
             }
 
-            if (counter == json.scenario.outputItemTypes.length) {
+            if (counter === json.scenario.outputItemTypes.length) {
               color = "green";
               break;
             } else if (counter === 0) {
-              if (color != "yellow") {
+              if (color !== "yellow") {
                 color = "red";
               }
             } else {
@@ -412,22 +362,23 @@ function loadRightSection() {
         }
       }
       if (hasSameItemType === false) {
-        if (color == "red") //TODO what is this statement for?
+        if (color === "red") { //TODO what is this statement for?
           color = "red";
+        }
       }
     }
     var $model = $('#model_' + model.referenceCode);
-    if (color == "red") {
+    if (color === "red") {
       $model.addClass('problem');
-    } else if (color == "green") {
+    } else if (color === "green") {
       $model.addClass('ready_to_use');
-    } else if (color == "yellow") {
+    } else if (color === "yellow") {
       $model.addClass('needs_building');
     }
   }
 
-  var referenceCodeServer = json.scenario.referenceCode,
-    $scenarioSettings = $(".scenario_settings");
+  var referenceCodeServer = json.scenario.referenceCode;
+  var $scenarioSettings = $(".scenario_settings");
 
   $("#scenario_title").attr('value', json.scenario.title ? json.scenario.title : referenceCodeServer);
 
@@ -458,7 +409,7 @@ function loadRightSection() {
       value = $this.siblings('input').val(),
       inputId = $this.data('inputid'),
       $inputs = $('input[name="category_filter"]');
-    value = value === 'null' ? null : value;
+    value = (value === 'null') ? null : value;
 
     function change(event, ui) {
       $(ui.handle).parent().siblings('.levelView').html(ui.value);
@@ -490,6 +441,7 @@ function loadRightSection() {
         $('#includeParent').attr('disabled', 'disabled').prop('checked', false);
         $('#levelsUp').slider('disable').slider('value', 1);
       }
+
       if ($this.is(':checked') && $this.val() === 'sameMainCategory') {
         //console.log('same Main');
         $('#levelsDown').slider('enable');
@@ -503,7 +455,7 @@ function loadRightSection() {
     if (value === null) {
       $inputs.filter('[value="sameCategory"]').prop('checked', true).trigger('click');
       $('input[name="includeParent"]').prop('checked', false);
-    } else if (parseInt(value, 10) === 0) {
+    } else if (parseInt(value, 10) === 0) { // a bug can happen here. parseInt() returns NaN when parsing is not possible
       //					  window.test = $inputs;
       $inputs.filter('[value="noFilter"]').prop('checked', true).trigger('click');
       $('input[name="includeParent"]').prop('checked', false);
@@ -539,6 +491,7 @@ function loadRightSection() {
         setCategoryPath(inputId, value);
         $('#category_path_settings').hide();
       });
+
     $('#category_path_settings')
       .show()
       .find('.destroy_dialog')
@@ -550,7 +503,7 @@ function loadRightSection() {
 
 
   var extendedSolution = ifExtended();
-  var stagesAmount;
+  var stagesAmount = 0;
 
   if (extendedSolution) {
     $(".extended_stage").show();
@@ -564,32 +517,51 @@ function loadRightSection() {
     stagesAmount = json.scenario.stages.length;
   }
 
-  var stages = json.scenario.stages;
-
   for (var j = 0; j < stagesAmount; j++) {
 
     var stage = json.scenario.stages[j];
+    if (!stage) {
+      continue;
+    }
 
-    if (stage) {
+    if (j === 0) {
+      setCategoryPath('primary_category_path', stage.useCategoryPath); //(through localizer) overrites everything in the models box 
+    } else {
+      setCategoryPath('fallback' + j + '_category_path', stage.useCategoryPath); //(through localizer) overrites everything in the models box
+    }
 
-      if (j === 0) {
-        setCategoryPath('primary_category_path', stage.useCategoryPath); //(through localizer) overrites everything in the models box 
-      } else {
-        setCategoryPath('fallback' + j + '_category_path', stage.useCategoryPath); //(through localizer) overrites everything in the models box
+    for (var k = 0; k < stage.xingModels.length; k++) {
+      var xing = stage.xingModels[k];
+      var childNumberDiv = j;
+      var childNumberLi = k + 1;
+      var nest = $('.ui-stage:eq(' + childNumberDiv + ')').children("ul").children("li:nth-child(" + childNumberLi + ")");
+
+      var ghostModel = generatePlacedModel(xing.modelReferenceCode, j, k, xing);
+      var hasSubmodels = false;
+      for (var modelRef = 0; modelRef < modelRefList.length; modelRef++) {
+        if (modelRefList[modelRef].referenceCode === xing.modelReferenceCode) {
+
+          var submodelsNrStr = "";
+          if (modelRefList[modelRef].submodelSummaries.length > 0) {
+            hasSubmodels = true;
+            submodelsNrStr = " (" + modelRefList[modelRef].submodelSummaries.length + ")";
+
+            //set/append the number of submodels to the "Use submodels" checkbox
+            ghostModel.find('#submodels_count').append(submodelsNrStr);
+
+            break; //exit for in modelRef
+          }
+        }
       }
 
-      for (var k = 0; k < stage.xingModels.length; k++) {
-        var xing = stage.xingModels[k];
-        var childnumberdiv = j;
-        var childnumberli = k + 1;
-        var nest = $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")");
-
-        var ghostModel = generatePlacedModel(xing.modelReferenceCode, j, k, xing);
-
-        ghostModel.appendTo(nest);
-
-        $('.ui-stage:eq(' + childnumberdiv + ')').children("ul").children("li:nth-child(" + childnumberli + ")").children('.empty_model_place').remove();
+      if (!hasSubmodels) {
+        //hide the "Use submodels" checkbox
+        ghostModel.find('input.use_submodels').prop('checked', false);
+        ghostModel.find('input.use_submodels').prop('disabled', true);
       }
+      ghostModel.appendTo(nest);
+
+      $('.ui-stage:eq(' + childNumberDiv + ')').children("ul").children("li:nth-child(" + childNumberLi + ")").children('.empty_model_place').remove();
     }
   }
 
@@ -598,7 +570,7 @@ function loadRightSection() {
 ////////////////////////////////////////////////////////////////////////////////
 var ifExtended = function () {
   var solution = mandatorInfo.baseInformation.version;
-  return (solution == 'EXTENDED');
+  return (solution === 'EXTENDED');
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -614,7 +586,7 @@ var ifExtended = function () {
  */
 function generatePlacedModel(model, j, k, xing) {
 
-  if (typeof model == 'string') {
+  if (typeof model === 'string') {
     model = modelDao.getModel(model);
     if (!model) {
       throw {
@@ -659,7 +631,7 @@ function generatePlacedModel(model, j, k, xing) {
 
   for (var i in contexts) {
     var opt = $('<option value="' + contexts[i] + '" data-translate="model_configurator_context_' + contexts[i] + '">').clone();
-    if (xing && contexts[i] == xing.contextFlag) {
+    if (xing && contexts[i] === xing.contextFlag) {
       opt.attr("selected", "selected");
     }
     opt.appendTo(ghostModel.find("select[name=placed_model_context_type]"));
@@ -675,7 +647,7 @@ function generatePlacedModel(model, j, k, xing) {
 
     for (var i in ages) {
       var opt = $('<option value="' + ages[i] + '" data-translate="model_configurator_rating_age_' + ages[i] + '">').clone();
-      if (xing && ages[i] == xing.maximumRatingAge) {
+      if (xing && ages[i] === xing.maximumRatingAge) {
         opt.attr("selected", "selected");
       }
       opt.appendTo($ageSelect);
@@ -703,7 +675,7 @@ function generatePlacedModel(model, j, k, xing) {
  * */
 function getSubmodel(attributeKey, attributeType) {
 
-  if (arguments.length == 1) {
+  if (arguments.length === 1) {
     attributeKey = arguments[0];
     attributeType = arguments[1];
   }
@@ -716,7 +688,7 @@ function getSubmodel(attributeKey, attributeType) {
   var newSubmodel = new Object();
   newSubmodel.attributeKey = attributeKey;
   newSubmodel.submodelType = attributeType;
-  if (attributeType == "NOMINAL") {
+  if (attributeType === "NOMINAL") {
     newSubmodel.attributeValues = new Array();
   }
   current_submodels[current_submodels.length] = newSubmodel;
@@ -845,7 +817,7 @@ function updateJsonValueForModel(modelName) {
       if (!model) {
         continue;
       }
-      if ((i + "_" + j + "_" + model.modelReferenceCode) == modelName) {
+      if ((i + "_" + j + "_" + model.modelReferenceCode) === modelName) {
         var domModel = $("#" + modelName);
 
         model.useSubmodels = domModel.find("input.use_submodels").is(':checked');
@@ -867,7 +839,7 @@ function deleteJsonModelWithName(modelName) {
     for (var j = 0; j < json.scenario.stages[i].xingModels.length; j++) {
       var model = json.scenario.stages[i].xingModels[j];
       if (typeof model != 'undefined') {
-        if ((i + "_" + j + "_" + model.modelReferenceCode) == modelName) {
+        if ((i + "_" + j + "_" + model.modelReferenceCode) === modelName) {
           json.scenario.stages[i].xingModels[j] = undefined;
         }
       }
@@ -1145,9 +1117,9 @@ function checkRelevantPeriod() {
   var duration = parseDuration(); // creating empty duration
 
   var key = $('#relevant_period_unit').val();
-  if (key == 'H') {
+  if (key === 'H') {
     duration.setHours(val);
-  } else if (key == 'D') {
+  } else if (key === 'D') {
     duration.setDays(val);
   }
 
@@ -1707,7 +1679,7 @@ function getModelAdditionalInfo(model) {
   } else if (startsWith('EDITOR_BASED', type, true)) { //Editorial List model
     str += model.referenceCode;
 
-    if (model.size && model.size != 'undefined') {
+    if (model.size && model.size !== 'undefined') {
       str += '; ' + model.size;
     }
   } else if (startsWith('Profile', type, true)) { //Profile Model
@@ -2153,30 +2125,28 @@ app.tools.toolTipFullContent = (function () {
 
 ////////////////////////////////////////////////////////////////////////////////
 app.tools.extend = function (a, b) {
-  var prop;
   if (!a instanceof Object) {
     return;
   }
-  for (prop in b) {
+  for (var prop in b) {
     if (a.hasOwnProperty(prop)) {
       continue;
-    } else {
-      a[prop] = b[prop];
     }
+    a[prop] = b[prop];
   }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 app.tools.stdAjaxErrorHandler = function (jqXHR, textStatus, errorThrown) {
-  if (jqXHR.status !== null && jqXHR.status == 403) {
-    setMessagePopUp("problem", "error_server_error_403");
-  } else if (jqXHR.status !== null && jqXHR.status == 401) {
-    setMessagePopUp("problem", "error_server_error_401");
-  } else if (jqXHR.status !== null && jqXHR.status == 400) {
+  if (jqXHR.status !== null && jqXHR.status === 400) {
     setMessagePopUp("problem", "error_server_error_400");
-  } else if (jqXHR.status !== null && jqXHR.status == 404) {
+  } else if (jqXHR.status !== null && jqXHR.status === 401) {
+    setMessagePopUp("problem", "error_server_error_401");
+  } else if (jqXHR.status !== null && jqXHR.status === 403) {
+    setMessagePopUp("problem", "error_server_error_403");
+  } else if (jqXHR.status !== null && jqXHR.status === 404) {
     setMessagePopUp("problem", "error_server_error_404");
-  } else if (jqXHR.status !== null && jqXHR.status == 409) {
+  } else if (jqXHR.status !== null && jqXHR.status === 409) {
     setMessagePopUp("problem", "error_server_error_409");
   } else {
     setMessagePopUp("problem", "error_server_error");
