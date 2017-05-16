@@ -93,7 +93,7 @@ var initialize = function () {
 
   $('.models_base').children('h3').children('span').first().text(json.length);
 
-  var modelRefArray = new Array();
+  //var modelRefArray = new Array();
   var wasOtherli = false;
 
   for (var i = 0; i < json.length; i++) {
@@ -204,7 +204,7 @@ function renderModelUpdate(model) {
   ghostModel.find('.info').append(getModelReference(model));
 
   //set submodels as itemList
-  ghostModel.find('#submodels_list').append(getSubmodelsItemList(model));
+  ghostModel.find('#submodels_list').html(getSubmodelsItemList(model));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -294,7 +294,7 @@ function saveScenario() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//ajax request for the right section
+//ajax request for the rightmost section
 function itemTypeTreeAsText(input, output) {
 
   var result = "";
@@ -702,6 +702,9 @@ function getSubmodel(attributeKey, attributeType) {
  */
 function renderAttributes(attributes) {
 
+  if (attributes.length <= 0) {
+    return;
+  }
   var $select = $('#submodels_attributes');
   $select.find("option").remove();
 
@@ -709,50 +712,47 @@ function renderAttributes(attributes) {
 
   $select.append(defOption);
 
-  if (attributes.length > 0) {
+  for (var i = 0; i < attributes.length; i++) {
 
-    for (var i = 0; i < attributes.length; i++) {
+    var sbm = getSubmodel(attributes[i].key, attributes[i].type);
 
-      var sbm = getSubmodel(attributes[i].key, attributes[i].type);
+    var $option = $("<option></option>")
+      .attr("data-type", attributes[i].type)
+      .val(attributes[i].key)
+      .text((attributes[i].type === 'NUMERIC' ? '[123] ' : '[ABC] ') + attributes[i].key);
 
-      var $option = $("<option></option>")
-        .attr("data-type", attributes[i].type)
-        .val(attributes[i].key)
-        .text((attributes[i].type === 'NUMERIC' ? '[123] ' : '[ABC] ') + attributes[i].key);
+    $select.append($option);
 
-      $select.append($option);
-
-      if (sbm) {
-        if (attributes[i].type === 'NUMERIC') {
-          if ('intervals' in sbm) {
-            $option.text($option.text() + ' (' + sbm.intervals.length + ' intervals)');
-          }
-        } else if (attributes[i].type === 'NOMINAL') {
-          var count = 0;
-          var keys = {};
-          var j = sbm.attributeValues.length;
-
-          while (j--) {
-            var group = sbm.attributeValues[j].group;
-            if (keys[group]) {
-              continue;
-            } else {
-              keys[group] = true;
-              count++;
-            }
-          }
-          $option.text($option.text() + ' (' + count + ' groups)');
+    if (sbm) {
+      if (attributes[i].type === 'NUMERIC') {
+        if ('intervals' in sbm) {
+          $option.text($option.text() + ' (' + sbm.intervals.length + ' intervals)');
         }
+      } else if (attributes[i].type === 'NOMINAL') {
+        var count = 0;
+        var keys = {};
+        var j = sbm.attributeValues.length;
+
+        while (j--) {
+          var group = sbm.attributeValues[j].group;
+          if (keys[group]) {
+            continue;
+          } else {
+            keys[group] = true;
+            count++;
+          }
+        }
+        $option.text($option.text() + ' (' + count + ' groups)');
       }
     }
-
-    // sort the submodels_attributes
-    var sortedOptions = $('#submodels_attributes option');
-    sortedOptions.sort(function (a, b) {
-      return a.text.toLowerCase() > b.text.toLowerCase();
-    });
-    $('#submodels_attributes').empty().append(sortedOptions);
   }
+
+  // sort the submodels_attributes
+  var sortedOptions = $('#submodels_attributes option');
+  sortedOptions.sort(function (a, b) {
+    return a.text.toLowerCase() > b.text.toLowerCase();
+  });
+  $('#submodels_attributes').html(sortedOptions);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1814,13 +1814,16 @@ app.editorialListsEditor = {
     this.$editorialLists = $('#editorial_lists');
     this.$typeSelect = this.$overlay.find('#itemTypes');
     this.$dummyList = $('#dummyList');
+
     //add click handler for the delete buttons of items
     this.$overlay.on('click', '.deleteItem', function () {
       $(this).closest('li').remove();
     });
+
     this.$overlay.find('.destroy_dialog').on('click', function () {
       $(this).closest('._overlay').hide();
     });
+
     this.$overlay.find('#addItem').on('click', function () {
       var $form = $(this).closest('form');
       var id = $form.find('#itemId').val();
@@ -1861,6 +1864,8 @@ app.editorialListsEditor = {
           self.clearError();
         });
     });
+
+
     this.$overlay.find('#save_editorial_model').on('click', function clickFunc() {
       var $self = $(this).off('click').addClass('inactive');
       //self.$overlay.find('.cover').show();
@@ -1881,8 +1886,7 @@ app.editorialListsEditor = {
     this.init = function () {};
   },
   'reset': function () {
-    var id;
-    for (id in this.lists) {
+    for (var id in this.lists) {
       this.lists[id].remove();
     }
     this.lists = {};
