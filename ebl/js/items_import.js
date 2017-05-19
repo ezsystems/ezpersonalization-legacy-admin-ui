@@ -67,7 +67,7 @@ function loadTypes(){
 		var selectedTxt = '';
 		if(t.id == defaultItemType ){
 			selectedTxt = ' id="defaultInItemType" selected = "selected" ';
-			console.log("defaultItemType="+defaultItemType+".");
+			//console.log("defaultItemType="+defaultItemType+".");
 		}
 		$('<option value="' + t.id + '"'+selectedTxt+'></option>').appendTo($("#input_type_block select")).text(d);
 	}
@@ -196,7 +196,7 @@ function getCSVFields(){
 						  for(var j = 0;j<fields.length;j++){
 							  var field = fields[j];
 							  if(val && val == field){
-								  console.log("key: "+retObj.mappings[i].key+" for value: "+val);
+								  //console.log("key: "+retObj.mappings[i].key+" for value: "+val);
 								  $("#field"+j).val(retObj.mappings[i].key);
 								  $("#type_field"+j).val(retObj.mappings[i].valueFormat);
 								  if(retObj.mappings[i].valueFormat == 'URI'){

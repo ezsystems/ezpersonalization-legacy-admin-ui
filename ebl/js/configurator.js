@@ -250,13 +250,11 @@ function saveScenario() {
   }
 
   for (var k = 1; k < 4; k++) {
-    if (stages[k] !== null && "undefined" !== typeof stages[k]) {
+    if (stages[k] != null) { //check for null && undefined
       var strn = '#fallback' + k + '_category_path';
-      if ("undefined" === typeof $(strn).val() || $(strn).val() === null) {
-        stages[k].useCategoryPath = null;
-      } else {
-        stages[k].useCategoryPath = $(strn).val();
-      }
+
+      //check for null && undefined
+      stages[k].useCategoryPath = $(strn).val() != null ? $(strn).val() : null;
     }
   }
 
@@ -456,7 +454,7 @@ function loadRightSection() {
       $inputs.filter('[value="sameCategory"]').prop('checked', true).trigger('click');
       $('input[name="includeParent"]').prop('checked', false);
     } else if (parseInt(value, 10) === 0) { // a bug can happen here. parseInt() returns NaN when parsing is not possible
-      //					  window.test = $inputs;
+      //window.test = $inputs;
       $inputs.filter('[value="noFilter"]').prop('checked', true).trigger('click');
       $('input[name="includeParent"]').prop('checked', false);
     } else if (parseInt(value, 10) < 0) {
@@ -478,7 +476,7 @@ function loadRightSection() {
       .on('click', function () {
         var filter = $inputs.filter(':checked').val(),
           value = 0;
-        // 								console.log(filter);
+        //console.log(filter);
         if (filter === 'noFilter') {
           value = 0;
         } else if (filter === 'sameCategory') {
@@ -702,14 +700,17 @@ function getSubmodel(attributeKey, attributeType) {
  */
 function renderAttributes(attributes) {
 
-  if (attributes.length <= 0) {
+  //check for null or undefined
+  if (attributes == null || attributes.length <= 0) {
+    console.error("ERROR: Atributes are empty, null or undefined");
     return;
   }
+
   var $select = $('#submodels_attributes');
-  $select.find("option").remove();
 
+  //removes the only option in the selectBox and replaces it with a disabled option 
+  $select.find("option").remove(); //remove all content from submodels_attributes
   var defOption = '<option value="" data-translate="configurator_submodel_select_attribute" disabled="disabled" selected="selected">- Select an attribute -</option>';
-
   $select.append(defOption);
 
   for (var i = 0; i < attributes.length; i++) {
@@ -726,35 +727,62 @@ function renderAttributes(attributes) {
     if (sbm) {
       if (attributes[i].type === 'NUMERIC') {
         if ('intervals' in sbm) {
-          $option.text($option.text() + ' (' + sbm.intervals.length + ' intervals)');
-        }
-      } else if (attributes[i].type === 'NOMINAL') {
-        var count = 0;
-        var keys = {};
-        var j = sbm.attributeValues.length;
+          if (sbm.intervals.length > 0) {
 
-        while (j--) {
-          var group = sbm.attributeValues[j].group;
-          if (keys[group]) {
-            continue;
-          } else {
-            keys[group] = true;
-            count++;
+          var intervalsCount = 0;
+            for (var k =0; k< sbm.intervals.length; k++) {
+              var interval = sbm.intervals[k];
+              if (interval != null && interval.leftValue != null && interval.rightValue != null) {
+                intervalsCount++;
+              }
+            }
+
+            if (intervalsCount === 1) {
+              $option.append(' (' + sbm.intervals.length + ' interval)');
+            } else if (intervalsCount > 1) {
+              $option.append(' (' + sbm.intervals.length + ' intervals)');
+            }
+            // attention, this happens and is ok. it's just ignored in the Frontend:
+            // intervals = [{ leftValue: null,
+            //                rightValue: null }]
+
+          }
+      }
+    } else if (attributes[i].type === 'NOMINAL') {
+          var count = 0;
+          var keys = {};
+          var j = sbm.attributeValues.length;
+
+          while (j--) {
+            var group = sbm.attributeValues[j].group;
+            if (keys[group]) {
+              continue;
+            } else {
+              keys[group] = true;
+              count++;
+            }
+          }
+
+          if (count === 1) {
+            $option.text($option.text() + ' (' + count + ' group)');
+          } else if (count > 1) {
+            $option.text($option.text() + ' (' + count + ' groups)');
           }
         }
-        $option.text($option.text() + ' (' + count + ' groups)');
       }
     }
-  }
-
+  
   // sort the submodels_attributes
   var sortedOptions = $('#submodels_attributes option');
   sortedOptions.sort(function (a, b) {
     return a.text.toLowerCase() > b.text.toLowerCase();
   });
   $('#submodels_attributes').html(sortedOptions);
-}
 
+  //select the first element (the disabled field)
+  $("#submodels_attributes")[0].selectedIndex = 0;
+
+}
 ////////////////////////////////////////////////////////////////////////////////
 function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
   if (jqXHR !== null && jqXHR.status == 403) {
@@ -774,12 +802,13 @@ function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
 
 ////////////////////////////////////////////////////////////////////////////////
 function createJsonXingModel(json, stage, stageIndex, modelName, modelIndex) {
-  if (stage === null || "undefined" === typeof stage) {
-    json.scenario.stages[stageIndex] = new Object();
-    json.scenario.stages[stageIndex].xingModels = new Array();
+  if (stage == null) { //check for null && undefined
+    json.scenario.stages[stageIndex] = {};
+    json.scenario.stages[stageIndex].xingModels = [];
   }
 
-  var xing = json.scenario.stages[stageIndex].xingModels[modelIndex] = new Object();
+  json.scenario.stages[stageIndex].xingModels[modelIndex] = {};
+  var xing = json.scenario.stages[stageIndex].xingModels[modelIndex]; // = {};
 
   xing.modelReferenceCode = modelName;
 
@@ -838,7 +867,7 @@ function deleteJsonModelWithName(modelName) {
     }
     for (var j = 0; j < json.scenario.stages[i].xingModels.length; j++) {
       var model = json.scenario.stages[i].xingModels[j];
-      if (typeof model != 'undefined') {
+      if (typeof model != null) { //check for null && undefined
         if ((i + "_" + j + "_" + model.modelReferenceCode) === modelName) {
           json.scenario.stages[i].xingModels[j] = undefined;
         }
@@ -871,9 +900,8 @@ function fillSubModels(modelID) {
 
       var sm = current_submodels[0];
 
-      $('#submodels_attributes option').removeAttr('selected').filter(function () {
-        return ($(this).data('type') === sm.submodelType && $(this).val() === sm.attributeKey);
-      }).attr('selected', 'selected');
+      //select the first element (the disabled field)
+      $("#submodels_attributes")[0].selectedIndex = 0;
 
       fillSubModelsChange(sm.attributeKey, sm.submodelType);
 
@@ -940,7 +968,6 @@ function fillAttributeEmptyValues(attributeKey, type) {
     //console.log(json);
 
     //write all the groups and the according attribute values
-
     //fill the available attribute values, which are not yet in groups
     var $container = $('.grouping_attributes');
 
@@ -1031,8 +1058,6 @@ function fillSubmodelValues(subModel) {
         $available_attributes.append($new_attribute);
       }
     }
-
-
     //console.log("Attributes:" +  $available_attributes.find('li').size());
   });
 }
@@ -1558,7 +1583,7 @@ function fillNumericSubmodelValues(sm) {
 
 ////////////////////////////////////////////////////////////////////////////////
 function checkNumericSubModel($content) {
-  //  		console.log('checkNumericSubModel');
+  //console.log('checkNumericSubModel');
   $content = $content ? $content : $('#numericSubmodelValues');
   var $groups = $content.find('.interval'),
     values = [],
@@ -1679,7 +1704,7 @@ function getModelAdditionalInfo(model) {
   } else if (startsWith('EDITOR_BASED', type, true)) { //Editorial List model
     str += model.referenceCode;
 
-    if (model.size && model.size !== 'undefined') {
+    if (model.size != null) { //check for null && undefined
       str += '; ' + model.size;
     }
   } else if (startsWith('Profile', type, true)) { //Profile Model
@@ -1730,7 +1755,6 @@ var setLiveDragDrop = function (element) {
   });
 };
 
-
 ////////////////////////////////////////////////////////////////////////////////
 var createPlacedModel = function (placed_model, model) {
 
@@ -1761,7 +1785,6 @@ var destroyPlacedModel = function () {
     dummy.clone().appendTo(nest).removeClass("ghost").fadeIn();
   });
 };
-
 
 ////////////////////////////////////////////////////////////////////////////////
 var setSubmodelGroupsSortable = function () {
