@@ -222,12 +222,48 @@ function getSubmodelsItemList(model) {
     return "";
   }
 
-  var submodelsItems = "<span class='model_description'><strong>Submodels:</strong><br><ul>";
-  for (var i = 0; i < submodelsCount; i++) {
-    submodelsItems += "<li>- " + model.submodelSummaries[i].attributeKey + "</li>";
+  var newSubmodelSummaries = copyPrefixAndSortSummodelSummaries(model.submodelSummaries);
+
+  var submodelsItems = "<span class='model_description'><strong>Configured submodels:</strong><br><ul>";
+  for (var i = 0; i < newSubmodelSummaries.length; i++) {
+
+    var submodel = newSubmodelSummaries[i];
+    var attributeType = submodel.attributeType;
+    if (attributeType === "NOMINAL" || (attributeType === "NUMERIC" && submodel.groupCount > 0)) {
+      submodelsItems += "<li>- " + newSubmodelSummaries[i].attributeKey + "</li>";
+    }
   }
   submodelsItems += "</ul></span>";
   return submodelsItems;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function copyPrefixAndSortSummodelSummaries(smsList) {
+
+  //deep copy array
+  var smsListCopy = jQuery.extend(true, [], smsList);
+
+  //prefix it
+  for (var i = 0; i < smsListCopy.length; i++) {
+
+    var attributeType = smsListCopy[i].attributeType;
+    if (attributeType === "NOMINAL") {
+      smsListCopy[i].attributeKey = "[ABC] " + smsListCopy[i].attributeKey;
+    } else if (attributeType === "NUMERIC") {
+      smsListCopy[i].attributeKey = "[123] " + smsListCopy[i].attributeKey;
+    } else {
+      //should never happen, yet/so far
+      smsListCopy[i].attributeKey = "[?] " + smsListCopy[i].attributeKey;
+    }
+  }
+
+  // sort list alphabetically
+  var smsListCopySorted =
+    smsListCopy.sort(function (a, b) {
+      return a.attributeKey.toLowerCase() > b.attributeKey.toLowerCase();
+    });
+
+  return smsListCopySorted;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -382,7 +418,7 @@ function loadRightSection() {
 
   $('#primary_category_path').val(json.scenario.useCategoryPath);
 
-
+  //------------------------------------------------------------------------------
   function setCategoryPath(path, value) {
     $('#' + path).val(value === null ? 'null' : value);
     if (value === 0) {
@@ -400,7 +436,7 @@ function loadRightSection() {
     }
     localizer(); //here inside, it will overwrite everything in the models box
   }
-
+  //------------------------------------------------------------------------------
   $(document).on('click', '.edit_category_path', function () {
     //init the configuration
     var $this = $(this),
@@ -498,8 +534,7 @@ function loadRightSection() {
         $(this).closest('._overlay').hide();
       });
   });
-
-
+  //------------------------------------------------------------------------------
   var extendedSolution = ifExtended();
   var stagesAmount = 0;
 
@@ -540,15 +575,29 @@ function loadRightSection() {
         if (modelRefList[modelRef].referenceCode === xing.modelReferenceCode) {
 
           var submodelsNrStr = "";
-          if (modelRefList[modelRef].submodelSummaries.length > 0) {
-            hasSubmodels = true;
-            submodelsNrStr = " (" + modelRefList[modelRef].submodelSummaries.length + ")";
-
-            //set/append the number of submodels to the "Use submodels" checkbox
-            ghostModel.find('#submodels_count').append(submodelsNrStr);
-
-            break; //exit for in modelRef
+          if (modelRefList[modelRef].submodelSummaries.length <= 0) {
+            continue;
           }
+          var submodelSummary = modelRefList[modelRef].submodelSummaries;
+          var submodelNrCount = 0;
+          for (var subIndex = 0; subIndex < submodelSummary.length; subIndex++) {
+            if (submodelSummary[subIndex].attributeType === "NOMINAL" ||
+              (submodelSummary[subIndex].attributeType === "NUMERIC" &&
+                submodelSummary[subIndex].groupCount > 0)) {
+              hasSubmodels = true;
+              submodelNrCount++;
+              continue; //skip because counts only the ones that have valid entries (for ex: valid interval)
+            }
+          }
+
+          if (hasSubmodels) {
+            submodelsNrStr = " (" + submodelNrCount + ")";
+          }
+
+          //set/append the number of submodels to the "Use submodels" checkbox
+          ghostModel.find('#submodels_count').append(submodelsNrStr);
+
+          break; //exit for in modelRef
         }
       }
 
@@ -729,8 +778,8 @@ function renderAttributes(attributes) {
         if ('intervals' in sbm) {
           if (sbm.intervals.length > 0) {
 
-          var intervalsCount = 0;
-            for (var k =0; k< sbm.intervals.length; k++) {
+            var intervalsCount = 0;
+            for (var k = 0; k < sbm.intervals.length; k++) {
               var interval = sbm.intervals[k];
               if (interval != null && interval.leftValue != null && interval.rightValue != null) {
                 intervalsCount++;
@@ -747,31 +796,31 @@ function renderAttributes(attributes) {
             //                rightValue: null }]
 
           }
-      }
-    } else if (attributes[i].type === 'NOMINAL') {
-          var count = 0;
-          var keys = {};
-          var j = sbm.attributeValues.length;
+        }
+      } else if (attributes[i].type === 'NOMINAL') {
+        var count = 0;
+        var keys = {};
+        var j = sbm.attributeValues.length;
 
-          while (j--) {
-            var group = sbm.attributeValues[j].group;
-            if (keys[group]) {
-              continue;
-            } else {
-              keys[group] = true;
-              count++;
-            }
+        while (j--) {
+          var group = sbm.attributeValues[j].group;
+          if (keys[group]) {
+            continue;
+          } else {
+            keys[group] = true;
+            count++;
           }
+        }
 
-          if (count === 1) {
-            $option.text($option.text() + ' (' + count + ' group)');
-          } else if (count > 1) {
-            $option.text($option.text() + ' (' + count + ' groups)');
-          }
+        if (count === 1) {
+          $option.text($option.text() + ' (' + count + ' group)');
+        } else if (count > 1) {
+          $option.text($option.text() + ' (' + count + ' groups)');
         }
       }
     }
-  
+  }
+
   // sort the submodels_attributes
   var sortedOptions = $('#submodels_attributes option');
   sortedOptions.sort(function (a, b) {
@@ -867,7 +916,7 @@ function deleteJsonModelWithName(modelName) {
     }
     for (var j = 0; j < json.scenario.stages[i].xingModels.length; j++) {
       var model = json.scenario.stages[i].xingModels[j];
-      if (typeof model != null) { //check for null && undefined
+      if (model != null) { //check for null && undefined
         if ((i + "_" + j + "_" + model.modelReferenceCode) === modelName) {
           json.scenario.stages[i].xingModels[j] = undefined;
         }
