@@ -599,10 +599,13 @@ function loadRightSection() {
 
           break; //exit for in modelRef
         }
+        ghostModel = processEventualUpheavalGhostModel(modelRefList[modelRef].modelType, ghostModel);
       }
 
+      ghostModel = processEventualUpheavalGhostModel(xing.modelReferenceCode, ghostModel);
+
       if (!hasSubmodels) {
-        //hide the "Use submodels" checkbox
+        //disable the "Use submodels" checkbox
         ghostModel.find('input.use_submodels').prop('checked', false);
         ghostModel.find('input.use_submodels').prop('disabled', true);
       }
@@ -612,6 +615,24 @@ function loadRightSection() {
     }
   }
 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+var processEventualUpheavalGhostModel = function (modelRefCode, generatedGhostModel) {
+  if (modelRefCode == null) {
+    console.error("ERROR: error processing eventual Upheaval model. modelRefCode is null or undefined.");
+    return null;
+  }
+
+  //if substring 'upheaval' is present
+  if (modelRefCode.indexOf("upheaval") !== -1) {
+    var additionalSpanDays = "<br><span style='font-weight: normal; font-size: 12px;' class='info2_refcode'>(1 Day - 365 Days)</span>";
+    var additionalSpanRef = "<br><span style='font-weight: normal; font-size: 12px;' class='info2_refcode'>[" + modelRefCode + "]</span>";
+    var xpto1 = generatedGhostModel.children("h4").children(".name");
+    generatedGhostModel.children("h4").children(".name").after(additionalSpanRef);
+    generatedGhostModel.children("h4").children(".name").after(additionalSpanDays);
+  }
+  return generatedGhostModel;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -684,6 +705,7 @@ function generatePlacedModel(model, j, k, xing) {
     opt.appendTo(ghostModel.find("select[name=placed_model_context_type]"));
   }
 
+  // make the upheaval
   if (model.modelType.indexOf("UPHEAVAL") > -1) {
 
     var $ageSelect = ghostModel.find("select[name=placed_model_rating_age]");
@@ -694,7 +716,10 @@ function generatePlacedModel(model, j, k, xing) {
 
     for (var i in ages) {
       var opt = $('<option value="' + ages[i] + '" data-translate="model_configurator_rating_age_' + ages[i] + '">').clone();
-      if (xing && ages[i] === xing.maximumRatingAge) {
+
+      if (xing === undefined && ages[i] === 'P90D') { //the just dropped ones (display as default 90 days/3months)
+        opt.attr("selected", "selected");
+      } else if (xing && ages[i] === xing.maximumRatingAge) { //the already saved ones display their value
         opt.attr("selected", "selected");
       }
       opt.appendTo($ageSelect);
@@ -1807,20 +1832,16 @@ var setLiveDragDrop = function (element) {
 ////////////////////////////////////////////////////////////////////////////////
 var createPlacedModel = function (placed_model, model) {
 
-  var nest = placed_model.parent("li[data-row]");
-
-  var rowData = nest.attr("data-row");
-  var columnData = nest.attr("data-column");
-
   var mid = model.attr("id");
   var refcode = mid.substring('model_'.length, mid.length);
 
+  var nest = placed_model.parent("li[data-row]");
+  var rowData = nest.attr("data-row");
+  var columnData = nest.attr("data-column");
+
   var htmlModel = generatePlacedModel(refcode, rowData, columnData);
-
   nest.html(htmlModel);
-
   createJsonModel(htmlModel, refcode, rowData, columnData);
-
 };
 
 ////////////////////////////////////////////////////////////////////////////////
