@@ -116,7 +116,7 @@ var initialize = function () {
       nest = $('#other_list');
     }
 
-    //append dummyClone to nest
+    //append dummyClone to nest + remove dummyModel 
     $(dummyClone).appendTo(nest).removeClass("dummymodel");
 
     renderModel(model);
@@ -358,56 +358,17 @@ function loadRightSection() {
 
   for (var l = 0; l < modelRefList.length; l++) {
     var model = modelRefList[l]; //TODO check for multiple declaration
-    var color = "";
-    if (model.itemTypeTrees && model.itemTypeTrees.length < 1) {
-      color = "red";
-    } else {
-      var hasSameItemType = true;
-      for (var m = 0; m < model.itemTypeTrees.length; m++) {
-        var itemTypeTree = model.itemTypeTrees[m];
-        if (itemTypeTree.inputItemType !== null && itemTypeTree.inputItemType !== json.scenario.inputItemType) {
-          hasSameItemType = false;
-        } else {
-          hasSameItemType = true;
-          if (itemTypeTree.outputItemTypes.length > 0) {
-            var counter = 0;
-            for (var treeOut = 0; treeOut < itemTypeTree.outputItemTypes.length; treeOut++) {
-              var modelOutputItemType = itemTypeTree.outputItemTypes[treeOut];
 
-              for (var sOut = 0; sOut < json.scenario.outputItemTypes.length; sOut++) {
-                var scenarioOutputItemType = json.scenario.outputItemTypes[sOut];
-                if (modelOutputItemType === scenarioOutputItemType) {
-                  counter++;
-                }
-              }
-            }
+    var color = determineColor(model, json);
 
-            if (counter === json.scenario.outputItemTypes.length) {
-              color = "green";
-              break;
-            } else if (counter === 0) {
-              if (color !== "yellow") {
-                color = "red";
-              }
-            } else {
-              color = "yellow";
-            }
-          }
-        }
-      }
-      if (hasSameItemType === false) {
-        if (color === "red") { //TODO what is this statement for?
-          color = "red";
-        }
-      }
-    }
+    //apply the color class to the models (left side)
     var $model = $('#model_' + model.referenceCode);
     if (color === "red") {
       $model.addClass('problem');
     } else if (color === "green") {
       $model.addClass('ready_to_use');
     } else if (color === "yellow") {
-      $model.addClass('needs_building');
+      $model.addClass('partly_available');
     }
   }
 
@@ -618,7 +579,78 @@ function loadRightSection() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-var processEventualUpheavalGhostModel = function (modelRefCode, generatedGhostModel) {
+function determineColor(model, json) {
+
+  //before any condition/verification, set fixed model colors (and return/exit):
+  var COLOR_RED = "red";
+  var COLOR_GREEN = "green";
+
+  //blacklist is always green
+  if (model != null && model.referenceCode != null && model.referenceCode === "editor_blacklist") {
+    return COLOR_GREEN;
+  }
+
+  //profile model is always green
+  if (model != null && model.modelType != null && model.modelType === "PROFILE_MODEL") {
+    return COLOR_GREEN;
+  }
+
+  // if editor_based/list and has not blacklist in it
+  if (model != null && model.modelType != null && model.modelType === "EDITOR_BASED" &&
+    model.referenceCode != null && model.referenceCode.toUpperCase().indexOf("BLACKLIST") === -1) {
+    if (model.size > 0) {
+      return COLOR_GREEN;
+    } else {
+      return COLOR_RED;
+    }
+  }
+
+  //end of fixed colors set. Now depends if the models have submodels -> green, else -> red.
+
+  if (model.itemTypeTrees && model.itemTypeTrees.length < 1) {
+    //console.log("itemTypes length mismatch.  model/ model.itemTypeTrees/model.itemTypeTrees.length:", model, model.itemTypeTrees, model.itemTypeTrees.length);
+    return COLOR_RED;
+  }
+
+  var hasSameItemType = true;
+  for (var m = 0; m < model.itemTypeTrees.length; m++) {
+    var itemTypeTree = model.itemTypeTrees[m];
+    if (itemTypeTree.inputItemType != null && itemTypeTree.inputItemType !== json.scenario.inputItemType) {
+      continue;
+    }
+
+    if (itemTypeTree.outputItemTypes.length <= 0) {
+      continue;
+    }
+
+    var counter = 0;
+    for (var treeOut = 0; treeOut < itemTypeTree.outputItemTypes.length; treeOut++) {
+      var modelOutputItemType = itemTypeTree.outputItemTypes[treeOut];
+
+      for (var sOut = 0; sOut < json.scenario.outputItemTypes.length; sOut++) {
+        var scenarioOutputItemType = json.scenario.outputItemTypes[sOut];
+        if (modelOutputItemType === scenarioOutputItemType) {
+          counter++;
+        }
+      }
+    }
+
+    if (counter === json.scenario.outputItemTypes.length) {
+      //console.log("gren. model:", model);
+      return COLOR_GREEN;
+    } else {
+
+      //console.log("counter mismatch");
+      //console.log("counter", counter);
+      //console.log("json.scenario.outputItemTypes.length", json.scenario.outputItemTypes.length);
+      //console.log("json.scenario", json.scenario);
+      return COLOR_RED;
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function processEventualUpheavalGhostModel(modelRefCode, generatedGhostModel) {
   if (modelRefCode == null) {
     console.error("ERROR: error processing eventual Upheaval model. modelRefCode is null or undefined.");
     return null;
@@ -636,7 +668,7 @@ var processEventualUpheavalGhostModel = function (modelRefCode, generatedGhostMo
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-var ifExtended = function () {
+function ifExtended() {
   var solution = mandatorInfo.baseInformation.version;
   return (solution === 'EXTENDED');
 };
