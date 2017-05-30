@@ -367,9 +367,8 @@ function loadRightSection() {
       $model.addClass('problem');
     } else if (color === "green") {
       $model.addClass('ready_to_use');
-    } else if (color === "yellow") {
-      $model.addClass('partly_available');
-    }
+    } 
+    
   }
 
   var referenceCodeServer = json.scenario.referenceCode;
@@ -584,6 +583,7 @@ function determineColor(model, json) {
   //before any condition/verification, set fixed model colors (and return/exit):
   var COLOR_RED = "red";
   var COLOR_GREEN = "green";
+
 
   //blacklist is always green
   if (model != null && model.referenceCode != null && model.referenceCode === "editor_blacklist") {
