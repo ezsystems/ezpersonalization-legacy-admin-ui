@@ -257,8 +257,9 @@ function switchTab(newTab) {
 		$("#ABTests").show();
 		$("#abControls").show();
 		$("section.scenarios li.tabAbTests").addClass("current");
-
-		if(!$('#testList').data('tests').length){
+        
+		//validate for null or undefined
+		if($('#testList').data('tests') != null && !$('#testList').data('tests').length){
 			$('#abControls').find('.helpLink').trigger('click');
 		}
 

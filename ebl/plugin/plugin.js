@@ -527,7 +527,8 @@ var pluginPanel = {
 
 		var import_config = this.$panel.find(".plugin_import");
 
-		if (plugin.base.type != PLUGIN_TYPE_MAGENTO) {
+        //hide import functionality for magento and magento2 plugins
+		if (plugin.base.type.indexOf(PLUGIN_TYPE_MAGENTO) !== -1) {
 			import_config.hide();
 		} else {
 			import_config.show();
