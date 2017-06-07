@@ -225,6 +225,10 @@
    var customerID = $.cookie('customerID');
 
    var recoHost = $("#link-recocontroller").attr("href");
+   var windowUrl = window.location.href;
+   if( windowUrl.indexOf('test.yoochoose') !== -1) {
+     recoHost = recoHost.replace(/reco.*yoochoose/, 'reco.test.yoochoose');     
+   }
 
    if (recoHost.length > 0 && recoHost.charAt(recoHost.length - 1) == '/') {
      recoHost = str.substring(0, recoHost.length - 1);
