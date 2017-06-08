@@ -126,8 +126,11 @@ var initialize = function () {
 
   if (fromTemplate) {
     $('#scenario_id').prop('disabled', false);
+    
+    //disable links in both tabs (configurator and preview)
     $('.configurator_tab').addClass("no_link").find('a').attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
     $('.preview_tab').addClass("no_link").find('a').attr("style", "color: #000000; cursor:text;").find('span').attr("style", "text-decoration: none;");
+    
     $('#button_save').attr('data-translate', 'settings_button_save_next_step');
     $('.delete').attr('data-translate', 'settings_cancel');
   }
@@ -503,7 +506,8 @@ function renderScenario() {
     $('#no_already_consumed').prop("checked", true);
   }
 
-  if (excludeRepeatedRecommendations !== null) {
+  //check for null or undefined
+  if (excludeRepeatedRecommendations != null) {
     $('#enable_limit_max_recs_per_session').prop("checked", true);
     $('#limit_max_recs_per_session').prop("disabled", false);
     $('#limit_max_recs_per_session').val(excludeRepeatedRecommendations);
@@ -574,10 +578,13 @@ function addScenarioToParent() {
   var escapedRefCode = escape(referenceCode);
   $(dummyClone).children("div").attr("id", "scenario_" + j);
 
-  if (title === null || $.trim(title) === "") {
+  //check null or undefined
+  if (title == null || $.trim(title) === "") {
     title = referenceCode;
   }
-  if (description === null) {
+
+  //check null or undefined
+  if (description == null) {
     description = "Some brief description of the scenario, that can be edited together with other parameters";
   }
   var options = "<option value='" + referenceCode + "'>" + title + "</option>";
