@@ -96,6 +96,8 @@ ul.wizard_steps  {
 
 .wizard_steps > li.no_link{
   opacity: 0.33;
+  pointer-events: none;
+  cursor: default;
 }
 
 
