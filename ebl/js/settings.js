@@ -553,7 +553,8 @@ function addScenarioToParent() {
   var j = -1;
   window.parent.$('.scenario').each(function () {
     var eid = $(this).attr('id');
-    if (eid !== null && eid != 'undefined') {
+    //check for null and undefined
+    if (eid != null) {
       eida = eid.split('_');
       if (eida.length > 1) {
         jid = eida[1];
