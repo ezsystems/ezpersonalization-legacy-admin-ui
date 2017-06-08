@@ -277,6 +277,13 @@ function saveScenario() {
   //it has to be set in the save method
   var stages = json.scenario.stages;
 
+  //check for null or undefined
+  if( stages == null ){
+    setMessagePopUp("problem", "Error saving scenario: Scenario has no stages.");
+    unsetLoadingDiv('body');
+    return;
+  }
+
   if (stages[0] !== null) {
     if ($('#primary_category_path').val() === "null") {
       stages[0].useCategoryPath = null;
@@ -504,6 +511,12 @@ function loadRightSection() {
   } else {
     $(".extended_stage").hide();
     stagesAmount = 2;
+  }
+  
+  //check for null or undefined
+  if(json.scenario.stages == null ) {
+    setMessagePopUp("problem", "Error loading right section: Scenario has no stages.");
+    return;
   }
 
   if (json.scenario.stages.length > stagesAmount) { // backward compatibility
@@ -935,6 +948,11 @@ function createJsonModel(modelDOM, modelName, row, column) {
 
   var json = $('body').data('scenario');
 
+  //check for null or undefined
+  if( json.scenario.stages == null ) {
+    setMessagePopUp("problem", "Error creating Json model: Scenario has no stages.");
+    return;
+  }
   var stage = json.scenario.stages[row];
 
   createJsonXingModel(json, stage, row, modelName, column);
