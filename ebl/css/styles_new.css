@@ -615,6 +615,11 @@ input[type="text"].inverted {
   box-shadow: 0 0 8px rgba(13, 189, 254, 1);
 }
 
+.normal_form textarea:focus {
+  outline: 0;
+  box-shadow: 0 0 8px rgba(13, 189, 254, 1);
+}
+
 .normal_form .problem input {
   box-shadow: 0 0 8px rgba(192, 80, 77, 1);
 }

@@ -1,24 +1,24 @@
 
 /** INCLUDE ME AS
- * 
+ *
  *  $.getScript("/js/switch_mandator.js");
  */
 
 
 
 
-/** Opens a dialog for switching the mandator 
- * 
- *  @param canBeClosed 
+/** Opens a dialog for switching the mandator
+ *
+ *  @param canBeClosed
  *  	if true, the dialog can be closed without selecting a mandator.
  *      Default value - true.
  * */
 var showSwitchMandatorPopup = function(canBeClosed) {
-	
+
 	canBeClosed = (typeof canBeClosed !== 'undefined') ? canBeClosed : true;
-	
+
 	$('#switch_mandator_popup').show();
-	
+
 	var closeButton = $('#switch_mandator_popup .destroy_dialog');
 	if (canBeClosed) {
 		closeButton.show();
@@ -35,16 +35,16 @@ function autocompleteOnSelect(){
 	        this.wrapper = $( "<span>" )
 	          .addClass( "custom-combobox" )
 	          .insertAfter( this.element );
-	 
+
 	        this.element.hide();
 	        this._createAutocomplete();
 	        this._createShowAllButton();
 	      },
-	 
+
 	      _createAutocomplete: function() {
 	        var selected = this.element.children( ":selected" ),
 	          value = selected.val() ? selected.text() : "";
-	 
+
 	        this.input = $( "<input>" )
 	          .appendTo( this.wrapper )
 	          .val( value )
@@ -58,7 +58,7 @@ function autocompleteOnSelect(){
 	          .tooltip({
 	            tooltipClass: "ui-state-highlight"
 	          });
-	 
+
 	        this._on( this.input, {
 	          autocompleteselect: function( event, ui ) {
 	            ui.item.option.selected = true;
@@ -66,15 +66,15 @@ function autocompleteOnSelect(){
 	              item: ui.item.option
 	            });
 	          },
-	 
+
 	          autocompletechange: "_removeIfInvalid"
 	        });
 	      },
-	 
+
 	      _createShowAllButton: function() {
 	        var input = this.input,
 	          wasOpen = false;
-	 
+
 	        $( "<a>" )
 	          .attr( "tabIndex", -1 )
 	          .attr( "title", "Show All Items" )
@@ -93,17 +93,17 @@ function autocompleteOnSelect(){
 	          })
 	          .click(function() {
 	            input.focus();
-	 
+
 	            // Close if already visible
 	            if ( wasOpen ) {
 	              return;
 	            }
-	 
+
 	            // Pass empty string as value to search for, displaying all results
 	            input.autocomplete( "search", "" );
 	          });
 	      },
-	 
+
 	      _source: function( request, response ) {
 	        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
 	        response( this.element.children( "option" ).map(function() {
@@ -116,14 +116,14 @@ function autocompleteOnSelect(){
 	            };
 	        }) );
 	      },
-	 
+
 	      _removeIfInvalid: function( event, ui ) {
-	 
+
 	        // Selected an item, nothing to do
 	        if ( ui.item ) {
 	          return;
 	        }
-	 
+
 	        // Search for a match (case-insensitive)
 	        var value = this.input.val(),
 	          valueLowerCase = value.toLowerCase(),
@@ -134,12 +134,12 @@ function autocompleteOnSelect(){
 	            return false;
 	          }
 	        });
-	 
+
 	        // Found a match, nothing to do
 	        if ( valid ) {
 	          return;
 	        }
-	 
+
 	        // Remove invalid value
 	        this.input
 	          .val( "" )
@@ -151,14 +151,14 @@ function autocompleteOnSelect(){
 	        }, 2500 );
 	        this.input.data( "ui-autocomplete" ).term = "";
 	      },
-	 
+
 	      _destroy: function() {
 	        this.wrapper.remove();
 	        this.element.show();
 	      }
 	    });
 	  })( jQuery );
-	 
+
 	  $(function() {
 	    $( "#choose_mandant" ).combobox();
 	  });
@@ -166,7 +166,7 @@ function autocompleteOnSelect(){
 
 var showNoAvailableMandatorPopup = function() {
 	$('#no_mandator_available').show();
-	
+
 	getCurrentUser(function(user) {
 		$('#no_mandator_available .fullname').text((user.firstName ? user.firstName : "") + " " + (user.lastName ? user.lastName : ""));
 		if (user.provider) {
@@ -176,21 +176,21 @@ var showNoAvailableMandatorPopup = function() {
 		} else {
 			$('#no_mandator_available .logo').hide();
 		}
-		
+
 	    // updating interface language
 	    if (user.lang && in_to_language != user.lang) { // "in_to_language" is a global variable defined in "i18n.js"
 	    	changeLang(user.lang, false);
 	    }
 	});
-	
+
 };
 
 
 var initSwitchMandator = function() {
-	
+
 	// Mandator switch click event
 	$('.switch > a').click(showSwitchMandatorPopup);
-	
+
 	var closeSwitchMandatorPopup = function(e) {
 	    if (e.which == 1 || e.which == 27) { // left click or Esc
 	    	if ($('#switch_mandator_popup .destroy_dialog').is(':visible')) {
@@ -198,31 +198,31 @@ var initSwitchMandator = function() {
 	    	}
 	    }
 	};
-	
+
 	$('#switch_mandator_popup .destroy_dialog').on("click", closeSwitchMandatorPopup);
-	
+
 	$(document).bind('keydown', closeSwitchMandatorPopup);
 
 	$("#saveMandatorChange").on("click", function (event) {
-		if($('#choose_mandant').val() != "") {
-			
+		if($('#choose_mandant').val() !== "") {
+
 			customerID = $('#choose_mandant').val();              // setting global variable.
 			$.cookie('customerID', customerID, { expires: 365 }); // setting cookie.
-			
+
 			$.when(
 				mandatorDao.init(customerID),
 				ajaxScenarioList('24H')
 		    ).done(function() {
 				initialLoadData();
 				setMandantData(mandatorDao.mandator);
-				
+
 				$('.available_view_options').children('li').removeClass('current');
 				$('.available_view_options').children('li').first().addClass('current');
-				
+
 				$(document).trigger('mandatorChanged');
 //				var event = new $.Event('mandatorChanged');
 //				document.dispatchEvent(event);
-				
+
 				$('#switch_mandator_popup').hide();
 		    });
 

@@ -68,6 +68,8 @@
 var PLUGIN_ANCHOR_CREATE = "plugin/create";
 var PLUGIN_ANCHOR_CONFIG = "plugin/configuration";
 
+var PLUGIN_TYPE_MAGENTO = "MAGENTO";
+
 var pluginPanel = {
 
 	/**
@@ -525,35 +527,37 @@ var pluginPanel = {
 
 		var import_config = this.$panel.find(".plugin_import");
 
-		if ( ! plugin.base.importAvailable) {
+        //hide import functionality for magento and magento2 plugins
+		if (plugin.base.type.indexOf(PLUGIN_TYPE_MAGENTO) !== -1) {
 			import_config.hide();
 		} else {
 			import_config.show();
-
-			var $endpoint = this.$panel.find("#plugin_endpoint");
-			var $app_key = this.$panel.find("#plugin_app_key");
-			var $app_secret = this.$panel.find("#plugin_app_secret");
-
-			var $app_key_label = this.$panel.find("label[for=plugin_app_key]");
-			var $app_secret_label = this.$panel.find("label[for=plugin_app_secret]");
-
-			$app_key.val(plugin.base.appKey);
-			$app_secret.val(plugin.base.appSecret);
-
-			var $oauth_section = this.$panel.find(".plugin_oauth");
-
-			if (plugin.tech.authKeyName) {
-				$app_key_label.text(plugin.tech.authKeyName);
-				$app_secret_label.text(plugin.tech.authSecretName)
-				$oauth_section.show();
-			} else {
-				$oauth_section.hide();
-			}
-
-			$endpoint.val(plugin.base.endpoint);
-			$app_key.val(plugin.base.appKey);
-			$app_secret.val(plugin.base.appSecret);
 		}
+
+		var $endpoint = this.$panel.find("#plugin_endpoint");
+		var $app_key = this.$panel.find("#plugin_app_key");
+		var $app_secret = this.$panel.find("#plugin_app_secret");
+
+		var $app_key_label = this.$panel.find("label[for=plugin_app_key]");
+		var $app_secret_label = this.$panel.find("label[for=plugin_app_secret]");
+
+		$app_key.val(plugin.base.appKey);
+		$app_secret.val(plugin.base.appSecret);
+
+		var $oauth_section = this.$panel.find(".plugin_oauth");
+
+		if (plugin.tech.authKeyName) {
+			$app_key_label.text(plugin.tech.authKeyName);
+			$app_secret_label.text(plugin.tech.authSecretName)
+			$oauth_section.show();
+		} else {
+			$oauth_section.hide();
+		}
+
+		$endpoint.val(plugin.base.endpoint);
+		$app_key.val(plugin.base.appKey);
+		$app_secret.val(plugin.base.appSecret);
+		
 
 		$app_key.trigger("change"); // adjusting save button description
 	},
