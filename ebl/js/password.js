@@ -199,51 +199,31 @@ function resetFormFields() {
  * @returns {*}
  */
 function validateFormFields() {
-    if (isEmptyString(getOldPasswordValue())
-        && isOldPasswordFieldVisible()
-    ) {
-        return magicMessage(
-            'warning', 'old_password_not_entered'
-        );
+    if (isEmptyString(getOldPasswordValue()) && isOldPasswordFieldVisible()) {
+        return magicMessage('warning', 'old_password_not_entered');
     }
     if (isStringContainsSpace(getNewPasswordValue())) {
-        return magicMessage(
-            'warning', 'password_no_spaces'
-        );
+        return magicMessage('warning', 'password_no_spaces');
     }
     if (isEmptyString(getNewPasswordValue())) {
-        return magicMessage(
-            'warning', 'password_not_entered'
-        );
+        return magicMessage('warning', 'password_not_entered');
     }
     if (isShortString(getNewPasswordValue())) {
-        return magicMessage(
-            'warning', 'password_too_short'
-        );
+        return magicMessage('warning', 'password_too_short');
     }
     if (!isStringContainsNumbers(getNewPasswordValue())) {
-        return magicMessage(
-            'warning', 'password_one_number'
-        );
+        return magicMessage('warning', 'password_one_number');
     }
     if (!isStringContainsLowerCases(getNewPasswordValue())) {
-        return magicMessage(
-            'warning', 'password_lowercase'
-        );
+        return magicMessage('warning', 'password_lowercase');
     }
     if (!isStringContainsUpperCases(getNewPasswordValue())) {
-        return magicMessage(
-            'warning', 'password_uppercase'
-        );
+        return magicMessage('warning', 'password_uppercase');
     }
     if (!isStringsEqual(getNewPasswordValue(), getNewConfirmPasswordValue())) {
-        return magicMessage(
-            'warning', 'password_confirm_not_match'
-        );
+        return magicMessage('warning', 'password_confirm_not_match');
     }
-    return magicMessage(
-        'positive', 'password_met_requirements'
-    );
+    return magicMessage('positive', 'password_met_requirements');
 }
 
 /**

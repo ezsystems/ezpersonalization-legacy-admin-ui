@@ -10,7 +10,7 @@ $(document).ready(function () {
 		nlid = 0;
 	}
 	htmlDays = '';
-	for (dm = 1; dm < 31; dm++) { 
+	for (dm = 1; dm < 31; dm++) {
 		htmlDays += '<option value="'+dm+'">'+dm+'</option>';
 	}
 	 $("#dayOfmonth").append(htmlDays);
@@ -20,7 +20,7 @@ $(document).ready(function () {
 			$('#dayOfmonthli').show();
 			$('#dayOfweekli').hide();
 			$('#hourOfdayli').show();
-			
+
 		}else if(cval  == 'WEEKLY'){
 			$('#dayOfmonthli').hide();
 			$('#dayOfweekli').show();
@@ -34,18 +34,18 @@ $(document).ready(function () {
 			$('#dayOfweekli').hide();
 			$('#hourOfdayli').hide();
 		}
-		
+
 	});
-	
+
 	inlineSpectrumBodyBackground();
-	
+
 	$('#import_primary_settings').submit(function () {
 		savePreferences2();
 		return false;
     });
 	var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview?nlid="+nlid;
-	$('#previewFrame').attr('src',isrc);   
-	
+	$('#previewFrame').attr('src',isrc);
+
 	$("#button_save").click(submitImport);
 	$(function() {
 	    $( "#accordion" ).accordion();
@@ -53,7 +53,7 @@ $(document).ready(function () {
 	loadMandatorInfo(function(json) {
 		initializeSolutionAndItemTypes(json);
 	});
-	
+
 });
 
 
@@ -61,14 +61,13 @@ $(document).ready(function () {
  */
 function initializeSolutionAndItemTypes(mandatorInfo) {
 	var solution = mandatorInfo.baseInformation.version;
-	
+
 	var defaultItemType = mandatorInfo.itemTypeConfiguration.defaultType;
-			 
+
 	if (solution == 'EXTENDED') {
-		
+
 		$("#input_type_block select").html(""); // removing all options
-		$
-		
+
   		for (var i in mandatorInfo.itemTypeConfiguration.types) {
   			var t = mandatorInfo.itemTypeConfiguration.types[i];
   			var d = t.description + ' (' + t.id + ')';
@@ -78,31 +77,31 @@ function initializeSolutionAndItemTypes(mandatorInfo) {
   				console.log("defaultItemType="+defaultItemType+".");
   			}
   			$('<option value="' + t.id + '"'+selectedTxt+'></option>').appendTo($("#input_type_block select")).text(d);
-  			
+
   		}
-		
-		
+
+
 	} else {
-		
+
 		var defaultItemTypeDescription = "Default";
-		
+
 		for (var i in mandatorInfo.itemTypeConfiguration.types) {
 			if (mandatorInfo.itemTypeConfiguration.types[i].id == defaultItemType) {
 				defaultItemTypeDescription = mandatorInfo.itemTypeConfiguration.types[i].description;
 			}
 		}
-		
+
 		var d = defaultItemTypeDescription + ' (' + defaultItemType + ')';
 		var l = $('<label></label>').text(d);
-		
+
 		$('#input_type_block').hide();
-		
-		
+
+
 		$('#input_type_block').css("opacity",'0.50');
-		
-		
+
+
 	}
-	
+
 	$('#input_type_block .value').css('visibility', 'visible');
 }
 
@@ -111,7 +110,7 @@ function submitImport() {
 }
 
 function loadMandatorInfo(callback) {
-	
+
 	var result = $.ajax({
 		dataType: "json",
 		url: "/api/v4/base/get_mandator/" + encodeURIComponent(customerID) + "?advancedOptions&itemTypeConfiguration&no-realm",
@@ -161,22 +160,22 @@ function inlineSpectrumBodyBackground(){
 			  if(retObj.timeframe){
 				  $("#timeframe").val(retObj.timeframe);
 			  }
-			  
-			  
-			  if(retObj.background != null){
+
+
+			  if(retObj.background !== null){
 				  currentbg = retObj.background;
 			  }
-			  if(retObj.menuBackground != null){
+			  if(retObj.menuBackground !== null){
 				  menuCurrentbg = retObj.menuBackground;
 			  }
-			  if(retObj.ctaBackground != null){
+			  if(retObj.ctaBackground !== null){
 				  ctaCurrentbg = retObj.ctaBackground;
 			  }
-			  if(retObj.footerBackground != null){
+			  if(retObj.footerBackground !== null){
 				  footerCurrentbg = retObj.footerBackground;
 			  }
-			  
-			  if(retObj.menuLinks != null){
+
+			  if(retObj.menuLinks !== null){
 				  var kk = 1;
 				  var menuLinks = retObj.menuLinks;
 				  for(var menuLink in menuLinks){
@@ -188,22 +187,22 @@ function inlineSpectrumBodyBackground(){
 			  $("#facebook").val(retObj.facebook);
 			  $("#googleplus").val(retObj.googleplus);
 			  $("#twitter").val(retObj.twitter);
-			  
-			  if(retObj.imprint != null){
+
+			  if(retObj.imprint !== null){
 				  $("#imprintName").val(retObj.imprint.caption);
 				  $("#imprintURL").val(retObj.imprint.url);
 			  }
-			  
-			  if(retObj.unsubscribe != null){
+
+			  if(retObj.unsubscribe !== null){
 				  $("#unsubscribeName").val(retObj.unsubscribe.caption);
 				  $("#unsubscribeURL").val(retObj.unsubscribe.url);
 			  }
 			  $("#basket_subject").val(retObj.hello1);
 			  $("#basket_note").val(retObj.note1);
 			  $("#basket_footer").val( retObj.footer1);
-			 
-			 
-			  
+
+
+
 			  spectrumBackground('mailBackground',currentbg);
 			  spectrumBackground('menuBackground',menuCurrentbg);
 			  spectrumBackground('ctaBackground',ctaCurrentbg);
@@ -217,10 +216,10 @@ function inlineSpectrumBodyBackground(){
 			  spectrumBackground('footerBackground',footerCurrentbg);
 			  stdAjaxErrorHandler();
 		  }
-	  });	
-	
-	
-	
+	  });
+
+
+
 }
 
 function spectrumBackground(elementId, colorVariable){
@@ -231,7 +230,7 @@ function spectrumBackground(elementId, colorVariable){
 	    move: function(color) {
 	    },
 	    change: function(color) {
-	    	var bgcolorPrev = color.toHexString(); 
+	    	var bgcolorPrev = color.toHexString();
 	    	if('mailBackground' === elementId ){
 	    		currentbg = bgcolorPrev;
 	    	}else if('menuBackground'  === elementId){
@@ -241,11 +240,11 @@ function spectrumBackground(elementId, colorVariable){
 	    	}else if('footerBackground'  === elementId){
 	    		footerCurrentbg = bgcolorPrev;
 	    	}
-	    		
+
 	    },
 	    hide: function(color) {
 	    }
-		
+
 	});
 }
 
@@ -253,7 +252,7 @@ function addMenuElement(menuLinksArray){
 	for (var i=1; i < 5; i++) {
 		var name = $("#menu_elment_name"+i).val();
 		var url  = $("#menu_elment_url"+i).val();
-		if(name != null && name != ''){
+		if(name !== null && name !== ''){
 			var menuLink = new Object();
 			menuLink.caption = name;
 			menuLink.url = url;
@@ -265,19 +264,19 @@ function addMenuElement(menuLinksArray){
 
 
 function stdAjaxErrorHandler(jqXHR, textStatus, errorThrown) {
-	  if(jqXHR != null && jqXHR.status == 403) {
+	  if(jqXHR !== null && jqXHR.status == 403) {
 		  setMessagePopUp("problem", "error_server_error_403");
 	  }
-	  else if(jqXHR != null && jqXHR.status == 401) {
+	  else if(jqXHR !== null && jqXHR.status == 401) {
 		  setMessagePopUp("problem", "error_server_error_401");
 	  }
-	  else if(jqXHR != null && jqXHR.status == 400) {
+	  else if(jqXHR !== null && jqXHR.status == 400) {
 		  setMessagePopUp("problem", "error_server_error_400");
 	  }
-	  else if(jqXHR != null && jqXHR.status == 404) {
+	  else if(jqXHR !== null && jqXHR.status == 404) {
 		  setMessagePopUp("problem", "error_server_error_404");
 	  }
-	  else if(jqXHR != null && jqXHR.status == 409) {
+	  else if(jqXHR !== null && jqXHR.status == 409) {
 		  setMessagePopUp("problem", "error_server_error_409");
 	  }
 	  else {
@@ -303,59 +302,59 @@ function savePreferences2() {
 		 var fromDay =  $("#dayOfweek").val();
 		 var diff = fromDay-currentDay;
 		 if(fromDay < currentDay){
-			 diff = 7+diff; 
+			 diff = 7+diff;
 		 }
 		 d.setDate(d.getDate()+diff);
 	 }
 	 if(retObj.interval != 'ONCE'){
 		 d.setHours($("#hourOfday").val(), 0, 0);
 	 }
-	 
+
 	 retObj.startDate = d;
 	 retObj.timeframe =  $("#timeframe").val();
-	 
-	 
+
+
 	 retObj.logo = $("#logo").val();
 	 retObj.holineName = $("#menu_elment_hotline_name").val();
 	 retObj.holineNumber = $("#menu_elment_hotline_number").val();
 	 retObj.cta = $("#cta").val();
-	 
+
 	 retObj.ctaBackground = ctaCurrentbg;
 	 retObj.background = currentbg;
 	 retObj.menuBackground = menuCurrentbg;
 	 retObj.menuLinks = new Array();
 	 addMenuElement(retObj.menuLinks);
-	 
+
 	 retObj.footerBackground = footerCurrentbg;
 	 retObj.facebook = $("#facebook").val();
 	 retObj.googleplus = $("#googleplus").val();
 	 retObj.twitter = $("#twitter").val();
-	 
-	 
+
+
 	 retObj.hello1 = $("#basket_subject").val();
 	 retObj.note1 = $("#basket_note").val();
 	 retObj.footer1 = $("#basket_footer").val();
-	 
-	 
-	 
+
+
+
 	 var imprintName = $("#imprintName").val();
 	 var imprintURL  = $("#imprintURL").val();
-	 if(imprintName != null && imprintName != ''){
+	 if(imprintName !== null && imprintName !== ''){
 		 var menuLink = new Object();
 		 menuLink.caption = imprintName;
 		 menuLink.url = imprintURL;
 		 retObj.imprint = menuLink;
 	 }
-	 
+
 	 var unsubscribeName = $("#unsubscribeName").val();
 	 var unsubscribeURL  = $("#unsubscribeURL").val();
-	 if(imprintName != null && imprintName != ''){
+	 if(imprintName !== null && imprintName !== ''){
 		 var menuLink = new Object();
 		 menuLink.caption = unsubscribeName;
 		 menuLink.url = unsubscribeURL;
 		 retObj.unsubscribe = menuLink;
 	 }
-	 
+
 	 $.ajax({
 		  type: "POST",
 		  mimeType: "application/json",
@@ -367,14 +366,14 @@ function savePreferences2() {
 			  unsetLoadingDiv($('body'));
 			  nlid = json.newsletterId;
 			  var isrc="/api/v4/" + encodeURIComponent(customerID) + "/nl2go/get_preview?nlid="+nlid;
-			  $('#previewFrame').attr('src',isrc);   
+			  $('#previewFrame').attr('src',isrc);
 			  setMessagePopUp("positive", "message_data_saved_successfully");
 		  },
 		  error: function() {
 			  unsetLoadingDiv($('body'));
 			  stdAjaxErrorHandler();
 		  }
-	  });	
+	  });
 }
 
 

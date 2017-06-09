@@ -1,5 +1,5 @@
 //
-// It is a part of maininx.js. It uses global variables from there. 
+// It is a part of maininx.js. It uses global variables from there.
 //
 
 
@@ -8,27 +8,27 @@
  */
 
 function loadAddedRevenue() {
-	
+
 	var from_date_time = currentPeriodFromTime();
 	var to_date_time = currentPeriodToTime();
 
-	var xsd_from = from_date_time.toString("yyyy-MM-ddTHH:mm:ss")
-	var xsd_to = to_date_time.toString("yyyy-MM-ddTHH:mm:ss")
-	
+	var xsd_from = from_date_time.toString("yyyy-MM-ddTHH:mm:ss");
+	var xsd_to = to_date_time.toString("yyyy-MM-ddTHH:mm:ss");
+
 	var mandator = mandatorDao.mandator; // mandatorDao is global
-	
+
 	$('#addedRevenue tr:not(.fixed)').slice(1).remove();
 	$('#addedRevenue tr.overflow').hide();
 	$('#addedRevenue tr.nothing').hide();
-	
+
 	if (! mandator) {
 		return; // something went wrong
 	}
-	
+
 	$('#addedRevenue span.currency').text(mandator.advancedOptions.currency);
-	
+
 	setLoadingDiv('#addedRevenue');
-	
+
 	var limit = 100;
 
 	yooAjax(null, {
@@ -37,15 +37,15 @@ function loadAddedRevenue() {
 		success: function (json) {
 
 			var index = 0;
-			
+
 			for (var i in json) {
-				
+
 				if (i >= limit) {
 					$('#addedRevenue tr.overflow').show();
 					$('#addedRevenue span.limit').text(limit);
 					break;
 				}
-				
+
 				var e = json[i];
 
 				var time = new Date(e.timeConsumed);
@@ -53,31 +53,31 @@ function loadAddedRevenue() {
 				var timeFormatted = time.toString("dd.MM.yyyy HH:mm");
 
 				var date = timeFormatted + " [" + dateDiffMinutes(e.timeRecommended, e.timeConsumed) + " min]";
-			
+
 				$('#addedRevenue tr:nth-child(2) td.reco_accepted').text(date);
 				if (e.item.title) {
-					$('#addedRevenue tr:nth-child(2) td.item_bought').text(e.item.title + " ["+e.item.id+"]");	
+					$('#addedRevenue tr:nth-child(2) td.item_bought').text(e.item.title + " ["+e.item.id+"]");
 				} else {
 					$('#addedRevenue tr:nth-child(2) td.item_bought').text(e.item.id);
 				}
-				
+
 				if (e.price) {
 					var price = e.price.toFixed(mandator.advancedOptions.currencyFractionDigits);
-					
+
 					if (e.quantity && e.quantity > 1) {
-						$('#addedRevenue tr:nth-child(2) td.item_price').text(e.quantity + " x " + price);	
+						$('#addedRevenue tr:nth-child(2) td.item_price').text(e.quantity + " x " + price);
 					} else {
 						$('#addedRevenue tr:nth-child(2) td.item_price').text(price);
 					}
 				}
-				
+
 				var content = $('#addedRevenue tr:nth-child(2)').html();
 				$('#addedRevenue table').append("<tr>" + content + "</tr>").show();
-				
+
 				index++;
 			}
-			
-			if (index == 0) {
+
+			if (index === 0) {
 				$('#addedRevenue tr.nothing').show();
 				$('section.scenarios a.create_csv').hide();
 				$('#addedRevenue span.period').text(dateTimeFormat(from_date_time) + " - " + dateTimeFormat(to_date_time));
@@ -85,13 +85,13 @@ function loadAddedRevenue() {
 				$('section.scenarios a.create_csv').show();
 				$('section.scenarios a.create_csv').attr('href',"/api/v4/" + encodeURIComponent(customerID) + "/statistic/added_revenue.xlsx?from_date_time=" + xsd_from + "&to_date_time=" + xsd_to);
 			}
-			
+
 			i18n($('#addedRevenue'));
 		}
 	}).always(function() {
-		unsetLoadingDiv('#addedRevenue');		
+		unsetLoadingDiv('#addedRevenue');
 	});
-	
+
 
 }
 
@@ -104,7 +104,7 @@ function dateDiffMinutes(a, b) {
 		  b = new Date(b);
 	  }
 	  var r = (b - a) / 1000 / 60;
-	  
+
 	  if (r > 0) {
 		  return Math.ceil(r);
 	  } else {
