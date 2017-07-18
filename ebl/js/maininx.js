@@ -157,6 +157,7 @@ $(document).ready(function() {
 	});
 	$('#itemimportP .closeOverlay').click(function () {
 		 readImportJobs();
+         readPluginImportScheduler();
 	});
 	$('#mailP .closeOverlay').click(function () {
 		 readMailJobs();
@@ -1003,6 +1004,7 @@ function initialLoadData() {
 			$('#itemimportP').show();
 		});
 		readImportJobs();
+        readPluginImportScheduler();
 
 	}else{
 		$('section.scenarios li.tabAbTests').hide();
@@ -1019,6 +1021,7 @@ function initialLoadData() {
 
 var imports = new Array();
 var  allJobsI;
+var  allSchedulersI;
 var  allJobsM;
 
 function readImportJobs(){
@@ -1069,10 +1072,10 @@ function readImportJobs(){
                       }
                       htmlToAppend += '<div class="tr test">\n';
                       htmlToAppend += ' <div class="tc name">' + name + '</div>';
-                      htmlToAppend += ' <div class="tc interval">' + interval + '</div>';
-                      htmlToAppend += ' <div class="tc startdate">' + startdate + '</div>';
+                      //htmlToAppend += ' <div class="tc interval">' + interval + '</div>';
+                      //htmlToAppend += ' <div class="tc startdate">' + startdate + '</div>';
                       htmlToAppend += ' <div class="tc lastimport">' + lastRun + '</div>';
-                      htmlToAppend += ' <div class="tc showHistory"><a onclick="showImportHistory(' + obj.id + ')">Show History</a> </div>';
+                     // htmlToAppend += ' <div class="tc showHistory"><a onclick="showImportHistory(' + obj.id + ')">Show History</a> </div>';
 
                       if (obj.fileFormat == "CSV") {
                           htmlToAppend += ' <div class="tc editimport"><a onclick="$(\'#itemimportF\').attr(\'src\', \'itempop.html?customer_id=' + encodeURIComponent(customerID) + '&importJobId=' + id + '\');$(\'#itemimportP\').show();">Edit</a> </div>';
@@ -1080,7 +1083,7 @@ function readImportJobs(){
                           htmlToAppend += ' <div class="tc editimport"></div>';
                       }
 
-					    htmlToAppend +=' <div class="tc jobstatus"><img id="statusImage'+i+'" style="vertical-align: middle;" src="'+statusURL+'" /></div>';
+					    /**htmlToAppend +=' <div class="tc jobstatus"><img id="statusImage'+i+'" style="vertical-align: middle;" src="'+statusURL+'" /></div>';
 					    htmlToAppend +=' <div class="tc jobstatus"><a onclick="runJobNow('+obj.id+');"><img style="vertical-align: middle;" src="'+runURL+'" /></a></div>';
 					    htmlToAppend +=' <div class="tc jobon toggle-light">'
 					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
@@ -1092,7 +1095,7 @@ function readImportJobs(){
 						    	 +'</div>'
 						    +'</div></div></div>';
 
-					    htmlToAppend +='</div>';
+					    htmlToAppend +='</div>';**/
 				  }
 				  htmlToAppend +='<div>';
 			  }
@@ -1101,10 +1104,88 @@ function readImportJobs(){
 			$('#importJobsTable').append(header);
           	$('#importJobsTable').append(htmlToAppend);
           	$('#importJobsTable').show();
+		  },
+		  error: mainErrorHandler
+	  });
+}
 
-
-
-
+function readPluginImportScheduler(){
+	$.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/plugin/all",
+		  success: function(json) {              
+			  var htmlToAppend ='';
+			  if(json.length === 0){
+				  htmlToAppend = '<div id="noTests" data-translate="item_import_no_jobs">you have no import jobs schedulers defined</div>';
+			  }else{
+				allSchedulersI = json;
+				  for(var i = 0; i < json.length; i++) {
+                      var obj = json[i].base;
+                      console.log("RECEIVED CHUsssJ");
+                      console.log(obj);
+                      var appKey = obj.appKey;
+                      var appSecret = obj.appSecret;
+                      var endpoint = obj.endpoint;
+                      var importEnabled = obj.importEnabled;
+                      var importInterval = obj.importInterval;
+                      var importLastRun = obj.importLastRun;
+                      var importStartDate = obj.importStartDate;
+                      var importTriggerState = obj.importTriggerState;
+                      var importTriggerType = obj.importTriggerType;     
+                      
+                      if (!importLastRun) {
+                          importLastRun = 'nope';
+                      }
+                      var id = obj.id;
+                      var runURL = 'img/clock.png';
+                      var statusURL = 'img/red.png';
+                      var margin = -48;
+                      var off = 'active';
+                      var on = '';
+                      if (importEnabled) {
+                          on = 'active';
+                          off = '';
+                          margin = 0;
+                          statusURL = 'img/blue.png';
+                          if (importLastRun != 'nope') {
+                              var diff = Math.abs(new Date() - new Date(importLastRun));
+                              var days = diff / (24 * 60 * 60 * 1000);
+                              //console.log(diff + " " + days + " " + new Date(importLastRun));
+                              if (importInterval == 'DAILY' && days >= 1) {
+                                  statusURL = 'img/yellow.png';
+                              }
+                              if (importInterval == 'WEEKLY' && days >= 7) {
+                                  statusURL = 'img/yellow.png';
+                              }
+                          }
+                      }
+                      htmlToAppend += '<div class="tr test">\n';
+                      htmlToAppend += ' <div class="tc interval">' + importInterval + '</div>';
+                      htmlToAppend += ' <div class="tc importStartDate">' + importStartDate + '</div>';
+                      htmlToAppend += ' <div class="tc lastimport">' + importLastRun + '</div>';
+                      htmlToAppend += ' <div class="tc importTriggerState">' + importTriggerState + '</div>';
+                      htmlToAppend +=' <div class="tc jobon toggle-light">'
+					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
+					    	+'<div class="toggle-slide" onclick="updateSchedulerStatus('+i+');">'
+						    	+'<div id="toggle-inner'+i+'" class="toggle-inner" style="width: 118px; margin-left: '+margin+'px;">'
+						    		+'<div id="toggle-on'+i+'" class="toggle-on '+on+'" style="height: 22px; width: 59px; text-indent: -11px; line-height: 22px;">ON</div>'
+						    		+'<div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>'
+						    		+'<div id="toggle-off'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
+						    	 +'</div>'
+						    +'</div></div></div>';
+                      htmlToAppend +='</div>';
+				  }
+				  htmlToAppend +='<div>';
+			  }
+              
+            var pluginHeader = $('#import_plugin_head').clone();
+            $('#pluginImportTable').empty();
+            $('#pluginImportTable').append(pluginHeader);
+            $('#pluginImportTable').append(htmlToAppend);
+            $('#pluginImportTable').show();
 		  },
 		  error: mainErrorHandler
 	  });
@@ -1283,6 +1364,46 @@ function updateStatus(activeId){
 			  stdAjaxErrorHandler();
 		  }
 	  });
+}
+
+function updateSchedulerStatus(activeId){
+	var classList =$('#toggle-on'+activeId).attr('class').split(/\s+/);
+	var status = 1;
+	var job = allSchedulersI[activeId];
+	$.each( classList, function(index, item){
+	    if (item === 'active') {
+	    	status = 0;
+	    }
+	});    
+	var statusURL = 'img/blue.png';
+	if(status == 1){
+		$('#toggle-inner'+activeId).css('margin-left','0px');
+		$('#toggle-on'+activeId).addClass('active');
+		$('#toggle-off'+activeId).removeClass('active');
+		job.base.importEnabled = true;           
+	}else{
+		$('#toggle-inner'+activeId).css('margin-left','-48px');
+		$('#toggle-on'+activeId).removeClass('active');
+		$('#toggle-off'+activeId).addClass('active');
+		statusURL = 'img/red.png';
+		job.base.importEnabled = false;       
+	}
+    
+    $.ajax({
+		  type: "POST",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  data: JSON.stringify(job),
+		  url: "/api/v4/"+ encodeURIComponent(customerID) +"/plugin/update",
+		  success: function(json) {
+			  $('#statusImage'+activeId).attr("src",statusURL);
+		  },
+		  error: function() {
+			  stdAjaxErrorHandler();
+		  }
+	  });
+	 
 }
 
 function runJobNow(jobId) {
