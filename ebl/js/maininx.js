@@ -1039,9 +1039,13 @@ function readImportJobs(){
 				allJobsI = json;
 				  for(var i = 0; i < json.length; i++) {
                       var obj = json[i];
+                      
+                      console.log(obj);
                       var name = obj.name;
                       var interval = obj.interval;
                       var startdate = obj.startDate;
+                      var language = obj.language;
+                      var itemType = obj.itemType;
                       var lastRun = obj.lastRun;
                       if (!lastRun) {
                           lastRun = 'nope';
@@ -1072,6 +1076,8 @@ function readImportJobs(){
                       }
                       htmlToAppend += '<div class="tr test">\n';
                       htmlToAppend += ' <div class="tc name">' + name + '</div>';
+                      htmlToAppend += ' <div class="tc language">' + language + '</div>';
+                      htmlToAppend += ' <div class="tc itemType">' + itemType + '</div>';
                       //htmlToAppend += ' <div class="tc interval">' + interval + '</div>';
                       //htmlToAppend += ' <div class="tc startdate">' + startdate + '</div>';
                       htmlToAppend += ' <div class="tc lastimport">' + lastRun + '</div>';
@@ -1124,8 +1130,6 @@ function readPluginImportScheduler(){
 				allSchedulersI = json;
 				  for(var i = 0; i < json.length; i++) {
                       var obj = json[i].base;
-                      console.log("RECEIVED CHUsssJ");
-                      console.log(obj);
                       var appKey = obj.appKey;
                       var appSecret = obj.appSecret;
                       var endpoint = obj.endpoint;
