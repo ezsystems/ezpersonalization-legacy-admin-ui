@@ -1038,13 +1038,15 @@ function readImportJobs(){
 			  }else{
 				allJobsI = json;
 				  for(var i = 0; i < json.length; i++) {
-                      var obj = json[i];                      
+                      var obj = json[i];  
                       var name = obj.name;
                       var interval = obj.interval;
                       var startdate = obj.startDate;
                       var language = obj.language;
                       var itemType = obj.itemType;
                       var lastRun = obj.lastRun;
+                      var amountFull = obj.amountFull;
+                      var amountUpdate = obj.amountUpdate;
                       if (!lastRun) {
                           lastRun = 'nope';
                       }
@@ -1079,6 +1081,8 @@ function readImportJobs(){
                       //htmlToAppend += ' <div class="tc interval">' + interval + '</div>';
                       //htmlToAppend += ' <div class="tc startdate">' + startdate + '</div>';
                       htmlToAppend += ' <div class="tc lastimport">' + lastRun + '</div>';
+                      htmlToAppend += ' <div class="tc amountUpdate">' + amountUpdate + '</div>';
+                      htmlToAppend += ' <div class="tc amountFull">' + amountFull + '</div>';
                      // htmlToAppend += ' <div class="tc showHistory"><a onclick="showImportHistory(' + obj.id + ')">Show History</a> </div>';
 
                       if (obj.fileFormat == "CSV") {
@@ -1128,7 +1132,6 @@ function readImportScheduler(){
 				allSchedulersI = json;
 				  for(var i = 0; i < json.length; i++) {
                       var obj = json[i];
-                      console.log(obj);
                       var importEnabled = obj.enabled;
                       var importInterval = obj.interval;
                       var importLastRun = obj.lastRun;
