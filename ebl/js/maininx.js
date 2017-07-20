@@ -157,7 +157,7 @@ $(document).ready(function() {
 	});
 	$('#itemimportP .closeOverlay').click(function () {
 		 readImportJobs();
-         readPluginImportScheduler();
+         readImportScheduler();
 	});
 	$('#mailP .closeOverlay').click(function () {
 		 readMailJobs();
@@ -1004,7 +1004,7 @@ function initialLoadData() {
 			$('#itemimportP').show();
 		});
 		readImportJobs();
-        readPluginImportScheduler();
+        readImportScheduler();
 
 	}else{
 		$('section.scenarios li.tabAbTests').hide();
@@ -1038,9 +1038,7 @@ function readImportJobs(){
 			  }else{
 				allJobsI = json;
 				  for(var i = 0; i < json.length; i++) {
-                      var obj = json[i];
-                      
-                      console.log(obj);
+                      var obj = json[i];                      
                       var name = obj.name;
                       var interval = obj.interval;
                       var startdate = obj.startDate;
@@ -1115,13 +1113,13 @@ function readImportJobs(){
 	  });
 }
 
-function readPluginImportScheduler(){
+function readImportScheduler(){
 	$.ajax({
 		  type: "GET",
 		  mimeType: "application/json",
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
-		  url: "/api/v4/" + encodeURIComponent(customerID) + "/plugin/all",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/import/get_importjobs_schedulers",
 		  success: function(json) {              
 			  var htmlToAppend ='';
 			  if(json.length === 0){
@@ -1129,16 +1127,14 @@ function readPluginImportScheduler(){
 			  }else{
 				allSchedulersI = json;
 				  for(var i = 0; i < json.length; i++) {
-                      var obj = json[i].base;
-                      var appKey = obj.appKey;
-                      var appSecret = obj.appSecret;
-                      var endpoint = obj.endpoint;
-                      var importEnabled = obj.importEnabled;
-                      var importInterval = obj.importInterval;
-                      var importLastRun = obj.importLastRun;
-                      var importStartDate = obj.importStartDate;
-                      var importTriggerState = obj.importTriggerState;
-                      var importTriggerType = obj.importTriggerType;     
+                      var obj = json[i];
+                      console.log(obj);
+                      var importEnabled = obj.enabled;
+                      var importInterval = obj.interval;
+                      var importLastRun = obj.lastRun;
+                      var importStartDate = obj.startDate;
+                      var importTriggerState = obj.triggerState;
+                      var importTriggerType = obj.triggerType;     
                       
                       if (!importLastRun) {
                           importLastRun = 'nope';
@@ -1384,13 +1380,13 @@ function updateSchedulerStatus(activeId){
 		$('#toggle-inner'+activeId).css('margin-left','0px');
 		$('#toggle-on'+activeId).addClass('active');
 		$('#toggle-off'+activeId).removeClass('active');
-		job.base.importEnabled = true;           
+		job.enabled = true;           
 	}else{
 		$('#toggle-inner'+activeId).css('margin-left','-48px');
 		$('#toggle-on'+activeId).removeClass('active');
 		$('#toggle-off'+activeId).addClass('active');
 		statusURL = 'img/red.png';
-		job.base.importEnabled = false;       
+		job.enabled = false;       
 	}
     
     $.ajax({
@@ -1399,15 +1395,14 @@ function updateSchedulerStatus(activeId){
 		  contentType: "application/json;charset=UTF-8",
 		  dataType: "json",
 		  data: JSON.stringify(job),
-		  url: "/api/v4/"+ encodeURIComponent(customerID) +"/plugin/update",
+		  url: "/api/v4/"+ encodeURIComponent(customerID) +"/import/update_scheduler",
 		  success: function(json) {
 			  $('#statusImage'+activeId).attr("src",statusURL);
 		  },
 		  error: function() {
 			  stdAjaxErrorHandler();
 		  }
-	  });
-	 
+	  });	 
 }
 
 function runJobNow(jobId) {
