@@ -1,4 +1,4 @@
-﻿/*Fixes*/
+/*Fixes*/
 
 .clearfix:before,
 .clearfix:after {
@@ -2176,16 +2176,17 @@ body > .cover{
     background-color: rgba(235, 235, 235, 1);
 }
 
-#importJobs .tc.results a:hover, #importJobs .tc.config a:hover, #importJobs .tc.remove a:hover, #mailJobs .tc.results a:hover, #mailJobs .tc.config a:hover, #mailJobs .tc.remove a:hover{
+#importJobs .tc.results a:hover, #importJobs .tc.config a:hover, #importJobs .tc.remove a:hover,
+#exportJobs .tc.results a:hover, #exportJobs .tc.config a:hover, #exportJobs .tc.remove a:hover, #mailJobs .tc.results a:hover, #mailJobs .tc.config a:hover, #mailJobs .tc.remove a:hover{
     text-decoration: underline;
     cursor: pointer;
 }
 
-#importJobs .tr.head, #mailJobs .tr.head{
+#importJobs .tr.head, #exportJobs .tr.head, #mailJobs .tr.head{
     font-weight: 700;
 }
 
-#importJobs .tr:nth-child(odd), #mailJobs .tr:nth-child(odd){
+#importJobs .tr:nth-child(odd), #exportJobs .tr:nth-child(odd), #mailJobs .tr:nth-child(odd){
     background-color: rgba(235, 235, 235, 1);
 }
 
