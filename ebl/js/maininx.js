@@ -1018,6 +1018,7 @@ function initialLoadData() {
 		});
 		readImportJobs();
         readImportScheduler();
+        readExportJobs();
 
 	}else{
 		$('section.scenarios li.tabAbTests').hide();
@@ -1207,6 +1208,128 @@ function readImportScheduler(){
 	  });
 }
 
+var allExportJobs;
+
+function readExportJobs(){
+	$.ajax({
+		  type: "GET",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  url: "/api/v4/" + encodeURIComponent(customerID) + "/export/get_exportjobs/",
+		  success: function(json) {
+			  var htmlToAppend ='';
+			  if(json.length === 0){
+				  htmlToAppend = '<div id="noTests" data-translate="item_export_no_jobs">you have no export jobs defined</div>';
+			  }else{
+				allExportJobs = json;
+                  console.log(json);
+				  for(var i = 0; i < json.length; i++) {
+                      var obj = json[i];  
+                      var scenario = obj.scenario;
+                      var interval = obj.interval;                      
+                      var language = obj.language;
+                      var inputItemType = obj.inputItemType;
+                      var outputItemType = obj.outputItemType;
+                      var startdate = obj.startDate;                     
+                      var lastRun = obj.lastRun;
+                      var enabled = obj.enabled;
+                      
+                      if (!lastRun) {
+                          lastRun = 'nope';
+                      }
+                      
+                      var id = obj.id;
+                      var runURL = 'img/clock.png';
+                      var statusURL = 'img/red.png';
+                      var margin = -48;
+                      var off = 'active';
+                      var on = '';
+                      if (enabled) {
+                          on = 'active';
+                          off = '';
+                          margin = 0;
+                          statusURL = 'img/blue.png';
+                          if (lastRun != 'nope') {
+                              var diff = Math.abs(new Date() - new Date(lastRun));
+                              var days = diff / (24 * 60 * 60 * 1000);
+                              if (interval == 'DAILY' && days >= 1) {
+                                  statusURL = 'img/yellow.png';
+                              }
+                              if (interval == 'WEEKLY' && days >= 7) {
+                                  statusURL = 'img/yellow.png';
+                              }
+                          }
+                      }
+                      htmlToAppend += '<div class="tr test">\n';
+                      htmlToAppend += ' <div class="tc scenario">' + scenario + '</div>';
+                      htmlToAppend += ' <div class="tc interval">' + interval + '</div>';
+                      htmlToAppend += ' <div class="tc language">' + language + '</div>';
+                      htmlToAppend += ' <div class="tc inputItemType">' + inputItemType + '</div>';
+                      htmlToAppend += ' <div class="tc outputItemType">' + outputItemType + '</div>';
+                      htmlToAppend += ' <div class="tc startdate">' + startdate + '</div>';
+                      htmlToAppend += ' <div class="tc lastimport">' + lastRun + '</div>';
+                      htmlToAppend +=' <div class="tc jobon toggle-light">'
+					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
+					    	+'<div class="toggle-slide" onclick="updateExportJob('+i+');">'
+						    	+'<div id="toggle-inner-exporter'+i+'" class="toggle-inner" style="width: 118px; margin-left: '+margin+'px;">'
+						    		+'<div id="toggle-on-exporter'+i+'" class="toggle-on '+on+'" style="height: 22px; width: 59px; text-indent: -11px; line-height: 22px;">ON</div>'
+						    		+'<div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>'
+						    		+'<div id="toggle-off-exporter'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
+						    	 +'</div>'
+						    +'</div></div></div>';
+				  }
+				  htmlToAppend +='<div>';
+			  }
+			var header = $('#export_head').clone();
+			$('#exportJobs').empty();
+			$('#exportJobs').append(header);
+          	$('#exportJobs').append(htmlToAppend);
+          	$('#exportJobs').show();
+		  },
+		  error: mainErrorHandler
+	  });
+}
+
+function updateExportJob(activeId){
+	var classList =$('#toggle-on-exporter'+activeId).attr('class').split(/\s+/);
+	var status = 1;
+	var job = allExportJobs[activeId];
+	$.each( classList, function(index, item){
+	    if (item === 'active') {
+	    	status = 0;
+	    }
+	});    
+	var statusURL = 'img/blue.png';
+	if(status == 1){
+		$('#toggle-inner'+activeId).css('margin-left','0px');
+		$('#toggle-on-exporter'+activeId).addClass('active');
+		$('#toggle-off-exporter'+activeId).removeClass('active');
+		job.enabled = true;           
+	}else{
+		$('#toggle-inner-exporter'+activeId).css('margin-left','-48px');
+		$('#toggle-on-exporter'+activeId).removeClass('active');
+		$('#toggle-off-exporter'+activeId).addClass('active');
+		statusURL = 'img/red.png';
+		job.enabled = false;       
+	}
+    
+    $.ajax({
+		  type: "POST",
+		  mimeType: "application/json",
+		  contentType: "application/json;charset=UTF-8",
+		  dataType: "json",
+		  data: JSON.stringify(job),
+		  url: "/api/v4/"+ encodeURIComponent(customerID) +"/export/update_exportjob",
+		  success: function(json) {
+			  $('#statusImage'+activeId).attr("src",statusURL);
+		  },
+		  error: function() {
+			  stdAjaxErrorHandler();
+		  }
+	  });	 
+}
+
 function readMailJobs(){
 	$.ajax({
 		  type: "GET",
@@ -1266,10 +1389,6 @@ function readMailJobs(){
 			$('#mailTable').append(header);
           	$('#mailTable').append(htmlToAppend);
           	$('#mailTable').show();
-
-
-
-
 		  },
 		  error: mainErrorHandler
 	  });
