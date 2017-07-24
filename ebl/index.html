@@ -343,6 +343,9 @@
 			  	<li class="tab tabImports" id="itemImortTab" data-target="#importJobs" style="display: none;" data-controls="#itemImortControls">
 			  		<label data-translate="item_import"></label>
 		  		</li>
+                <li class="tab tabExports" id="recoExportTab" data-target="#exportJobs" style="display: none;" data-controls="#recoExportControls">
+			  		<label data-translate="reco_export"></label>
+		  		</li>
 			  	<li class="tab tabMail" id="mailTab" data-target="#mailJobs" style="display: none;" data-controls="#mailControls">
 			  		<label  data-translate="mail_newsletter"></label>
 		  		</li>
@@ -420,8 +423,8 @@
 
 	   <div id="importJobs" class="importItems tabContent" style="display: none;">
            Scheduler:
-           <div class="table" id="pluginImportTable" style="width: 100%;display: none;">
-                <div class="tr head" id = "import_plugin_head">
+           <div class="table" id="schedulerImportTable" style="width: 100%;display: none;">
+                <div class="tr head" id = "scheduler_import_head">
 				    <div class="tc" data-translate="plugin_import_scheduler_interval">Import Interval</div>
 				    <div class="tc" data-translate="plugin_import_scheduler_start_date">Start date</div>
 				    <div class="tc" data-translate="plugin_import_scheduler_last_run_date">Last run</div>
@@ -448,6 +451,21 @@
 				    <!--div class="tc" data-translate="item_import_status">Status</div>
 				    <div class="tc" data-translate="item_import_run">Run Now</div>
 				    <div class="tc" data-translate="item_import_on">ON/OFF</div-->
+				</div>
+			</div>
+		</div>
+      
+        <div id="exportJobs" class="exportItems tabContent" style="display: none;">
+			<div class="table" id="exportobsTable" style="width: 100%;display: none;">
+				<div class="tr head" id = "export_head">
+					<div class="tc" data-translate="reco_export_scenario">Exported scenario</div>
+                    <div class="tc" data-translate="reco_export_input_item">Input Item</div>
+                    <div class="tc" data-translate="reco_export_output_item">Output Type</div>
+					<div class="tc" data-translate="reco_export_lang">Language</div>
+				    <div class="tc" data-translate="reco_export_interval">Interval</div>
+				    <div class="tc" data-translate="reco_export_start_date">Start Date</div>
+				    <div class="tc" data-translate="reco_export_last_run">Last Run</div>
+				    <div class="tc" data-translate="item_import_on">ON/OFF</div>
 				</div>
 			</div>
 		</div>

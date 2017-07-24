@@ -135,6 +135,10 @@ $(document).ready(function() {
 	$('section.scenarios li.tabImports').click(function() {
 		switchTab("IMPORT");
 	});
+    
+    $('section.scenarios li.tabExports').click(function() {
+		switchTab("EXPORT");
+	});
 
 	$('section.scenarios li.tabMail').click(function() {
 		switchTab("MAIL");
@@ -274,7 +278,11 @@ function switchTab(newTab) {
 		$("#itemImortControls").show();
 		$("section.scenarios li.tabImports").addClass("current");
 
-	} else if (newTab == "MAIL") {
+	} else if (newTab == "EXPORT") {
+		$("#exportJobs").show();
+		$("section.scenarios li.tabImports").addClass("current");
+
+	}else if (newTab == "MAIL") {
 		$("#mailJobs").show();
 		$("#mailControls").show();
 		$("section.scenarios li.tabMail").addClass("current");
@@ -535,6 +543,10 @@ function initialize() {
 
 	$('section.scenarios li.tabImports').click(function() {
 		switchTab("IMPORT");
+	});
+    
+    $('section.scenarios li.tabExports').click(function() {
+		switchTab("EXPORT");
 	});
 
 	$('section.scenarios li.tabPlugins').click(function() {
@@ -987,6 +999,7 @@ function initialLoadData() {
 		$('section.scenarios li.tabAbTests').show();
 		$('section.scenarios li.tabPlugins').show();
 		$('section.scenarios li.tabImports').show();
+        $('section.scenarios li.tabExports').show();
 		if('321' === customerID || '1221'  === customerID || '1780'  === customerID  || '1351'  === customerID || '1209'  === customerID ){
 			$('section.scenarios li.tabMail').show();
 			$('#mailF').attr('src', 'mailconfig.html?customer_id=' +  encodeURIComponent(customerID));
@@ -1184,11 +1197,11 @@ function readImportScheduler(){
 				  htmlToAppend +='<div>';
 			  }
               
-            var pluginHeader = $('#import_plugin_head').clone();
-            $('#pluginImportTable').empty();
-            $('#pluginImportTable').append(pluginHeader);
-            $('#pluginImportTable').append(htmlToAppend);
-            $('#pluginImportTable').show();
+            var pluginHeader = $('#scheduler_import_head').clone();
+            $('#schedulerImportTable').empty();
+            $('#schedulerImportTable').append(pluginHeader);
+            $('#schedulerImportTable').append(htmlToAppend);
+            $('#schedulerImportTable').show();
 		  },
 		  error: mainErrorHandler
 	  });
