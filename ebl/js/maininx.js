@@ -1115,11 +1115,9 @@ function readImportJobs(){
 						    		+'<div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>'
 						    		+'<div id="toggle-off'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
 						    	 +'</div>'
-						    +'</div></div></div>';
-
-					    htmlToAppend +='</div>';**/
+						    +'</div></div></div>';**/
+                      htmlToAppend +='</div>';
 				  }
-				  htmlToAppend +='<div>';
 			  }
 			var header = $('#import_head').clone();
 			$('#importJobsTable').empty();
@@ -1219,9 +1217,9 @@ function readExportJobs(){
 		  url: "/api/v4/" + encodeURIComponent(customerID) + "/export/get_exportjobs/",
 		  success: function(json) {
 			  var htmlToAppend ='';
-			  if(json.length === 0){
+			  if(json.length === 0) {
 				  htmlToAppend = '<div id="noTests" data-translate="item_export_no_jobs">you have no export jobs defined</div>';
-			  }else{
+			  }else {
 				allExportJobs = json;
                   console.log(json);
 				  for(var i = 0; i < json.length; i++) {
@@ -1234,9 +1232,23 @@ function readExportJobs(){
                       var startdate = obj.startDate;                     
                       var lastRun = obj.lastRun;
                       var enabled = obj.enabled;
+                      var downloadLink = obj.downloadLink;
+                      var inputSourceType = obj.inputSourceType;
                       
                       if (!lastRun) {
                           lastRun = 'nope';
+                      }
+                      
+                      if(inputSourceType === 'CLICKED') {
+                          inputSourceType = "clicks";
+                      } else if(inputSourceType === 'BUY') {
+                          inputSourceType = "buys";
+                      } else if(inputSourceType === 'ITEMS') {
+                          inputSourceType = "items";
+                      } else if(inputSourceType === 'ITEMS_CATEGORIES') {
+                          inputSourceType = "items and categories";
+                      } else if(inputSourceType === 'CATEGORIES') {
+                          inputSourceType = "categories";
                       }
                       
                       var id = obj.id;
@@ -1262,24 +1274,36 @@ function readExportJobs(){
                           }
                       }
                       htmlToAppend += '<div class="tr test">\n';
+                      
                       htmlToAppend += ' <div class="tc scenario">' + scenario + '</div>';
                       htmlToAppend += ' <div class="tc interval">' + interval + '</div>';
                       htmlToAppend += ' <div class="tc language">' + language + '</div>';
                       htmlToAppend += ' <div class="tc inputItemType">' + inputItemType + '</div>';
                       htmlToAppend += ' <div class="tc outputItemType">' + outputItemType + '</div>';
+                      htmlToAppend += ' <div class="tc inputSourceType">' + inputSourceType + '</div>';
                       htmlToAppend += ' <div class="tc startdate">' + startdate + '</div>';
                       htmlToAppend += ' <div class="tc lastimport">' + lastRun + '</div>';
+                      htmlToAppend += ' <div class="tc download"><a href="' + downloadLink + '" target="_blank">Download</a></div>';
                       htmlToAppend +=' <div class="tc jobon toggle-light">'
+                      
 					    	+'<div class="toggle on" style="  margin: 0 auto; margin-bottom: -6px;  height: 22px;  width: 70px;">'
+                      
 					    	+'<div class="toggle-slide" onclick="updateExportJob('+i+');">'
-						    	+'<div id="toggle-inner-exporter'+i+'" class="toggle-inner" style="width: 118px; margin-left: '+margin+'px;">'
+                      
+						    	+'<div id="toggle-inner-exporter'+i+'" class="toggle-inner" style="width: 118px; margin-left: '+margin+'px;">'                      
 						    		+'<div id="toggle-on-exporter'+i+'" class="toggle-on '+on+'" style="height: 22px; width: 59px; text-indent: -11px; line-height: 22px;">ON</div>'
 						    		+'<div class="toggle-blob" style="height: 22px; width: 22px; margin-left: -11px;"></div>'
 						    		+'<div id="toggle-off-exporter'+i+'" class="toggle-off '+off+'" style="height: 22px; width: 59px; margin-left: -11px; text-indent: 11px; line-height: 22px;">OFF</div>'
 						    	 +'</div>'
-						    +'</div></div></div>';
+                      
+						    +'</div>'
+                            
+                            +'</div>'
+                      
+                            +'</div>'
+                      
+                            +'</div>';
 				  }
-				  htmlToAppend +='<div>';
 			  }
 			var header = $('#export_head').clone();
 			$('#exportJobs').empty();
