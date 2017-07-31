@@ -1326,7 +1326,7 @@ function updateExportJob(activeId){
 	});    
 	var statusURL = 'img/blue.png';
 	if(status == 1){
-		$('#toggle-inner'+activeId).css('margin-left','0px');
+		$('#toggle-inner-exporter'+activeId).css('margin-left','0px');
 		$('#toggle-on-exporter'+activeId).addClass('active');
 		$('#toggle-off-exporter'+activeId).removeClass('active');
 		job.enabled = true;           
