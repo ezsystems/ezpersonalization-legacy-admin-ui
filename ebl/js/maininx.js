@@ -1221,7 +1221,6 @@ function readExportJobs(){
 				  htmlToAppend = '<div id="noTests" data-translate="item_export_no_jobs">you have no export jobs defined</div>';
 			  }else {
 				allExportJobs = json;
-                  console.log(json);
 				  for(var i = 0; i < json.length; i++) {
                       var obj = json[i];  
                       var scenario = obj.scenario;
