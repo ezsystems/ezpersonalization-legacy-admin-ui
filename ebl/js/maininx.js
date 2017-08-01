@@ -1305,10 +1305,10 @@ function readExportJobs(){
 				  }
 			  }
 			var header = $('#export_head').clone();
-			$('#exportJobs').empty();
-			$('#exportJobs').append(header);
-          	$('#exportJobs').append(htmlToAppend);
-          	$('#exportJobs').show();
+			$('#exportobsTable').empty();
+			$('#exportobsTable').append(header);
+          	$('#exportobsTable').append(htmlToAppend);
+          	$('#exportobsTable').show();
 		  },
 		  error: mainErrorHandler
 	  });
