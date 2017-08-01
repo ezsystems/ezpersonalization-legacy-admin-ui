@@ -535,7 +535,6 @@ function loadRightSection() {
     } else {
       setCategoryPath('fallback' + j + '_category_path', stage.useCategoryPath); //(through localizer) overrites everything in the models box
     }
-
     for (var k = 0; k < stage.xingModels.length; k++) {
       var xing = stage.xingModels[k];
       var childNumberDiv = j;
@@ -572,10 +571,13 @@ function loadRightSection() {
 
           break; //exit for in modelRef
         }
-        ghostModel = processEventualUpheavalGhostModel(modelRefList[modelRef].modelType, ghostModel);
+        //ghostModel = processEventualUpheavalGhostModel(modelRefList[modelRef].modelType, ghostModel);
       }
-
-      ghostModel = processEventualUpheavalGhostModel(xing.modelReferenceCode, ghostModel);
+        
+      var additionalSpanRef = "<br><span style='font-weight: normal; font-size: 12px;' class='info2_refcode'>[" + xing.modelReferenceCode + "]</span>";
+      ghostModel.children("h4").children(".name").after(additionalSpanRef);
+                
+     // ghostModel = processEventualUpheavalGhostModel(xing.modelReferenceCode, ghostModel);
 
       if (!hasSubmodels) {
         //disable the "Use submodels" checkbox
@@ -668,15 +670,9 @@ function processEventualUpheavalGhostModel(modelRefCode, generatedGhostModel) {
     console.error("ERROR: error processing eventual Upheaval model. modelRefCode is null or undefined.");
     return null;
   }
-
+    
   //if substring 'upheaval' is present
-  if (modelRefCode.indexOf("upheaval") !== -1) {
-    var additionalSpanDays = "<br><span style='font-weight: normal; font-size: 12px;' class='info2_refcode'>(1 Day - 365 Days)</span>";
-    var additionalSpanRef = "<br><span style='font-weight: normal; font-size: 12px;' class='info2_refcode'>[" + modelRefCode + "]</span>";
-    var xpto1 = generatedGhostModel.children("h4").children(".name");
-    generatedGhostModel.children("h4").children(".name").after(additionalSpanRef);
-    generatedGhostModel.children("h4").children(".name").after(additionalSpanDays);
-  }
+  
   return generatedGhostModel;
 }
 
@@ -752,6 +748,12 @@ function generatePlacedModel(model, j, k, xing) {
 
   // make the upheaval
   if (model.modelType.indexOf("UPHEAVAL") > -1) {
+      
+    var additionalSpanDays = "<br><span style='font-weight: normal; font-size: 12px;' class='info2_refcode'>1 Day - 90 Days</span>";
+    
+    var xpto1 = ghostModel.children("h4").children(".name");
+    
+    ghostModel.children("h4").children(".name").after(additionalSpanDays);
 
     var $ageSelect = ghostModel.find("select[name=placed_model_rating_age]");
 
