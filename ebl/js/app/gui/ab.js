@@ -772,7 +772,7 @@ define([
 		//insert data of test into overlay
 		$overlay.data('test', test);
 		$overlay.find('#testName').val(test.name);
-		$overlay.find('#testStartDate').datepicker('setDate',test.startDate);
+		$overlay.find('#testStartDate').datepicker('setDate',new Date());
 		$overlay.find('#testPercentUser').val(test.percentUser).trigger('change');
 		$overlay.find('#testCurrentScenario').val(test.getIdOfA());
 		$overlay.find('#testOtherScenario').val(test.getIdOfB());
