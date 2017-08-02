@@ -96,11 +96,11 @@ function generateContentTypeOrLanguageString(_type) {
   var contentTypesOrLanguage = "";
 
   //open content
-  if ((_type.contentTypes != null && _type.contentTypes.size > 0) || _type.language != null) {
+  if ((_type.contentTypes != null && _type.contentTypes.length > 0) || _type.language != null) {
     contentTypesOrLanguage += OPEN;
   }
 
-  if (_type.contentTypes != null && _type.contentTypes.size > 0) {
+  if (_type.contentTypes != null && _type.contentTypes.length > 0) {
     contentTypesOrLanguage += _type.contentTypes;
   }
 
