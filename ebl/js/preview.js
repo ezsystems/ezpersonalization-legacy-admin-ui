@@ -192,6 +192,9 @@
  function getCallId() {
    var url = getCallSrc().replace('jsonp', 'json');
    $('#urlid').text(url);
+   $('#urlid').href = url;
+   var a = document.getElementById('urlid');
+   a.href = url;
  }
 
  function changeTop() {
