@@ -838,14 +838,24 @@ function renderAttributes(attributes) {
   for (var i = 0; i < attributes.length; i++) {
 
     var sbm = getSubmodel(attributes[i].key, attributes[i].type);
-
+      
+    var source = '';
+      
+    if (attributes[i].source !== null) {
+        source = ':' + attributes[i].source;
+    }
+      
+    var attributeSource = '[' + attributes[i].attributeSource.toLowerCase() + source + '] ';
+      
     var $option = $("<option></option>")
       .attr("data-type", attributes[i].type)
+      .attr("data-source", attributes[i].source)
+      .attr("data-attributesource", attributes[i].attributeSource)
       .val(attributes[i].key)
-      .text((attributes[i].type === 'NUMERIC' ? '[123] ' : '[ABC] ') + attributes[i].key);
+      .text((attributes[i].type === 'NUMERIC' ? '[123] ' : '[ABC] ') + attributeSource + attributes[i].key);
 
     $select.append($option);
-
+      
     if (sbm) {
       if (attributes[i].type === 'NUMERIC') {
         if ('intervals' in sbm) {
@@ -1056,7 +1066,7 @@ function updateSubModel() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function fillSubModelsChange(attributeKey, type) {
+function fillSubModelsChange(attributeKey, type, attributeSource, source) {
   if (!attributeKey) {
     fillSubmodelValues(null);
     return;
@@ -1075,7 +1085,7 @@ function fillSubModelsChange(attributeKey, type) {
     if (!current_submodel) {
       fillAttributeEmptyValues(attributeKey, type);
     } else {
-      fillSubmodelValues(current_submodel);
+      fillSubmodelValues(current_submodel, attributeSource, source);
     }
   }
 }
@@ -1090,7 +1100,6 @@ function fillAttributeEmptyValues(attributeKey, type) {
   $('#nominalSubmodelValues').show().siblings('div').hide();
   $('.grouping_attributes').html("");
 
-
   getAttributeValues(attributeKey, type).then(function (json) {
     //console.log(json);
 
@@ -1099,7 +1108,6 @@ function fillAttributeEmptyValues(attributeKey, type) {
     var $container = $('.grouping_attributes');
 
     for (var i = 0; i < json.attribute.values.length; i++) {
-      //console.log(json.attribute.values[i]);
       $container.append('<li data-value="' + json.attribute.values[i] + '">' + json.attribute.values[i] + '</li>');
     }
   });
@@ -1110,7 +1118,7 @@ function fillAttributeEmptyValues(attributeKey, type) {
  *
  * @param {Submodel} subModel
  */
-function fillSubmodelValues(subModel) {
+function fillSubmodelValues(subModel, attributeSource, source) {
 
   var $available_attributes = $('.grouping_attributes');
 
@@ -1129,7 +1137,9 @@ function fillSubmodelValues(subModel) {
     return;
   }
 
-  getAttributeValues(subModel.attributeKey, subModel.submodelType).then(function (json) {
+    console.log('submodels');
+    console.log(subModel);
+  getAttributeValues(subModel.attributeKey, subModel.submodelType, attributeSource, source).then(function (json) {
 
     //write all the groups and the according attribute values
     for (var i = 0; i < subModel.attributeValues.length; i++) {
@@ -1190,10 +1200,10 @@ function fillSubmodelValues(subModel) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function getAttributeValues(attributeKey, type) {
+function getAttributeValues(attributeKey, type, attributeSource, source) {
   return yooAjax("body", {
     'dataType': "json",
-    'url': "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey)
+    'url': "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey) + attributeSource + source
   });
 }
 
@@ -1313,9 +1323,11 @@ function initSubmodelDialog() {
   });
 
   $('#submodels_attributes').on('change', function (event) {
-    var $this = $(this),
-      type = $this.find('option:selected').data('type');
-    fillSubModelsChange($this.val(), type);
+    var selected = $(this).find('option:selected');
+    var type = selected.data('type');
+    var attributeSource = selected.data('attributesource');
+    var source = selected.data('source');
+    fillSubModelsChange($(this).val(), type, attributeSource, source);
   });
 
   $(".create_one_more_group").on("click", function (event) {
