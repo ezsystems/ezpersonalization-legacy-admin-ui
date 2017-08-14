@@ -1137,8 +1137,6 @@ function fillSubmodelValues(subModel, attributeSource, source) {
     return;
   }
 
-    console.log('submodels');
-    console.log(subModel);
   getAttributeValues(subModel.attributeKey, subModel.submodelType, attributeSource, source).then(function (json) {
 
     //write all the groups and the according attribute values
@@ -1201,6 +1199,12 @@ function fillSubmodelValues(subModel, attributeSource, source) {
 
 ////////////////////////////////////////////////////////////////////////////////
 function getAttributeValues(attributeKey, type, attributeSource, source) {
+  if(typeof attributeSource === "undefined") {
+      attributeSource = 'USER';
+  }
+  if(typeof source === "undefined") {
+      source = null;
+  } 
   return yooAjax("body", {
     'dataType': "json",
     'url': "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey) +  "/" + attributeSource +  "/" + source
