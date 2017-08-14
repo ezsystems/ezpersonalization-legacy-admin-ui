@@ -1203,7 +1203,7 @@ function fillSubmodelValues(subModel, attributeSource, source) {
 function getAttributeValues(attributeKey, type, attributeSource, source) {
   return yooAjax("body", {
     'dataType': "json",
-    'url': "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey) + attributeSource + source
+    'url': "/api/v3/" + encodeURIComponent(customerID) + "/structure/get_attribute_values/" + type + "/" + encodeURIComponent(attributeKey) +  "/" + attributeSource +  "/" + source
   });
 }
 
