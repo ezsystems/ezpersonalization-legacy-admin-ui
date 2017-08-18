@@ -247,10 +247,23 @@ function copyPrefixAndSortSummodelSummaries(smsList) {
   for (var i = 0; i < smsListCopy.length; i++) {
 
     var attributeType = smsListCopy[i].attributeType;
+    var attributeSource = smsListCopy[i].attributeSource;
+    var source = '';
+      console.log(smsListCopy[i]);
+    if (smsListCopy[i].source !== null) {
+        source = ':' + smsListCopy[i].source;
+    }
+      
+    if (attributeSource === null) {
+        attributeSource = 'ITEM';
+    }
+      
+    var attributeSS = '[' + attributeSource.toLowerCase() + source + '] ';
+      
     if (attributeType === "NOMINAL") {
-      smsListCopy[i].attributeKey = "[ABC] " + smsListCopy[i].attributeKey;
+      smsListCopy[i].attributeKey = "[ABC] " + attributeSS + smsListCopy[i].attributeKey;
     } else if (attributeType === "NUMERIC") {
-      smsListCopy[i].attributeKey = "[123] " + smsListCopy[i].attributeKey;
+      smsListCopy[i].attributeKey = "[123] " + attributeSS + smsListCopy[i].attributeKey;
     } else {
       //should never happen, yet/so far
       smsListCopy[i].attributeKey = "[?] " + smsListCopy[i].attributeKey;
