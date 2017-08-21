@@ -805,21 +805,23 @@ function generatePlacedModel(model, j, k, xing) {
  *
  *  @return {Submodel}
  * */
-function getSubmodel(attributeKey, attributeType) {
-
+function getSubmodel(attributeKey, attributeType, attributeSource, source) {
   if (arguments.length === 1) {
     attributeKey = arguments[0];
     attributeType = arguments[1];
   }
 
   for (var i = 0; i < current_submodels.length; i++) {
-    if (current_submodels[i].attributeKey === attributeKey && current_submodels[i].submodelType === attributeType) {
+    if (current_submodels[i].attributeKey === attributeKey && current_submodels[i].submodelType === attributeType && current_submodels[i].attributeSource === attributeSource && current_submodels[i].source === source) {
       return current_submodels[i];
     }
   }
+    
   var newSubmodel = new Object();
   newSubmodel.attributeKey = attributeKey;
   newSubmodel.submodelType = attributeType;
+  newSubmodel.attributeSource = attributeSource;
+  newSubmodel.source = source;
   if (attributeType === "NOMINAL") {
     newSubmodel.attributeValues = new Array();
   }
@@ -833,7 +835,6 @@ function getSubmodel(attributeKey, attributeType) {
  * @param {AttributePk[]} attributes
  */
 function renderAttributes(attributes) {
-
   //check for null or undefined
   if (attributes == null || attributes.length <= 0) {
     console.error("ERROR: Atributes are empty, null or undefined");
@@ -849,7 +850,7 @@ function renderAttributes(attributes) {
 
   for (var i = 0; i < attributes.length; i++) {
 
-    var sbm = getSubmodel(attributes[i].key, attributes[i].type);
+    var sbm = getSubmodel(attributes[i].key, attributes[i].type, attributes[i].attributeSource, attributes[i].source);
       
     var source = '';
       
@@ -1088,7 +1089,7 @@ function fillSubModelsChange(attributeKey, type, attributeSource, source) {
     updateSubModel(); // parsing changes and altering the JSON object ()
   }
 
-  current_submodel = getSubmodel(attributeKey, type);
+  current_submodel = getSubmodel(attributeKey, type, attributeSource, source);
 
   // we have already an instance
   if (type === "NUMERIC") {
