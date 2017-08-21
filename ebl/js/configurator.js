@@ -249,7 +249,6 @@ function copyPrefixAndSortSummodelSummaries(smsList) {
     var attributeType = smsListCopy[i].attributeType;
     var attributeSource = smsListCopy[i].attributeSource;
     var source = '';
-      console.log(smsListCopy[i]);
     if (smsListCopy[i].source !== null) {
         source = ':' + smsListCopy[i].source;
     }
