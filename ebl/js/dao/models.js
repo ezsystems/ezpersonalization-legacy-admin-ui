@@ -182,7 +182,7 @@ modelDao.updateModelWithSubmodels = function (model, submodels, callback, errorC
   var errorResult = null;
 
   var tasks = [];
-
+    
   tasks.push($.ajax({
     type: "POST",
     mimeType: "application/json",
