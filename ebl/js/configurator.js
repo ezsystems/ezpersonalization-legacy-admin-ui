@@ -811,8 +811,27 @@ function getSubmodel(attributeKey, attributeType, attributeSource, source) {
     attributeType = arguments[1];
   }
 
+  if(typeof source === 'undefined') {
+      source = null;
+  }
+    
+  if(typeof attributeSource === 'undefined') {
+      attributeSource = null;
+  }
+    
   for (var i = 0; i < current_submodels.length; i++) {
-    if (current_submodels[i].attributeKey === attributeKey && current_submodels[i].submodelType === attributeType && current_submodels[i].attributeSource === attributeSource && current_submodels[i].source === source) {
+    var currentSource = current_submodels[i].source;
+    var currentattributeSource = current_submodels[i].attributeSource;
+     
+    if(typeof currentSource === 'undefined') {
+      currentSource = null;
+    }
+    
+    if(typeof currentattributeSource === 'undefined') {
+      currentattributeSource = null;
+    }
+      
+    if (current_submodels[i].attributeKey === attributeKey && current_submodels[i].submodelType === attributeType && currentattributeSource === attributeSource && currentSource === source) {
       return current_submodels[i];
     }
   }
