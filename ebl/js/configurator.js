@@ -772,7 +772,7 @@ function generatePlacedModel(model, j, k, xing) {
     $ageSelect.find("option").remove();
 
     //var ages = ['P1D', 'P7D', 'P14D', 'P30D', 'P45D', 'P60D', 'P90D', 'P180D', 'P365D'];
-    var ages = ['P1D', 'P7D', 'P14D', 'P30D', 'P60D', 'P90D']; // https://jira.ez.no/browse/RSYS-2464
+    var ages = ['P1D', 'P7D', 'P14D', 'P30D', 'P60D', 'P90D', 'P320D']; // https://jira.ez.no/browse/RSYS-2464
 
     for (var i in ages) {
       var opt = $('<option value="' + ages[i] + '" data-translate="model_configurator_rating_age_' + ages[i] + '">').clone();
