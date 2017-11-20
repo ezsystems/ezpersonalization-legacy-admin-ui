@@ -621,6 +621,11 @@ function determineColor(model, json) {
   if (model != null && model.modelType != null && model.modelType === "PROFILE_MODEL") {
     return COLOR_GREEN;
   }
+  
+  //suggestion model is always green
+  if (model != null && model.modelType != null && model.modelType === "SUGGESTION") {
+    return COLOR_GREEN;
+  }
 
   // if editor_based/list and has not blacklist in it
   if (model != null && model.modelType != null && model.modelType === "EDITOR_BASED" &&
